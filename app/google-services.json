@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "168275920031",
+    "project_id": "chimpagneapp",
+    "storage_bucket": "chimpagneapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168275920031:android:8f8a54dda26458c3c1ceaa",
+        "android_client_info": {
+          "package_name": "com.monkeyteam.chimpagne"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWxYGuZ7Qua_RZydiiyaMQBGcRxhM_dEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
