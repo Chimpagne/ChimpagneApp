@@ -21,5 +21,8 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Organizing who can sleep on site with reservation 
 
 
+## Sonar
+Link: https://sonarcloud.io/summary/overall?id=Chimpagne_ChimpagneApp
+
 ## Figma
 Link: https://www.figma.com/team_invite/redeem/XYJd1jV6IDQFRKusTIYNgO
