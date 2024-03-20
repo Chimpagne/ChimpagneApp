@@ -1,8 +1,11 @@
 package com.monkeyteam.chimpagne
 
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Assert.*
+import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.monkeyteam.chimpagne.screen.MainScreen
+import io.github.kakaocup.compose.node.element.ComposeScreen
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -12,11 +15,19 @@ import org.junit.runner.RunWith
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class MainActivityTest : TestCase() {
+
+  @get:Rule val composeTestRule = createAndroidComposeRule<MainActivity>()
+
   @Test
-  fun useAppContext() {
-    // Context of the app under test.
-    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-    assertEquals("com.monkeyteam.chimpagne", appContext.packageName)
+  fun test() = run {
+    step("Start Main Activity") {
+      ComposeScreen.onComposeScreen<MainScreen>(composeTestRule) {
+        simpleText {
+          assertIsDisplayed()
+          assertTextEquals("Hello Android!")
+        }
+      }
+    }
   }
 }

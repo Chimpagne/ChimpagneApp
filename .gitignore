@@ -1,3 +1,14 @@
+/.idea/
+.DS_Store
+.gradle
+/local.properties
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+
 v/.idea/
 .DS_Store
 .gradle
@@ -127,8 +138,6 @@ obj/
 # IntelliJ IDEA
 *.iws
 /out/
-
-.idea/
 
 # User-specific configurations
 .idea/caches/

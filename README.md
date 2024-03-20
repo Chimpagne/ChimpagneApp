@@ -9,16 +9,16 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Task management: To organise and track preparations effortlessly with reminders.
 - Polls & voting: Facilitates group decisions.
 - Shared budget & purchases: Simplifies collective expense control.
-- Shared playlist: Creates a collaborative musical atmosphere using Spotify.  
+- Shared playlist: Creates a collaborative musical atmosphere using Spotify.
 - Group and private chat: Enables instant communication.
 - Share the party/event with other people that aren’t in the organisation
-- Research public parties that are close to your location 
+- Research public parties that are close to your location
 - Party rating & review system ⭐⭐⭐⭐
 - Party tag for what kind of party it is (this is set up by the organiser)
 - Weather Info: Have a bar that indicates if and when it's going to rain (plus reminder)
-- Permission Handling: One admin (creates event), multiple possible organisers (added later on) and event goers (who don’t have access to the organisation part of the event). 
+- Permission Handling: One admin (creates event), multiple possible organisers (added later on) and event goers (who don’t have access to the organisation part of the event).
 - Car pooling : number of seats, departure time, destination, etc.. ,  “trust me I am not drunk”
-- Organizing who can sleep on site with reservation 
+- Organizing who can sleep on site with reservation
 
 
 ## Sonar
