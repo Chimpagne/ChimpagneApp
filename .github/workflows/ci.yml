@@ -27,6 +27,10 @@ jobs:
           submodules: recursive
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of Sonar analysis (if we use Sonar Later)
 
+      - name: API Key Setup
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+        run: echo MAPS_API_KEY="MAPS_API_KEY"
 
       # Kernel-based Virtual Machine (KVM) is an open source virtualization technology built into Linux. Enabling it allows the Android emulator to run faster.
       - name: Enable KVM group perms
@@ -75,9 +79,9 @@ jobs:
           chmod +x ./gradlew
 
       # Check formatting
-#      - name: KTFmt Check
-#        run: |
-#          ./gradlew ktfmtCheck
+      - name: KTFmt Check
+        run: |
+          ./gradlew ktfmtCheck
 
       # This step runs gradle commands to build the application
       - name: Assemble
