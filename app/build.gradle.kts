@@ -7,6 +7,8 @@ plugins {
     id("com.ncorti.ktfmt.gradle") version "0.16.0"
 
     id("jacoco")
+
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 android {
@@ -108,6 +110,21 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
         include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
         include("outputs/code_coverage/debugAndroidTest/connected/*/coverage.ec")
     })
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "Chimpagne_ChimpagneApp")
+        property("sonar.projectName", "ChimpagneApp")
+        property("sonar.organization", "chimpagne")
+        property("sonar.host.url", "https://sonarcloud.io")
+        // Comma-separated paths to the various directories containing the *.xml JUnit report files. Each path may be absolute or relative to the project base directory.
+        property("sonar.junit.reportPaths", "${project.layout.buildDirectory.get()}/test-results/testDebugunitTest/")
+        // Paths to xml files with Android Lint issues. If the main flavor is changed, this file will have to be changed too.
+        property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory.get()}/reports/lint-results-debug.xml")
+        // Paths to JaCoCo XML coverage report files.
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
+    }
 }
 
 secrets {
