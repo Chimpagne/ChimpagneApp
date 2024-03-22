@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -24,66 +25,35 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 
 @Composable
 fun LoginScreen(successfulLogin: () -> Unit) {
-  val signInLauncher =
-      rememberLauncherForActivityResult(
-          FirebaseAuthUIActivityResultContract(),
-      ) { result ->
-        val response = result.idpResponse
-        if (result.resultCode == Activity.RESULT_OK) {
-          // Successfully signed in
-          val user = FirebaseAuth.getInstance().currentUser
-          successfulLogin()
-        } else {
-          // Sign in failed. If response is null the user canceled the
-          // sign-in flow using the back button. Otherwise check
-          // response.getError().getErrorCode() and handle the error.
-          // ...
-        }
-      }
-  val providers =
-      arrayListOf(
-          AuthUI.IdpConfig.GoogleBuilder().build(),
-      )
-
-  // Create and launch sign-in intent
-  val signInIntent =
-      AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build()
-
   Column(
       modifier = Modifier.fillMaxSize().padding(horizontal = 15.dp),
       horizontalAlignment = Alignment.CenterHorizontally) {
-        Image(
-            painter = painterResource(id = R.drawable.chimpagne_app_logo),
-            contentDescription = "App Logo",
-            modifier = Modifier.size(250.dp).padding(top = 62.dp).clip(RoundedCornerShape(16)),
-            contentScale = ContentScale.Fit)
+      Image(
+          painter = painterResource(id = R.drawable.chimpagne_app_logo),
+          contentDescription = "App Logo",
+          modifier = Modifier.size(250.dp).padding(top = 62.dp).clip(CircleShape),
+          contentScale = ContentScale.Fit
+      )
 
-        Text(
-            text = "Welcome",
-            // fontSize = 70.sp,
-            modifier = Modifier.padding(top = 62.dp))
+      Text(
+          text = "Welcome to",
+          fontSize = 60.sp,
+          modifier = Modifier.padding(top = 80.dp)
+      )
+      Text(
+          text = "Chimpagne",
+          fontSize = 60.sp,
+          modifier = Modifier.padding(bottom = 62.dp)
+      )
 
-        Spacer(modifier = Modifier.height(150.dp))
+      Spacer(modifier = Modifier.height(130.dp))
 
-        OutlinedButton(
-            onClick = { signInLauncher.launch(signInIntent) },
-            modifier = Modifier.size(250.dp, 40.dp).testTag("LoginButton")) {
-              Row(
-                  verticalAlignment = Alignment.CenterVertically,
-                  horizontalArrangement = Arrangement.Start) {
-                    Image(
-                        painter = painterResource(id = R.drawable.google_logo),
-                        contentDescription = "Google Logo")
-                    Spacer(modifier = Modifier.width(20.dp))
-                    Text(text = "Sign in with Google", color = Color.DarkGray)
-                  }
-            }
-      }
+      GoogleAuthentication(successfulLogin)
+  }
 }
