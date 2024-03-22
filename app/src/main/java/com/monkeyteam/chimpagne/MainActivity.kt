@@ -6,10 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.monkeyteam.chimpagne.ui.LoginScreen
+import com.monkeyteam.chimpagne.ui.MainScreen
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,20 +23,20 @@ class MainActivity : ComponentActivity() {
       ChimpagneTheme {
         // A surface container using the 'background' color from the theme
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          Greeting("Android")
+          val navController = rememberNavController()
+          val navActions = NavigationActions(navController)
+          NavHost(navController = navController, startDestination = Route.LOGIN) {
+            composable(Route.LOGIN) {
+              LoginScreen {
+                navController.navigate(Route.MAIN) { popUpTo(Route.LOGIN) { inclusive = true } }
+                navController.graph.setStartDestination(Route.MAIN)
+              }
+            }
+
+            composable(Route.MAIN) { MainScreen(navObject = navActions) }
+          }
         }
       }
     }
   }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-  Text(text = "Hello $name!", modifier = modifier)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-  ChimpagneTheme { Greeting("Android") }
 }
