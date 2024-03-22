@@ -30,7 +30,7 @@ jobs:
       - name: API Key Setup
         env:
           MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
-        run: echo MAPS_API_KEY="MAPS_API_KEY"
+        run: echo MAPS_API_KEY="$MAPS_API_KEY"
 
       # Kernel-based Virtual Machine (KVM) is an open source virtualization technology built into Linux. Enabling it allows the Android emulator to run faster.
       - name: Enable KVM group perms
