@@ -28,6 +28,7 @@ jobs:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of Sonar analysis (if we use Sonar Later)
 
       - name: API Key Setup
+        shell: bash
         env:
           MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
         run: echo MAPS_API_KEY="$MAPS_API_KEY"
