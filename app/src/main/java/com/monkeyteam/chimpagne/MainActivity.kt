@@ -33,7 +33,9 @@ class MainActivity : ComponentActivity() {
               }
             }
 
-            composable(Route.MAIN) { MainScreen(navObject = navActions) }
+            composable(Route.MAIN) {
+              MainScreen(navObject = navActions)
+            }
           }
         }
       }
