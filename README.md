@@ -35,3 +35,11 @@ Link to minute notes: https://docs.google.com/spreadsheets/d/141KT7RH3QI2LVfiPTD
 
 Scrum Master Sprint 1 : Juan Bautista Iaconucci
 Scrum Master Sprint 2 : Clément
+
+
+## How to setup the project on your device
+
+1. Clone the repo
+2. Add this to secrets.properties (not local.properties)
+
+    ```MAPS_API_KEY=YOUR_API_KEY_HERE```
