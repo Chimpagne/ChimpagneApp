@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           val navController = rememberNavController()
           val navActions = NavigationActions(navController)
+
           NavHost(navController = navController, startDestination = Route.LOGIN) {
             composable(Route.LOGIN) {
               LoginScreen {
@@ -33,9 +34,7 @@ class MainActivity : ComponentActivity() {
               }
             }
 
-            composable(Route.MAIN) {
-              MainScreen(navObject = navActions)
-            }
+            composable(Route.MAIN) { MainScreen(navObject = navActions) }
           }
         }
       }

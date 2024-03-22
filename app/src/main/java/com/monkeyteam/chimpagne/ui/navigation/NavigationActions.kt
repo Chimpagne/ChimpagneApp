@@ -1,10 +1,7 @@
 package com.monkeyteam.chimpagne.ui.navigation
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-
-data class TopLevelDestination(val route: String, val icon: ImageVector, val textId: String)
 
 object Route {
   const val LOGIN = "Login"
