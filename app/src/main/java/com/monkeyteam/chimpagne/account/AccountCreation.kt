@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,9 @@ fun AccountCreation() {
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
             text = if (preferredLanguageEnglish) "Create your Account" else "Créer votre compte",
-            fontSize = 24.sp)
+            fontSize = 24.sp,
+            modifier = Modifier.testTag("accountCreationLabel")
+        )
         Spacer(modifier = Modifier.padding(16.dp))
         IconButton(
             onClick = { /* TODO showPhotoChooser*/},
@@ -57,6 +60,7 @@ fun AccountCreation() {
             }
         Spacer(modifier = Modifier.padding(16.dp))
         OutlinedTextField(
+            modifier = Modifier.testTag("firstNameTextField"),
             value = firstName,
             onValueChange = { firstName = it },
             label = {
@@ -68,6 +72,7 @@ fun AccountCreation() {
             })
         Spacer(modifier = Modifier.padding(16.dp))
         OutlinedTextField(
+            modifier = Modifier.testTag("lastNameTextField"),
             value = lastName,
             onValueChange = { lastName = it },
             label = {
@@ -95,6 +100,7 @@ fun AccountCreation() {
           Text("Language")
           Spacer(modifier = Modifier.padding(16.dp))
           Switch(
+              modifier = Modifier.testTag("changeLanguageSwitch"),
               checked = preferredLanguageEnglish,
               onCheckedChange = { preferredLanguageEnglish = it },
               thumbContent = {
@@ -111,7 +117,7 @@ fun AccountCreation() {
         }
         Spacer(modifier = Modifier.padding(16.dp))
         Button(
-            onClick = { /*TODO createAccount*/}, modifier = Modifier.width(210.dp).height(50.dp)) {
+            onClick = { /*TODO createAccount*/}, modifier = Modifier.width(210.dp).height(50.dp).testTag("createAccountButton")) {
               Icon(
                   painter = painterResource(id = R.drawable.ic_logout),
                   contentDescription = "Logout icon")
