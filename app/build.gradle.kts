@@ -1,14 +1,12 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.google.gms.google-services")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.ktfmt)
+    alias(libs.plugins.sonar)
 
-    id("com.ncorti.ktfmt.gradle") version "0.16.0"
-
-    id("jacoco")
-
-    id("org.sonarqube") version "4.4.1.3373"
+    jacoco
 }
 
 android {
