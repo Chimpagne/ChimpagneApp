@@ -83,6 +83,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
 
     implementation(libs.okhttp)
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
