@@ -80,6 +80,10 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation(libs.okhttp)
+
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
