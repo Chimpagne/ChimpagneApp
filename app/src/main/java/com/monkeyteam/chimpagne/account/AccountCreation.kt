@@ -122,11 +122,10 @@ fun AccountCreation() {
                   painter = painterResource(id = R.drawable.ic_logout),
                   contentDescription = "Logout icon")
               Spacer(modifier = Modifier.padding(8.dp))
-              if (preferredLanguageEnglish) {
-                Text("Create Account")
-              } else {
-                Text("Créer un compte")
-              }
+              Text(
+                  if (preferredLanguageEnglish) "Create Account" else "Créer un compte",
+                  modifier = Modifier.testTag("createAccountButton")
+              )
             }
       }
 }
