@@ -21,46 +21,48 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 
 @Composable
-fun HomeScreen(){
-    ChimpagneTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ){
-            ChimpagneButton(onClick = { /*TODO*/ },
-                text = {
-                    Text(text = "MY PARTIES", fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold, fontSize = 30.sp)
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            ChimpagneButton(onClick = { /*TODO*/ },
-                text = {
-                    Text(text = "JOIN A PARTY", fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold, fontSize = 30.sp)
-
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            ChimpagneButton(onClick = { /*TODO*/ },
-                text = {
-                    Text(text = "ORGANIZE A PARTY", fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold, fontSize = 30.sp)
-                }
-            )
+fun HomeScreen() {
+  ChimpagneTheme {
+    Column(
+        modifier =
+            Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+          ChimpagneButton(
+              onClick = { /*TODO*/},
+              text = {
+                Text(
+                    text = "MY PARTIES",
+                    fontFamily = ChimpagneFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp)
+              })
+          Spacer(modifier = Modifier.height(16.dp))
+          ChimpagneButton(
+              onClick = { /*TODO*/},
+              text = {
+                Text(
+                    text = "JOIN A PARTY",
+                    fontFamily = ChimpagneFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp)
+              })
+          Spacer(modifier = Modifier.height(16.dp))
+          ChimpagneButton(
+              onClick = { /*TODO*/},
+              text = {
+                Text(
+                    text = "ORGANIZE A PARTY",
+                    fontFamily = ChimpagneFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp)
+              })
         }
-    }
+  }
 }
 
 @Preview
 @Composable
 fun PreviewHomeScreen() {
-    ChimpagneTheme {
-        HomeScreen()
-    }
+  ChimpagneTheme { HomeScreen() }
 }
-

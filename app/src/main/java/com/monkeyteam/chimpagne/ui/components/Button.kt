@@ -15,19 +15,18 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ChimpagneButton(
     modifier: Modifier = Modifier,
-    text: @Composable () -> Unit = { Text("Click Me")},
+    text: @Composable () -> Unit = { Text("Click Me") },
     onClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = RoundedCornerShape(12.dp),
     padding: PaddingValues = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-        shape = shape,
-        contentPadding = padding
-    ) {
+  Button(
+      onClick = onClick,
+      modifier = modifier,
+      colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+      shape = shape,
+      contentPadding = padding) {
         text()
-    }
+      }
 }

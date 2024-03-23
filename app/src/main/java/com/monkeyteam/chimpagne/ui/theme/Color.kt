@@ -5,11 +5,11 @@ import androidx.compose.ui.graphics.Color
 // _primary -> main colors for the light/dark themes
 // _onPrimary -> colors that provide high contrast with primary color
 
-// _secondary, _tertiary -> support primary colors to provide more ways to distinguish app components
+// _secondary, _tertiary -> support primary colors to provide more ways to distinguish app
+// components
 // _onSecondary -> same idea as for onPrimary
 
 // _background -> color for the background
-
 
 // Colors for the light theme
 
@@ -35,7 +35,6 @@ val md_theme_light_onErrorContainer = Color(0xFF410002)
 
 val md_theme_light_background = Color(0xFFFFFBFF)
 val md_theme_light_onBackground = Color(0xFF1C1B1E)
-
 
 // Colors for dark theme
 
