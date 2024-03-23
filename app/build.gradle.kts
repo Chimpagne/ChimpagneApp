@@ -84,6 +84,7 @@ dependencies {
 
     implementation(libs.okhttp)
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("io.mockk:mockk:1.13.10")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
