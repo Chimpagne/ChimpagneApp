@@ -1,14 +1,12 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.google.gms.google-services")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    alias(libs.plugins.secrets.gradle.plugin)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.ktfmt)
+    alias(libs.plugins.sonar)
 
-    id("com.ncorti.ktfmt.gradle") version "0.16.0"
-
-    id("jacoco")
-
-    id("org.sonarqube") version "4.4.1.3373"
+    jacoco
 }
 
 android {
@@ -63,24 +61,25 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(platform(libs.firebase.bom))
+
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
