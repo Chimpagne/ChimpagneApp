@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.model.location
 
+import android.util.Log
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -16,14 +17,14 @@ class LocationHelper {
         client.newCall(request).enqueue(object : Callback {
 
             override fun onFailure(call: Call, e: IOException) {
-                // Give error feedback?
+                Log.e("LocationHelper", "Failed to get location for $name, because of IO Exception", e)
                 onResult(Location(name))
             }
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) {
-                        // Give error feedback?
+                        Log.e("LocationHelper", "Failed to get location for $name, because of unsuccessful response")
                         onResult(Location(name))
                     } else {
                         val geoLocation = response.body?.string()
@@ -35,6 +36,7 @@ class LocationHelper {
                             val locationInfo = Location(name, lat, lon)
                             onResult(locationInfo)
                         } else {
+                            Log.e("LocationHelper", "Failed to get location for $name, because of empty response")
                             onResult(Location(name))
                         }
                     }
