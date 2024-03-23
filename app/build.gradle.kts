@@ -84,6 +84,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation(libs.okhttp)
 
+    // Co-routine image loader (image loading library)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
