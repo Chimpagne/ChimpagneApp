@@ -82,7 +82,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
-tasks.register("jacocoTestReport", JacocoReport::class) {
+tasks.register<JacocoReport>("jacocoTestReport") {
+    group = "other"
+    description = "run jacoco"
+
     mustRunAfter("testDebugUnitTest", "connectedDebugAndroidTest")
 
     reports {
