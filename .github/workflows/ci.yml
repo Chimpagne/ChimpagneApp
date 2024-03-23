@@ -4,8 +4,7 @@ name: CI - Test Runner
 on:
   push:
     branches:
-      - main
-      - ci-fix
+      - '**'
 
   pull_request:
     types:
