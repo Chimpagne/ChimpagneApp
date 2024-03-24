@@ -56,8 +56,10 @@ class AccountCreationUITest {
 
     composeTestRule.onNodeWithTag("firstNameTextField").performTextInput("John")
     composeTestRule.onNodeWithTag("lastNameTextField").performTextInput("Doe")
+    composeTestRule.onNodeWithTag("locationTextField").performTextInput("Paris")
 
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("John")
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Doe")
+    composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Paris")
   }
 }

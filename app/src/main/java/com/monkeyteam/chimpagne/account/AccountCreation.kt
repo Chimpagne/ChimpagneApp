@@ -38,6 +38,7 @@ fun AccountCreation() {
   var lastName by remember { mutableStateOf("") }
   var preferredLanguageEnglish by remember { mutableStateOf(false) }
   var location by remember { mutableStateOf("") }
+  val languageStrings = getLanguageStrings(preferredLanguageEnglish)
 
   Column(
       modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -46,7 +47,7 @@ fun AccountCreation() {
       ) {
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
-            text = if (preferredLanguageEnglish) "Create your Account" else "Créer votre compte",
+            text = languageStrings.createAccount,
             fontSize = 24.sp,
             modifier = Modifier.testTag("accountCreationLabel"))
         Spacer(modifier = Modifier.padding(16.dp))
@@ -62,37 +63,20 @@ fun AccountCreation() {
             modifier = Modifier.testTag("firstNameTextField"),
             value = firstName,
             onValueChange = { firstName = it },
-            label = {
-              if (preferredLanguageEnglish) {
-                Text("First Name")
-              } else {
-                Text("Prénom")
-              }
-            })
+            label = { Text(languageStrings.firstName) })
         Spacer(modifier = Modifier.padding(16.dp))
         OutlinedTextField(
             modifier = Modifier.testTag("lastNameTextField"),
             value = lastName,
             onValueChange = { lastName = it },
-            label = {
-              if (preferredLanguageEnglish) {
-                Text("Last Name")
-              } else {
-                Text("Nom de famille")
-              }
-            })
+            label = { Text(languageStrings.lastName) })
         Spacer(modifier = Modifier.padding(16.dp))
 
         OutlinedTextField(
+            modifier = Modifier.testTag("locationTextField"),
             value = location,
             onValueChange = { location = it },
-            label = {
-              if (preferredLanguageEnglish) {
-                Text("Choose your City")
-              } else {
-                Text("Choisissez votre ville")
-              }
-            })
+            label = { Text(languageStrings.city) })
         Spacer(modifier = Modifier.padding(16.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -123,8 +107,38 @@ fun AccountCreation() {
                   contentDescription = "Logout icon")
               Spacer(modifier = Modifier.padding(8.dp))
               Text(
-                  if (preferredLanguageEnglish) "Create Account" else "Créer un compte",
+                  languageStrings.createAccountButton,
                   modifier = Modifier.testTag("createAccountButton"))
             }
       }
+}
+
+data class LanguageStrings(
+    val createAccount: String,
+    val firstName: String,
+    val lastName: String,
+    val city: String,
+    val language: String,
+    val createAccountButton: String
+)
+
+@Composable
+fun getLanguageStrings(preferredLanguageEnglish: Boolean): LanguageStrings {
+  return if (preferredLanguageEnglish) {
+    LanguageStrings(
+        createAccount = "Create your Account",
+        firstName = "First Name",
+        lastName = "Last Name",
+        city = "Choose your City",
+        language = "Language",
+        createAccountButton = "Create Account")
+  } else {
+    LanguageStrings(
+        createAccount = "Créer votre compte",
+        firstName = "Prénom",
+        lastName = "Nom de famille",
+        city = "Choisissez votre ville",
+        language = "Langue",
+        createAccountButton = "Créer un compte")
+  }
 }
