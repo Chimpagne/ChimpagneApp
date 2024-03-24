@@ -48,8 +48,7 @@ fun AccountCreation() {
         Text(
             text = if (preferredLanguageEnglish) "Create your Account" else "Créer votre compte",
             fontSize = 24.sp,
-            modifier = Modifier.testTag("accountCreationLabel")
-        )
+            modifier = Modifier.testTag("accountCreationLabel"))
         Spacer(modifier = Modifier.padding(16.dp))
         IconButton(
             onClick = { /* TODO showPhotoChooser*/},
@@ -117,15 +116,15 @@ fun AccountCreation() {
         }
         Spacer(modifier = Modifier.padding(16.dp))
         Button(
-            onClick = { /*TODO createAccount*/}, modifier = Modifier.width(210.dp).height(50.dp).testTag("createAccountButton")) {
+            onClick = { /*TODO createAccount*/},
+            modifier = Modifier.width(210.dp).height(50.dp).testTag("createAccountButton")) {
               Icon(
                   painter = painterResource(id = R.drawable.ic_logout),
                   contentDescription = "Logout icon")
               Spacer(modifier = Modifier.padding(8.dp))
               Text(
                   if (preferredLanguageEnglish) "Create Account" else "Créer un compte",
-                  modifier = Modifier.testTag("createAccountButton")
-              )
+                  modifier = Modifier.testTag("createAccountButton"))
             }
       }
 }

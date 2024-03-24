@@ -29,20 +29,18 @@ class ExampleInstrumentedTest {
 }
 
 @RunWith(AndroidJUnit4::class)
-class AccountCreationUITest{
+class AccountCreationUITest {
 
-  @get:Rule
-  val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
   @Test
-  fun testLanguageChangeWorks(){
+  fun testLanguageChangeWorks() {
     composeTestRule.setContent { AccountCreation() }
 
     composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Créer votre compte")
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("Prénom")
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Nom de famille")
     composeTestRule.onNodeWithTag("createAccountButton").assertTextContains("Créer un compte")
-
 
     composeTestRule.onNodeWithTag("changeLanguageSwitch").performClick()
 
@@ -53,7 +51,7 @@ class AccountCreationUITest{
   }
 
   @Test
-  fun textInputWorks(){
+  fun textInputWorks() {
     composeTestRule.setContent { AccountCreation() }
 
     composeTestRule.onNodeWithTag("firstNameTextField").performTextInput("John")
