@@ -87,6 +87,7 @@ dependencies {
     // Co-routine image loader (image loading library)
     implementation(libs.coil.compose.v260)
     testImplementation(libs.mockwebserver)
+    testImplementation(libs.mockk)
 
 }
 
