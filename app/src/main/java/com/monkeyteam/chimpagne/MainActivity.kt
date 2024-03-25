@@ -29,7 +29,9 @@ class MainActivity : ComponentActivity() {
           NavHost(navController = navController, startDestination = Route.LOGIN_SCREEN) {
             composable(Route.LOGIN_SCREEN) {
               LoginScreen {
-                navController.navigate(Route.HOME_SCREEN) { popUpTo(Route.LOGIN_SCREEN) { inclusive = true } }
+                navController.navigate(Route.HOME_SCREEN) {
+                  popUpTo(Route.LOGIN_SCREEN) { inclusive = true }
+                }
                 navController.graph.setStartDestination(Route.HOME_SCREEN)
               }
             }
