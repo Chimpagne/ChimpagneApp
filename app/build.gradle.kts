@@ -80,13 +80,13 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+
+    implementation(platform(libs.firebase.bom.v3280))
     implementation(libs.okhttp)
 
     // Co-routine image loader (image loading library)
-    implementation("io.coil-kt:coil-compose:2.6.0")
-
+    implementation(libs.coil.compose.v260)
+    testImplementation(libs.mockwebserver)
 
 }
 
