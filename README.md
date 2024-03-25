@@ -20,6 +20,11 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Car pooling : number of seats, departure time, destination, etc.. ,  “trust me I am not drunk”
 - Organizing who can sleep on site with reservation 
 
+# UI
+
+## Design system
+
+Material design has been unanimously choosen
 
 ## Sonar
 
@@ -27,10 +32,19 @@ https://sonarcloud.io/summary/overall?id=Chimpagne_ChimpagneApp
 
 ## Figma
 
-https://www.figma.com/team_invite/redeem/XYJd1jV6IDQFRKusTIYNgO
+[https://www.figma.com/team_invite/redeem/XYJd1jV6IDQFRKusTIYNgO](https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&mode=design&t=S1m3KVTdSztS7SgU-1)
 
 ## Standup Meetings
 
 Link to minute notes: https://docs.google.com/spreadsheets/d/141KT7RH3QI2LVfiPTD8mgh-nVC4h1Q4AaNwIAWp7860/edit#gid=0
 
 Scrum Master Sprint 1 : Juan Bautista Iaconucci
+Scrum Master Sprint 2 : Clément
+
+
+## How to setup the project on your device
+
+1. Clone the repo
+2. Add this to secrets.properties (not local.properties)
+
+    ```MAPS_API_KEY=YOUR_API_KEY_HERE```
