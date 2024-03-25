@@ -50,7 +50,8 @@ fun LoginScreen(successfulLogin: () -> Unit) {
               fontSize = 60.sp,
           )
         }
-        GoogleAuthentication( { successfulLogin() }, { openAlertDialog.value = true }, Modifier.fillMaxWidth())
+        GoogleAuthentication(
+            { successfulLogin() }, { openAlertDialog.value = true }, Modifier.fillMaxWidth())
       }
   when {
     openAlertDialog.value -> {

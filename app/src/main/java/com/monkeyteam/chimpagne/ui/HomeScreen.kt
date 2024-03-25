@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne
+package com.monkeyteam.chimpagne.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,18 +16,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navObject: NavigationActions) {
   // Dummy user Data
   val dummyUser = User("0", "Lora", null)
 
@@ -75,10 +75,4 @@ fun HomeScreen() {
               }
         }
   }
-}
-
-@Preview
-@Composable
-fun PreviewHomeScreen() {
-  ChimpagneTheme { HomeScreen() }
 }

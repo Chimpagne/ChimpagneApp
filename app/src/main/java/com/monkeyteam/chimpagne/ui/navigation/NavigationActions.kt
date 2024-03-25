@@ -4,8 +4,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
 object Route {
-  const val LOGIN = "Login"
-  const val MAIN = "Overview"
+  const val LOGIN_SCREEN = "Login"
+  const val HOME_SCREEN = "Home"
 }
 
 class NavigationActions(private val navController: NavHostController) {
