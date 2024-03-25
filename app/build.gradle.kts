@@ -69,11 +69,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.okhttp)
+    implementation(libs.coil.compose)
     implementation(libs.firebase.ui.auth)
+    implementation(libs.firebase.firestore)
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -82,14 +86,6 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    implementation(platform(libs.firebase.bom.v3280))
-    implementation(libs.okhttp)
-
-    // Co-routine image loader (image loading library)
-    implementation(libs.coil.compose.v260)
-    testImplementation(libs.mockwebserver)
-
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
