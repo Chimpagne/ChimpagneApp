@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
-import com.monkeyteam.chimpagne.ui.MainScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
@@ -26,15 +26,17 @@ class MainActivity : ComponentActivity() {
           val navController = rememberNavController()
           val navActions = NavigationActions(navController)
 
-          NavHost(navController = navController, startDestination = Route.LOGIN) {
-            composable(Route.LOGIN) {
+          NavHost(navController = navController, startDestination = Route.LOGIN_SCREEN) {
+            composable(Route.LOGIN_SCREEN) {
               LoginScreen {
-                navController.navigate(Route.MAIN) { popUpTo(Route.LOGIN) { inclusive = true } }
-                navController.graph.setStartDestination(Route.MAIN)
+                navController.navigate(Route.HOME_SCREEN) {
+                  popUpTo(Route.LOGIN_SCREEN) { inclusive = true }
+                }
+                navController.graph.setStartDestination(Route.HOME_SCREEN)
               }
             }
 
-            composable(Route.MAIN) { MainScreen(navObject = navActions) }
+            composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
           }
         }
       }
