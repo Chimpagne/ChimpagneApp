@@ -90,6 +90,8 @@ dependencies {
     implementation(libs.coil.compose.v260)
     testImplementation(libs.mockwebserver)
 
+    implementation(libs.maps.compose)
+
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
