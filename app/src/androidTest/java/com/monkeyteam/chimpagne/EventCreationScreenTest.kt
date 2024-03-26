@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.FirstPanel
+import com.monkeyteam.chimpagne.ui.FourthPanel
 import com.monkeyteam.chimpagne.ui.SecondPanel
 import org.junit.Assert.*
 import org.junit.Rule
@@ -61,5 +62,20 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("Title").performTextInput(title)
 
     composeTestRule.onNodeWithText(title).assertIsDisplayed()
+  }
+
+  @Test
+  fun testFourthPanel() {
+    composeTestRule.setContent { FourthPanel() }
+
+    val value = "4"
+    composeTestRule.onNodeWithText("Number of parking spaces").performTextInput(value)
+
+    composeTestRule.onNodeWithText(value).assertIsDisplayed()
+
+    val valueBed = "2"
+    composeTestRule.onNodeWithText("Number of beds").performTextInput(valueBed)
+
+    composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
   }
 }

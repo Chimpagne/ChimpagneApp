@@ -148,6 +148,8 @@ fun Subtitle(t: String) {
 // Comment to make a new commit
 @Composable
 fun FourthPanel() {
+    var parkingText by remember { mutableStateOf("") }
+    var bedsText by remember { mutableStateOf("") }
   Column(modifier = Modifier.padding(16.dp)) {
     Headline("Logistics")
     Spacer(modifier = Modifier.height(16.dp))
@@ -155,16 +157,17 @@ fun FourthPanel() {
     Subtitle("Parking")
 
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = parkingText,
+        onValueChange = { parkingText = it },
         label = { Text("Number of parking spaces") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth())
+
     Spacer(modifier = Modifier.height(16.dp))
     Subtitle("Beds")
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = bedsText,
+        onValueChange = { bedsText = it },
         label = { Text("Number of beds") },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth())
