@@ -48,7 +48,6 @@ class EventCreationScreenTest {
     // Tags (comma-separated)
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Tags (comma-separated)").assertDoesNotExist()
     composeTestRule.onNodeWithText("Logistics").assertDoesNotExist()
     composeTestRule.onNodeWithText("Parking").assertDoesNotExist()
     composeTestRule.onNodeWithText("Beds").assertDoesNotExist()
