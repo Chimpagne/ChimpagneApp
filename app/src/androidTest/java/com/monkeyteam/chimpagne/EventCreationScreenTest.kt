@@ -45,7 +45,10 @@ class EventCreationScreenTest {
   @Test
   fun testMakeEventPublicButtonShowsToast() {
     composeTestRule.setContent { EventCreationScreen(1) }
-
+    // Tags (comma-separated)
+    composeTestRule.onNodeWithText("Title").assertDoesNotExist()
+    composeTestRule.onNodeWithText("Description").assertDoesNotExist()
+    composeTestRule.onNodeWithText("Tags (comma-separated)").assertDoesNotExist()
     composeTestRule.onNodeWithText("Logistics").assertDoesNotExist()
     composeTestRule.onNodeWithText("Parking").assertDoesNotExist()
     composeTestRule.onNodeWithText("Beds").assertDoesNotExist()
@@ -62,6 +65,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("Title").performTextInput(title)
 
     composeTestRule.onNodeWithText(title).assertIsDisplayed()
+    composeTestRule.onNodeWithText("Previous").assertDoesNotExist()
   }
 
   @Test
@@ -78,7 +82,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("Number of beds").performTextInput(valueBed)
 
     composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
-
+    composeTestRule.onNodeWithText("Next").assertDoesNotExist()
     composeTestRule.onNodeWithText("Create Event").performClick()
   }
 
