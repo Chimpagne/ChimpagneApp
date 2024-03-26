@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +36,8 @@ fun HomeScreen(navObject: NavigationActions) {
   ChimpagneTheme {
     Scaffold(
         topBar = {
-          TopAppBar(title = { Text("") }, actions = { ProfileIcon(user = dummyUser) })
+          TopAppBar(title = { Text("") },
+              actions = { ProfileIcon(user = dummyUser, modifier = Modifier.testTag("ProfileIcon")) })
         }) { innerPadding ->
           Column(
               modifier =
@@ -45,6 +47,7 @@ fun HomeScreen(navObject: NavigationActions) {
               horizontalAlignment = Alignment.CenterHorizontally,
               verticalArrangement = Arrangement.Center) {
                 ChimpagneButton(
+                    modifier = Modifier.testTag("MyEventsButton"),
                     onClick = { /*TODO*/},
                     text = {
                       Text(
@@ -55,16 +58,18 @@ fun HomeScreen(navObject: NavigationActions) {
                     })
                 Spacer(modifier = Modifier.height(16.dp))
                 ChimpagneButton(
+                    modifier = Modifier.testTag("JoinEventButton"),
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN)},
                     text = {
                       Text(
-                          text = "JOIN A EVENT",
+                          text = "JOIN AN EVENT",
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
                     })
                 Spacer(modifier = Modifier.height(16.dp))
                 ChimpagneButton(
+                    modifier = Modifier.testTag("OrganizeEventButton"),
                     onClick = { /*TODO*/},
                     text = {
                       Text(

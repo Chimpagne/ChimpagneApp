@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.firebase.ui.auth)
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
+    implementation(libs.androidx.navigation.testing)
 
     testImplementation(libs.junit)
 

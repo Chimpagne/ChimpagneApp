@@ -63,5 +63,5 @@ fun ChimpagneTheme(
         DarkColors
       }
 
-  MaterialTheme(colorScheme = colors, content = content)
+  MaterialTheme(colorScheme = colors, typography = ChimpagneTypography, content = content)
 }

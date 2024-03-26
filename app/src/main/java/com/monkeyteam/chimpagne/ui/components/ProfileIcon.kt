@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -23,17 +24,17 @@ data class User(
 )
 
 @Composable
-fun ProfileIcon(user: User?) {
+fun ProfileIcon(user: User?, modifier: Modifier) {
   val painter =
       if (user?.profilePictureURL != null) {
         rememberAsyncImagePainter(model = user.profilePictureURL)
       } else painterResource(id = R.drawable.default_user_profile_picture)
 
-  IconButton(onClick = { /*TODO*/}) {
+  IconButton(onClick = { /*TODO*/}, modifier = Modifier.testTag("ProfileIcon")) {
     Image(
         painter = painter,
         contentDescription = "Profile",
-        modifier = Modifier.size(40.dp).clip(CircleShape),
+        modifier = modifier.size(40.dp).clip(CircleShape),
         contentScale = ContentScale.Crop)
   }
 }
