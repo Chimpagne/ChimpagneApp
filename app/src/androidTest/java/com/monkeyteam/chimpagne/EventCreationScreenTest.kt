@@ -66,6 +66,7 @@ class EventCreationScreenTest {
 
   @Test
   fun testFourthPanel() {
+    // Now we do this to go the correct screen
     composeTestRule.setContent { EventCreationScreen(4) }
 
     val value = "4"
