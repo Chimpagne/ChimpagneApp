@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 object Route {
   const val LOGIN_SCREEN = "Login"
   const val HOME_SCREEN = "Home"
+  const val FIND_AN_EVENT_SCREEN = "FindAnEvent"
+  const val LOADING = "loading"
 }
 
 class NavigationActions(private val navController: NavHostController) {
