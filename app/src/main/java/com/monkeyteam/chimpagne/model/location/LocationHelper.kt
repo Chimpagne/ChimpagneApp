@@ -17,6 +17,8 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import okhttp3.Call
 import okhttp3.Callback
@@ -74,11 +76,11 @@ class LocationHelper {
             })
   }
 
-  fun addMarker(location: Location) {
-    val currentMarkers = _markers.value.orEmpty().toMutableList()
-    currentMarkers.add(location)
-    _markers.value = currentMarkers
-  }
+    suspend fun addMarker(location: Location) = withContext(Dispatchers.Main) {
+        val currentMarkers = _markers.value.orEmpty().toMutableList()
+        currentMarkers.add(location)
+        _markers.value = currentMarkers
+    }
 
   @Preview
   @Composable
