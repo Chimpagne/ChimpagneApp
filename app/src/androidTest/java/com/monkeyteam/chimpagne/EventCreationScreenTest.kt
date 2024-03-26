@@ -78,4 +78,12 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
   }
+
+  @Test
+  fun testUIHelpingFunctions() {
+    composeTestRule.setContent { FourthPanel() }
+    composeTestRule.onNodeWithText("Logistics").assertIsDisplayed()
+    composeTestRule.onNodeWithText("Parking").assertIsDisplayed()
+    composeTestRule.onNodeWithText("Beds").assertIsDisplayed()
+  }
 }
