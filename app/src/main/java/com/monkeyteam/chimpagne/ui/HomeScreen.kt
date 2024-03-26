@@ -22,6 +22,7 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 
@@ -47,7 +48,17 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { /*TODO*/},
                     text = {
                       Text(
-                          text = "MY PARTIES",
+                          text = "MY EVENTS",
+                          fontFamily = ChimpagneFontFamily,
+                          fontWeight = FontWeight.Bold,
+                          fontSize = 30.sp)
+                    })
+                Spacer(modifier = Modifier.height(16.dp))
+                ChimpagneButton(
+                    onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN)},
+                    text = {
+                      Text(
+                          text = "JOIN A EVENT",
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
@@ -57,17 +68,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { /*TODO*/},
                     text = {
                       Text(
-                          text = "JOIN A PARTY",
-                          fontFamily = ChimpagneFontFamily,
-                          fontWeight = FontWeight.Bold,
-                          fontSize = 30.sp)
-                    })
-                Spacer(modifier = Modifier.height(16.dp))
-                ChimpagneButton(
-                    onClick = { /*TODO*/},
-                    text = {
-                      Text(
-                          text = "ORGANIZE A PARTY",
+                          text = "ORGANIZE AN EVENT",
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
