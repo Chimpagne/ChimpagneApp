@@ -148,8 +148,8 @@ fun Subtitle(t: String) {
 // Comment to make a new commit
 @Composable
 fun FourthPanel() {
-    var parkingText by remember { mutableStateOf("") }
-    var bedsText by remember { mutableStateOf("") }
+  var parkingText by remember { mutableStateOf("") }
+  var bedsText by remember { mutableStateOf("") }
   Column(modifier = Modifier.padding(16.dp)) {
     Headline("Logistics")
     Spacer(modifier = Modifier.height(16.dp))
