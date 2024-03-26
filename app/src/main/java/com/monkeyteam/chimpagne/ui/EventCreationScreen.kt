@@ -115,7 +115,7 @@ fun SecondPanel() {
     Spacer(modifier = Modifier.height(16.dp))
     Button(
         onClick = {
-          Toast.makeText(context, "This event has been made public", Toast.LENGTH_SHORT).show()
+          Toast.makeText(context, "This event has been made public !", Toast.LENGTH_SHORT).show()
         }) {
           Text("Make this event public")
         }
