@@ -76,6 +76,7 @@ class LocationHelper {
             })
   }
 
+
   suspend fun addMarker(location: Location) = withContext(Dispatchers.Main){
     val currentMarkers = _markers.value.orEmpty().toMutableList()
     currentMarkers.add(location)
