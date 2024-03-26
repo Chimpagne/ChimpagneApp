@@ -48,7 +48,9 @@ class EventCreationScreenTest {
   @Test
   fun testMakeEventPublicButtonShowsToast() {
     composeTestRule.setContent { SecondPanel() }
-
+    composeTestRule.onNodeWithText("Logistics").assertDoesNotExist()
+    composeTestRule.onNodeWithText("Parking").assertDoesNotExist()
+    composeTestRule.onNodeWithText("Beds").assertDoesNotExist()
     // This will attempt to click the button and create a Toast.
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
@@ -82,6 +84,7 @@ class EventCreationScreenTest {
   @Test
   fun testUIHelpingFunctions() {
     composeTestRule.setContent { FourthPanel() }
+
     composeTestRule.onNodeWithText("Logistics").assertIsDisplayed()
     composeTestRule.onNodeWithText("Parking").assertIsDisplayed()
     composeTestRule.onNodeWithText("Beds").assertIsDisplayed()
