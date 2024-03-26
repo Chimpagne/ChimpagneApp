@@ -18,7 +18,6 @@ import org.junit.runner.RunWith
 class InstrumentEventCreationScreenTest {
   @Test
   fun useAppContext() {
-    // Context of the app under test.
     val appContext = InstrumentationRegistry.getInstrumentation().targetContext
     assertEquals("com.monkeyteam.chimpagne", appContext.packageName)
   }
