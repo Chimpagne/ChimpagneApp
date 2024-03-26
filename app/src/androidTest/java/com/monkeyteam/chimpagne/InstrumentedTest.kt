@@ -82,4 +82,3 @@ class TestLocationHelper{
     assertEquals(listOf(locParis, locBerlin, locMadrid), locationHelper.markers.value)
   }
 }
-
