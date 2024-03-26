@@ -14,8 +14,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,13 +35,26 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+@Composable
+fun BackButton(onClick: () -> Unit) {
+  IconButton(onClick = { onClick() }) {
+    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", modifier = Modifier.padding(12.dp))
+  }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EventCreationScreen(initialPage: Int) {
+  // This screen is made of several panels
+  // The user can go from panel either by swiping left and right,
+  // or by clicking the buttons on the bottom of the screen.
   val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
   Column {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+      BackButton(onClick = {})
+    }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
         0 -> FirstPanel()
@@ -46,6 +63,9 @@ fun EventCreationScreen(initialPage: Int) {
         3 -> FourthPanel()
       }
     }
+
+    // The logic below is to make sure to display the proper panel navigation button
+    // throughout the panels
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
       if (pagerState.currentPage > 0) {
         Button(

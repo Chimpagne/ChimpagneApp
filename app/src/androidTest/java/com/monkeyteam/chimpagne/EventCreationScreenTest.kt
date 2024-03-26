@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -40,11 +41,14 @@ class EventCreationScreenTest {
     // Return to the First Panel
     composeTestRule.onNodeWithText("Previous").performClick()
     composeTestRule.onNodeWithText("Title").assertIsDisplayed()
+
+    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
   }
 
   @Test
   fun testMakeEventPublicButtonShowsToast() {
     composeTestRule.setContent { EventCreationScreen(1) }
+    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
     // Tags (comma-separated)
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
@@ -54,6 +58,15 @@ class EventCreationScreenTest {
     // This will attempt to click the button and create a Toast.
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
+  }
+
+  @Test
+  fun testPanel2() {
+    composeTestRule.setContent { EventCreationScreen(2) }
+    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+
+    composeTestRule.onNodeWithText("Groceries").assertIsDisplayed()
+    composeTestRule.onNodeWithText("Add groceries").assertIsDisplayed()
   }
 
   @Test
@@ -71,6 +84,7 @@ class EventCreationScreenTest {
   fun testFourthPanel() {
     // Now we do this to go the correct screen
     composeTestRule.setContent { EventCreationScreen(4) }
+    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
 
     val value = "4"
     composeTestRule.onNodeWithText("Number of parking spaces").performTextInput(value)
