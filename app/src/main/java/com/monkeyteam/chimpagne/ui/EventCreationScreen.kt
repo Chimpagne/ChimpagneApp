@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -35,9 +34,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EventCreationScreen(initialPage: Int) {
-    val pagerState = rememberPagerState(initialPage=initialPage) { 4 }
+  val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
+  val context = LocalContext.current
   Column {
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
@@ -66,9 +65,12 @@ fun EventCreationScreen(initialPage: Int) {
               Text("Next")
             }
       } else {
-        Button(onClick = {
-            Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
-        }) { Text("Create Event") }
+        Button(
+            onClick = {
+              Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
+            }) {
+              Text("Create Event")
+            }
       }
     }
   }
