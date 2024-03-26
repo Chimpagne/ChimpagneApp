@@ -17,50 +17,49 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class InstrumentEventCreationScreenTest {
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.monkeyteam.chimpagne", appContext.packageName)
-    }
+  @Test
+  fun useAppContext() {
+    // Context of the app under test.
+    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+    assertEquals("com.monkeyteam.chimpagne", appContext.packageName)
+  }
 }
 
 @RunWith(AndroidJUnit4::class)
 class EventCreationScreenTest {
 
-    @get:Rule
-    val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
-    @Test
-    fun testPanels() {
-        // Start on the correct screen
-        composeTestRule.setContent { EventCreationScreen() }
+  @Test
+  fun testPanels() {
+    // Start on the correct screen
+    composeTestRule.setContent { EventCreationScreen() }
 
-        // Move to the Second Panel
-        composeTestRule.onNodeWithText("Next").performClick()
-        composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
+    // Move to the Second Panel
+    composeTestRule.onNodeWithText("Next").performClick()
+    composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
 
-        // Return to the First Panel
-        composeTestRule.onNodeWithText("Previous").performClick()
-        composeTestRule.onNodeWithText("Title").assertIsDisplayed()
-    }
+    // Return to the First Panel
+    composeTestRule.onNodeWithText("Previous").performClick()
+    composeTestRule.onNodeWithText("Title").assertIsDisplayed()
+  }
 
-    @Test
-    fun testMakeEventPublicButtonShowsToast() {
-        composeTestRule.setContent { SecondPanel() }
+  @Test
+  fun testMakeEventPublicButtonShowsToast() {
+    composeTestRule.setContent { SecondPanel() }
 
-        // This will attempt to click the button and create a Toast.
-        // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
-        composeTestRule.onNodeWithText("Make this event public").performClick()
-    }
+    // This will attempt to click the button and create a Toast.
+    // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
+    composeTestRule.onNodeWithText("Make this event public").performClick()
+  }
 
-    @Test
-    fun testInputIntoTextFields() {
-        composeTestRule.setContent { FirstPanel() }
+  @Test
+  fun testInputIntoTextFields() {
+    composeTestRule.setContent { FirstPanel() }
 
-        val title = "Sample Event Title"
-        composeTestRule.onNodeWithText("Title").performTextInput(title)
+    val title = "Sample Event Title"
+    composeTestRule.onNodeWithText("Title").performTextInput(title)
 
-        composeTestRule.onNodeWithText(title).assertIsDisplayed()
-    }
+    composeTestRule.onNodeWithText(title).assertIsDisplayed()
+  }
 }
