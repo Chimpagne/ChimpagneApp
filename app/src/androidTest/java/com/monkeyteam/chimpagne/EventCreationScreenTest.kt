@@ -8,9 +8,6 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
-import com.monkeyteam.chimpagne.ui.FirstPanel
-import com.monkeyteam.chimpagne.ui.FourthPanel
-import com.monkeyteam.chimpagne.ui.SecondPanel
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -34,7 +31,7 @@ class EventCreationScreenTest {
   @Test
   fun testPanels() {
     // Start on the correct screen
-    composeTestRule.setContent { EventCreationScreen() }
+    composeTestRule.setContent { EventCreationScreen(0) }
 
     // Move to the Second Panel
     composeTestRule.onNodeWithText("Next").performClick()
@@ -47,7 +44,8 @@ class EventCreationScreenTest {
 
   @Test
   fun testMakeEventPublicButtonShowsToast() {
-    composeTestRule.setContent { SecondPanel() }
+    composeTestRule.setContent { EventCreationScreen(1) }
+
     composeTestRule.onNodeWithText("Logistics").assertDoesNotExist()
     composeTestRule.onNodeWithText("Parking").assertDoesNotExist()
     composeTestRule.onNodeWithText("Beds").assertDoesNotExist()
@@ -58,7 +56,7 @@ class EventCreationScreenTest {
 
   @Test
   fun testInputIntoTextFields() {
-    composeTestRule.setContent { FirstPanel() }
+    composeTestRule.setContent { EventCreationScreen(0) }
 
     val title = "Sample Event Title"
     composeTestRule.onNodeWithText("Title").performTextInput(title)
@@ -68,7 +66,7 @@ class EventCreationScreenTest {
 
   @Test
   fun testFourthPanel() {
-    composeTestRule.setContent { FourthPanel() }
+    composeTestRule.setContent { EventCreationScreen(4) }
 
     val value = "4"
     composeTestRule.onNodeWithText("Number of parking spaces").performTextInput(value)
@@ -79,12 +77,13 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("Number of beds").performTextInput(valueBed)
 
     composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
+
+    composeTestRule.onNodeWithText("Create Event").performClick()
   }
 
   @Test
   fun testUIHelpingFunctions() {
-    composeTestRule.setContent { FourthPanel() }
-
+    composeTestRule.setContent { EventCreationScreen(4) }
     composeTestRule.onNodeWithText("Logistics").assertIsDisplayed()
     composeTestRule.onNodeWithText("Parking").assertIsDisplayed()
     composeTestRule.onNodeWithText("Beds").assertIsDisplayed()

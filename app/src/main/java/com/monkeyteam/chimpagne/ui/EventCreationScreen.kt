@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -19,7 +20,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,9 +34,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EventCreationScreen() {
-  val pagerState = rememberPagerState { 4 }
+fun EventCreationScreen(initialPage: Int) {
+    val pagerState = rememberPagerState(initialPage=initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
   Column {
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
@@ -48,7 +49,7 @@ fun EventCreationScreen() {
     }
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
       if (pagerState.currentPage > 0) {
-        TextButton(
+        Button(
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
             }) {
@@ -58,14 +59,16 @@ fun EventCreationScreen() {
         Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
       }
       if (pagerState.currentPage < 3) {
-        TextButton(
+        Button(
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
             }) {
               Text("Next")
             }
       } else {
-        TextButton(onClick = { /* Create event logic */}) { Text("Create Event") }
+        Button(onClick = {
+            Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
+        }) { Text("Create Event") }
       }
     }
   }
@@ -105,7 +108,7 @@ fun SecondPanel() {
 
   val context = LocalContext.current
   Column(modifier = Modifier.padding(16.dp)) {
-    Headline(t = "More event infos")
+    Text("More event infos", style = MaterialTheme.typography.headlineSmall)
     Spacer(modifier = Modifier.height(16.dp))
     OutlinedTextField(
         value = tagsText,
@@ -125,7 +128,7 @@ fun SecondPanel() {
 @Composable
 fun ThirdPanel() {
   Column(modifier = Modifier.padding(16.dp)) {
-    Headline(t = "Groceries")
+    Text("Groceries", style = MaterialTheme.typography.headlineSmall)
     Spacer(modifier = Modifier.height(16.dp))
     Button(onClick = { /* Add groceries logic */}) { Text("Add groceries") }
     Spacer(modifier = Modifier.height(16.dp))
@@ -135,26 +138,15 @@ fun ThirdPanel() {
   }
 }
 
-@Composable
-fun Headline(t: String) {
-  Text(t, style = MaterialTheme.typography.headlineSmall)
-}
-
-@Composable
-fun Subtitle(t: String) {
-
-  Text(t, style = MaterialTheme.typography.bodyMedium)
-}
 // Comment to make a new commit
 @Composable
 fun FourthPanel() {
   var parkingText by remember { mutableStateOf("") }
   var bedsText by remember { mutableStateOf("") }
   Column(modifier = Modifier.padding(16.dp)) {
-    Headline("Logistics")
+    Text("Logistics", style = MaterialTheme.typography.headlineSmall)
     Spacer(modifier = Modifier.height(16.dp))
-
-    Subtitle("Parking")
+    Text("Parking", style = MaterialTheme.typography.bodyMedium)
 
     OutlinedTextField(
         value = parkingText,
@@ -164,7 +156,7 @@ fun FourthPanel() {
         modifier = Modifier.fillMaxWidth())
 
     Spacer(modifier = Modifier.height(16.dp))
-    Subtitle("Beds")
+    Text("Beds", style = MaterialTheme.typography.bodyMedium)
     OutlinedTextField(
         value = bedsText,
         onValueChange = { bedsText = it },

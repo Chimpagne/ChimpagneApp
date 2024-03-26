@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
             composable("loading") { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
-            composable(Route.EVENT_CREATION_SCREEN) { EventCreationScreen() }
+            composable(Route.EVENT_CREATION_SCREEN) { EventCreationScreen(0) }
             composable(Route.FIND_AN_EVENT_SCREEN) { FindAnEventScreen(navObject = navActions) }
           }
         }
