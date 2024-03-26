@@ -28,7 +28,9 @@ class InstrumentEventCreationScreenTest {
 @RunWith(AndroidJUnit4::class)
 class EventCreationScreenTest {
 
-    @get:Rule val composeTestRule = createComposeRule()
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
     @Test
     fun testPanels() {
 
