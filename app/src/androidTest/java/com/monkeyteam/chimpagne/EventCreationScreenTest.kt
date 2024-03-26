@@ -33,7 +33,7 @@ class EventCreationScreenTest {
 
     @Test
     fun testPanels() {
-
+        // Start on the correct screen
         composeTestRule.setContent { EventCreationScreen() }
 
         // Move to the Second Panel
