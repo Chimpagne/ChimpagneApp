@@ -67,9 +67,9 @@ class AccountCreationUITest {
   }
 }
 
-class TestLocationHelper{
+class TestLocationHelper {
   @Test
-  fun check_adding_markers_works() = runBlocking{
+  fun check_adding_markers_works() = runBlocking {
     val locationHelper = LocationHelper()
     val locParis = Location("Paris", 48.8566, 2.3522)
     val locBerlin = Location("Berlin", 52.5200, 13.4050)
