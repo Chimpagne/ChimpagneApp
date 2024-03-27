@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.launch
 
@@ -36,7 +38,9 @@ fun FindAnEventScreen(navObject: NavigationActions) {
 
         if (showBottomSheet) {
           ModalBottomSheet(
-              onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
+              modifier = Modifier.padding(contentPadding),
+              onDismissRequest = { showBottomSheet = false },
+              sheetState = sheetState) {
                 // Sheet content
                 Button(
                     onClick = {
