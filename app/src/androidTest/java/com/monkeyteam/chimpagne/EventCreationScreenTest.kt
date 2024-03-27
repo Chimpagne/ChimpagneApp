@@ -44,6 +44,12 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
   }
 
+
+  @Test
+  fun testPanel1() {
+    composeTestRule.setContent { EventCreationScreen(1) }
+    composeTestRule.onNodeWithText("Tags (comma-separated)").assertIsDisplayed()
+  }
   @Test
   fun testMakeEventPublicButtonShowsToast() {
     composeTestRule.setContent { EventCreationScreen(1) }
@@ -86,11 +92,13 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
 
     val value = "4"
+    composeTestRule.onNodeWithText("Number of parking spaces").assertExists()
     composeTestRule.onNodeWithText("Number of parking spaces").performTextInput(value)
 
     composeTestRule.onNodeWithText(value).assertIsDisplayed()
 
     val valueBed = "2"
+    composeTestRule.onNodeWithText("Number of beds").assertExists()
     composeTestRule.onNodeWithText("Number of beds").performTextInput(valueBed)
 
     composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
