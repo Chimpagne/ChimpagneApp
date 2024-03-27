@@ -44,12 +44,12 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
   }
 
-
   @Test
   fun testPanel1() {
     composeTestRule.setContent { EventCreationScreen(1) }
     composeTestRule.onNodeWithText("Tags (comma-separated)").assertIsDisplayed()
   }
+
   @Test
   fun testMakeEventPublicButtonShowsToast() {
     composeTestRule.setContent { EventCreationScreen(1) }
