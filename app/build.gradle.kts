@@ -92,6 +92,8 @@ dependencies {
 
     implementation(libs.maps.compose)
 
+    implementation(libs.coil.compose)
+
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {

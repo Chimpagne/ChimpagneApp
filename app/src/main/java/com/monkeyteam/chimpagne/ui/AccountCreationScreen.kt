@@ -1,5 +1,10 @@
 package com.monkeyteam.chimpagne.ui.theme
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,15 +33,32 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 
 @Composable
-fun AccountCreation() {
+fun AccountCreation(navObject: NavigationActions) {
+
+  var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
   var firstName by remember { mutableStateOf("") }
   var lastName by remember { mutableStateOf("") }
   var preferredLanguageEnglish by remember { mutableStateOf(false) }
   var location by remember { mutableStateOf("") }
   val languageStrings = getLanguageStrings(preferredLanguageEnglish)
+
+  val pickProfilePicture =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.PickVisualMedia(),
+          onResult = { uri: Uri? ->
+            if (uri != null) {
+              /*TODO add uri to account*/
+              Log.d("AccountCreation", "Profile picture URI: $uri")
+              selectedImageUri = uri
+            } else {
+              Log.d("AccountCreation", "Profile picture URI is null")
+            }
+          })
 
   Column(
       modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -50,11 +72,21 @@ fun AccountCreation() {
             modifier = Modifier.testTag("accountCreationLabel"))
         Spacer(modifier = Modifier.padding(16.dp))
         IconButton(
-            onClick = { /* TODO showPhotoChooser*/},
+            onClick = {
+              pickProfilePicture.launch(
+                  PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            },
             modifier = Modifier.size(100.dp).border(1.dp, Color.Black, CircleShape)) {
-              Icon(
-                  painter = painterResource(id = R.drawable.ic_placeholder_profile),
-                  contentDescription = "Placeholder for user icon")
+              if (selectedImageUri == null) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_placeholder_profile),
+                    contentDescription = "Placeholder for user icon")
+              } else {
+                AsyncImage(
+                    model = selectedImageUri,
+                    contentDescription = "Profile picture",
+                )
+              }
             }
         Spacer(modifier = Modifier.padding(16.dp))
         OutlinedTextField(
@@ -98,7 +130,10 @@ fun AccountCreation() {
         }
         Spacer(modifier = Modifier.padding(16.dp))
         Button(
-            onClick = { /*TODO: createAccount()*/},
+            onClick = {
+              /*TODO: createAccount()*/
+              navObject.navigateTo("Home")
+            },
             modifier = Modifier.width(210.dp).height(50.dp).testTag("createAccountButton")) {
               Icon(
                   painter = painterResource(id = R.drawable.ic_logout),

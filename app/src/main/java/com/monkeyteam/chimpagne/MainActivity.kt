@@ -19,6 +19,7 @@ import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.ui.viewmodel.AuthViewModel
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity() {
                 navController.graph.setStartDestination(Route.HOME_SCREEN)
               }
             }
+            composable(Route.ACCOUNT_CREATION_SCREEN) { AccountCreation(navObject = navActions) }
 
             composable("loading") { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }

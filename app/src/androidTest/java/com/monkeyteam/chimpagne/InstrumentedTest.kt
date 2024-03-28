@@ -5,10 +5,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationHelper
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -38,7 +40,11 @@ class AccountCreationUITest {
 
   @Test
   fun testLanguageChangeWorks() {
-    composeTestRule.setContent { AccountCreation() }
+
+    composeTestRule.setContent {
+      val navObject = NavigationActions(rememberNavController())
+      AccountCreation(navObject)
+    }
 
     composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Créer votre compte")
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("Prénom")
@@ -54,8 +60,11 @@ class AccountCreationUITest {
   }
 
   @Test
-  fun textInputWorks() {
-    composeTestRule.setContent { AccountCreation() }
+  fun testTextInputWorks() {
+    composeTestRule.setContent {
+      val navObject = NavigationActions(rememberNavController())
+      AccountCreation(navObject)
+    }
 
     composeTestRule.onNodeWithTag("firstNameTextField").performTextInput("John")
     composeTestRule.onNodeWithTag("lastNameTextField").performTextInput("Doe")
