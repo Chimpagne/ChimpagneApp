@@ -55,7 +55,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     })
                 Spacer(modifier = Modifier.height(16.dp))
                 ChimpagneButton(
-                    onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN)},
+                    onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = {
                       Text(
                           text = "JOIN A EVENT",
