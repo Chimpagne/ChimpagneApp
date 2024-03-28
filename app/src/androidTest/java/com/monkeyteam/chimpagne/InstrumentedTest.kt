@@ -11,9 +11,15 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+<<<<<<< HEAD
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+=======
+import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.location.LocationHelper
+>>>>>>> main
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -70,6 +76,7 @@ class AccountCreationUITest {
   }
 }
 
+<<<<<<< HEAD
 @RunWith(AndroidJUnit4::class)
 class HomeScreenUITest {
   @get:Rule val composeTestRule = createComposeRule()
@@ -90,5 +97,20 @@ class HomeScreenUITest {
     composeTestRule.onNodeWithTag("MyEventsButton").isDisplayed()
     composeTestRule.onNodeWithTag("JoinEventButton").isDisplayed()
     composeTestRule.onNodeWithTag("OrganizeEventButton").isDisplayed()
+=======
+class TestLocationHelper {
+  @Test
+  fun check_adding_markers_works() = runBlocking {
+    val locationHelper = LocationHelper()
+    val locParis = Location("Paris", 48.8566, 2.3522)
+    val locBerlin = Location("Berlin", 52.5200, 13.4050)
+    val locMadrid = Location("Madrid", 40.4168, 3.7038)
+
+    locationHelper.addMarker(locParis)
+    locationHelper.addMarker(locBerlin)
+    locationHelper.addMarker(locMadrid)
+
+    assertEquals(listOf(locParis, locBerlin, locMadrid), locationHelper.markers.value)
+>>>>>>> main
   }
 }
