@@ -81,7 +81,6 @@ class HomeScreenUITest {
       val navActions = NavigationActions(navController)
       HomeScreen(navActions)
     }
-
     composeTestRule.onNodeWithTag("MyEventsButton").assertTextContains("MY EVENTS")
     composeTestRule.onNodeWithTag("JoinEventButton").assertTextContains("JOIN AN EVENT")
     composeTestRule.onNodeWithTag("OrganizeEventButton").assertTextContains("ORGANIZE AN EVENT")

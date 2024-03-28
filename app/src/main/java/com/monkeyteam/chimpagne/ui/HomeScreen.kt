@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -38,6 +39,9 @@ fun HomeScreen(navObject: NavigationActions) {
         topBar = {
           TopAppBar(
               title = { Text("") },
+              navigationIcon = {
+                GoBackButton(navigationActions = navObject, modifier = Modifier.testTag("Go Back"))
+              },
               actions = {
                 ProfileIcon(user = dummyUser, modifier = Modifier.testTag("ProfileIcon"))
               })
