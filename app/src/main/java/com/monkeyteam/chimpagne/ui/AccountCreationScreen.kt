@@ -29,10 +29,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 
 @Composable
-fun AccountCreation(navObject: NavigationActions) {
+fun AccountCreation() {
   var firstName by remember { mutableStateOf("") }
   var lastName by remember { mutableStateOf("") }
   var preferredLanguageEnglish by remember { mutableStateOf(false) }
@@ -99,7 +98,7 @@ fun AccountCreation(navObject: NavigationActions) {
         }
         Spacer(modifier = Modifier.padding(16.dp))
         Button(
-            onClick = { navObject.navigateTo("Home") /*TODO: createAccount()*/ },
+            onClick = { /*TODO: createAccount()*/},
             modifier = Modifier.width(210.dp).height(50.dp).testTag("createAccountButton")) {
               Icon(
                   painter = painterResource(id = R.drawable.ic_logout),
