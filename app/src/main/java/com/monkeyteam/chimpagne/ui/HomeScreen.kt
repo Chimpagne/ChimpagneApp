@@ -36,8 +36,11 @@ fun HomeScreen(navObject: NavigationActions) {
   ChimpagneTheme {
     Scaffold(
         topBar = {
-          TopAppBar(title = { Text("") },
-              actions = { ProfileIcon(user = dummyUser, modifier = Modifier.testTag("ProfileIcon")) })
+          TopAppBar(
+              title = { Text("") },
+              actions = {
+                ProfileIcon(user = dummyUser, modifier = Modifier.testTag("ProfileIcon"))
+              })
         }) { innerPadding ->
           Column(
               modifier =
@@ -59,7 +62,7 @@ fun HomeScreen(navObject: NavigationActions) {
                 Spacer(modifier = Modifier.height(16.dp))
                 ChimpagneButton(
                     modifier = Modifier.testTag("JoinEventButton"),
-                    onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN)},
+                    onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = {
                       Text(
                           text = "JOIN AN EVENT",
