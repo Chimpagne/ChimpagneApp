@@ -25,7 +25,6 @@ fun MapPreview() {
 
 @Composable
 fun MapContainer(modifier: Modifier, locationHelper: LocationHelper = LocationHelper()) {
-  modifier.fillMaxSize()
 
   val markers by locationHelper.markers.collectAsState()
   val latMap by remember { mutableDoubleStateOf(46.5196) }
@@ -37,7 +36,7 @@ fun MapContainer(modifier: Modifier, locationHelper: LocationHelper = LocationHe
 
   GoogleMap(
       cameraPositionState = cameraPositionState,
-      modifier = modifier,
+      modifier = modifier.fillMaxSize(),
       uiSettings = MapUiSettings(zoomControlsEnabled = false)) {
         for (marker in markers) {
           Marker(
