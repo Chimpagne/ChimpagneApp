@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.geofire.android.common)
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
+    implementation(libs.maps.compose)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockwebserver)

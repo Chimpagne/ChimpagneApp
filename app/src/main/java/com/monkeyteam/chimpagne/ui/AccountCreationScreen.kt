@@ -26,12 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 
-@Preview
 @Composable
 fun AccountCreation() {
   var firstName by remember { mutableStateOf("") }
@@ -100,7 +98,7 @@ fun AccountCreation() {
         }
         Spacer(modifier = Modifier.padding(16.dp))
         Button(
-            onClick = { /*TODO createAccount*/},
+            onClick = { /*TODO: createAccount()*/},
             modifier = Modifier.width(210.dp).height(50.dp).testTag("createAccountButton")) {
               Icon(
                   painter = painterResource(id = R.drawable.ic_logout),
