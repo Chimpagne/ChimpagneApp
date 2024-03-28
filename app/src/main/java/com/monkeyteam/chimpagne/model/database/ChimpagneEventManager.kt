@@ -36,9 +36,9 @@ class ChimpagneEventManager(private val events: CollectionReference) {
     fun getAllEventsByFilterAroundLocation(
         center: Location,
         radiusInM: Double,
-        filter: Filter,
         onSuccess: (List<ChimpagneEvent>) -> Unit,
-        onFailure: (Exception) -> Unit
+        onFailure: (Exception) -> Unit,
+        filter: Filter? = null,
     ) {
         // https://firebase.google.com/docs/firestore/solutions/geoqueries?hl=en#kotlin+ktx
 
@@ -49,8 +49,14 @@ class ChimpagneEventManager(private val events: CollectionReference) {
         val bounds = GeoFireUtils.getGeoHashQueryBounds(c, radiusInM)
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
         for (b in bounds) {
-            val q = events.where(filter).orderBy("location.geohash").startAt(b.startHash).endAt(b.endHash)
-            tasks.add(q.get())
+
+            if (filter != null) {
+                val q = events.where(filter).orderBy("location.geohash").startAt(b.startHash).endAt(b.endHash)
+                tasks.add(q.get())
+            } else {
+                val q = events.orderBy("location.geohash").startAt(b.startHash).endAt(b.endHash)
+                tasks.add(q.get())
+            }
         }
 
         // Collect all the query results together into a single list
@@ -84,7 +90,6 @@ class ChimpagneEventManager(private val events: CollectionReference) {
         id: String, onSuccess: (ChimpagneEvent?) -> Unit, onFailure: (Exception) -> Unit
     ) {
         events.document(id).get().addOnSuccessListener {
-            println(it.get("date"))
             onSuccess(it.toObject<ChimpagneEvent>())
         }.addOnFailureListener {
             onFailure(it)
