@@ -24,7 +24,7 @@ fun MapPreview() {
 }
 
 @Composable
-fun MapContainer(modifier: Modifier, locationHelper: LocationHelper = LocationHelper()) {
+fun MapContainer(modifier: Modifier = Modifier, locationHelper: LocationHelper = LocationHelper()) {
 
   val markers by locationHelper.markers.collectAsState()
   val latMap by remember { mutableDoubleStateOf(46.5196) }

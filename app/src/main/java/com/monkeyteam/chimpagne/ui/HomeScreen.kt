@@ -32,7 +32,7 @@ fun HomeScreen(navObject: NavigationActions) {
   // Dummy user Data
   val dummyUser = User("0", "Lora", null)
 
-  ChimpagneTheme {
+  ChimpagneTheme { //This wrap is redundant, already wrapped by mainActivity
     Scaffold(
         topBar = {
           TopAppBar(title = { Text("") }, actions = { ProfileIcon(user = dummyUser) })
@@ -58,7 +58,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = {
                       Text(
-                          text = "JOIN A EVENT",
+                          text = "JOIN AN EVENT",
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
