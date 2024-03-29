@@ -66,4 +66,10 @@ class LocationHelper {
     currentMarkers.add(location)
     _markers.value = currentMarkers
   }
+
+  fun removeMarker(location: Location) {
+    val currentMarkers = _markers.value.toMutableList()
+    currentMarkers.removeAll { it.name == location.name }
+    _markers.value = currentMarkers
+  }
 }

@@ -24,7 +24,11 @@ fun MapPreview() {
 }
 
 @Composable
-fun MapContainer(modifier: Modifier = Modifier, locationHelper: LocationHelper = LocationHelper()) {
+fun MapContainer(
+    modifier: Modifier = Modifier,
+    locationHelper: LocationHelper = LocationHelper(),
+    expandBottomSheet: () -> Unit = {}
+) {
 
   val markers by locationHelper.markers.collectAsState()
   val latMap by remember { mutableDoubleStateOf(46.5196) }
@@ -37,11 +41,19 @@ fun MapContainer(modifier: Modifier = Modifier, locationHelper: LocationHelper =
   GoogleMap(
       cameraPositionState = cameraPositionState,
       modifier = modifier.fillMaxSize(),
-      uiSettings = MapUiSettings(zoomControlsEnabled = false)) {
+      uiSettings =
+          MapUiSettings(
+              zoomControlsEnabled = false,
+              myLocationButtonEnabled = false,
+              mapToolbarEnabled = false)) {
         for (marker in markers) {
           Marker(
               state = rememberMarkerState(position = LatLng(marker.latitude, marker.longitude)),
-              title = marker.name)
+              title = marker.name,
+              onClick = {
+                expandBottomSheet()
+                true
+              })
         }
       }
 }
