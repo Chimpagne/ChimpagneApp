@@ -32,7 +32,7 @@ fun HomeScreen(navObject: NavigationActions) {
   // Dummy user Data
   val dummyUser = User("0", "Lora", null)
 
-  ChimpagneTheme { //This wrap is redundant, already wrapped by mainActivity
+  ChimpagneTheme { // This wrap is redundant, already wrapped by mainActivity
     Scaffold(
         topBar = {
           TopAppBar(title = { Text("") }, actions = { ProfileIcon(user = dummyUser) })

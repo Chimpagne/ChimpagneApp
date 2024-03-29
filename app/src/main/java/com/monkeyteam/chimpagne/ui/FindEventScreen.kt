@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,11 +26,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,18 +44,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter.*
 import kotlinx.coroutines.launch
 
 object FindEventScreens {
@@ -87,6 +95,15 @@ fun MainFindEventScreen(navObject: NavigationActions) {
 @ExperimentalMaterial3Api
 @Composable
 fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit) {
+
+  var showDatePicker by remember { mutableStateOf(false) }
+  val datePickerState = rememberDatePickerState()
+
+  val onDateSelected = { date: LocalDateTime ->
+    showDatePicker = false
+    // should reformat date for the text field
+  }
+
   Scaffold(
       topBar = {
         TopAppBar(
@@ -102,89 +119,109 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
             onClick = { onSearchClick() },
             modifier =
                 Modifier.fillMaxWidth().padding(8.dp).height(56.dp), // Typical height for buttons
-            shape = MaterialTheme.shapes.medium) {
+            shape = MaterialTheme.shapes.extraLarge) {
               Icon(Icons.Rounded.Search, contentDescription = "Search")
               Spacer(Modifier.width(8.dp))
-              Text("Search")
+              Text("Search", style = MaterialTheme.typography.bodyLarge)
             }
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
               modifier =
                   Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
-              horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Enter Keywords",
-                    modifier = Modifier.align(Alignment.Start).padding(8.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                // Keyword search text field
+              horizontalAlignment = Alignment.Start) {
+                FindEventLegend("Enter Event Keywords")
+
+                Spacer(Modifier.height(16.dp))
+
                 TextField(
-                    value = "", // This should be a state you're managing
+                    value = "",
                     onValueChange = {},
                     placeholder = { Text("Search...") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
-                Spacer(Modifier.height(8.dp))
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .background(
+                                shape = MaterialTheme.shapes.extraLarge,
+                                color = MaterialTheme.colorScheme.surfaceVariant))
 
-                Text(
-                    text = "Add Tags to your Search",
-                    modifier = Modifier.align(Alignment.Start).padding(8.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                // Tags text field
+                Spacer(Modifier.height(40.dp))
+
+                FindEventLegend("Add Tags to your search")
+                Spacer(Modifier.height(16.dp))
+
                 TextField(
-                    value = "", // This should be a state you're managing
+                    value = "",
                     onValueChange = {},
                     placeholder = { Text("Enter a tag...") },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
-                Spacer(Modifier.height(8.dp))
-
-                // Tags row
-                Row(modifier = Modifier.padding(8.dp)) {
-                  Chip(label = "Tags 1")
-                  Spacer(Modifier.width(8.dp))
-                  Chip(label = "Tags 2")
-                  Spacer(Modifier.width(8.dp))
-                  Chip(label = "Tags 1")
-                }
+                    modifier = Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = "Select the date of the event",
-                    modifier = Modifier.align(Alignment.Start).padding(8.dp),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                // Date picker field
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                  Icon(Icons.Rounded.CalendarToday, contentDescription = "Select date")
+                Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                  TagChip("Tags 1")
                   Spacer(Modifier.width(8.dp))
-                  Text("5 may 2024") // This should be a state you're managing
+                  TagChip("Tags 2")
+                  Spacer(Modifier.width(8.dp))
+                  TagChip("Tags 3")
                 }
+                Spacer(Modifier.height(40.dp))
+
+                FindEventLegend("Select the date of the event")
 
                 Spacer(Modifier.height(16.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier =
+                        Modifier.align(Alignment.CenterHorizontally)
+                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(52.dp))
+                            .background(
+                                shape = RoundedCornerShape(52.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant)
+                            .clickable { showDatePicker = true }
+                            .padding(horizontal = 24.dp, vertical = 16.dp)) {
+                      Icon(Icons.Rounded.CalendarToday, contentDescription = "Select date")
+                      Spacer(Modifier.width(8.dp))
+                      Text("5 may 2024") // date picker
+                }
               }
         }
+      }
+  // Show date picker dialog when showDatePicker is true
+  if (showDatePicker) {
+    FindEventDatePicker(datePickerState) { showDatePicker = false }
+  }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+fun FindEventDatePicker(datePickerState: DatePickerState, onDismissRequest: () -> Unit) {
+  DatePickerDialog(
+      onDismissRequest = { onDismissRequest() },
+      confirmButton = {
+        Button(
+            onClick = {
+              onDismissRequest()
+              // Call onDateSelected with the date from datePickerState
+              // This should be a LocalDateTime constructed from the selected date millis
+            }) {
+              Text("OK")
+            }
+      }) {
+        DatePicker(
+            state = datePickerState,
+            // Add more customization as needed
+        )
       }
 }
 
 @Composable
-fun Chip(label: String) {
-  Surface(
-      shape = MaterialTheme.shapes.small,
-      color = MaterialTheme.colorScheme.surfaceVariant,
-      contentColor = MaterialTheme.colorScheme.onSurfaceVariant) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
-              Checkbox(
-                  checked = true, // This should be a state you're managing
-                  onCheckedChange = null // Provide an actual lambda to handle check changes
-                  )
-              Spacer(Modifier.width(4.dp))
-              Text(text = label)
-            }
-      }
+fun FindEventLegend(text: String) {
+  Text(
+      text = text,
+      modifier = Modifier.padding(8.dp),
+      style = MaterialTheme.typography.titleLarge,
+  )
 }
 
 @ExperimentalMaterial3Api
@@ -258,22 +295,26 @@ fun TagsRow() {
           Modifier.horizontalScroll(rememberScrollState())
               .padding(start = 8.dp, end = 0.dp, bottom = 8.dp, top = 8.dp)) {
         for (tag in tags) {
-          Tag(text = tag, shape = RoundedCornerShape(50), modifier = Modifier.padding(end = 8.dp))
+          TagChip(text = tag)
         }
       }
 }
 
 @Composable
-fun Tag(text: String, shape: Shape, modifier: Modifier = Modifier) {
-  Surface(shape = shape, modifier = modifier) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier =
-            Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                .wrapContentWidth(Alignment.CenterHorizontally))
-  }
+fun TagChip(text: String) {
+  Surface(
+      modifier = Modifier.padding(end = 8.dp),
+      shape = MaterialTheme.shapes.extraLarge,
+      color = MaterialTheme.colorScheme.surfaceVariant,
+      contentColor = MaterialTheme.colorScheme.onSurfaceVariant) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier =
+                Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally))
+      }
 }
 
 @Composable
