@@ -12,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 
 // test class so that it compiles with my code, won't actually be here and probably will have
 // more attributes
@@ -23,13 +24,13 @@ data class User(
 )
 
 @Composable
-fun ProfileIcon(user: User?) {
+fun ProfileIcon(user: User?, onClick: () -> Unit = {}) {
   val painter =
       if (user?.profilePictureURL != null) {
         rememberAsyncImagePainter(model = user.profilePictureURL)
       } else painterResource(id = R.drawable.default_user_profile_picture)
 
-  IconButton(onClick = { /*TODO*/}) {
+  IconButton(onClick = onClick) {
     Image(
         painter = painter,
         contentDescription = "Profile",
