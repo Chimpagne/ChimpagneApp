@@ -31,6 +31,6 @@ fun endsAfterFilter(timestamp: Timestamp): Filter {
   return Filter.greaterThan("endsAtTimestamp", timestamp)
 }
 
-fun onlyPublic(): Filter{
+fun onlyPublic(): Filter {
   return Filter.equalTo("isPublic", true)
 }
