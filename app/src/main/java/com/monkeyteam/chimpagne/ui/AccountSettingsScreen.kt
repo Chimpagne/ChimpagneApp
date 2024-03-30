@@ -112,7 +112,7 @@ fun AccountSettings(navObject: NavigationActions) {
 
               Spacer(modifier = Modifier.height(8.dp))
               // TODO has to be changed to log out
-              Button(onClick = {/*navObject.navigateTo(Route.ACCOUNT_CREATION_SCREEN)*/}) {
+              Button(onClick = { /*navObject.navigateTo(Route.ACCOUNT_CREATION_SCREEN)*/}) {
                 Text("Log Out")
               }
             }
