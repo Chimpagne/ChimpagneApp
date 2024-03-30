@@ -35,7 +35,13 @@ fun HomeScreen(navObject: NavigationActions) {
   ChimpagneTheme {
     Scaffold(
         topBar = {
-          TopAppBar(title = { Text("") }, actions = { ProfileIcon(user = dummyUser) })
+          TopAppBar(
+              title = { Text("") },
+              actions = {
+                ProfileIcon(
+                    user = dummyUser,
+                    onClick = { navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN) })
+              })
         }) { innerPadding ->
           Column(
               modifier =

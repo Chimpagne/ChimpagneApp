@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne
 
+import AccountSettings
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.monkeyteam.chimpagne.ui.AccountEdit
 import com.monkeyteam.chimpagne.ui.FindAnEventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
@@ -68,6 +70,8 @@ class MainActivity : ComponentActivity() {
               }
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) { AccountCreation(navObject = navActions) }
+            composable(Route.ACCOUNT_SETTINGS_SCREEN) { AccountSettings(navObject = navActions) }
+            composable(Route.ACCOUNT_EDIT_SCREEN) { AccountEdit(navObject = navActions) }
 
             composable("loading") { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }

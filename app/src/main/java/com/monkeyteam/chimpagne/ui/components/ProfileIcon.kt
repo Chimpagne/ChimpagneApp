@@ -12,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 
 // test class so that it compiles with my code, won't actually be here and probably will have
 // more attributes
