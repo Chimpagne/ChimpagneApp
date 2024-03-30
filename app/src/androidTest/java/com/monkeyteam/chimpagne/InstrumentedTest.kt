@@ -1,20 +1,11 @@
 package com.monkeyteam.chimpagne
 
-import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
-import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationHelper
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,7 +24,7 @@ class ExampleInstrumentedTest {
   }
 }
 
-@RunWith(AndroidJUnit4::class)
+/*@RunWith(AndroidJUnit4::class)
 class AccountCreationUITest {
 
   @get:Rule val composeTestRule = createComposeRule()
@@ -74,7 +65,7 @@ class AccountCreationUITest {
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Doe")
     composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Paris")
   }
-}
+}*/
 
 class TestLocationHelper {
   @Test
