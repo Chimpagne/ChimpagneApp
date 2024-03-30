@@ -89,11 +89,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(platform(libs.firebase.bom.v3280))
+    implementation(platform(libs.firebase.bom))
     implementation(libs.okhttp)
 
     // Co-routine image loader (image loading library)
-    implementation(libs.coil.compose.v260)
+    implementation(libs.coil.compose)
     testImplementation(libs.mockwebserver)
 
     implementation(libs.maps.compose)
