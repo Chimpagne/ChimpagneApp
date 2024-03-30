@@ -3,8 +3,6 @@ package com.monkeyteam.chimpagne
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.location.LocationHelper
-import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
