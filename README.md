@@ -45,6 +45,6 @@ Scrum Master Sprint 2 : Clément
 ## How to setup the project on your device
 
 1. Clone the repo
-2. Add this to secrets.properties (not local.properties)
+2. Add this to secrets.properties (not local.properties and NOT secrets.default.properties)
 
     ```MAPS_API_KEY=YOUR_API_KEY_HERE```
