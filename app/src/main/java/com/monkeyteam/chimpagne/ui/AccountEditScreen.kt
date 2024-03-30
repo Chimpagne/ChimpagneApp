@@ -52,7 +52,7 @@ fun AccountEdit(navObject: NavigationActions) {
           })
 
   AccountChangeBody(
-      topBarText = "Edit Account",
+      topBarText = languageStrings.editAccount,
       hasBackButton = true,
       selectedImageUri = selectedImageUri,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },

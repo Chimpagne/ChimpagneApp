@@ -76,17 +76,15 @@ fun LanguageSwitch(
 @Composable
 fun SaveChangesButton(
     onClick: () -> Unit,
-    text: String = "Save Changes",
+    text: String,
     iconId: Int = R.drawable.ic_logout,
     contentDescription: String? = "Save icon",
 ) {
-  Button(
-      onClick = onClick,
-      modifier = Modifier.width(210.dp).height(50.dp).testTag("saveChangesButton")) {
-        Icon(painter = painterResource(id = iconId), contentDescription = contentDescription)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text, modifier = Modifier.testTag("buttonText"))
-      }
+  Button(onClick = onClick, modifier = Modifier.width(210.dp).height(50.dp)) {
+    Icon(painter = painterResource(id = iconId), contentDescription = contentDescription)
+    Spacer(modifier = Modifier.width(8.dp))
+    Text(text, modifier = Modifier.testTag("saveChangesButton"))
+  }
 }
 
 @Composable
@@ -133,7 +131,10 @@ fun AccountChangeBody(
                   modifier = Modifier.fillMaxWidth(),
                   verticalAlignment = Alignment.CenterVertically,
                   horizontalArrangement = Arrangement.Center) {
-                    Text(text = topBarText, style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = topBarText,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.testTag("accountCreationLabel"))
                   }
             },
             colors =
@@ -157,22 +158,24 @@ fun AccountChangeBody(
               Spacer(modifier = Modifier.height(10.dp))
               ProfileImage(imageUri = selectedImageUri, onClick = onPickImage)
               TextInputField(
-                  modifier = Modifier.fillMaxWidth(),
+                  modifier = Modifier.fillMaxWidth().testTag("firstNameTextField"),
                   label = firstNameLabel,
                   value = firstName,
                   onValueChange = firstNameChange)
               TextInputField(
-                  modifier = Modifier.fillMaxWidth(),
+                  modifier = Modifier.fillMaxWidth().testTag("lastNameTextField"),
                   label = lastNameLabel,
                   value = lastName,
                   onValueChange = lastNameChange)
               TextInputField(
-                  modifier = Modifier.fillMaxWidth(),
+                  modifier = Modifier.fillMaxWidth().testTag("locationTextField"),
                   label = locationLabel,
                   value = location,
                   onValueChange = locationChange)
               LanguageSwitch(
-                  isEnglish = preferredLanguageEnglish, onToggleLanguage = onLanguageToggle)
+                  modifier = Modifier.testTag("changeLanguageSwitch"),
+                  isEnglish = preferredLanguageEnglish,
+                  onToggleLanguage = onLanguageToggle)
               SaveChangesButton(
                   onClick = { navObject.navigateTo(to_navigate_next) },
                   text = commitButtontext,
@@ -184,6 +187,7 @@ fun AccountChangeBody(
 
 data class LanguageStrings(
     val createAccount: String,
+    val editAccount: String,
     val firstName: String,
     val lastName: String,
     val city: String,
@@ -197,6 +201,7 @@ fun getLanguageStrings(preferredLanguageEnglish: Boolean): LanguageStrings {
   return if (preferredLanguageEnglish) {
     LanguageStrings(
         createAccount = "Create your Account",
+        editAccount = "Edit Account",
         firstName = "First Name",
         lastName = "Last Name",
         city = "Choose your City",
@@ -206,6 +211,7 @@ fun getLanguageStrings(preferredLanguageEnglish: Boolean): LanguageStrings {
   } else {
     LanguageStrings(
         createAccount = "Créer votre compte",
+        editAccount = "Modifier le compte",
         firstName = "Prénom",
         lastName = "Nom de famille",
         city = "Choisissez votre ville",
