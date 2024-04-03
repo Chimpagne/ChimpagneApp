@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Chimpagne</string>
+    <string name="homescreen_my_events">MES ÉVÉNEMENTS/string>
+    <string name="homescreen_join_event">REJOINDRE UN ÉVÉNEMENT</string>
+    <string name="homescreen_organize_event">ORGANISER UN ÉVÉNEMENT</string>
+</resources>
