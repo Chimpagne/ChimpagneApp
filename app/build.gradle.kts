@@ -77,7 +77,6 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.maps.compose)
-    implementation(androidx.compose.ui:ui-resources:1.0.0)
     testImplementation(libs.junit)
     testImplementation(libs.mockwebserver)
 
