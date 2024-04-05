@@ -3,12 +3,8 @@ package com.monkeyteam.chimpagne.model.database
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Filter
 
-fun containsInTitle(title: String): Filter {
-  return Filter.arrayContains("title", title)
-}
-
-fun containsInDescription(description: String): Filter {
-  return Filter.arrayContains("description", description)
+fun isTitle(title: String): Filter {
+  return Filter.equalTo("title", title)
 }
 
 fun containsTagsFilter(tags: List<String>): Filter {

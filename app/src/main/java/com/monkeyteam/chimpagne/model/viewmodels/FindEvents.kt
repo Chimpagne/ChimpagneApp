@@ -7,11 +7,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.containsInDescription
-import com.monkeyteam.chimpagne.model.database.containsInTitle
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.endsAfterFilter
 import com.monkeyteam.chimpagne.model.database.endsBeforeFilter
+import com.monkeyteam.chimpagne.model.database.isTitle
 import com.monkeyteam.chimpagne.model.database.onlyPublic
 import com.monkeyteam.chimpagne.model.database.startsAfterFilter
 import com.monkeyteam.chimpagne.model.database.startsBeforeFilter
@@ -40,9 +39,9 @@ class FindEventsViewModel : ViewModel() {
       val filter =
           Filter.and(
               onlyPublic(),
-              Filter.or(
-                  containsInTitle(_uiState.value.searchByTitleOrDescription),
-                  containsInDescription(_uiState.value.searchByTitleOrDescription)),
+              if (_uiState.value.searchByExactTitle != "")
+                  isTitle(_uiState.value.searchByExactTitle)
+              else Filter(),
               if (_uiState.value.searchByTags.isNotEmpty())
                   containsTagsFilter(_uiState.value.searchByTags)
               else Filter(),
@@ -82,8 +81,9 @@ class FindEventsViewModel : ViewModel() {
     }
   }
 
-  fun updateTitleOrDescriptionQuery(newQuery: String, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(searchByTitleOrDescription = newQuery)
+  // WARNING TITLE MUST BE EXACT, LEAVE IT EMPTY IF YOU DO NOT WANT TO LIMIT YOUR SEARCHES
+  fun updateExactTitleQuery(newQuery: String, onFailure: (Exception) -> Unit = {}) {
+    _uiState.value = _uiState.value.copy(searchByExactTitle = newQuery)
     fetchAllEventsByQueries(onFailure)
   }
 
@@ -130,7 +130,7 @@ class FindEventsViewModel : ViewModel() {
 
 data class FindEventsUIState(
     val listOfEvents: List<ChimpagneEvent> = emptyList(),
-    val searchByTitleOrDescription: String = "",
+    val searchByExactTitle: String = "",
     val searchByLocation: String = "",
     val possibleLocationsList: List<Location> = emptyList(),
     val radiusAroundLocationInM: Double = 0.0,
