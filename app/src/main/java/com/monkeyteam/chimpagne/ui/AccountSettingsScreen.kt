@@ -31,26 +31,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.user.Account
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 import com.monkeyteam.chimpagne.ui.utilities.ProfileImage
 
-// TODO Delete after real one received
-data class Account(
-    val profilePictureUri: Uri?,
-    val firstName: String,
-    val lastName: String,
-    val preferredLanguageEnglish: Boolean,
-    val location: Location?
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettings(navObject: NavigationActions) {
   val account =
       Account(
+          email = "",
           profilePictureUri = null, // Placeholder for example URI
           firstName = "John",
           lastName = "Doe",
