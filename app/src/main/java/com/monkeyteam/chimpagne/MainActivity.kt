@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.monkeyteam.chimpagne.ui.AccountEdit
+import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.FindAnEventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
@@ -76,6 +77,7 @@ class MainActivity : ComponentActivity() {
             composable("loading") { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
             composable(Route.FIND_AN_EVENT_SCREEN) { FindAnEventScreen(navObject = navActions) }
+            composable(Route.EVENT_CREATION_SCREEN) { EventCreationScreen(0) }
           }
         }
       }
