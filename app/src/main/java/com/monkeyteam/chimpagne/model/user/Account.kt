@@ -11,5 +11,3 @@ data class Account(
     val preferredLanguageEnglish: Boolean,
     val location: Location?
 )
-
-
