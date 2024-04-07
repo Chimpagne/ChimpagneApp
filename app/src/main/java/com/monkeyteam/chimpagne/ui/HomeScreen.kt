@@ -71,10 +71,10 @@ fun HomeScreen(navObject: NavigationActions) {
                     })
                 Spacer(modifier = Modifier.height(16.dp))
                 ChimpagneButton(
-                    onClick = { /*TODO*/},
+                    onClick = { navObject.navigateTo(Route.EVENT_CREATION_SCREEN) },
                     text = {
                       Text(
-                          text = "ORGANIZE AN EVENT",
+                          text = "CREATE A NEW EVENT",
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
