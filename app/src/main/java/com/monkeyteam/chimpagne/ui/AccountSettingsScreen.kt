@@ -30,8 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.user.Account
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -42,7 +42,7 @@ import com.monkeyteam.chimpagne.ui.utilities.ProfileImage
 @Composable
 fun AccountSettings(navObject: NavigationActions) {
   val account =
-      Account(
+      ChimpagneAccount(
           email = "",
           profilePictureUri = null, // Placeholder for example URI
           firstName = "John",

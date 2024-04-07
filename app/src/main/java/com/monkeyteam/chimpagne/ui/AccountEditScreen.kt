@@ -12,8 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.user.Account
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.AccountChangeBody
@@ -24,7 +24,7 @@ import com.monkeyteam.chimpagne.ui.utilities.getLanguageStrings
 fun AccountEdit(navObject: NavigationActions) {
   // Delete After
   val account =
-      Account(
+      ChimpagneAccount(
           email = "",
           profilePictureUri = null, // Placeholder for example URI
           firstName = "John",
