@@ -11,12 +11,12 @@
     <string name="account_creation_screen_button">Create Account</string>
     <string name="event_creation_screen_previous">Previous</string>
     <string name="event_creation_screen_next">Next</string>
-    <string name="event_creation_screen_create_event">Create event</string>
+    <string name="event_creation_screen_create_event">Create Event</string>
     <string name="event_creation_screen_title">Title</string>
     <string name="event_creation_screen_description">Description</string>
     <string name="event_creation_screen_address">Address</string>
     <string name="event_creation_screen_more_event_infos">More event infos</string>
-    <string name="event_creation_screen_tags">tags (comma-separated)</string>
+    <string name="event_creation_screen_tags">Tags (comma-separated)</string>
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
     <string name="event_creation_screen_groceries">Groceries</string>

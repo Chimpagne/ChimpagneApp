@@ -92,8 +92,8 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
 
     val value = "4"
-    composeTestRule.onNodeWithText("Number of parking spaces").assertExists()
-    composeTestRule.onNodeWithText("Number of parking spaces").performTextInput(value)
+    composeTestRule.onNodeWithText("Number of parking places").assertExists()
+    composeTestRule.onNodeWithText("Number of parking places").performTextInput(value)
 
     composeTestRule.onNodeWithText(value).assertIsDisplayed()
 
@@ -103,6 +103,7 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
     composeTestRule.onNodeWithText("Next").assertDoesNotExist()
+
     composeTestRule.onNodeWithText("Create Event").performClick()
   }
 
