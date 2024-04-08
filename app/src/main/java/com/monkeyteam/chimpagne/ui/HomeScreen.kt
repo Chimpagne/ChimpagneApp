@@ -15,9 +15,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
@@ -25,8 +27,6 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
-import androidx.compose.ui.res.stringResource
-import com.monkeyteam.chimpagne.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,7 +50,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { /*TODO*/},
                     text = {
                       Text(
-                          text =  stringResource(id = R.string.homescreen_my_events),
+                          text = stringResource(id = R.string.homescreen_my_events),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
