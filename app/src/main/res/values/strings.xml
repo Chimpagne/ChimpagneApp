@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Chimpagne</string>
+    <string name="homescreen_my_events">MY EVENTS</string>
+    <string name="homescreen_join_event">JOIN AN EVENT</string>
+    <string name="homescreen_organize_event">ORGANIZE AN EVENT</string>
+    <string name="account_creation_screen_create_account">Create your Account</string>
+    <string name="account_creation_screen_first_name">First Name</string>
+    <string name="account_creation_screen_last_name">Last Name</string>
+    <string name="account_creation_screen_city">Choose your City</string>
+    <string name="account_creation_screen_language">Language</string>
+    <string name="account_creation_screen_button">Create Account</string>
+    <string name="event_creation_screen_previous">Previous</string>
+    <string name="event_creation_screen_next">Next</string>
+    <string name="event_creation_screen_create_event">Create event</string>
+
 </resources>

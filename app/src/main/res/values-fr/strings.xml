@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Chimpagne</string>
+    <string name="homescreen_my_events">MES ÉVÉNEMENTS</string>
+    <string name="homescreen_join_event">REJOINDRE UN ÉVÉNEMENT</string>
+    <string name="homescreen_organize_event">ORGANISER UN ÉVÉNEMENT</string>
+    <string name="account_creation_screen_create_account">Créer votre compte</string>
+    <string name="account_creation_screen_first_name">Prénom</string>
+    <string name="account_creation_screen_last_name">Nom de famille</string>
+    <string name="account_creation_screen_city">Choisissez votre ville</string>
+    <string name="account_creation_screen_language">Langue</string>
+    <string name="account_creation_screen_button">Créer un compte</string>
+    <string name="event_creation_screen_previous">Précédent</string>
+    <string name="event_creation_screen_next">Prochain</string>
+    <string name="event_creation_screen_create_event">Créer l'événement</string>
+</resources>

@@ -25,6 +25,8 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
+import androidx.compose.ui.res.stringResource
+import com.monkeyteam.chimpagne.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +50,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { /*TODO*/},
                     text = {
                       Text(
-                          text = "MY EVENTS",
+                          text =  stringResource(id = R.string.homescreen_my_events),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
@@ -58,7 +60,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = {
                       Text(
-                          text = "JOIN A EVENT",
+                          text = stringResource(R.string.homescreen_join_event),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
@@ -68,7 +70,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { navObject.navigateTo(Route.EVENT_CREATION_SCREEN) },
                     text = {
                       Text(
-                          text = "CREATE A NEW EVENT",
+                          text = stringResource(R.string.homescreen_organize_event),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)

@@ -34,6 +34,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.monkeyteam.chimpagne.R
 
 @Composable
 fun BackButton(onClick: () -> Unit) {
@@ -72,7 +74,7 @@ fun EventCreationScreen(initialPage: Int) {
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
             }) {
-              Text("Previous")
+              Text(stringResource(id = R.string.event_creation_screen_previous))
             }
       } else {
         Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
@@ -82,14 +84,14 @@ fun EventCreationScreen(initialPage: Int) {
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
             }) {
-              Text("Next")
+              Text(stringResource(id = R.string.event_creation_screen_next))
             }
       } else {
         Button(
             onClick = {
               Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
             }) {
-              Text("Create Event")
+              Text(stringResource(id = R.string.event_creation_screen_create_event))
             }
       }
     }
