@@ -15,7 +15,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -37,13 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import kotlinx.coroutines.launch
 
-@Composable
-fun BackButton(onClick: () -> Unit) {
-  IconButton(onClick = { onClick() }) {
-    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", modifier = Modifier.padding(12.dp))
-  }
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EventCreationScreen(initialPage: Int) {
@@ -55,7 +48,7 @@ fun EventCreationScreen(initialPage: Int) {
   val context = LocalContext.current
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-      BackButton(onClick = {})
+      GoBackButton(onClick = {})
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
