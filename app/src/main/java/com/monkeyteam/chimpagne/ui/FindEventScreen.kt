@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
 import DateSelector
-import android.app.DatePickerDialog
 import android.util.Log
 import android.widget.AutoCompleteTextView
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,8 +35,6 @@ import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,7 +45,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -312,8 +308,7 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
       }
   // Show date picker dialog when showDatePicker is true
   if (showDatePicker) {
-    DateSelector(
-        selectedDate, { showDatePicker = false }, { calendar -> selectedDate = calendar })
+    DateSelector(selectedDate, { showDatePicker = false }, { calendar -> selectedDate = calendar })
   }
 }
 

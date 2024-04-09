@@ -23,26 +23,26 @@ fun DateSelector(
     onDismissRequest: () -> Unit,
     onDateSelected: (Calendar) -> Unit
 ) {
-    val datePickerState =
-        rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
+  val datePickerState =
+      rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
 
-    DatePickerDialog(
-        onDismissRequest = { onDismissRequest() },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onDismissRequest()
-                    val dateToUse =
-                        datePickerState.selectedDateMillis?.let {
-                            Calendar.getInstance().apply { timeInMillis = it }
-                        } ?: selectedDate
-                    onDateSelected(dateToUse)
-                }) {
-                Text("OK")
+  DatePickerDialog(
+      onDismissRequest = { onDismissRequest() },
+      confirmButton = {
+        Button(
+            onClick = {
+              onDismissRequest()
+              val dateToUse =
+                  datePickerState.selectedDateMillis?.let {
+                    Calendar.getInstance().apply { timeInMillis = it }
+                  } ?: selectedDate
+              onDateSelected(dateToUse)
+            }) {
+              Text("OK")
             }
-        }) {
+      }) {
         DatePicker(
             state = datePickerState,
         )
-    }
+      }
 }

@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -14,16 +13,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -108,23 +104,19 @@ fun <T> AutoCompleteTextView(
               query = query,
               label = queryLabel,
               onQueryChanged = onQueryChanged,
-              onDoneActionClick = {
-                onDoneActionClick()
-              },
+              onDoneActionClick = { onDoneActionClick() },
               onClearClick = {
-                  view.clearFocus()
-                  onClearClick() },
+                view.clearFocus()
+                onClearClick()
+              },
               onFocusChanged = onFocusChanged)
         }
 
         if (predictions.isNotEmpty()) {
           items(predictions) { prediction ->
-            Row(
-                Modifier.padding(8.dp).fillMaxWidth().clickable {
-                  onItemClick(prediction)
-                }) {
-                  itemContent(prediction)
-                }
+            Row(Modifier.padding(8.dp).fillMaxWidth().clickable { onItemClick(prediction) }) {
+              itemContent(prediction)
+            }
           }
         }
       }
