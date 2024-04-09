@@ -1,5 +1,9 @@
 package com.monkeyteam.chimpagne.ui
 
+import DateSelector
+import android.app.DatePickerDialog
+import android.util.Log
+import android.widget.AutoCompleteTextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,8 +24,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,7 +38,6 @@ import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,12 +46,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -61,12 +62,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationHelper
+import com.monkeyteam.chimpagne.ui.components.AutoCompleteTextView
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
-import com.monkeyteam.chimpagne.ui.components.LocationFinder
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
@@ -110,15 +113,54 @@ fun MainFindEventScreen(navObject: NavigationActions) {
 @Composable
 fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit) {
 
+  val scrollState = rememberScrollState()
+
+  var searchActive by remember { mutableStateOf(false) }
+
   var showDatePicker by remember { mutableStateOf(false) }
-  val datePickerState = rememberDatePickerState()
 
   var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
+
+  val keyboardController = LocalSoftwareKeyboardController.current
 
   var tagInput by remember { mutableStateOf("") }
   val selectedTags = remember { mutableStateListOf<String>() }
 
+  val tagPredictions =
+      remember(tagInput) {
+        if (tagInput.isEmpty()) {
+          listOf() // Return an empty list if addressInput is empty
+        } else {
+          listOf(
+                  "student",
+                  "disco",
+                  "vegan",
+                  "dark",
+                  "alcool",
+                  "beer",
+                  "bbq",
+                  "soundboks",
+                  "carnaval")
+              .filter { it.contains(tagInput, ignoreCase = true) }
+              .take(5)
+        }
+      }
+
   var searchRadius by remember { mutableStateOf(1f) }
+  val view = LocalView.current
+  var addressInput by remember { mutableStateOf("") }
+  val selectedAddress = remember { mutableStateListOf<String>() }
+
+  val addressPredictions =
+      remember(addressInput) {
+        if (addressInput.isEmpty()) {
+          listOf() // Return an empty list if addressInput is empty
+        } else {
+          listOf("EPFL", "UNIL", "Lausanne", "Renens", "Ecublens", "Montreux", "DLL", "Rolex")
+              .filter { it.contains(addressInput, ignoreCase = true) }
+              .take(5)
+        }
+      }
 
   Scaffold(
       topBar = {
@@ -144,14 +186,46 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
-              modifier =
-                  Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
+              modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
                 FindEventLegend("Event Location", Icons.Rounded.Search, "Search")
 
                 Spacer(Modifier.height(16.dp))
 
-                LocationFinder("", {}, emptyList(), {}, Modifier.fillMaxWidth())
+                AutoCompleteTextView(
+                    modifier = Modifier.fillMaxWidth(),
+                    query = addressInput,
+                    queryLabel = "Enter an address",
+                    onQueryChanged = { updatedAddress -> addressInput = updatedAddress },
+                    predictions = addressPredictions,
+                    onClearClick = {
+                      if (addressInput === "") {
+                        view.clearFocus()
+                        keyboardController?.hide()
+                      } else {
+                        addressInput = ""
+                      }
+                    },
+                    onDoneActionClick = {
+                      // TODO : should be an address converted to location using Nominatim
+                      if (addressInput.trim().isNotBlank()) {
+                        selectedAddress.add(0, addressInput.trim().lowercase(Locale.getDefault()))
+                        addressInput = ""
+                      } else {
+                        view.clearFocus()
+                      }
+                    },
+                    onItemClick = { selectedAdd ->
+                      // TODO : should be an address fetched from Nominatim
+                      if (selectedAdd.trim().isNotBlank()) {
+                        selectedAddress.add(0, selectedAdd.trim().lowercase(Locale.getDefault()))
+                        addressInput = ""
+                      }
+                    }) { address ->
+                      // Define how the items need to be displayed
+                      Text(address, fontSize = 14.sp)
+                    }
+
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
                     text = "Locate me",
@@ -161,38 +235,61 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
                 Spacer(Modifier.height(16.dp))
 
                 Text(text = "Search Radius: ${searchRadius.toInt()} km")
+
                 Slider(
                     value = searchRadius,
                     onValueChange = { searchRadius = it },
                     valueRange = 1f..30f,
                     modifier = Modifier.fillMaxWidth())
 
-                Spacer(Modifier.height(40.dp))
+                Spacer(Modifier.height(32.dp))
 
                 FindEventLegend("Add Tags to your search", Icons.Rounded.Tag, "Tags")
-                Spacer(Modifier.height(16.dp))
-
-                TextField(
-                    value = tagInput,
-                    onValueChange = { tagInput = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                    keyboardActions =
-                        KeyboardActions(
-                            onDone = {
-                              if (tagInput.trim().isNotBlank()) {
-                                selectedTags.add(0, tagInput.trim().lowercase(Locale.getDefault()))
-                                tagInput = ""
-                              }
-                            }),
-                    maxLines = 1,
-                    placeholder = { Text("Enter a tag...") },
-                    modifier = Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(16.dp))
 
                 Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
                   selectedTags.forEach { tag -> TagChip(tag = tag) { selectedTags.remove(tag) } }
                 }
+
+                Spacer(Modifier.height(16.dp))
+
+                AutoCompleteTextView(
+                    modifier = Modifier.fillMaxWidth(),
+                    query = tagInput,
+                    queryLabel = "Enter a tag",
+                    onQueryChanged = { updatedTag ->
+                      tagInput = updatedTag
+                      // Update addressPlaceItemPredictions based on the tagInput here
+                    },
+                    predictions = tagPredictions,
+                    onClearClick = {
+                      Log.d(tagInput, "tagInput")
+                      if (tagInput === "") {
+                        keyboardController?.hide()
+                        view.clearFocus()
+                      } else {
+                        tagInput = ""
+                      }
+                    },
+                    onDoneActionClick = {
+                      if (tagInput.trim().isNotBlank()) {
+                        selectedTags.add(0, tagInput.trim().lowercase(Locale.getDefault()))
+                        tagInput = ""
+                      } else {
+                        view.clearFocus()
+                      }
+                    },
+                    onItemClick = { selectedTag ->
+                      if (selectedTag.trim().isNotBlank()) {
+                        selectedTags.add(0, selectedTag.trim().lowercase(Locale.getDefault()))
+                        tagInput = ""
+                      }
+                    },
+                    onFocusChanged = { isFocused -> searchActive = isFocused }) { tag ->
+                      // Define how the items need to be displayed
+                      Text(tag, fontSize = 14.sp)
+                    }
 
                 Spacer(Modifier.height(40.dp))
 
@@ -205,45 +302,19 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
                     icon = Icons.Rounded.CalendarToday,
                     onClick = { showDatePicker = true },
                     modifier = Modifier.align(Alignment.CenterHorizontally))
+
+                if (searchActive) {
+                  Spacer(modifier = Modifier.height(250.dp))
+                  LaunchedEffect(Unit) { scrollState.animateScrollTo(scrollState.maxValue) }
+                }
               }
         }
       }
   // Show date picker dialog when showDatePicker is true
   if (showDatePicker) {
-    FindEventDatePicker(datePickerState, { showDatePicker = false }) { calendar ->
-      selectedDate = calendar
-    }
+    DateSelector(
+        selectedDate, { showDatePicker = false }, { calendar -> selectedDate = calendar })
   }
-}
-
-@ExperimentalMaterial3Api
-@Composable
-fun FindEventDatePicker(
-    datePickerState: DatePickerState,
-    onDismissRequest: () -> Unit,
-    onDateSelected: (Calendar) -> Unit
-) {
-  DatePickerDialog(
-      onDismissRequest = { onDismissRequest() },
-      confirmButton = {
-        Button(
-            onClick = {
-              onDismissRequest()
-
-              val selectedDate =
-                  Calendar.getInstance().apply {
-                    timeInMillis = datePickerState.selectedDateMillis!!
-                  }
-              onDateSelected(selectedDate)
-            }) {
-              Text("OK")
-            }
-      }) {
-        DatePicker(
-            state = datePickerState,
-            // Add more customization as needed
-        )
-      }
 }
 
 @Composable
