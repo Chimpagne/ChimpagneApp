@@ -36,31 +36,23 @@ class FindEventsViewModel : ViewModel() {
 
   private fun fetchAllEventsByQueries(onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      val filter =
-          Filter.and(
-              onlyPublic(),
-              if (_uiState.value.searchByExactTitle != "")
-                  isTitle(_uiState.value.searchByExactTitle)
-              else Filter(),
-              if (_uiState.value.searchByTags.isNotEmpty())
-                  containsTagsFilter(_uiState.value.searchByTags)
-              else Filter(),
-              if (_uiState.value.searchByStartsBefore != null)
-                  startsBeforeFilter(_uiState.value.searchByStartsBefore!!)
-              else Filter(),
-              if (_uiState.value.searchByStartsAfter != null)
-                  startsAfterFilter(_uiState.value.searchByStartsAfter!!)
-              else Filter(),
-              if (_uiState.value.searchByEndsBefore != null)
-                  endsBeforeFilter(_uiState.value.searchByEndsBefore!!)
-              else Filter(),
-              if (_uiState.value.searchByEndsAfter != null)
-                  endsAfterFilter(_uiState.value.searchByEndsAfter!!)
-              else Filter())
+      var filter = onlyPublic()
+      if (_uiState.value.searchByExactTitle != "")
+          filter = Filter.and(filter, isTitle(_uiState.value.searchByExactTitle))
+      if (_uiState.value.searchByTags.isNotEmpty())
+          filter = Filter.and(filter, containsTagsFilter(_uiState.value.searchByTags))
+      if (_uiState.value.searchByStartsBefore != null)
+          filter = Filter.and(filter, startsBeforeFilter(_uiState.value.searchByStartsBefore!!))
+      if (_uiState.value.searchByStartsAfter != null)
+          filter = Filter.and(filter, startsAfterFilter(_uiState.value.searchByStartsAfter!!))
+      if (_uiState.value.searchByEndsBefore != null)
+          filter = Filter.and(filter, endsBeforeFilter(_uiState.value.searchByEndsBefore!!))
+      if (_uiState.value.searchByEndsAfter != null)
+          filter = Filter.and(filter, endsAfterFilter(_uiState.value.searchByEndsAfter!!))
 
       if (_uiState.value.possibleLocationsList.isNotEmpty()) {
         fireBaseDB.eventManager.getAllEventsByFilterAroundLocation(
-            _uiState.value.possibleLocationsList[0],
+            _uiState.value.actualLocation,
             _uiState.value.radiusAroundLocationInM,
             { _uiState.value = _uiState.value.copy(listOfEvents = it) },
             {
@@ -73,7 +65,7 @@ class FindEventsViewModel : ViewModel() {
             filter,
             { _uiState.value = _uiState.value.copy(listOfEvents = it) },
             {
-              Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
+              Log.d("FETCHING EVENTS BY WITHOUT LOCATION QUERY", "Error : ", it)
               onFailure(it)
             },
         )
@@ -87,7 +79,7 @@ class FindEventsViewModel : ViewModel() {
     fetchAllEventsByQueries(onFailure)
   }
 
-  fun updateLocationQuery(newQuery: String, onFailure: (Exception) -> Unit = {}) {
+  fun updateLocationSearchQuery(newQuery: String, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(searchByLocation = newQuery)
     convertNameToLocation(
         _uiState.value.searchByLocation,
@@ -95,6 +87,12 @@ class FindEventsViewModel : ViewModel() {
           _uiState.value = _uiState.value.copy(possibleLocationsList = it)
           fetchAllEventsByQueries(onFailure)
         })
+  }
+
+  fun updateActualLocation(newLocation: Location, onFailure: (Exception) -> Unit = {}){
+      _uiState.value = _uiState.value.copy(actualLocation = newLocation)
+      _uiState.value = _uiState.value.copy(searchByLocation = newLocation.toString())
+      fetchAllEventsByQueries(onFailure)
   }
 
   fun updateLocationSearchRadius(newRadiusInM: Double, onFailure: (Exception) -> Unit = {}) {
@@ -121,7 +119,6 @@ class FindEventsViewModel : ViewModel() {
     _uiState.value = _uiState.value.copy(searchByEndsBefore = newQuery)
     fetchAllEventsByQueries(onFailure)
   }
-
   fun updateEndsAfterQuery(newQuery: Timestamp?, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(searchByEndsAfter = newQuery)
     fetchAllEventsByQueries(onFailure)
@@ -132,6 +129,7 @@ data class FindEventsUIState(
     val listOfEvents: List<ChimpagneEvent> = emptyList(),
     val searchByExactTitle: String = "",
     val searchByLocation: String = "",
+    val actualLocation: Location = Location(),
     val possibleLocationsList: List<Location> = emptyList(),
     val radiusAroundLocationInM: Double = 0.0,
     val searchByTags: List<String> = emptyList(),
