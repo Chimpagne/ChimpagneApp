@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +29,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material3.BottomSheetScaffold
@@ -42,6 +42,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -49,6 +50,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -63,10 +65,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationHelper
+import com.monkeyteam.chimpagne.ui.components.IconTextButton
+import com.monkeyteam.chimpagne.ui.components.LocationFinder
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
+import java.text.DateFormat
 import java.time.format.DateTimeFormatter.*
+import java.util.Calendar
 import java.util.Locale
 import kotlinx.coroutines.launch
 
@@ -107,8 +113,12 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
   var showDatePicker by remember { mutableStateOf(false) }
   val datePickerState = rememberDatePickerState()
 
+  var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
+
   var tagInput by remember { mutableStateOf("") }
   val selectedTags = remember { mutableStateListOf<String>() }
+
+  var searchRadius by remember { mutableStateOf(1f) }
 
   Scaffold(
       topBar = {
@@ -137,19 +147,25 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
               modifier =
                   Modifier.fillMaxSize().padding(16.dp).verticalScroll(rememberScrollState()),
               horizontalAlignment = Alignment.Start) {
-                FindEventLegend("Enter Event Keywords", Icons.Rounded.Search, "Search")
+                FindEventLegend("Event Location", Icons.Rounded.Search, "Search")
 
                 Spacer(Modifier.height(16.dp))
 
-                TextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Search...") },
-                    modifier =
-                        Modifier.fillMaxWidth()
-                            .background(
-                                shape = MaterialTheme.shapes.extraLarge,
-                                color = MaterialTheme.colorScheme.surfaceVariant))
+                LocationFinder("", {}, emptyList(), {}, Modifier.fillMaxWidth())
+                Spacer(Modifier.height(16.dp))
+                IconTextButton(
+                    text = "Locate me",
+                    icon = Icons.Rounded.MyLocation,
+                    onClick = { /*TODO*/},
+                    modifier = Modifier.align(Alignment.CenterHorizontally))
+                Spacer(Modifier.height(16.dp))
+
+                Text(text = "Search Radius: ${searchRadius.toInt()} km")
+                Slider(
+                    value = searchRadius,
+                    onValueChange = { searchRadius = it },
+                    valueRange = 1f..30f,
+                    modifier = Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(40.dp))
 
@@ -185,40 +201,41 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
 
                 Spacer(Modifier.height(16.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier.align(Alignment.CenterHorizontally)
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-                            .background(
-                                shape = RoundedCornerShape(100),
-                                color = MaterialTheme.colorScheme.surfaceVariant)
-                            .clickable { showDatePicker = true }
-                            .padding(horizontal = 24.dp, vertical = 16.dp)) {
-                      Icon(Icons.Rounded.CalendarToday, contentDescription = "Select date")
-                      Spacer(Modifier.width(8.dp))
-                      Text("5 may 2024")
-                    }
+                IconTextButton(
+                    text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time),
+                    icon = Icons.Rounded.CalendarToday,
+                    onClick = { showDatePicker = true },
+                    modifier = Modifier.align(Alignment.CenterHorizontally))
               }
         }
       }
   // Show date picker dialog when showDatePicker is true
   if (showDatePicker) {
-    FindEventDatePicker(datePickerState) { showDatePicker = false }
+    FindEventDatePicker(datePickerState, { showDatePicker = false }) { calendar ->
+      selectedDate = calendar
+    }
   }
 }
 
 @ExperimentalMaterial3Api
 @Composable
-fun FindEventDatePicker(datePickerState: DatePickerState, onDismissRequest: () -> Unit) {
+fun FindEventDatePicker(
+    datePickerState: DatePickerState,
+    onDismissRequest: () -> Unit,
+    onDateSelected: (Calendar) -> Unit
+) {
   DatePickerDialog(
       onDismissRequest = { onDismissRequest() },
       confirmButton = {
         Button(
             onClick = {
               onDismissRequest()
-              // Call onDateSelected with the date from datePickerState
-              // This should be a LocalDateTime constructed from the selected date millis
+
+              val selectedDate =
+                  Calendar.getInstance().apply {
+                    timeInMillis = datePickerState.selectedDateMillis!!
+                  }
+              onDateSelected(selectedDate)
             }) {
               Text("OK")
             }
@@ -272,6 +289,7 @@ fun FindEventMapScreen(
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
+  var isMapInitialized by remember { mutableStateOf(false) }
 
   val expandBottomSheet = { scope.launch { scaffoldState.bottomSheetState.expand() } }
 
@@ -284,6 +302,8 @@ fun FindEventMapScreen(
   }
 
   addMarker(Location("Balelec", 46.519144, 6.566804))
+  addMarker(Location("AirSound", 46.559144, 6.566804))
+  addMarker(Location("Anniversaire Juan", 46.51644, 6.53804))
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
@@ -305,13 +325,19 @@ fun FindEventMapScreen(
       },
       scaffoldState = scaffoldState,
       sheetPeekHeight = 0.dp) {
+        DisposableEffect(Unit) {
+          isMapInitialized = true
+          onDispose { isMapInitialized = false }
+        }
+
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
-          MapContainer(locationHelper = locationHelper) { expandBottomSheet() }
-          Column {
-            FindEventSearchBar("Before Balelec", onBackIconClicked)
-            TagsRow()
-            DateRow()
+          if (isMapInitialized) {
+            MapContainer(locationHelper = locationHelper, isMapInitialized = isMapInitialized) {
+              expandBottomSheet()
+            }
           }
+
+          Column { FindEventSearchBar("Before Balelec", onBackIconClicked) }
         }
       }
 }
@@ -324,13 +350,15 @@ fun FindEventSearchBar(searchText: String, onBackIconClicked: () -> Unit) {
           Modifier.fillMaxWidth()
               .padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 8.dp)
               .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+              .clickable(onClick = onBackIconClicked)
               .background(
                   color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(100))
               .padding(4.dp),
       verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = { onBackIconClicked() }) {
-          Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Go Back")
-        }
+        Icon(
+            Icons.AutoMirrored.Rounded.ArrowBack,
+            contentDescription = "Go Back",
+            modifier = Modifier.padding(12.dp))
 
         Spacer(Modifier.width(4.dp))
 
@@ -339,54 +367,5 @@ fun FindEventSearchBar(searchText: String, onBackIconClicked: () -> Unit) {
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f))
-      }
-}
-
-@Composable
-fun TagsRow() {
-  val tags = listOf("BBQ", "Student", "Vegan", "Beach")
-
-  Row(
-      modifier =
-          Modifier.horizontalScroll(rememberScrollState())
-              .padding(start = 8.dp, end = 0.dp, bottom = 8.dp, top = 8.dp)) {
-        for (tag in tags) {
-          TagChip(tag = tag)
-        }
-      }
-}
-
-@Composable
-fun TagChip(tag: String) {
-  Surface(
-      modifier = Modifier.padding(start = 8.dp),
-      shape = RoundedCornerShape(52.dp),
-      color = MaterialTheme.colorScheme.primary,
-      contentColor = MaterialTheme.colorScheme.onPrimary) {
-        Text(
-            text = tag,
-            modifier = Modifier.padding(vertical = 8.dp, horizontal = 12.dp),
-            style = MaterialTheme.typography.bodyMedium)
-      }
-}
-
-@Composable
-fun DateRow() {
-  val date by remember { mutableStateOf("5 may 2024") }
-
-  Row(
-      modifier =
-          Modifier.padding(start = 12.dp, top = 8.dp, end = 8.dp)
-              .shadow(elevation = 4.dp, shape = RoundedCornerShape(25))
-              .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(25))
-              .padding(8.dp),
-      horizontalArrangement = Arrangement.SpaceBetween) {
-        Icon(Icons.Rounded.CalendarToday, contentDescription = "Select Date")
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = date,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.align(Alignment.CenterVertically))
       }
 }
