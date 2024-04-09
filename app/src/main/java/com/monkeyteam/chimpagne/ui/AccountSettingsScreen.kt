@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -96,12 +97,22 @@ fun AccountSettings(navObject: NavigationActions) {
               Spacer(modifier = Modifier.height(10.dp))
               ProfileImage(imageUri = selectedImageUri)
 
-              SettingItem(label = "First Name", value = firstName)
-              SettingItem(label = "Last Name", value = lastName)
-              SettingItem(label = "Location", value = location?.name ?: "Unknown")
+              SettingItem(
+                  label = "First Name",
+                  value = firstName,
+                  modifierText = Modifier.testTag("firstNameTextField"))
+              SettingItem(
+                  label = "Last Name",
+                  value = lastName,
+                  modifierText = Modifier.testTag("lastNameTextField"))
+              SettingItem(
+                  label = "Location",
+                  value = location?.name ?: "Unknown",
+                  modifierText = Modifier.testTag("locationTextField"))
               SettingItem(
                   label = "Preferred Language",
-                  value = if (preferredLanguageEnglish) "English" else "French")
+                  value = (if (preferredLanguageEnglish) "English" else "French"),
+                  modifierText = Modifier.testTag("preferredLanguageTextField"))
 
               Spacer(modifier = Modifier.height(8.dp))
               // TODO has to be changed to log out
@@ -113,9 +124,10 @@ fun AccountSettings(navObject: NavigationActions) {
 }
 
 @Composable
-fun SettingItem(label: String, value: String) {
+fun SettingItem(label: String, value: String, modifierText: Modifier) {
   Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
     Text(
+        modifier = modifierText,
         text = label,
         style =
             androidx.compose.ui.text.TextStyle(
