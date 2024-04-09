@@ -2,18 +2,24 @@ package com.monkeyteam.chimpagne.ui.utilities
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
@@ -22,25 +28,24 @@ import com.google.maps.android.compose.rememberMarkerState
 import com.monkeyteam.chimpagne.model.location.LocationHelper
 import kotlin.math.max
 
-@Preview(showBackground = true)
-@Composable
-fun MapPreview() {
-  MapContainer(modifier = Modifier.fillMaxSize())
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapContainer(
-    modifier: Modifier = Modifier,
+    cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     locationHelper: LocationHelper = LocationHelper(),
     isMapInitialized: Boolean = false,
-    expandBottomSheet: () -> Unit = {}
+    bottomSheetState: SheetState,
+    onMarkerClick: (Marker) -> Unit,
 ) {
 
   val markers by locationHelper.markers.collectAsState()
 
-  val cameraPositionState = rememberCameraPositionState {
-    position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
-  }
+  val dynamicBottomPadding =
+      when (bottomSheetState.targetValue) {
+        SheetValue.Expanded -> 300.dp
+        SheetValue.PartiallyExpanded -> 0.dp // Adjust as needed for the partially expanded state
+        SheetValue.Hidden -> 0.dp
+      }
 
   LaunchedEffect(markers) {
     if (markers.isNotEmpty()) {
@@ -58,7 +63,7 @@ fun MapContainer(
       val centerLat = (maxLat + minLat) / 2
       val centerLon = (maxLon + minLon) / 2
 
-      // Occupy 3/4 of the screen
+      // Occupy 3/4 of the screen for accessibility
       // Shift of 1/8 of the screen
       val offset = maxRange / 8
       val adjustedCenterLat = centerLat + offset
@@ -82,7 +87,7 @@ fun MapContainer(
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(bottom = dynamicBottomPadding),
         uiSettings =
             MapUiSettings(
                 zoomControlsEnabled = false,
@@ -93,14 +98,14 @@ fun MapContainer(
                 state = rememberMarkerState(position = LatLng(marker.latitude, marker.longitude)),
                 title = marker.name,
                 onClick = {
-                  expandBottomSheet()
+                  onMarkerClick(it)
                   true
                 })
           }
         }
   } else {
     // Display a placeholder or loading indicator
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
       CircularProgressIndicator() // You can customize this part as needed
     }
   }

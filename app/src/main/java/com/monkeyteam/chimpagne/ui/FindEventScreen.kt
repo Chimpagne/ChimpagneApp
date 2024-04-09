@@ -5,7 +5,6 @@ import android.util.Log
 import android.widget.AutoCompleteTextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -62,6 +62,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationHelper
 import com.monkeyteam.chimpagne.ui.components.AutoCompleteTextView
@@ -356,7 +361,29 @@ fun FindEventMapScreen(
   val coroutineScope = rememberCoroutineScope()
   var isMapInitialized by remember { mutableStateOf(false) }
 
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
+    }
+
+    val onMarkerClick: (Marker) -> Unit = { marker ->
+        coroutineScope.launch {
+            launch {
+                scaffoldState.bottomSheetState.expand()
+            }
+            launch {
+                cameraPositionState.animate(CameraUpdateFactory.newLatLng(marker.position))
+            }
+        }
+    }
+
   val expandBottomSheet = { scope.launch { scaffoldState.bottomSheetState.expand() } }
+  val goBack = {
+    scope.launch {
+      scaffoldState.bottomSheetState.partialExpand()
+      onBackIconClicked()
+    }
+  }
+    
 
   val addMarker = { location: Location ->
     coroutineScope.launch { locationHelper.addMarker(location) }
@@ -371,6 +398,8 @@ fun FindEventMapScreen(
   addMarker(Location("Anniversaire Juan", 46.51644, 6.53804))
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
+
+
 
   BottomSheetScaffold(
       sheetContent = {
@@ -397,40 +426,25 @@ fun FindEventMapScreen(
 
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
           if (isMapInitialized) {
-            MapContainer(locationHelper = locationHelper, isMapInitialized = isMapInitialized) {
-              expandBottomSheet()
-            }
+            MapContainer(
+                bottomSheetState = scaffoldState.bottomSheetState,
+                cameraPositionState = cameraPositionState,
+                onMarkerClick = onMarkerClick,
+                locationHelper = locationHelper,
+                isMapInitialized = true)
           }
 
-          FindEventSearchBar("Before Balelec", onBackIconClicked)
+          IconButton(
+              modifier =
+                  Modifier.padding(start = 12.dp, top = 12.dp)
+                      .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+                      .background(
+                          color = MaterialTheme.colorScheme.surface,
+                          shape = RoundedCornerShape(100))
+                      .padding(4.dp),
+              onClick = { goBack() }) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Go Back")
+              }
         }
-      }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun FindEventSearchBar(searchText: String, onBackIconClicked: () -> Unit) {
-  Row(
-      modifier =
-          Modifier.fillMaxWidth()
-              .padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 8.dp)
-              .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-              .clickable(onClick = onBackIconClicked)
-              .background(
-                  color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(100))
-              .padding(4.dp),
-      verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            Icons.AutoMirrored.Rounded.ArrowBack,
-            contentDescription = "Go Back",
-            modifier = Modifier.padding(12.dp))
-
-        Spacer(Modifier.width(4.dp))
-
-        Text(
-            text = searchText,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f))
       }
 }
