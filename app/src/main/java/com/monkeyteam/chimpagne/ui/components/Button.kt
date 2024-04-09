@@ -37,8 +37,8 @@ fun ChimpagneButton(
 }
 
 @Composable
-fun GoBackButton(navigationActions: NavigationActions, modifier: Modifier) {
-  IconButton(onClick = { navigationActions.goBack() }, modifier = modifier) {
+fun GoBackButton(navigationActions: NavigationActions) {
+  IconButton(onClick = { navigationActions.goBack() }) {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "Go Back",
