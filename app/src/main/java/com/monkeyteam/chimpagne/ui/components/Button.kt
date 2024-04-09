@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -50,20 +48,17 @@ fun IconTextButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-            .background(
-                shape = RoundedCornerShape(100),
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
-            .clickable(onClick = onClick)
-            .padding(horizontal = 24.dp, vertical = 12.dp)
-    ) {
+  Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier =
+          modifier
+              .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+              .background(
+                  shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant)
+              .clickable(onClick = onClick)
+              .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
         Text(text)
-    }
+      }
 }
-

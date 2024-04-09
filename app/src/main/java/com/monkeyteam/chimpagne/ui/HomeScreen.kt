@@ -60,7 +60,6 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = {
                       Text(
-
                           text = stringResource(R.string.homescreen_join_event),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,

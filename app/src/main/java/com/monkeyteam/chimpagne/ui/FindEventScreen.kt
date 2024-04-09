@@ -196,8 +196,7 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
 
                 Spacer(Modifier.height(40.dp))
 
-                FindEventLegend(
-                    "Select the date of the event", Icons.Rounded.CalendarToday, "Select date")
+                FindEventLegend("Date of the event", Icons.Rounded.CalendarToday, "Select date")
 
                 Spacer(Modifier.height(16.dp))
 
@@ -337,7 +336,7 @@ fun FindEventMapScreen(
             }
           }
 
-          Column { FindEventSearchBar("Before Balelec", onBackIconClicked) }
+          FindEventSearchBar("Before Balelec", onBackIconClicked)
         }
       }
 }
