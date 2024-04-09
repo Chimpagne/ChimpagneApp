@@ -14,12 +14,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -35,11 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EventCreationScreen(initialPage: Int) {
+fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions) {
   // This screen is made of several panels
   // The user can go from panel either by swiping left and right,
   // or by clicking the buttons on the bottom of the screen.
@@ -48,7 +46,7 @@ fun EventCreationScreen(initialPage: Int) {
   val context = LocalContext.current
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-      GoBackButton(onClick = {})
+      GoBackButton(navigationActions = navObject)
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
