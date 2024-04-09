@@ -11,8 +11,9 @@ import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToL
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
-class EventsViewModel(eventID: String? = null) : ViewModel() {
+class EventViewModel(eventID: String? = null) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
   val uiState: StateFlow<EventUIState> = _uiState
@@ -42,8 +43,8 @@ class EventsViewModel(eventID: String? = null) : ViewModel() {
               _uiState.value = _uiState.value.copy(isPublic = it.isPublic)
               _uiState.value = _uiState.value.copy(tags = it.tags)
               _uiState.value = _uiState.value.copy(guests = it.guests)
-              _uiState.value = _uiState.value.copy(startsAtTimestamp = it.startsAtTimestamp)
-              _uiState.value = _uiState.value.copy(endsAtTimestamp = it.endsAtTimestamp)
+              _uiState.value = _uiState.value.copy(startsAtCalendarDate = it.startAt)
+              _uiState.value = _uiState.value.copy(endsAtCalendarDate = it.endsAt)
               onSuccess()
             } else {
               Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
@@ -64,8 +65,8 @@ class EventsViewModel(eventID: String? = null) : ViewModel() {
       isPublic: Boolean = _uiState.value.isPublic,
       tags: List<String> = _uiState.value.tags,
       guests: Map<String, Boolean> = _uiState.value.guests,
-      startsAtTimestamp: Timestamp = _uiState.value.startsAtTimestamp,
-      endsAtTimestamp: Timestamp = _uiState.value.endsAtTimestamp
+      startsAtTimestamp: Timestamp = Timestamp(_uiState.value.startsAtCalendarDate.time),
+      endsAtTimestamp: Timestamp = Timestamp(_uiState.value.endsAtCalendarDate.time)
   ): ChimpagneEvent {
     return ChimpagneEvent(
         id,
@@ -143,12 +144,26 @@ class EventsViewModel(eventID: String? = null) : ViewModel() {
     }
   }
 
+  fun getEventTitle(): String{
+      return _uiState.value.title
+  }
   fun updateEventTitle(newTitle: String) {
     _uiState.value = _uiState.value.copy(title = newTitle)
   }
 
+  fun getEventDescription(): String{
+      return _uiState.value.description
+  }
   fun updateEventDescription(newDescription: String) {
     _uiState.value = _uiState.value.copy(description = newDescription)
+  }
+
+  fun getEventLocationSearchField(): String {
+      return _uiState.value.locationSearchField
+  }
+
+  fun getAllPossibleLocationsList(): List<Location>{
+      return _uiState.value.possibleLocationsList
   }
 
   fun updateEventLocationSearchField(newLocationSearchField: String) {
@@ -159,24 +174,43 @@ class EventsViewModel(eventID: String? = null) : ViewModel() {
         { _uiState.value = _uiState.value.copy(possibleLocationsList = it) })
   }
 
+  fun getEventLocation(): Location {
+      return _uiState.value.location
+  }
+
   fun updateEventLocation(newLocation: Location) {
     _uiState.value = _uiState.value.copy(location = newLocation)
+  }
+
+  fun getEventPublicity(): Boolean{
+      return _uiState.value.isPublic
   }
 
   fun updateEventPublicity(newIsPublic: Boolean) {
     _uiState.value = _uiState.value.copy(isPublic = newIsPublic)
   }
 
+  fun getEventTags(): List<String> {
+      return _uiState.value.tags
+  }
+
   fun updateEventTags(newTags: List<String>) {
     _uiState.value = _uiState.value.copy(tags = newTags)
   }
 
-  fun updateEventStartTime(newStartTime: Timestamp) {
-    _uiState.value = _uiState.value.copy(startsAtTimestamp = newStartTime)
+  fun getEventStartCalendarDate(): Calendar{
+      return _uiState.value.startsAtCalendarDate
+  }
+  fun updateEventStartCalendarDate(newStartCalendarDate: Calendar) {
+    _uiState.value = _uiState.value.copy(startsAtCalendarDate = newStartCalendarDate)
   }
 
-  fun updateEventEndTime(newEndTime: Timestamp) {
-    _uiState.value = _uiState.value.copy(endsAtTimestamp = newEndTime)
+  fun getEventEndCalendarDate(): Calendar{
+      return _uiState.value.endsAtCalendarDate
+  }
+
+  fun updateEventEndCalendarDate(newEndCalendarDate: Calendar) {
+    _uiState.value = _uiState.value.copy(endsAtCalendarDate = newEndCalendarDate)
   }
 }
 
@@ -190,6 +224,6 @@ data class EventUIState(
     val isPublic: Boolean = false,
     val tags: List<String> = emptyList(),
     val guests: Map<String, Boolean> = emptyMap(),
-    val startsAtTimestamp: Timestamp = Timestamp.now(),
-    val endsAtTimestamp: Timestamp = Timestamp.now()
+    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val endsAtCalendarDate: Calendar = Calendar.getInstance()
 )

@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.model.database
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Filter
 import java.util.Calendar
+
 fun containsTagsFilter(tags: List<String>): Filter {
   return Filter.inArray("tags", tags)
 }
@@ -27,7 +28,7 @@ fun onlyPublicFilter(): Filter {
   return Filter.equalTo("isPublic", true)
 }
 
-fun happensOnThisDateFilter(calendar : Calendar): Filter{
+fun happensOnThisDateFilter(calendar: Calendar): Filter {
   val startDateCalendar = Calendar.getInstance()
   startDateCalendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR))
   startDateCalendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
@@ -36,9 +37,7 @@ fun happensOnThisDateFilter(calendar : Calendar): Filter{
   startDateCalendar.set(Calendar.MINUTE, 0)
   startDateCalendar.set(Calendar.SECOND, 0)
 
-  val startTimestampValidity = Timestamp(
-    startDateCalendar.time
-  )
+  val startTimestampValidity = Timestamp(startDateCalendar.time)
   val endDateCalendar = Calendar.getInstance()
   startDateCalendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR))
   startDateCalendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH))
@@ -47,21 +46,10 @@ fun happensOnThisDateFilter(calendar : Calendar): Filter{
   startDateCalendar.set(Calendar.MINUTE, 59)
   startDateCalendar.set(Calendar.SECOND, 59)
 
-  val endTimestampValidity = Timestamp(
-    endDateCalendar.time
-  )
+  val endTimestampValidity = Timestamp(endDateCalendar.time)
   return Filter.or(
-    Filter.and(
-      startsBeforeFilter(startTimestampValidity),
-      endsAfterFilter(startTimestampValidity)
-    ),
-    Filter.and(
-      startsAfterFilter(startTimestampValidity),
-      endsBeforeFilter(endTimestampValidity)
-    ),
-    Filter.and(
-      startsBeforeFilter(endTimestampValidity),
-      endsAfterFilter(endTimestampValidity)
-    )
-  )
+      Filter.and(
+          startsBeforeFilter(startTimestampValidity), endsAfterFilter(startTimestampValidity)),
+      Filter.and(startsAfterFilter(startTimestampValidity), endsBeforeFilter(endTimestampValidity)),
+      Filter.and(startsBeforeFilter(endTimestampValidity), endsAfterFilter(endTimestampValidity)))
 }
