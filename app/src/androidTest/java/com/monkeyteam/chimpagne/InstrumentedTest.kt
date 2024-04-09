@@ -7,11 +7,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.location.LocationHelper
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
-import com.monkeyteam.chimpagne.ui.utilities.MapContainer
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -68,6 +64,4 @@ class AccountCreationUITest {
   }
 }
 
-class TestMap {
-
-}
+class TestMap {}
