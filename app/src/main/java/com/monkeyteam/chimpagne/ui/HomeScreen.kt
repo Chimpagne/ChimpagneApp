@@ -15,9 +15,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
@@ -48,7 +50,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { /*TODO*/},
                     text = {
                       Text(
-                          text = "MY EVENTS",
+                          text = stringResource(id = R.string.homescreen_my_events),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
@@ -58,7 +60,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = {
                       Text(
-                          text = "JOIN A EVENT",
+                          text = stringResource(R.string.homescreen_join_event),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
@@ -68,7 +70,7 @@ fun HomeScreen(navObject: NavigationActions) {
                     onClick = { navObject.navigateTo(Route.EVENT_CREATION_SCREEN) },
                     text = {
                       Text(
-                          text = "CREATE A NEW EVENT",
+                          text = stringResource(R.string.homescreen_organize_event),
                           fontFamily = ChimpagneFontFamily,
                           fontWeight = FontWeight.Bold,
                           fontSize = 30.sp)
