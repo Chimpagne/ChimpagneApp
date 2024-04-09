@@ -39,7 +39,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -361,20 +360,16 @@ fun FindEventMapScreen(
   val coroutineScope = rememberCoroutineScope()
   var isMapInitialized by remember { mutableStateOf(false) }
 
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
-    }
+  val cameraPositionState = rememberCameraPositionState {
+    position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
+  }
 
-    val onMarkerClick: (Marker) -> Unit = { marker ->
-        coroutineScope.launch {
-            launch {
-                scaffoldState.bottomSheetState.expand()
-            }
-            launch {
-                cameraPositionState.animate(CameraUpdateFactory.newLatLng(marker.position))
-            }
-        }
+  val onMarkerClick: (Marker) -> Unit = { marker ->
+    coroutineScope.launch {
+      launch { scaffoldState.bottomSheetState.expand() }
+      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(marker.position)) }
     }
+  }
 
   val expandBottomSheet = { scope.launch { scaffoldState.bottomSheetState.expand() } }
   val goBack = {
@@ -383,7 +378,6 @@ fun FindEventMapScreen(
       onBackIconClicked()
     }
   }
-    
 
   val addMarker = { location: Location ->
     coroutineScope.launch { locationHelper.addMarker(location) }
@@ -398,8 +392,6 @@ fun FindEventMapScreen(
   addMarker(Location("Anniversaire Juan", 46.51644, 6.53804))
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
-
-
 
   BottomSheetScaffold(
       sheetContent = {
