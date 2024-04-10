@@ -42,7 +42,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions, eventViewModel: EventViewModel = viewModel()
+fun EventCreationScreen(
+    initialPage: Int = 0,
+    navObject: NavigationActions,
+    eventViewModel: EventViewModel = viewModel()
 ) {
   // This screen is made of several panels
   // The user can go from panel either by swiping left and right,
@@ -91,10 +94,11 @@ fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions, even
             onClick = {
               if (!uiState.loading) {
                 Toast.makeText(context, "Creating the event...", Toast.LENGTH_SHORT).show()
-                eventViewModel.createTheEvent(onSuccess = {
-                  Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
-                  navObject.goBack()
-                })
+                eventViewModel.createTheEvent(
+                    onSuccess = {
+                      Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
+                      navObject.goBack()
+                    })
               }
             }) {
               Text(stringResource(id = R.string.event_creation_screen_create_event))
@@ -151,9 +155,10 @@ fun SecondPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.fillMaxWidth())
     Spacer(modifier = Modifier.height(16.dp))
 
-    Row(verticalAlignment = Alignment.CenterVertically
-    ) {
-      Checkbox(checked = uiState.isPublic, onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.isPublic) })
+    Row(verticalAlignment = Alignment.CenterVertically) {
+      Checkbox(
+          checked = uiState.isPublic,
+          onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.isPublic) })
       Text(stringResource(id = R.string.event_creation_screen_make_event_public))
     }
   }

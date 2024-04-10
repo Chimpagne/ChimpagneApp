@@ -3,7 +3,6 @@ package com.monkeyteam.chimpagne.model.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
@@ -26,62 +25,67 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
   }
 
   private fun fetchEvent(
-    id: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
+      id: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
   ) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.getEventById(id, {
-        if (it != null) {
-          _uiState.value = EventUIState(
-            it.id,
-            it.title,
-            it.description,
-            it.location,
-            emptyList(),
-            it.location.name,
-            it.public,
-            it.tags,
-            it.guests,
-            it.startAt,
-            it.endsAt
-          )
-          onSuccess()
-        } else {
-          Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
-        }
-      }, {
-        Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
-        onFailure(it)
-      })
+      fireBaseDB.eventManager.getEventById(
+          id,
+          {
+            if (it != null) {
+              _uiState.value =
+                  EventUIState(
+                      it.id,
+                      it.title,
+                      it.description,
+                      it.location,
+                      emptyList(),
+                      it.location.name,
+                      it.public,
+                      it.tags,
+                      it.guests,
+                      it.startAt,
+                      it.endsAt)
+              onSuccess()
+            } else {
+              Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
+            }
+          },
+          {
+            Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
+            onFailure(it)
+          })
     }
   }
 
   private fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
-      _uiState.value.id,
-      _uiState.value.title,
-      _uiState.value.description,
-      _uiState.value.location,
-      _uiState.value.isPublic,
-      _uiState.value.tags,
-      _uiState.value.guests,
-      _uiState.value.startsAtCalendarDate,
-      _uiState.value.endsAtCalendarDate
-    )
+        _uiState.value.id,
+        _uiState.value.title,
+        _uiState.value.description,
+        _uiState.value.location,
+        _uiState.value.isPublic,
+        _uiState.value.tags,
+        _uiState.value.guests,
+        _uiState.value.startsAtCalendarDate,
+        _uiState.value.endsAtCalendarDate)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      fireBaseDB.eventManager.registerEvent(buildChimpagneEvent(),
-        {
-          _uiState.value = _uiState.value.copy(loading = false)
-          onSuccess(it)
-        },
-        {
-          Log.d("CREATE AN EVENT", "Error : ", it)
-          _uiState.value = _uiState.value.copy(loading = false)
-          onFailure(it)
-        })
+      fireBaseDB.eventManager.registerEvent(
+          buildChimpagneEvent(),
+          {
+            _uiState.value = _uiState.value.copy(loading = false)
+            onSuccess(it)
+          },
+          {
+            Log.d("CREATE AN EVENT", "Error : ", it)
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
+          })
     }
   }
 
@@ -104,33 +108,38 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
   }
 
   fun addGuestToTheEvent(
-    guestId: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
+      guestId: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
   ) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.addGuestToEvent(buildChimpagneEvent(),
-        guestId,
-        { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
-        {
-          Log.d("ADD GUEST TO EVENT", "Error : ", it)
-          onFailure(it)
-        })
+      fireBaseDB.eventManager.addGuestToEvent(
+          buildChimpagneEvent(),
+          guestId,
+          { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
+          {
+            Log.d("ADD GUEST TO EVENT", "Error : ", it)
+            onFailure(it)
+          })
     }
   }
 
   fun removeGuestFromTheEvent(
-    guestId: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
+      guestId: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
   ) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.removeGuestFromEvent(buildChimpagneEvent(),
-        guestId,
-        { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
-        {
-          Log.d("REMOVE GUEST TO EVENT", "Error : ", it)
-          onFailure(it)
-        })
+      fireBaseDB.eventManager.removeGuestFromEvent(
+          buildChimpagneEvent(),
+          guestId,
+          { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
+          {
+            Log.d("REMOVE GUEST TO EVENT", "Error : ", it)
+            onFailure(it)
+          })
     }
   }
-
 
   fun updateEventTitle(newTitle: String) {
     _uiState.value = _uiState.value.copy(title = newTitle)
@@ -144,8 +153,8 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
     _uiState.value = _uiState.value.copy(locationSearchField = newLocationSearchField)
 
     convertNameToLocation(
-      newLocationSearchField,
-      { _uiState.value = _uiState.value.copy(possibleLocationsList = it) })
+        newLocationSearchField,
+        { _uiState.value = _uiState.value.copy(possibleLocationsList = it) })
   }
 
   fun updateEventLocation(newLocation: Location) {
@@ -160,7 +169,6 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
     _uiState.value = _uiState.value.copy(tags = newTags)
   }
 
-
   fun updateEventStartCalendarDate(newStartCalendarDate: Calendar) {
     _uiState.value = _uiState.value.copy(startsAtCalendarDate = newStartCalendarDate)
   }
@@ -171,17 +179,16 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
 }
 
 data class EventUIState(
-  val id: String = "",
-  val title: String = "",
-  val description: String = "",
-  val location: Location = Location("default"),
-  val possibleLocationsList: List<Location> = emptyList(),
-  val locationSearchField: String = "",
-  val isPublic: Boolean = false,
-  val tags: List<String> = emptyList(),
-  val guests: Map<String, Boolean> = emptyMap(),
-  val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-  val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-
-  val loading: Boolean = false
+    val id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val location: Location = Location("default"),
+    val possibleLocationsList: List<Location> = emptyList(),
+    val locationSearchField: String = "",
+    val isPublic: Boolean = false,
+    val tags: List<String> = emptyList(),
+    val guests: Map<String, Boolean> = emptyMap(),
+    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val loading: Boolean = false
 )
