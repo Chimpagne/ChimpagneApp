@@ -1,3 +1,5 @@
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -5,6 +7,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import com.monkeyteam.chimpagne.ui.components.IconTextButton
+import java.text.DateFormat
 import java.util.Calendar
 
 /**
@@ -19,30 +29,37 @@ import java.util.Calendar
 @ExperimentalMaterial3Api
 @Composable
 fun DateSelector(
-    selectedDate: Calendar,
-    onDismissRequest: () -> Unit,
-    onDateSelected: (Calendar) -> Unit
+  selectedDate: Calendar, onDateSelected: (Calendar) -> Unit, modifier: Modifier = Modifier
 ) {
-  val datePickerState =
-      rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
 
-  DatePickerDialog(
-      onDismissRequest = { onDismissRequest() },
-      confirmButton = {
-        Button(
-            onClick = {
-              onDismissRequest()
-              val dateToUse =
-                  datePickerState.selectedDateMillis?.let {
-                    Calendar.getInstance().apply { timeInMillis = it }
-                  } ?: selectedDate
-              onDateSelected(dateToUse)
-            }) {
-              Text("OK")
-            }
+  var showDatePicker by remember { mutableStateOf(false) }
+
+  val datePickerState =
+    rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
+
+  IconTextButton(text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time),
+    icon = Icons.Rounded.CalendarToday,
+    onClick = { showDatePicker = true },
+    modifier = modifier)
+
+// Show date picker dialog when showDatePicker is true
+  if (showDatePicker) {
+    DatePickerDialog(onDismissRequest = { showDatePicker = false }, confirmButton = {
+      Button(onClick = {
+        showDatePicker = false
+        val dateToUse = datePickerState.selectedDateMillis?.let {
+          Calendar.getInstance().apply { timeInMillis = it }
+        } ?: selectedDate
+        onDateSelected(dateToUse)
       }) {
-        DatePicker(
-            state = datePickerState,
-        )
+        Text("OK")
       }
+    }) {
+      DatePicker(
+        state = datePickerState,
+      )
+    }
+  }
+
+
 }

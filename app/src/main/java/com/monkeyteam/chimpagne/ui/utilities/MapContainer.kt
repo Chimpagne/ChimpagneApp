@@ -25,19 +25,18 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-    mapViewModel: MapViewModel = MapViewModel(),
     isMapInitialized: Boolean = false,
     bottomSheetState: SheetState,
     onMarkerClick: (Marker) -> Unit,
+    events: Map<String, ChimpagneEvent>
 ) {
-
-  val events by mapViewModel.markers.collectAsState()
 
   val dynamicBottomPadding =
       when (bottomSheetState.targetValue) {
@@ -48,8 +47,8 @@ fun MapContainer(
 
   LaunchedEffect(events) {
     if (events.isNotEmpty()) {
-      val latitudes = events.map { it.location.latitude }
-      val longitudes = events.map { it.location.longitude }
+      val latitudes = events.values.map { it.location.latitude }
+      val longitudes = events.values.map { it.location.longitude }
       val minLat = latitudes.minOrNull()!!
       val maxLat = latitudes.maxOrNull()!!
       val minLon = longitudes.minOrNull()!!
@@ -92,7 +91,7 @@ fun MapContainer(
                 zoomControlsEnabled = false,
                 myLocationButtonEnabled = false,
                 mapToolbarEnabled = false)) {
-          for (event in events) {
+          for (event in events.values) {
             Marker(
                 state =
                     rememberMarkerState(

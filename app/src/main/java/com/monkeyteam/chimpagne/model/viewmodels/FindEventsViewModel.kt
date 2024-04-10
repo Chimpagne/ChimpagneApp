@@ -30,9 +30,11 @@ class FindEventsViewModel : ViewModel() {
   }
 
   fun fetchEvents(onFailure: (Exception) -> Unit = {}) {
+    _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       var filter =
-          Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.searchByDate))
+//          Filter.and(onlyPublicFilter())
+          Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
       if (_uiState.value.tags.isNotEmpty())
           filter = Filter.and(filter, containsTagsFilter(_uiState.value.tags))
 
@@ -40,9 +42,13 @@ class FindEventsViewModel : ViewModel() {
         eventManager.getAllEventsByFilterAroundLocation(
             _uiState.value.selectedLocation!!,
             _uiState.value.radiusAroundLocationInM,
-            { _uiState.value = _uiState.value.copy(listOfEvents = it) },
+            {
+              val monkey = it.associateBy { event -> event.id }
+              println(monkey)
+              _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id }, loading = false) },
             {
               Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
+              _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             },
             filter)
@@ -62,15 +68,17 @@ class FindEventsViewModel : ViewModel() {
     _uiState.value = _uiState.value.copy(tags = newTagList)
   }
 
-  fun updateDateQuery(newQuery: Calendar) {
-    _uiState.value = _uiState.value.copy(searchByDate = newQuery)
+  fun updateSelectedDate(newQuery: Calendar) {
+    _uiState.value = _uiState.value.copy(selectedDate = newQuery)
   }
 }
 
 data class FindEventsUIState(
-    val listOfEvents: List<ChimpagneEvent> = emptyList(),
-    val selectedLocation: Location? = null,
-    val radiusAroundLocationInM: Double = 0.0,
-    val tags: List<String> = emptyList(),
-    val searchByDate: Calendar = Calendar.getInstance()
+  val events: Map<String, ChimpagneEvent> = emptyMap(),
+  val selectedLocation: Location? = Location("Balelec", 46.519144, 6.566804),
+  val radiusAroundLocationInM: Double = 0.0,
+  val tags: List<String> = emptyList(),
+  val selectedDate: Calendar = Calendar.getInstance(),
+
+  val loading: Boolean = false
 )
