@@ -43,7 +43,7 @@ fun LocationSelector(
         {
           possibleLocations = it
           searching = false
-          showSearchBar = true
+          if (it.isNotEmpty()) showSearchBar = true
         },
         10)
   }

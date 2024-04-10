@@ -37,5 +37,7 @@
     <string name="find_event_date_legend">Date of the event</string>
     <string name="find_event_join_event_button_text">Join Event</string>
     <string name="find_event_no_event_available">No event details available</string>
+    <string name="search_location">Search for a location</string>
+
 
 </resources>

@@ -15,7 +15,7 @@ object NominatimConstants {
   const val HOST = "nominatim.openstreetmap.org"
 }
 
-fun convertNameToLocation(name: String, onResult: (List<Location>) -> Unit, limit: Int = 5) {
+fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, limit: Int = 5) {
 
   val client = OkHttpClient()
 
@@ -23,9 +23,9 @@ fun convertNameToLocation(name: String, onResult: (List<Location>) -> Unit, limi
       HttpUrl.Builder()
           .scheme(NominatimConstants.SCHEME)
           .host(NominatimConstants.HOST)
-          .addPathSegment("search")
+          .addPathSegment("search.php")
           .addQueryParameter("q", java.net.URLEncoder.encode(name, "UTF-8"))
-          .addQueryParameter("format", "json")
+          .addQueryParameter("format", "jsonv2")
           .addQueryParameter("limit", limit.toString())
           .build()
 
@@ -55,9 +55,10 @@ fun convertNameToLocation(name: String, onResult: (List<Location>) -> Unit, limi
                     val locations = arrayListOf<Location>()
                     for (i in 0 ..< jsonArray.length()) {
                       val jsonObject = jsonArray.getJSONObject(i)
+                      val locName = jsonObject.getString("display_name")
                       val lat = jsonObject.getDouble("lat")
                       val lon = jsonObject.getDouble("lon")
-                      locations.add(Location(name, lat, lon))
+                      locations.add(Location(locName, lat, lon))
                     }
                     onResult(locations)
                   } else {

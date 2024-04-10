@@ -11,7 +11,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import java.text.DateFormat
@@ -29,37 +28,42 @@ import java.util.Calendar
 @ExperimentalMaterial3Api
 @Composable
 fun DateSelector(
-  selectedDate: Calendar, onDateSelected: (Calendar) -> Unit, modifier: Modifier = Modifier
+    selectedDate: Calendar,
+    onDateSelected: (Calendar) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
   var showDatePicker by remember { mutableStateOf(false) }
 
   val datePickerState =
-    rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
+      rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
 
-  IconTextButton(text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time),
-    icon = Icons.Rounded.CalendarToday,
-    onClick = { showDatePicker = true },
-    modifier = modifier)
+  IconTextButton(
+      text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time),
+      icon = Icons.Rounded.CalendarToday,
+      onClick = { showDatePicker = true },
+      modifier = modifier)
 
-// Show date picker dialog when showDatePicker is true
+  // Show date picker dialog when showDatePicker is true
   if (showDatePicker) {
-    DatePickerDialog(onDismissRequest = { showDatePicker = false }, confirmButton = {
-      Button(onClick = {
-        showDatePicker = false
-        val dateToUse = datePickerState.selectedDateMillis?.let {
-          Calendar.getInstance().apply { timeInMillis = it }
-        } ?: selectedDate
-        onDateSelected(dateToUse)
-      }) {
-        Text("OK")
-      }
-    }) {
-      DatePicker(
-        state = datePickerState,
-      )
-    }
+    DatePickerDialog(
+        onDismissRequest = { showDatePicker = false },
+        confirmButton = {
+          Button(
+              onClick = {
+                showDatePicker = false
+                val dateToUse =
+                    datePickerState.selectedDateMillis?.let {
+                      Calendar.getInstance().apply { timeInMillis = it }
+                    } ?: selectedDate
+                onDateSelected(dateToUse)
+              }) {
+                Text("OK")
+              }
+        }) {
+          DatePicker(
+              state = datePickerState,
+          )
+        }
   }
-
-
 }

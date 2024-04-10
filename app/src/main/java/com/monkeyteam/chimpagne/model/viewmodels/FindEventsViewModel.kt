@@ -50,7 +50,7 @@ class FindEventsViewModel(
     }
   }
 
-  fun updateSelectedLocation(location: Location?) {
+  fun updateSelectedLocation(location: Location) {
     _uiState.value = _uiState.value.copy(selectedLocation = location)
   }
 
