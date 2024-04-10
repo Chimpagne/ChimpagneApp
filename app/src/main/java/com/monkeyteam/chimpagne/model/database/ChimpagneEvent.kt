@@ -19,11 +19,24 @@ data class ChimpagneEvent(
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now()
 ) {
-  @get:Exclude val guestList = guests.keys
+  private val gList = guests.keys
+  private val sAt = buildCalendar(startsAtTimestamp)
+  private val eAt = buildCalendar(endsAtTimestamp)
 
-  @get:Exclude val startAt = buildCalendar(startsAtTimestamp)
+  fun guestList(): Set<String> {
+    return gList
+  }
 
-  @get:Exclude val endsAt = buildCalendar(endsAtTimestamp)
+  fun startsAt(): Calendar {
+    return sAt
+  }
+
+  fun endsAt(): Calendar {
+    return eAt
+  }
+
+
+
 
   constructor(
       id: String,

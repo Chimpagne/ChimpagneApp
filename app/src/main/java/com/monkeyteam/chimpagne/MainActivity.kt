@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 navController.graph.setStartDestination(Route.HOME_SCREEN)
               }
             }
-            composable("loading") { SpinnerView() }
+            composable(Route.LOADING) { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
             composable(Route.FIND_AN_EVENT_SCREEN) { MainFindEventScreen(navObject = navActions) }
             composable(Route.EVENT_CREATION_SCREEN) { EventCreationScreen(navObject = navActions) }

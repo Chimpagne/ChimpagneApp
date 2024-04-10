@@ -7,6 +7,8 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.buildCalendar
+import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +25,8 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
+    val t = ChimpagneEvent(startsAtTimestamp = buildTimestamp(1, 1, 2021, 1, 1))
+
     if (eventID != null) {
       fetchEvent(eventID, onSuccess, onFailure)
     }
@@ -48,8 +52,8 @@ class EventViewModel(
                       it.public,
                       it.tags,
                       it.guests,
-                      it.startAt,
-                      it.endsAt)
+                      it.startsAt(),
+                      it.endsAt())
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {

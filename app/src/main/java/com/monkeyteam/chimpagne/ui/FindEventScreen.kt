@@ -1,8 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
 import DateSelector
-import android.util.Log
-import android.widget.AutoCompleteTextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -27,9 +25,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Tag
@@ -41,7 +38,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -50,6 +46,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,12 +55,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -73,13 +66,14 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.viewmodels.FindEventsViewModel
-import com.monkeyteam.chimpagne.ui.components.AutoCompleteTextView
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
+import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
+import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
+import com.monkeyteam.chimpagne.ui.components.TagChip
+import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
-import java.time.format.DateTimeFormatter.*
-import java.util.Locale
 import kotlinx.coroutines.launch
 
 object FindEventScreens {
@@ -128,48 +122,9 @@ fun FindEventFormScreen(
 
   val scrollState = rememberScrollState()
 
-  var searchActive by remember { mutableStateOf(false) }
+  var tagFieldActive by remember { mutableStateOf(false) }
 
-  val keyboardController = LocalSoftwareKeyboardController.current
-
-  var tagInput by remember { mutableStateOf("") }
-  val selectedTags = remember { mutableStateListOf<String>() }
-
-  val tagPredictions =
-      remember(tagInput) {
-        if (tagInput.isEmpty()) {
-          listOf() // Return an empty list if addressInput is empty
-        } else {
-          listOf(
-                  "student",
-                  "disco",
-                  "vegan",
-                  "dark",
-                  "alcool",
-                  "beer",
-                  "bbq",
-                  "soundboks",
-                  "carnaval")
-              .filter { it.contains(tagInput, ignoreCase = true) }
-              .take(5)
-        }
-      }
-
-  var searchRadius by remember { mutableStateOf(1f) }
-  val view = LocalView.current
-  var addressInput by remember { mutableStateOf("") }
-  val selectedAddress = remember { mutableStateListOf<String>() }
-
-  val addressPredictions =
-      remember(addressInput) {
-        if (addressInput.isEmpty()) {
-          listOf() // Return an empty list if addressInput is empty
-        } else {
-          listOf("EPFL", "UNIL", "Lausanne", "Renens", "Ecublens", "Montreux", "DLL", "Rolex")
-              .filter { it.contains(addressInput, ignoreCase = true) }
-              .take(5)
-        }
-      }
+  var searchRadius by remember { mutableFloatStateOf(1f) }
 
   Scaffold(
       topBar = {
@@ -186,7 +141,10 @@ fun FindEventFormScreen(
         Button(
             onClick = { onSearchClick() },
             modifier =
-                Modifier.fillMaxWidth().padding(8.dp).height(56.dp), // Typical height for buttons
+            Modifier
+              .fillMaxWidth()
+              .padding(8.dp)
+              .height(56.dp), // Typical height for buttons
             shape = MaterialTheme.shapes.extraLarge) {
               Icon(Icons.Rounded.Search, contentDescription = "Search")
               Spacer(Modifier.width(8.dp))
@@ -197,49 +155,22 @@ fun FindEventFormScreen(
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
-              modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
+              modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
-                FindEventLegend(
+                Legend(
                     stringResource(id = R.string.find_event_event_location_legend),
-                    Icons.Rounded.Search,
-                    "Search")
+                    Icons.Rounded.LocationOn,
+                    "Location")
 
                 Spacer(Modifier.height(16.dp))
 
-                AutoCompleteTextView(
-                    modifier = Modifier.fillMaxWidth(),
-                    query = addressInput,
-                    queryLabel =
-                        stringResource(id = R.string.find_event_event_location_query_label),
-                    onQueryChanged = { updatedAddress -> addressInput = updatedAddress },
-                    predictions = addressPredictions,
-                    onClearClick = {
-                      if (addressInput.isEmpty()) {
-                        view.clearFocus()
-                        keyboardController?.hide()
-                      } else {
-                        addressInput = ""
-                      }
-                    },
-                    onDoneActionClick = {
-                      // TODO : should be an address converted to location using Nominatim
-                      if (addressInput.trim().isNotBlank()) {
-                        selectedAddress.add(0, addressInput.trim().lowercase(Locale.getDefault()))
-                        addressInput = ""
-                      } else {
-                        view.clearFocus()
-                      }
-                    },
-                    onItemClick = { selectedAdd ->
-                      // TODO : should be an address fetched from Nominatim
-                      if (selectedAdd.trim().isNotBlank()) {
-                        selectedAddress.add(0, selectedAdd.trim().lowercase(Locale.getDefault()))
-                        addressInput = ""
-                      }
-                    }) { address ->
-                      // Define how the items need to be displayed
-                      Text(address, fontSize = 14.sp)
-                    }
+                LocationSelector(
+                  uiState.selectedLocation,
+                  findViewModel::updateSelectedLocation,
+                  Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
@@ -254,11 +185,6 @@ fun FindEventFormScreen(
                         stringResource(id = R.string.find_event_search_radius) +
                             " : ${searchRadius.toInt()} km")
 
-                LocationSelector(
-                    uiState.selectedLocation,
-                    findViewModel::updateSelectedLocation,
-                    Modifier.fillMaxWidth())
-
                 Slider(
                     value = searchRadius,
                     onValueChange = { searchRadius = it },
@@ -267,59 +193,18 @@ fun FindEventFormScreen(
 
                 Spacer(Modifier.height(32.dp))
 
-                FindEventLegend(
+                Legend(
                     stringResource(id = R.string.find_event_event_tags_legend),
                     Icons.Rounded.Tag,
                     "Tags")
 
                 Spacer(Modifier.height(16.dp))
 
-                Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
-                  selectedTags.forEach { tag -> TagChip(tag = tag) { selectedTags.remove(tag) } }
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                AutoCompleteTextView(
-                    modifier = Modifier.fillMaxWidth(),
-                    query = tagInput,
-                    queryLabel = stringResource(id = R.string.find_event_search_tag_query_label),
-                    onQueryChanged = { updatedTag ->
-                      tagInput = updatedTag
-                      // Update addressPlaceItemPredictions based on the tagInput here
-                    },
-                    predictions = tagPredictions,
-                    onClearClick = {
-                      Log.d(tagInput, "tagInput")
-                      if (tagInput.isEmpty()) {
-                        keyboardController?.hide()
-                        view.clearFocus()
-                      } else {
-                        tagInput = ""
-                      }
-                    },
-                    onDoneActionClick = {
-                      if (tagInput.trim().isNotBlank()) {
-                        selectedTags.add(0, tagInput.trim().lowercase(Locale.getDefault()))
-                        tagInput = ""
-                      } else {
-                        view.clearFocus()
-                      }
-                    },
-                    onItemClick = { selectedTag ->
-                      if (selectedTag.trim().isNotBlank()) {
-                        selectedTags.add(0, selectedTag.trim().lowercase(Locale.getDefault()))
-                        tagInput = ""
-                      }
-                    },
-                    onFocusChanged = { isFocused -> searchActive = isFocused }) { tag ->
-                      // Define how the items need to be displayed
-                      Text(tag, fontSize = 14.sp)
-                    }
+                TagField(uiState.selectedTags, findViewModel::updateTags, { tagFieldActive = it }, Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(40.dp))
 
-                FindEventLegend(
+                Legend(
                     stringResource(id = R.string.find_event_date_legend),
                     Icons.Rounded.CalendarToday,
                     "Select date")
@@ -331,54 +216,13 @@ fun FindEventFormScreen(
                     findViewModel::updateSelectedDate,
                     modifier = Modifier.align(Alignment.CenterHorizontally))
 
-                if (searchActive) {
+                if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))
                   LaunchedEffect(Unit) { scrollState.animateScrollTo(scrollState.maxValue) }
                 }
               }
         }
       }
-}
-
-@Composable
-fun TagChip(tag: String, onRemove: () -> Unit) {
-  Surface(
-      modifier = Modifier.padding(end = 8.dp),
-      shape = RoundedCornerShape(52.dp),
-      color = MaterialTheme.colorScheme.primary,
-      contentColor = MaterialTheme.colorScheme.onPrimary) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-          Text(
-              text = tag,
-              modifier = Modifier.padding(start = 16.dp),
-              style = MaterialTheme.typography.bodyMedium)
-          IconButton(onClick = onRemove) {
-            Icon(imageVector = Icons.Rounded.Close, contentDescription = "Remove tag")
-          }
-        }
-      }
-}
-
-@Composable
-fun SimpleTagChip(tag: String) {
-  Text(
-      text = "#$tag",
-      style = MaterialTheme.typography.bodyLarge,
-      color = MaterialTheme.colorScheme.primary)
-}
-
-@Composable
-fun FindEventLegend(text: String, imageVector: ImageVector, contentDescription: String) {
-  Row(
-      verticalAlignment = Alignment.CenterVertically,
-  ) {
-    Icon(imageVector = imageVector, contentDescription = contentDescription)
-    Text(
-        text = text,
-        modifier = Modifier.padding(8.dp),
-        style = MaterialTheme.typography.titleLarge,
-    )
-  }
 }
 
 @ExperimentalMaterial3Api
@@ -414,8 +258,6 @@ fun FindEventMapScreen(
     }
   }
 
-  //  location = Location("Balelec", 46.519144, 6.566804),
-
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
@@ -439,12 +281,14 @@ fun FindEventMapScreen(
 
           IconButton(
               modifier =
-                  Modifier.padding(start = 12.dp, top = 12.dp)
-                      .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-                      .background(
-                          color = MaterialTheme.colorScheme.surface,
-                          shape = RoundedCornerShape(100))
-                      .padding(4.dp),
+              Modifier
+                .padding(start = 12.dp, top = 12.dp)
+                .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+                .background(
+                  color = MaterialTheme.colorScheme.surface,
+                  shape = RoundedCornerShape(100)
+                )
+                .padding(4.dp),
               onClick = { goBack() }) {
                 Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Go Back")
               }
@@ -456,7 +300,9 @@ fun FindEventMapScreen(
 fun EventDetailSheet(event: ChimpagneEvent?) {
   if (event != null) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
           Text(
               text = event.title,
@@ -464,12 +310,12 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               modifier = Modifier.padding(bottom = 8.dp))
 
           Text(
-              text = event.startAt.time.toString(),
+              text = event.startsAt().time.toString(),
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.padding(bottom = 8.dp))
 
           Text(
-              text = event.endsAt.time.toString(),
+              text = event.endsAt().time.toString(),
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.padding(bottom = 8.dp))
 
@@ -479,7 +325,9 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               modifier = Modifier.padding(bottom = 8.dp))
 
           Row(
-              modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+              modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
               horizontalArrangement = Arrangement.SpaceEvenly) {
                 event.tags.forEach { tag -> SimpleTagChip(tag) }
               }
@@ -491,7 +339,9 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               }
         }
   } else {
-    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier
+      .fillMaxWidth()
+      .padding(16.dp), contentAlignment = Alignment.Center) {
       Text(
           stringResource(id = R.string.find_event_no_event_available),
           style = MaterialTheme.typography.bodyMedium)

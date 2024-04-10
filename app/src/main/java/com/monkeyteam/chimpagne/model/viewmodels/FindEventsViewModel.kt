@@ -59,7 +59,7 @@ class FindEventsViewModel(
   }
 
   fun updateTags(newTagList: List<String>) {
-    _uiState.value = _uiState.value.copy(selectedTags = newTagList)
+    _uiState.value = _uiState.value.copy(selectedTags = newTagList.distinct())
   }
 
   fun updateSelectedDate(newQuery: Calendar) {
