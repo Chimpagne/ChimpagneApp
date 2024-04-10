@@ -25,6 +25,7 @@ import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
+import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 import com.monkeyteam.chimpagne.ui.viewmodel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +39,8 @@ class MainActivity : ComponentActivity() {
         // A surface container using the 'background' color from the them
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
+        val accountViewModel =
+            AccountViewModel("g@myrichard.ch") // TODO hast to be integrated with auth
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           val isAuthenticated by authViewModel.isAuthenticated.collectAsState(initial = null)
@@ -70,9 +73,15 @@ class MainActivity : ComponentActivity() {
                 navController.graph.setStartDestination(Route.HOME_SCREEN)
               }
             }
-            composable(Route.ACCOUNT_CREATION_SCREEN) { AccountCreation(navObject = navActions) }
-            composable(Route.ACCOUNT_SETTINGS_SCREEN) { AccountSettings(navObject = navActions) }
-            composable(Route.ACCOUNT_EDIT_SCREEN) { AccountEdit(navObject = navActions) }
+            composable(Route.ACCOUNT_CREATION_SCREEN) {
+              AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
+            }
+            composable(Route.ACCOUNT_SETTINGS_SCREEN) {
+              AccountSettings(navObject = navActions, accountViewModel = accountViewModel)
+            }
+            composable(Route.ACCOUNT_EDIT_SCREEN) {
+              AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
+            }
 
             composable("loading") { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
