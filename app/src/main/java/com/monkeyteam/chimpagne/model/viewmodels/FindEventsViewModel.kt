@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.happensOnThisDateFilter
@@ -15,48 +16,41 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class FindEventsViewModel : ViewModel() {
+class FindEventsViewModel(
+  private val eventManager: ChimpagneEventManager = Database.instance.eventManager
+) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
   val uiState: StateFlow<FindEventsUIState> = _uiState
-  private val eventManager = Database().eventManager
 
-  init {
-    //    viewModelScope.launch {
-    //      fireBaseDB.eventManager.getAllEvents(
-    //          { _uiState.value = _uiState.value.copy(listOfEvents = it) },
-    //          { Log.d("FETCHING ALL EVENTS", "Error : ", it) })
-    //    }
-  }
-
-  fun fetchEvents(onFailure: (Exception) -> Unit = {}) {
+  fun fetchEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       var filter =
-//          Filter.and(onlyPublicFilter())
           Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
-      if (_uiState.value.tags.isNotEmpty())
-          filter = Filter.and(filter, containsTagsFilter(_uiState.value.tags))
+      if (_uiState.value.selectedTags.isNotEmpty())
+          filter = Filter.and(filter, containsTagsFilter(_uiState.value.selectedTags))
 
       if (_uiState.value.selectedLocation != null) {
         eventManager.getAllEventsByFilterAroundLocation(
             _uiState.value.selectedLocation!!,
             _uiState.value.radiusAroundLocationInM,
             {
-              val monkey = it.associateBy { event -> event.id }
-              println(monkey)
-              _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id }, loading = false) },
+              _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id }, loading = false)
+              onSuccess()
+            },
             {
               Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             },
-            filter)
+            filter
+        )
       }
     }
   }
 
-  fun updateSelectedLocation(location: Location) {
+  fun updateSelectedLocation(location: Location?) {
     _uiState.value = _uiState.value.copy(selectedLocation = location)
   }
 
@@ -65,7 +59,7 @@ class FindEventsViewModel : ViewModel() {
   }
 
   fun updateTags(newTagList: List<String>) {
-    _uiState.value = _uiState.value.copy(tags = newTagList)
+    _uiState.value = _uiState.value.copy(selectedTags = newTagList)
   }
 
   fun updateSelectedDate(newQuery: Calendar) {
@@ -75,9 +69,9 @@ class FindEventsViewModel : ViewModel() {
 
 data class FindEventsUIState(
   val events: Map<String, ChimpagneEvent> = emptyMap(),
-  val selectedLocation: Location? = Location("Balelec", 46.519144, 6.566804),
+  val selectedLocation: Location? = null,
   val radiusAroundLocationInM: Double = 0.0,
-  val tags: List<String> = emptyList(),
+  val selectedTags: List<String> = emptyList(),
   val selectedDate: Calendar = Calendar.getInstance(),
 
   val loading: Boolean = false
