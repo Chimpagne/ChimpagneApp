@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.model.database
 
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.Exclude
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
@@ -34,9 +33,6 @@ data class ChimpagneEvent(
   fun endsAt(): Calendar {
     return eAt
   }
-
-
-
 
   constructor(
       id: String,

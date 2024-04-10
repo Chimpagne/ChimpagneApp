@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class FindEventsViewModel(
-  private val eventManager: ChimpagneEventManager = Database.instance.eventManager
+    private val eventManager: ChimpagneEventManager = Database.instance.eventManager
 ) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
@@ -36,7 +36,9 @@ class FindEventsViewModel(
             _uiState.value.selectedLocation!!,
             _uiState.value.radiusAroundLocationInM,
             {
-              _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id }, loading = false)
+              _uiState.value =
+                  _uiState.value.copy(
+                      events = it.associateBy { event -> event.id }, loading = false)
               onSuccess()
             },
             {
@@ -44,8 +46,7 @@ class FindEventsViewModel(
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             },
-            filter
-        )
+            filter)
       }
     }
   }
@@ -68,11 +69,10 @@ class FindEventsViewModel(
 }
 
 data class FindEventsUIState(
-  val events: Map<String, ChimpagneEvent> = emptyMap(),
-  val selectedLocation: Location? = null,
-  val radiusAroundLocationInM: Double = 0.0,
-  val selectedTags: List<String> = emptyList(),
-  val selectedDate: Calendar = Calendar.getInstance(),
-
-  val loading: Boolean = false
+    val events: Map<String, ChimpagneEvent> = emptyMap(),
+    val selectedLocation: Location? = null,
+    val radiusAroundLocationInM: Double = 0.0,
+    val selectedTags: List<String> = emptyList(),
+    val selectedDate: Calendar = Calendar.getInstance(),
+    val loading: Boolean = false
 )

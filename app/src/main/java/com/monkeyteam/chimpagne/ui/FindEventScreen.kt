@@ -3,7 +3,6 @@ package com.monkeyteam.chimpagne.ui
 import DateSelector
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +46,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -70,7 +68,6 @@ import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
-import com.monkeyteam.chimpagne.ui.components.TagChip
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
@@ -141,10 +138,7 @@ fun FindEventFormScreen(
         Button(
             onClick = { onSearchClick() },
             modifier =
-            Modifier
-              .fillMaxWidth()
-              .padding(8.dp)
-              .height(56.dp), // Typical height for buttons
+                Modifier.fillMaxWidth().padding(8.dp).height(56.dp), // Typical height for buttons
             shape = MaterialTheme.shapes.extraLarge) {
               Icon(Icons.Rounded.Search, contentDescription = "Search")
               Spacer(Modifier.width(8.dp))
@@ -155,10 +149,7 @@ fun FindEventFormScreen(
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
-              modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(scrollState),
+              modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
                 Legend(
                     stringResource(id = R.string.find_event_event_location_legend),
@@ -168,9 +159,9 @@ fun FindEventFormScreen(
                 Spacer(Modifier.height(16.dp))
 
                 LocationSelector(
-                  uiState.selectedLocation,
-                  findViewModel::updateSelectedLocation,
-                  Modifier.fillMaxWidth())
+                    uiState.selectedLocation,
+                    findViewModel::updateSelectedLocation,
+                    Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
@@ -200,7 +191,11 @@ fun FindEventFormScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                TagField(uiState.selectedTags, findViewModel::updateTags, { tagFieldActive = it }, Modifier.fillMaxWidth())
+                TagField(
+                    uiState.selectedTags,
+                    findViewModel::updateTags,
+                    { tagFieldActive = it },
+                    Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(40.dp))
 
@@ -281,14 +276,12 @@ fun FindEventMapScreen(
 
           IconButton(
               modifier =
-              Modifier
-                .padding(start = 12.dp, top = 12.dp)
-                .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-                .background(
-                  color = MaterialTheme.colorScheme.surface,
-                  shape = RoundedCornerShape(100)
-                )
-                .padding(4.dp),
+                  Modifier.padding(start = 12.dp, top = 12.dp)
+                      .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+                      .background(
+                          color = MaterialTheme.colorScheme.surface,
+                          shape = RoundedCornerShape(100))
+                      .padding(4.dp),
               onClick = { goBack() }) {
                 Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Go Back")
               }
@@ -300,9 +293,7 @@ fun FindEventMapScreen(
 fun EventDetailSheet(event: ChimpagneEvent?) {
   if (event != null) {
     Column(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp),
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
           Text(
               text = event.title,
@@ -325,9 +316,7 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               modifier = Modifier.padding(bottom = 8.dp))
 
           Row(
-              modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
+              modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
               horizontalArrangement = Arrangement.SpaceEvenly) {
                 event.tags.forEach { tag -> SimpleTagChip(tag) }
               }
@@ -339,9 +328,7 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               }
         }
   } else {
-    Box(modifier = Modifier
-      .fillMaxWidth()
-      .padding(16.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
       Text(
           stringResource(id = R.string.find_event_no_event_available),
           style = MaterialTheme.typography.bodyMedium)

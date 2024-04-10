@@ -14,13 +14,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Legend(text: String, imageVector: ImageVector, contentDescription: String) {
   Row(
-    verticalAlignment = Alignment.CenterVertically,
+      verticalAlignment = Alignment.CenterVertically,
   ) {
     Icon(imageVector = imageVector, contentDescription = contentDescription)
     Text(
-      text = text,
-      modifier = Modifier.padding(8.dp),
-      style = MaterialTheme.typography.titleLarge,
+        text = text,
+        modifier = Modifier.padding(8.dp),
+        style = MaterialTheme.typography.titleLarge,
     )
   }
 }
