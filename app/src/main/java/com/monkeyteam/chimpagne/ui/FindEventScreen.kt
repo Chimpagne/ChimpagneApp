@@ -60,6 +60,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -68,6 +69,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.firebase.Timestamp
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.AutoCompleteTextView
@@ -168,7 +170,7 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
   Scaffold(
       topBar = {
         TopAppBar(
-            title = { Text("Find an event") },
+            title = { Text(stringResource(id = R.string.find_event_page_title)) },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
@@ -184,25 +186,31 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
             shape = MaterialTheme.shapes.extraLarge) {
               Icon(Icons.Rounded.Search, contentDescription = "Search")
               Spacer(Modifier.width(8.dp))
-              Text("Search", style = MaterialTheme.typography.bodyLarge)
+              Text(
+                  stringResource(id = R.string.find_event_search_button_text),
+                  style = MaterialTheme.typography.bodyLarge)
             }
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
               modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
-                FindEventLegend("Event Location", Icons.Rounded.Search, "Search")
+                FindEventLegend(
+                    stringResource(id = R.string.find_event_event_location_legend),
+                    Icons.Rounded.Search,
+                    "Search")
 
                 Spacer(Modifier.height(16.dp))
 
                 AutoCompleteTextView(
                     modifier = Modifier.fillMaxWidth(),
                     query = addressInput,
-                    queryLabel = "Enter an address",
+                    queryLabel =
+                        stringResource(id = R.string.find_event_event_location_query_label),
                     onQueryChanged = { updatedAddress -> addressInput = updatedAddress },
                     predictions = addressPredictions,
                     onClearClick = {
-                      if (addressInput === "") {
+                      if (addressInput.isEmpty()) {
                         view.clearFocus()
                         keyboardController?.hide()
                       } else {
@@ -231,13 +239,16 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
-                    text = "Locate me",
+                    text = stringResource(id = R.string.find_event_event_locate_me_button),
                     icon = Icons.Rounded.MyLocation,
                     onClick = { /*TODO*/},
                     modifier = Modifier.align(Alignment.CenterHorizontally))
                 Spacer(Modifier.height(16.dp))
 
-                Text(text = "Search Radius: ${searchRadius.toInt()} km")
+                Text(
+                    text =
+                        stringResource(id = R.string.find_event_search_radius) +
+                            " : ${searchRadius.toInt()} km")
 
                 Slider(
                     value = searchRadius,
@@ -247,7 +258,10 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
 
                 Spacer(Modifier.height(32.dp))
 
-                FindEventLegend("Add Tags to your search", Icons.Rounded.Tag, "Tags")
+                FindEventLegend(
+                    stringResource(id = R.string.find_event_event_tags_legend),
+                    Icons.Rounded.Tag,
+                    "Tags")
 
                 Spacer(Modifier.height(16.dp))
 
@@ -260,7 +274,7 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
                 AutoCompleteTextView(
                     modifier = Modifier.fillMaxWidth(),
                     query = tagInput,
-                    queryLabel = "Enter a tag",
+                    queryLabel = stringResource(id = R.string.find_event_search_tag_query_label),
                     onQueryChanged = { updatedTag ->
                       tagInput = updatedTag
                       // Update addressPlaceItemPredictions based on the tagInput here
@@ -268,7 +282,7 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
                     predictions = tagPredictions,
                     onClearClick = {
                       Log.d(tagInput, "tagInput")
-                      if (tagInput === "") {
+                      if (tagInput.isEmpty()) {
                         keyboardController?.hide()
                         view.clearFocus()
                       } else {
@@ -296,7 +310,10 @@ fun FindEventFormScreen(navObject: NavigationActions, onSearchClick: () -> Unit)
 
                 Spacer(Modifier.height(40.dp))
 
-                FindEventLegend("Date of the event", Icons.Rounded.CalendarToday, "Select date")
+                FindEventLegend(
+                    stringResource(id = R.string.find_event_date_legend),
+                    Icons.Rounded.CalendarToday,
+                    "Select date")
 
                 Spacer(Modifier.height(16.dp))
 
@@ -498,12 +515,14 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
           Button(
               onClick = { /* Handle join event */},
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text("Join event")
+                Text(stringResource(id = R.string.find_event_join_event_button_text))
               }
         }
   } else {
     Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-      Text("No event details available", style = MaterialTheme.typography.bodyMedium)
+      Text(
+          stringResource(id = R.string.find_event_no_event_available),
+          style = MaterialTheme.typography.bodyMedium)
     }
   }
 }
