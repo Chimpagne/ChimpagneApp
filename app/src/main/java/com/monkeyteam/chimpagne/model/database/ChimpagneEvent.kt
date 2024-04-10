@@ -33,8 +33,8 @@ data class ChimpagneEvent(
       public: Boolean,
       tags: List<String>,
       guests: Map<String, Boolean>,
-      startAt: Calendar,
-      endAt: Calendar
+      startsAt: Calendar,
+      endsAt: Calendar
   ) : this(
       id,
       title,
@@ -43,6 +43,6 @@ data class ChimpagneEvent(
       public,
       tags,
       guests,
-      buildTimestamp(startAt),
-      buildTimestamp(endAt))
+      buildTimestamp(startsAt),
+      buildTimestamp(endsAt))
 }

@@ -16,31 +16,40 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions) {
+fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions, eventViewModel: EventViewModel = viewModel()
+) {
   // This screen is made of several panels
   // The user can go from panel either by swiping left and right,
   // or by clicking the buttons on the bottom of the screen.
+
+  val uiState by eventViewModel.uiState.collectAsState()
+
   val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -50,10 +59,10 @@ fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions) {
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
-        0 -> FirstPanel()
-        1 -> SecondPanel()
-        2 -> ThirdPanel()
-        3 -> FourthPanel()
+        0 -> FirstPanel(eventViewModel)
+        1 -> SecondPanel(eventViewModel)
+        2 -> ThirdPanel(eventViewModel)
+        3 -> FourthPanel(eventViewModel)
       }
     }
 
@@ -80,7 +89,13 @@ fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions) {
       } else {
         Button(
             onClick = {
-              Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
+              if (!uiState.loading) {
+                Toast.makeText(context, "Creating the event...", Toast.LENGTH_SHORT).show()
+                eventViewModel.createTheEvent(onSuccess = {
+                  Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
+                  navObject.goBack()
+                })
+              }
             }) {
               Text(stringResource(id = R.string.event_creation_screen_create_event))
             }
@@ -90,20 +105,21 @@ fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions) {
 }
 
 @Composable
-fun FirstPanel() {
-  var titleText by remember { mutableStateOf("") }
-  var descriptionText by remember { mutableStateOf("") }
+fun FirstPanel(eventViewModel: EventViewModel) {
+  val uiState by eventViewModel.uiState.collectAsState()
+
   var addressText by remember { mutableStateOf("") }
+
   Column(modifier = Modifier.padding(16.dp)) {
     OutlinedTextField(
-        value = titleText,
-        onValueChange = { titleText = it },
+        value = uiState.title,
+        onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
         modifier = Modifier.fillMaxWidth())
     Spacer(modifier = Modifier.height(16.dp))
     OutlinedTextField(
-        value = descriptionText,
-        onValueChange = { descriptionText = it },
+        value = uiState.description,
+        onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
         modifier = Modifier.fillMaxWidth(),
         maxLines = 3)
@@ -117,7 +133,8 @@ fun FirstPanel() {
 }
 
 @Composable
-fun SecondPanel() {
+fun SecondPanel(eventViewModel: EventViewModel) {
+  val uiState by eventViewModel.uiState.collectAsState()
 
   var tagsText by remember { mutableStateOf("") }
 
@@ -128,23 +145,24 @@ fun SecondPanel() {
         style = MaterialTheme.typography.headlineSmall)
     Spacer(modifier = Modifier.height(16.dp))
     OutlinedTextField(
-        value = tagsText,
-        onValueChange = { tagsText = it },
+        value = uiState.tags.joinToString(","),
+        onValueChange = { eventViewModel.updateEventTags(it.split(",")) },
         label = { Text(stringResource(id = R.string.event_creation_screen_tags)) },
         modifier = Modifier.fillMaxWidth())
     Spacer(modifier = Modifier.height(16.dp))
-    Button(
-        onClick = {
-          // We can't use stringResource because it's a composable...
-          Toast.makeText(context, "This event has been made public !", Toast.LENGTH_SHORT).show()
-        }) {
-          Text(stringResource(id = R.string.event_creation_screen_make_event_public))
-        }
+
+    Row(verticalAlignment = Alignment.CenterVertically
+    ) {
+      Checkbox(checked = uiState.isPublic, onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.isPublic) })
+      Text(stringResource(id = R.string.event_creation_screen_make_event_public))
+    }
   }
 }
 
 @Composable
-fun ThirdPanel() {
+fun ThirdPanel(eventViewModel: EventViewModel) {
+  val uiState by eventViewModel.uiState.collectAsState()
+
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_groceries),
@@ -162,7 +180,11 @@ fun ThirdPanel() {
 
 // Comment to make a new commit
 @Composable
-fun FourthPanel() {
+fun FourthPanel(eventViewModel: EventViewModel) {
+  val uiState by eventViewModel.uiState.collectAsState()
+
+  // TODO: SHOW SPINNER
+
   var parkingText by remember { mutableStateOf("") }
   var bedsText by remember { mutableStateOf("") }
   Column(modifier = Modifier.padding(16.dp)) {
