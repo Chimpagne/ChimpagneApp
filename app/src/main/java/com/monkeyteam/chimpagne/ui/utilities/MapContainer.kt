@@ -41,7 +41,7 @@ fun MapContainer(
 
   val dynamicBottomPadding =
       when (bottomSheetState.targetValue) {
-        SheetValue.Expanded -> 100.dp
+        SheetValue.Expanded -> 180.dp
         SheetValue.PartiallyExpanded -> 0.dp
         SheetValue.Hidden -> 0.dp
       }
@@ -94,7 +94,9 @@ fun MapContainer(
                 mapToolbarEnabled = false)) {
           for (event in events) {
             Marker(
-                state = rememberMarkerState(position = LatLng(event.location.latitude, event.location.longitude)),
+                state =
+                    rememberMarkerState(
+                        position = LatLng(event.location.latitude, event.location.longitude)),
                 title = event.title,
                 tag = event.id,
                 onClick = {

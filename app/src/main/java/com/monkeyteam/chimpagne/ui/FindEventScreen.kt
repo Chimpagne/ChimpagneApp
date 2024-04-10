@@ -479,10 +479,10 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.padding(bottom = 8.dp))
 
-        Text(
-            text = event.endsAt.time.toString(),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp))
+          Text(
+              text = event.endsAt.time.toString(),
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(bottom = 8.dp))
 
           Text(
               text = event.description,
