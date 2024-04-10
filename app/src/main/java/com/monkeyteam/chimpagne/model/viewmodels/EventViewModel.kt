@@ -74,7 +74,6 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
     viewModelScope.launch {
       fireBaseDB.eventManager.registerEvent(buildChimpagneEvent(),
         {
-//          fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure)
           _uiState.value = _uiState.value.copy(loading = false)
           onSuccess(it)
         },
@@ -104,34 +103,33 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
     }
   }
 
-// Seems to be not the good place for this
-//  fun addGuestToTheEvent(
-//    guestId: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
-//  ) {
-//    viewModelScope.launch {
-//      fireBaseDB.eventManager.addGuestToEvent(buildChimpagneEvent(),
-//        guestId,
-//        { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
-//        {
-//          Log.d("ADD GUEST TO EVENT", "Error : ", it)
-//          onFailure(it)
-//        })
-//    }
-//  }
-//
-//  fun removeGuestFromTheEvent(
-//    guestId: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
-//  ) {
-//    viewModelScope.launch {
-//      fireBaseDB.eventManager.removeGuestFromEvent(buildChimpagneEvent(),
-//        guestId,
-//        { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
-//        {
-//          Log.d("REMOVE GUEST TO EVENT", "Error : ", it)
-//          onFailure(it)
-//        })
-//    }
-//  }
+  fun addGuestToTheEvent(
+    guestId: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
+  ) {
+    viewModelScope.launch {
+      fireBaseDB.eventManager.addGuestToEvent(buildChimpagneEvent(),
+        guestId,
+        { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
+        {
+          Log.d("ADD GUEST TO EVENT", "Error : ", it)
+          onFailure(it)
+        })
+    }
+  }
+
+  fun removeGuestFromTheEvent(
+    guestId: String, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
+  ) {
+    viewModelScope.launch {
+      fireBaseDB.eventManager.removeGuestFromEvent(buildChimpagneEvent(),
+        guestId,
+        { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
+        {
+          Log.d("REMOVE GUEST TO EVENT", "Error : ", it)
+          onFailure(it)
+        })
+    }
+  }
 
 
   fun updateEventTitle(newTitle: String) {
