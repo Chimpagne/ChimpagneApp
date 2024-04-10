@@ -53,9 +53,6 @@ class EventViewModelTests {
     eventVM.updateEventDescription(testEvent.description)
     assertTrue(eventVM.uiState.value.description == testEvent.description)
 
-    eventVM.updateEventLocationSearchField(testEvent.location.name)
-    assertTrue(eventVM.uiState.value.locationSearchField == testEvent.location.name)
-
     eventVM.updateEventLocation(testEvent.location)
     assertTrue(eventVM.uiState.value.location.name == testEvent.location.name)
     assertTrue(eventVM.uiState.value.location.latitude == testEvent.location.latitude)
@@ -123,7 +120,6 @@ class EventViewModelTests {
 
     eventCreationVM.updateEventTitle(testEvent.title)
     eventCreationVM.updateEventDescription(testEvent.description)
-    eventCreationVM.updateEventLocationSearchField(testEvent.location.name)
     eventCreationVM.updateEventLocation(testEvent.location)
     eventCreationVM.updateEventPublicity(testEvent.public)
     eventCreationVM.updateEventTags(testEvent.tags)
@@ -150,7 +146,6 @@ class EventViewModelTests {
 
     assertTrue(eventSearchVM.uiState.value.title == testEvent.title)
     assertTrue(eventSearchVM.uiState.value.description == testEvent.description)
-    assertTrue(eventSearchVM.uiState.value.locationSearchField == testEvent.location.name)
     assertTrue(eventSearchVM.uiState.value.location.name == testEvent.location.name)
     assertTrue(eventSearchVM.uiState.value.location.latitude == testEvent.location.latitude)
     assertTrue(eventSearchVM.uiState.value.location.longitude == testEvent.location.longitude)
@@ -205,7 +200,6 @@ class EventViewModelTests {
 
     eventCreationVM.updateEventTitle(testEvent.title)
     eventCreationVM.updateEventDescription(testEvent.description)
-    eventCreationVM.updateEventLocationSearchField(testEvent.location.name)
     eventCreationVM.updateEventLocation(testEvent.location)
     eventCreationVM.updateEventPublicity(testEvent.public)
     eventCreationVM.updateEventTags(testEvent.tags)
@@ -234,7 +228,6 @@ class EventViewModelTests {
 
     eventSearchVM.updateEventTitle(testUpdatedEvent.title)
     eventSearchVM.updateEventDescription(testUpdatedEvent.description)
-    eventSearchVM.updateEventLocationSearchField(testUpdatedEvent.location.name)
     eventSearchVM.updateEventLocation(testUpdatedEvent.location)
     eventSearchVM.updateEventPublicity(testUpdatedEvent.public)
     eventSearchVM.updateEventTags(testUpdatedEvent.tags)
@@ -259,7 +252,6 @@ class EventViewModelTests {
 
     assertTrue(eventSearch2VM.uiState.value.title == testUpdatedEvent.title)
     assertTrue(eventSearch2VM.uiState.value.description == testUpdatedEvent.description)
-    assertTrue(eventSearch2VM.uiState.value.locationSearchField == testUpdatedEvent.location.name)
     assertTrue(eventSearch2VM.uiState.value.location.name == testUpdatedEvent.location.name)
     assertTrue(eventSearch2VM.uiState.value.location.latitude == testUpdatedEvent.location.latitude)
     assertTrue(

@@ -157,8 +157,8 @@ fun SecondPanel(eventViewModel: EventViewModel) {
 
     Row(verticalAlignment = Alignment.CenterVertically) {
       Checkbox(
-          checked = uiState.isPublic,
-          onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.isPublic) })
+          checked = uiState.public,
+          onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.public) })
       Text(stringResource(id = R.string.event_creation_screen_make_event_public))
     }
   }

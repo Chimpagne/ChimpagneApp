@@ -7,7 +7,6 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToLocation
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,8 +45,6 @@ class EventViewModel(
                       it.title,
                       it.description,
                       it.location,
-                      emptyList(),
-                      it.location.name,
                       it.public,
                       it.tags,
                       it.guests,
@@ -202,14 +199,6 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(description = newDescription)
   }
 
-  fun updateEventLocationSearchField(newLocationSearchField: String) {
-    _uiState.value = _uiState.value.copy(locationSearchField = newLocationSearchField)
-
-    convertNameToLocation(
-        newLocationSearchField,
-        { _uiState.value = _uiState.value.copy(possibleLocationsList = it) })
-  }
-
   fun updateEventLocation(newLocation: Location) {
     _uiState.value = _uiState.value.copy(location = newLocation)
   }
@@ -236,8 +225,6 @@ data class EventUIState(
     val title: String = "",
     val description: String = "",
     val location: Location = Location("default"),
-    val possibleLocationsList: List<Location> = emptyList(),
-    val locationSearchField: String = "",
     val public: Boolean = false,
     val tags: List<String> = emptyList(),
     val guests: Map<String, Boolean> = emptyMap(),
