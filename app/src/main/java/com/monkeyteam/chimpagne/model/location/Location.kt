@@ -18,7 +18,7 @@ data class Location(
     val longitude: Double,
     val geohash: String
 ) {
-  constructor() : this(name = "", latitude = 0.0, longitude = 0.0, geohash = "")
+  constructor() : this(name = "Default", latitude = 0.0, longitude = 0.0, geohash = "")
 
   constructor(name: String) : this(name = name, latitude = 0.0, longitude = 0.0, geohash = "")
 

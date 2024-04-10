@@ -25,7 +25,7 @@ fun endsAfterFilter(timestamp: Timestamp): Filter {
 }
 
 fun onlyPublicFilter(): Filter {
-  return Filter.equalTo("isPublic", true)
+  return Filter.equalTo("public", true)
 }
 
 fun happensOnThisDateFilter(calendar: Calendar): Filter {
