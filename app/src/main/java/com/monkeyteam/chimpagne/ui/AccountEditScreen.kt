@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,13 +8,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import com.monkeyteam.chimpagne.MainActivity
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.AccountChangeBody
 import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,13 +48,10 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       locationChange = { accountViewModel.updateLocationName(it) },
       preferredLanguageEnglish =
           accountViewModel.userAccount.value?.preferredLanguageEnglish ?: true,
-      onLanguageToggle = {
-        accountViewModel.updatePreferredLanguageEnglish(it)
-      },
+      onLanguageToggle = { accountViewModel.updatePreferredLanguageEnglish(it) },
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
       commitOnClick = { accountViewModel.putUpdatedAccount() },
       to_navigate_next = Route.ACCOUNT_SETTINGS_SCREEN,
       navObject = navObject)
 }
-
