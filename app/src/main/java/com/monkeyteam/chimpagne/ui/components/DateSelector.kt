@@ -5,13 +5,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.monkeyteam.chimpagne.R
 import java.util.Calendar
 
 /**
- * A date picker dialog  to be used accross the app.
+ * A date picker dialog to be used accross the app.
  *
  * @param selectedDate The selected date to display in the date picker.
- * @param onDismissRequest Callback when the date picker is dismissed.
+ * @param onDismissAndAfterSelected Callback when the date picker is dismissed or the date has been
+ *   choosen
  * @param onDateSelected Callback when a date is selected.
  * @sample ChimpagneDatePicker( selectedDate, { showDatePicker = false }, { calendar -> selectedDate
  *   = calendar })
@@ -20,29 +23,28 @@ import java.util.Calendar
 @Composable
 fun DateSelector(
     selectedDate: Calendar,
-    onDismissRequest: () -> Unit,
+    onDismissAndAfterSelected: () -> Unit,
     onDateSelected: (Calendar) -> Unit
 ) {
+
   val datePickerState =
       rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
 
   DatePickerDialog(
-      onDismissRequest = { onDismissRequest() },
+      onDismissRequest = { onDismissAndAfterSelected() },
       confirmButton = {
         Button(
             onClick = {
-              onDismissRequest()
               val dateToUse =
                   datePickerState.selectedDateMillis?.let {
                     Calendar.getInstance().apply { timeInMillis = it }
                   } ?: selectedDate
               onDateSelected(dateToUse)
+              onDismissAndAfterSelected()
             }) {
-              Text("OK")
+              Text(stringResource(R.string.validate_date_choice))
             }
       }) {
-        DatePicker(
-            state = datePickerState,
-        )
+        DatePicker(state = datePickerState, showModeToggle = false)
       }
 }

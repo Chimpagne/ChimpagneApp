@@ -26,4 +26,6 @@
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
     <string name="event_creation_screen_beds">Lits</string>
+    <string name="validate_date_choice">OK</string>
+    <string name="event_creation_screen_pick_date">Choisir la date de l\'événement</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import DateSelector
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import java.util.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -89,11 +92,13 @@ fun EventCreationScreen(initialPage: Int = 0, navObject: NavigationActions) {
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstPanel() {
   var titleText by remember { mutableStateOf("") }
   var descriptionText by remember { mutableStateOf("") }
   var addressText by remember { mutableStateOf("") }
+  var showDateSelector by remember { mutableStateOf(false) }
   Column(modifier = Modifier.padding(16.dp)) {
     OutlinedTextField(
         value = titleText,
@@ -113,6 +118,17 @@ fun FirstPanel() {
         onValueChange = { addressText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_address)) },
         modifier = Modifier.fillMaxWidth())
+    Button(
+        content = { Text(text = stringResource(id = R.string.event_creation_screen_pick_date)) },
+        onClick = { showDateSelector = true })
+    if (showDateSelector) {
+      Spacer(modifier = Modifier.height(16.dp))
+      val calendar = Calendar.getInstance()
+      DateSelector(
+          selectedDate = calendar, onDismissAndAfterSelected = { showDateSelector = false }) {
+            print("Date has been selected")
+          }
+    }
   }
 }
 
