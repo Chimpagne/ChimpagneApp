@@ -40,7 +40,7 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
               _uiState.value = _uiState.value.copy(description = it.description)
               _uiState.value = _uiState.value.copy(location = it.location)
               _uiState.value = _uiState.value.copy(locationSearchField = it.location.name)
-              _uiState.value = _uiState.value.copy(isPublic = it.isPublic)
+              _uiState.value = _uiState.value.copy(isPublic = it.public)
               _uiState.value = _uiState.value.copy(tags = it.tags)
               _uiState.value = _uiState.value.copy(guests = it.guests)
               _uiState.value = _uiState.value.copy(startsAtCalendarDate = it.startAt)

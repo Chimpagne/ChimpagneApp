@@ -11,7 +11,7 @@ data class ChimpagneEvent(
     val title: String = "Default Name",
     val description: String = "Default Description",
     val location: Location = Location("default"),
-    val isPublic: Boolean = false,
+    val public: Boolean = false,
     val tags: List<String> = listOf(),
     val guests: Map<String, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
