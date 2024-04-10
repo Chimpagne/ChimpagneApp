@@ -9,19 +9,20 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToLocation
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class EventViewModel(eventID: String? = null) : ViewModel() {
+class EventViewModel(eventID: String? = null,
+                     onSuccess: () -> Unit = {},
+                     onFailure: (Exception) -> Unit = {}
+) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
-  val uiState: StateFlow<EventUIState> = _uiState
   private val fireBaseDB = Database()
 
   init {
     if (eventID != null) {
-      fetchEvent(eventID)
+      fetchEvent(eventID, onSuccess, onFailure)
     }
   }
 
@@ -82,31 +83,39 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
 
   fun createTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.registerEvent(
+      val newEventId = fireBaseDB.eventManager.registerEvent(
           createChimpagneEvent(id = "", guests = emptyMap()),
-          { fetchEvent(id = _uiState.value.id, onSuccess = onSuccess, onFailure = onFailure) },
+          { onSuccess() },
           {
             Log.d("CREATE AN EVENT", "Error : ", it)
             onFailure(it)
           })
+        _uiState.value = _uiState.value.copy(id = newEventId)
     }
   }
 
   fun updateTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.updateEvent(createChimpagneEvent(), onSuccess) {
+      fireBaseDB.eventManager.updateEvent(createChimpagneEvent(),
+          { fetchEvent(_uiState.value.id, onSuccess, onFailure) },
+          {
         Log.d("UPDATE AN EVENT", "Error : ", it)
         onFailure(it)
-      }
+      })
     }
   }
 
   fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.deleteEvent(uiState.value.id, onSuccess) {
+      fireBaseDB.eventManager.deleteEvent(_uiState.value.id,
+          {
+              _uiState.value = EventUIState()
+              onSuccess()
+      },
+          {
         Log.d("DELETE AN EVENT", "Error : ", it)
         onFailure(it)
-      }
+      })
     }
   }
 
@@ -127,6 +136,10 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
     }
   }
 
+  fun getEventGuestSet(): Set<String>{
+      return  _uiState.value.guests.keys
+  }
+
   fun removeGuestFromTheEvent(
       guestId: String,
       onSuccess: () -> Unit = {},
@@ -142,6 +155,10 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
             onFailure(it)
           })
     }
+  }
+
+  fun getEventId(): String{
+        return _uiState.value.id
   }
 
   fun getEventTitle(): String{

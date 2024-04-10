@@ -13,13 +13,11 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToLocation
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class FindEventsViewModel : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
-  val uiState: StateFlow<FindEventsUIState> = _uiState
   private val fireBaseDB = Database()
 
   init {
