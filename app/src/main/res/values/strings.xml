@@ -26,5 +26,6 @@
     <string name="event_creation_screen_number_parking">Number of parking places</string>
     <string name="event_creation_screen_number_beds">Number of beds</string>
     <string name="event_creation_screen_beds">Beds</string>
+    <string name="accountEditScreenButton">Edit Account</string>
 
 </resources>
