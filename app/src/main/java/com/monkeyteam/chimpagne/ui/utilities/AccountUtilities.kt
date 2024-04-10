@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.monkeyteam.chimpagne.R
@@ -38,12 +39,15 @@ import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 @Composable
 fun TextInputField(
     modifier: Modifier = Modifier,
-    label: String,
+    label: Int,
     value: String,
     onValueChange: (String) -> Unit
 ) {
   OutlinedTextField(
-      modifier = modifier, value = value, onValueChange = onValueChange, label = { Text(label) })
+      modifier = modifier,
+      value = value,
+      onValueChange = onValueChange,
+      label = { Text(stringResource(id = label)) })
   Spacer(modifier = Modifier.height(16.dp))
 }
 
@@ -76,14 +80,14 @@ fun LanguageSwitch(
 @Composable
 fun SaveChangesButton(
     onClick: () -> Unit,
-    text: String,
+    text: Int,
     iconId: Int = R.drawable.ic_logout,
     contentDescription: String? = "Save icon",
 ) {
   Button(onClick = onClick, modifier = Modifier.width(210.dp).height(50.dp)) {
     Icon(painter = painterResource(id = iconId), contentDescription = contentDescription)
     Spacer(modifier = Modifier.width(8.dp))
-    Text(text, modifier = Modifier.testTag("saveChangesButton"))
+    Text(stringResource(id = text), modifier = Modifier.testTag("saveChangesButton"))
   }
 }
 
@@ -103,23 +107,24 @@ fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AccountChangeBody(
-    topBarText: String,
+    topBarText: Int,
     hasBackButton: Boolean,
     selectedImageUri: Uri?,
     onPickImage: () -> Unit,
     firstName: String,
-    firstNameLabel: String,
+    firstNameLabel: Int,
     firstNameChange: (String) -> Unit,
     lastName: String,
-    lastNameLabel: String,
+    lastNameLabel: Int,
     lastNameChange: (String) -> Unit,
     location: String,
-    locationLabel: String,
+    locationLabel: Int,
     locationChange: (String) -> Unit,
     preferredLanguageEnglish: Boolean,
     onLanguageToggle: (Boolean) -> Unit,
-    commitButtontext: String,
+    commitButtontext: Int,
     commitButtonIcon: Int,
+    commitOnClick: () -> Unit = {},
     to_navigate_next: String,
     navObject: NavigationActions,
 ) {
@@ -132,7 +137,7 @@ fun AccountChangeBody(
                   verticalAlignment = Alignment.CenterVertically,
                   horizontalArrangement = Arrangement.Center) {
                     Text(
-                        text = topBarText,
+                        text = stringResource(id = topBarText),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.testTag("accountCreationLabel"))
                   }
@@ -177,7 +182,10 @@ fun AccountChangeBody(
                   isEnglish = preferredLanguageEnglish,
                   onToggleLanguage = onLanguageToggle)
               SaveChangesButton(
-                  onClick = { navObject.navigateTo(to_navigate_next) },
+                  onClick = {
+                    commitOnClick()
+                    navObject.navigateTo(to_navigate_next)
+                  },
                   text = commitButtontext,
                   iconId = commitButtonIcon,
                   contentDescription = "Logout icon")
@@ -195,28 +203,3 @@ data class LanguageStrings(
     val createAccountButton: String,
     val saveAccountButton: String
 )
-
-@Composable
-fun getLanguageStrings(preferredLanguageEnglish: Boolean): LanguageStrings {
-  return if (preferredLanguageEnglish) {
-    LanguageStrings(
-        createAccount = "Create your Account",
-        editAccount = "Edit Account",
-        firstName = "First Name",
-        lastName = "Last Name",
-        city = "Choose your City",
-        language = "Language",
-        createAccountButton = "Create Account",
-        saveAccountButton = "Save Account")
-  } else {
-    LanguageStrings(
-        createAccount = "Créer votre compte",
-        editAccount = "Modifier le compte",
-        firstName = "Prénom",
-        lastName = "Nom de famille",
-        city = "Choisissez votre ville",
-        language = "Langue",
-        createAccountButton = "Créer un compte",
-        saveAccountButton = "Sauvegarder le compte")
-  }
-}

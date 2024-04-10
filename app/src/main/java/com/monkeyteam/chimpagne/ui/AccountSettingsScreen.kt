@@ -1,4 +1,3 @@
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,31 +29,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
-import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 import com.monkeyteam.chimpagne.ui.utilities.ProfileImage
+import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountSettings(navObject: NavigationActions) {
-  val account =
-      ChimpagneAccount(
-          email = "",
-          profilePictureUri = null, // Placeholder for example URI
-          firstName = "John",
-          lastName = "Doe",
-          preferredLanguageEnglish = true,
-          location = Location("New York", 40.7128, -74.0060))
+fun AccountSettings(navObject: NavigationActions, accountViewModel: AccountViewModel) {
+  val account = accountViewModel.userAccount.collectAsState()
 
-  var selectedImageUri by remember { mutableStateOf<Uri?>(account.profilePictureUri) }
-  var firstName by remember { mutableStateOf(account.firstName) }
-  var lastName by remember { mutableStateOf(account.lastName) }
-  var preferredLanguageEnglish by remember { mutableStateOf(account.preferredLanguageEnglish) }
-  var location by remember { mutableStateOf(account.location) }
+  /*  val selectedImageUri by remember { mutableStateOf<Uri?>(account.value?.profilePictureUri) }
+  val firstName by remember { mutableStateOf(account.value?.firstName) }
+  val lastName by remember { mutableStateOf(account.value?.lastName) }
+  val preferredLanguageEnglish by remember {
+    mutableStateOf(account.value?.preferredLanguageEnglish)
+  }
+  val location by remember { mutableStateOf(account.value?.location) }*/
 
   Scaffold(
       topBar = {
@@ -95,23 +87,24 @@ fun AccountSettings(navObject: NavigationActions) {
             modifier = Modifier.padding(paddingValues).padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(modifier = Modifier.height(10.dp))
-              ProfileImage(imageUri = selectedImageUri)
+              ProfileImage(imageUri = account.value?.profilePictureUri)
 
               SettingItem(
                   label = "First Name",
-                  value = firstName,
+                  value = account.value?.firstName ?: "",
                   modifierText = Modifier.testTag("firstNameTextField"))
               SettingItem(
                   label = "Last Name",
-                  value = lastName,
+                  value = account.value?.lastName ?: "",
                   modifierText = Modifier.testTag("lastNameTextField"))
               SettingItem(
                   label = "Location",
-                  value = location?.name ?: "Unknown",
+                  value = account.value?.location?.name ?: "",
                   modifierText = Modifier.testTag("locationTextField"))
               SettingItem(
                   label = "Preferred Language",
-                  value = (if (preferredLanguageEnglish) "English" else "French"),
+                  value =
+                      if (account.value?.preferredLanguageEnglish == true) "English" else "French",
                   modifierText = Modifier.testTag("preferredLanguageTextField"))
 
               Spacer(modifier = Modifier.height(8.dp))
