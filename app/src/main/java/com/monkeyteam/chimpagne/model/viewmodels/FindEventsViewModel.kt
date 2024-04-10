@@ -60,15 +60,16 @@ class FindEventsViewModel : ViewModel() {
     }
   }
 
-  fun getListOfFilteredEvents(): List<ChimpagneEvent>{
-      return _uiState.value.listOfEvents
-  }
-  fun getLocationSearchQuery(): String{
-      return _uiState.value.searchByLocation
+  fun getListOfFilteredEvents(): List<ChimpagneEvent> {
+    return _uiState.value.listOfEvents
   }
 
-  fun getPossibleLocationList(): List<Location>{
-      return _uiState.value.possibleLocationsList
+  fun getLocationSearchQuery(): String {
+    return _uiState.value.searchByLocation
+  }
+
+  fun getPossibleLocationList(): List<Location> {
+    return _uiState.value.possibleLocationsList
   }
 
   fun updateLocationSearchQuery(newQuery: String, onFailure: (Exception) -> Unit = {}) {
@@ -81,34 +82,38 @@ class FindEventsViewModel : ViewModel() {
         })
   }
 
-  fun getActualLocation(): Location{
-      return _uiState.value.actualLocation
+  fun getActualLocation(): Location {
+    return _uiState.value.actualLocation
   }
+
   fun updateActualLocation(newLocation: Location, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(actualLocation = newLocation)
     _uiState.value = _uiState.value.copy(searchByLocation = newLocation.toString())
     fetchAllEventsByQueries(onFailure)
   }
 
-  fun getLocationSearchRadius(): Double{
-      return _uiState.value.radiusAroundLocationInM
+  fun getLocationSearchRadius(): Double {
+    return _uiState.value.radiusAroundLocationInM
   }
+
   fun updateLocationSearchRadius(newRadiusInM: Double, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(radiusAroundLocationInM = newRadiusInM)
     fetchAllEventsByQueries(onFailure)
   }
 
-  fun getTagsQuery(): List<String>{
+  fun getTagsQuery(): List<String> {
     return _uiState.value.searchByTags
   }
+
   fun updateTagsQuery(newTagList: List<String>, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(searchByTags = newTagList)
     fetchAllEventsByQueries(onFailure)
   }
 
-  fun getDateQuery(): Calendar{
-      return _uiState.value.searchByDate
+  fun getDateQuery(): Calendar {
+    return _uiState.value.searchByDate
   }
+
   fun updateDateQuery(newQuery: Calendar, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(searchByDate = newQuery)
     fetchAllEventsByQueries(onFailure)

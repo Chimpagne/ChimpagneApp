@@ -8,10 +8,10 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToLocation
+import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class EventViewModel(eventID: String? = null) : ViewModel() {
   // UI state exposed to the UI
@@ -144,26 +144,28 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
     }
   }
 
-  fun getEventTitle(): String{
-      return _uiState.value.title
+  fun getEventTitle(): String {
+    return _uiState.value.title
   }
+
   fun updateEventTitle(newTitle: String) {
     _uiState.value = _uiState.value.copy(title = newTitle)
   }
 
-  fun getEventDescription(): String{
-      return _uiState.value.description
+  fun getEventDescription(): String {
+    return _uiState.value.description
   }
+
   fun updateEventDescription(newDescription: String) {
     _uiState.value = _uiState.value.copy(description = newDescription)
   }
 
   fun getEventLocationSearchField(): String {
-      return _uiState.value.locationSearchField
+    return _uiState.value.locationSearchField
   }
 
-  fun getAllPossibleLocationsList(): List<Location>{
-      return _uiState.value.possibleLocationsList
+  fun getAllPossibleLocationsList(): List<Location> {
+    return _uiState.value.possibleLocationsList
   }
 
   fun updateEventLocationSearchField(newLocationSearchField: String) {
@@ -175,15 +177,15 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
   }
 
   fun getEventLocation(): Location {
-      return _uiState.value.location
+    return _uiState.value.location
   }
 
   fun updateEventLocation(newLocation: Location) {
     _uiState.value = _uiState.value.copy(location = newLocation)
   }
 
-  fun getEventPublicity(): Boolean{
-      return _uiState.value.isPublic
+  fun getEventPublicity(): Boolean {
+    return _uiState.value.isPublic
   }
 
   fun updateEventPublicity(newIsPublic: Boolean) {
@@ -191,22 +193,23 @@ class EventViewModel(eventID: String? = null) : ViewModel() {
   }
 
   fun getEventTags(): List<String> {
-      return _uiState.value.tags
+    return _uiState.value.tags
   }
 
   fun updateEventTags(newTags: List<String>) {
     _uiState.value = _uiState.value.copy(tags = newTags)
   }
 
-  fun getEventStartCalendarDate(): Calendar{
-      return _uiState.value.startsAtCalendarDate
+  fun getEventStartCalendarDate(): Calendar {
+    return _uiState.value.startsAtCalendarDate
   }
+
   fun updateEventStartCalendarDate(newStartCalendarDate: Calendar) {
     _uiState.value = _uiState.value.copy(startsAtCalendarDate = newStartCalendarDate)
   }
 
-  fun getEventEndCalendarDate(): Calendar{
-      return _uiState.value.endsAtCalendarDate
+  fun getEventEndCalendarDate(): Calendar {
+    return _uiState.value.endsAtCalendarDate
   }
 
   fun updateEventEndCalendarDate(newEndCalendarDate: Calendar) {
