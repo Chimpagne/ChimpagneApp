@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -15,9 +14,6 @@ import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.viewmodels.EventViewModel
 import java.util.Calendar
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,9 +23,7 @@ class EventViewModelTests {
   @get:Rule val composeTestRule = createComposeRule()
 
   private val eventManager: ChimpagneEventManager =
-      ChimpagneEventManager(
-          Firebase.firestore.collection("testevents")
-      )
+      ChimpagneEventManager(Firebase.firestore.collection("testevents"))
 
   @Test
   fun TestVMSetterFunctions() {
@@ -146,7 +140,10 @@ class EventViewModelTests {
 
     val eventSearchVM =
         EventViewModel(
-            eventID = eventID, eventManager = eventManager, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+            eventID = eventID,
+            eventManager = eventManager,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
@@ -161,7 +158,8 @@ class EventViewModelTests {
     assertTrue(eventSearchVM.uiState.value.public == testEvent.public)
     assertTrue(eventSearchVM.uiState.value.tags.size == testEvent.tags.size)
     assertTrue(eventSearchVM.uiState.value.tags.toSet() == testEvent.tags.toSet())
-    // assertTrue(eventSearchVM.uiState.value.startsAtCalendarDate.time == testEvent.startAt.time)//TODO
+    // assertTrue(eventSearchVM.uiState.value.startsAtCalendarDate.time ==
+    // testEvent.startAt.time)//TODO
     // assertTrue(eventSearchVM.uiState.value.endsAtCalendarDate == testEvent.endsAt)//TODO
 
     eventSearchVM.deleteTheEvent(
@@ -224,7 +222,10 @@ class EventViewModelTests {
 
     val eventSearchVM =
         EventViewModel(
-            eventID = eventID, eventManager = eventManager, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+            eventID = eventID,
+            eventManager = eventManager,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
@@ -248,7 +249,10 @@ class EventViewModelTests {
 
     val eventSearch2VM =
         EventViewModel(
-            eventID = eventID, eventManager = eventManager, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+            eventID = eventID,
+            eventManager = eventManager,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearch2VM.uiState.value.loading) {}
@@ -258,7 +262,8 @@ class EventViewModelTests {
     assertTrue(eventSearch2VM.uiState.value.locationSearchField == testUpdatedEvent.location.name)
     assertTrue(eventSearch2VM.uiState.value.location.name == testUpdatedEvent.location.name)
     assertTrue(eventSearch2VM.uiState.value.location.latitude == testUpdatedEvent.location.latitude)
-    assertTrue(eventSearch2VM.uiState.value.location.longitude == testUpdatedEvent.location.longitude)
+    assertTrue(
+        eventSearch2VM.uiState.value.location.longitude == testUpdatedEvent.location.longitude)
     assertTrue(eventSearch2VM.uiState.value.location.geohash == testUpdatedEvent.location.geohash)
     assertTrue(eventSearch2VM.uiState.value.public == testUpdatedEvent.public)
     assertTrue(eventSearch2VM.uiState.value.tags.size == testUpdatedEvent.tags.size)
@@ -286,7 +291,10 @@ class EventViewModelTests {
 
     val eventSearchVM =
         EventViewModel(
-            eventID = eventID, eventManager = eventManager, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+            eventID = eventID,
+            eventManager = eventManager,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
@@ -295,13 +303,13 @@ class EventViewModelTests {
 
     eventSearchVM.addGuestToTheEvent(
         "Clement", onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-      while (eventSearchVM.uiState.value.loading) {}
+    while (eventSearchVM.uiState.value.loading) {}
     eventSearchVM.addGuestToTheEvent(
         "Lea", onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-      while (eventSearchVM.uiState.value.loading) {}
+    while (eventSearchVM.uiState.value.loading) {}
     eventSearchVM.addGuestToTheEvent(
         "Arnaud", onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-      while (eventSearchVM.uiState.value.loading) {}
+    while (eventSearchVM.uiState.value.loading) {}
 
     val guestSet = setOf("Clement", "Lea", "Arnaud")
 
@@ -310,13 +318,13 @@ class EventViewModelTests {
 
     eventSearchVM.removeGuestFromTheEvent(
         "Clement", onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-      while (eventSearchVM.uiState.value.loading) {}
+    while (eventSearchVM.uiState.value.loading) {}
     eventSearchVM.removeGuestFromTheEvent(
         "Lea", onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-      while (eventSearchVM.uiState.value.loading) {}
+    while (eventSearchVM.uiState.value.loading) {}
     eventSearchVM.removeGuestFromTheEvent(
         "Arnaud", onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-      while (eventSearchVM.uiState.value.loading) {}
+    while (eventSearchVM.uiState.value.loading) {}
 
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
 

@@ -40,7 +40,7 @@ class EventViewModel(
           id,
           {
             if (it != null) {
-                _uiState.value =
+              _uiState.value =
                   EventUIState(
                       it.id,
                       it.title,
@@ -53,8 +53,8 @@ class EventViewModel(
                       it.guests,
                       it.startAt,
                       it.endsAt)
-                onSuccess()
-                _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess()
+              _uiState.value = _uiState.value.copy(loading = false)
             } else {
               Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
               _uiState.value = _uiState.value.copy(loading = false)
