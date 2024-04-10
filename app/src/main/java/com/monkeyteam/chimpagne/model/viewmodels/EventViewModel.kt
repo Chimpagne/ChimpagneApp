@@ -8,13 +8,14 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToLocation
+import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
-class EventViewModel(eventID: String? = null,
-                     onSuccess: () -> Unit = {},
-                     onFailure: (Exception) -> Unit = {}
+class EventViewModel(
+    eventID: String? = null,
+    onSuccess: () -> Unit = {},
+    onFailure: (Exception) -> Unit = {}
 ) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
@@ -83,39 +84,42 @@ class EventViewModel(eventID: String? = null,
 
   fun createTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      val newEventId = fireBaseDB.eventManager.registerEvent(
-          createChimpagneEvent(id = "", guests = emptyMap()),
-          { onSuccess() },
-          {
-            Log.d("CREATE AN EVENT", "Error : ", it)
-            onFailure(it)
-          })
-        _uiState.value = _uiState.value.copy(id = newEventId)
+      val newEventId =
+          fireBaseDB.eventManager.registerEvent(
+              createChimpagneEvent(id = "", guests = emptyMap()),
+              { onSuccess() },
+              {
+                Log.d("CREATE AN EVENT", "Error : ", it)
+                onFailure(it)
+              })
+      _uiState.value = _uiState.value.copy(id = newEventId)
     }
   }
 
   fun updateTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.updateEvent(createChimpagneEvent(),
+      fireBaseDB.eventManager.updateEvent(
+          createChimpagneEvent(),
           { fetchEvent(_uiState.value.id, onSuccess, onFailure) },
           {
-        Log.d("UPDATE AN EVENT", "Error : ", it)
-        onFailure(it)
-      })
+            Log.d("UPDATE AN EVENT", "Error : ", it)
+            onFailure(it)
+          })
     }
   }
 
   fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     viewModelScope.launch {
-      fireBaseDB.eventManager.deleteEvent(_uiState.value.id,
+      fireBaseDB.eventManager.deleteEvent(
+          _uiState.value.id,
           {
-              _uiState.value = EventUIState()
-              onSuccess()
-      },
+            _uiState.value = EventUIState()
+            onSuccess()
+          },
           {
-        Log.d("DELETE AN EVENT", "Error : ", it)
-        onFailure(it)
-      })
+            Log.d("DELETE AN EVENT", "Error : ", it)
+            onFailure(it)
+          })
     }
   }
 
@@ -136,8 +140,8 @@ class EventViewModel(eventID: String? = null,
     }
   }
 
-  fun getEventGuestSet(): Set<String>{
-      return  _uiState.value.guests.keys
+  fun getEventGuestSet(): Set<String> {
+    return _uiState.value.guests.keys
   }
 
   fun removeGuestFromTheEvent(
@@ -157,30 +161,32 @@ class EventViewModel(eventID: String? = null,
     }
   }
 
-  fun getEventId(): String{
-        return _uiState.value.id
+  fun getEventId(): String {
+    return _uiState.value.id
   }
 
-  fun getEventTitle(): String{
-      return _uiState.value.title
+  fun getEventTitle(): String {
+    return _uiState.value.title
   }
+
   fun updateEventTitle(newTitle: String) {
     _uiState.value = _uiState.value.copy(title = newTitle)
   }
 
-  fun getEventDescription(): String{
-      return _uiState.value.description
+  fun getEventDescription(): String {
+    return _uiState.value.description
   }
+
   fun updateEventDescription(newDescription: String) {
     _uiState.value = _uiState.value.copy(description = newDescription)
   }
 
   fun getEventLocationSearchField(): String {
-      return _uiState.value.locationSearchField
+    return _uiState.value.locationSearchField
   }
 
-  fun getAllPossibleLocationsList(): List<Location>{
-      return _uiState.value.possibleLocationsList
+  fun getAllPossibleLocationsList(): List<Location> {
+    return _uiState.value.possibleLocationsList
   }
 
   fun updateEventLocationSearchField(newLocationSearchField: String) {
@@ -192,15 +198,15 @@ class EventViewModel(eventID: String? = null,
   }
 
   fun getEventLocation(): Location {
-      return _uiState.value.location
+    return _uiState.value.location
   }
 
   fun updateEventLocation(newLocation: Location) {
     _uiState.value = _uiState.value.copy(location = newLocation)
   }
 
-  fun getEventPublicity(): Boolean{
-      return _uiState.value.isPublic
+  fun getEventPublicity(): Boolean {
+    return _uiState.value.isPublic
   }
 
   fun updateEventPublicity(newIsPublic: Boolean) {
@@ -208,22 +214,23 @@ class EventViewModel(eventID: String? = null,
   }
 
   fun getEventTags(): List<String> {
-      return _uiState.value.tags
+    return _uiState.value.tags
   }
 
   fun updateEventTags(newTags: List<String>) {
     _uiState.value = _uiState.value.copy(tags = newTags)
   }
 
-  fun getEventStartCalendarDate(): Calendar{
-      return _uiState.value.startsAtCalendarDate
+  fun getEventStartCalendarDate(): Calendar {
+    return _uiState.value.startsAtCalendarDate
   }
+
   fun updateEventStartCalendarDate(newStartCalendarDate: Calendar) {
     _uiState.value = _uiState.value.copy(startsAtCalendarDate = newStartCalendarDate)
   }
 
-  fun getEventEndCalendarDate(): Calendar{
-      return _uiState.value.endsAtCalendarDate
+  fun getEventEndCalendarDate(): Calendar {
+    return _uiState.value.endsAtCalendarDate
   }
 
   fun updateEventEndCalendarDate(newEndCalendarDate: Calendar) {
