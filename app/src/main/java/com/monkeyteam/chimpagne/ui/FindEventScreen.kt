@@ -67,12 +67,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.location.LocationHelper
 import com.monkeyteam.chimpagne.ui.components.AutoCompleteTextView
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
+import com.monkeyteam.chimpagne.ui.utilities.MapViewModel
 import java.text.DateFormat
 import java.time.format.DateTimeFormatter.*
 import java.util.Calendar
@@ -353,7 +353,7 @@ fun FindEventLegend(text: String, imageVector: ImageVector, contentDescription: 
 @Composable
 fun FindEventMapScreen(
     onBackIconClicked: () -> Unit,
-    locationHelper: LocationHelper = LocationHelper()
+    mapViewModel: MapViewModel = MapViewModel(),
 ) {
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
@@ -380,16 +380,17 @@ fun FindEventMapScreen(
   }
 
   val addMarker = { location: Location ->
-    coroutineScope.launch { locationHelper.addMarker(location) }
+    coroutineScope.launch { mapViewModel.addMarker(location) }
   }
 
   val removeMarker = { location: Location ->
-    coroutineScope.launch { locationHelper.removeMarker(location) }
+    coroutineScope.launch { mapViewModel.removeMarker(location) }
   }
 
+  // TODO: Add markers to the map in tests
   addMarker(Location("Balelec", 46.519144, 6.566804))
   addMarker(Location("AirSound", 46.559144, 6.566804))
-  addMarker(Location("Anniversaire Juan", 46.51644, 6.53804))
+  addMarker(Location("Anniversaire de Juan", 46.51644, 6.53804))
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
@@ -422,7 +423,7 @@ fun FindEventMapScreen(
                 bottomSheetState = scaffoldState.bottomSheetState,
                 cameraPositionState = cameraPositionState,
                 onMarkerClick = onMarkerClick,
-                locationHelper = locationHelper,
+                mapViewModel = mapViewModel,
                 isMapInitialized = true)
           }
 

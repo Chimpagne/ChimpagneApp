@@ -25,20 +25,19 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import com.monkeyteam.chimpagne.model.location.LocationHelper
 import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
-    locationHelper: LocationHelper = LocationHelper(),
+    mapViewModel: MapViewModel = MapViewModel(),
     isMapInitialized: Boolean = false,
     bottomSheetState: SheetState,
     onMarkerClick: (Marker) -> Unit,
 ) {
 
-  val markers by locationHelper.markers.collectAsState()
+  val markers by mapViewModel.markers.collectAsState()
 
   val dynamicBottomPadding =
       when (bottomSheetState.targetValue) {
