@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.location.Location.Companion.convertNameToLocation
+import com.monkeyteam.chimpagne.model.location.convertNameToLocation
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
