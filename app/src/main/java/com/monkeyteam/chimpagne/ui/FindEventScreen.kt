@@ -6,6 +6,7 @@ import android.widget.AutoCompleteTextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -65,7 +66,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.Timestamp
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.AutoCompleteTextView
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
@@ -336,6 +339,14 @@ fun TagChip(tag: String, onRemove: () -> Unit) {
 }
 
 @Composable
+fun SimpleTagChip(tag: String) {
+  Text(
+      text = "#$tag",
+      style = MaterialTheme.typography.bodyLarge,
+      color = MaterialTheme.colorScheme.primary)
+}
+
+@Composable
 fun FindEventLegend(text: String, imageVector: ImageVector, contentDescription: String) {
   Row(
       verticalAlignment = Alignment.CenterVertically,
@@ -359,19 +370,19 @@ fun FindEventMapScreen(
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   var isMapInitialized by remember { mutableStateOf(false) }
+  var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
   }
-
   val onMarkerClick: (Marker) -> Unit = { marker ->
     coroutineScope.launch {
+      currentEvent = mapViewModel.getEventById(marker.tag as String)
       launch { scaffoldState.bottomSheetState.expand() }
       launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(marker.position)) }
     }
   }
 
-  val expandBottomSheet = { scope.launch { scaffoldState.bottomSheetState.expand() } }
   val goBack = {
     scope.launch {
       scaffoldState.bottomSheetState.partialExpand()
@@ -379,37 +390,47 @@ fun FindEventMapScreen(
     }
   }
 
-  val addMarker = { location: Location ->
-    coroutineScope.launch { mapViewModel.addMarker(location) }
+  val addEvents = { list: List<ChimpagneEvent> ->
+    coroutineScope.launch {
+      mapViewModel.clearMarkers()
+      list.forEach { event -> mapViewModel.addMarker(event) }
+    }
   }
 
-  val removeMarker = { location: Location ->
-    coroutineScope.launch { mapViewModel.removeMarker(location) }
-  }
-
-  // TODO: Add markers to the map in tests
-  addMarker(Location("Balelec", 46.519144, 6.566804))
-  addMarker(Location("AirSound", 46.559144, 6.566804))
-  addMarker(Location("Anniversaire de Juan", 46.51644, 6.53804))
+  addEvents(
+      listOf(
+          ChimpagneEvent(
+              id = "c",
+              title = "Balelec",
+              description = "The best student party in Switzerland",
+              location = Location("Balelec", 46.519144, 6.566804),
+              isPublic = true,
+              tags = listOf("student", "disco", "vegan"),
+              startsAtTimestamp = Timestamp.now(),
+              endsAtTimestamp = Timestamp.now()),
+          ChimpagneEvent(
+              id = "b",
+              title = "AirSound",
+              description = "The best sound system in the world",
+              location = Location("AirSound", 46.559144, 6.566804),
+              isPublic = true,
+              tags = listOf("soundboks", "alcool", "beer"),
+              startsAtTimestamp = Timestamp.now(),
+              endsAtTimestamp = Timestamp.now()),
+          ChimpagneEvent(
+              id = "a",
+              title = "Anniversaire de Juan",
+              description = "The best birthday party in the world",
+              location = Location("Anniversaire de Juan", 46.51644, 6.53804),
+              isPublic = true,
+              tags = listOf("carnaval", "bbq"),
+              startsAtTimestamp = Timestamp.now(),
+              endsAtTimestamp = Timestamp.now())))
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = {
-        Box(Modifier.fillMaxWidth().height(128.dp), contentAlignment = Alignment.Center) {
-          Text("Swipe up to expand sheet")
-        }
-        Column(
-            Modifier.fillMaxWidth().padding(64.dp),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-              Text("Sheet content")
-              Spacer(Modifier.height(20.dp))
-              Button(
-                  onClick = { scope.launch { scaffoldState.bottomSheetState.partialExpand() } }) {
-                    Text("Join event")
-                  }
-            }
-      },
+      sheetContent = { EventDetailSheet(event = currentEvent) },
       scaffoldState = scaffoldState,
       sheetPeekHeight = 0.dp) {
         DisposableEffect(Unit) {
@@ -440,4 +461,49 @@ fun FindEventMapScreen(
               }
         }
       }
+}
+
+@Composable
+fun EventDetailSheet(event: ChimpagneEvent?) {
+  if (event != null) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+          Text(
+              text = event.title,
+              style = MaterialTheme.typography.headlineMedium,
+              modifier = Modifier.padding(bottom = 8.dp))
+
+          Text(
+              text = event.startAt.time.toString(),
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(bottom = 8.dp))
+
+        Text(
+            text = event.endsAt.time.toString(),
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 8.dp))
+
+          Text(
+              text = event.description,
+              style = MaterialTheme.typography.bodySmall,
+              modifier = Modifier.padding(bottom = 8.dp))
+
+          Row(
+              modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+              horizontalArrangement = Arrangement.SpaceEvenly) {
+                event.tags.forEach { tag -> SimpleTagChip(tag) }
+              }
+
+          Button(
+              onClick = { /* Handle join event */},
+              modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                Text("Join event")
+              }
+        }
+  } else {
+    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+      Text("No event details available", style = MaterialTheme.typography.bodyMedium)
+    }
+  }
 }

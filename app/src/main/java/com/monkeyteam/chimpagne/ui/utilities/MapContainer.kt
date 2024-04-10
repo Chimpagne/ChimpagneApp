@@ -37,19 +37,19 @@ fun MapContainer(
     onMarkerClick: (Marker) -> Unit,
 ) {
 
-  val markers by mapViewModel.markers.collectAsState()
+  val events by mapViewModel.markers.collectAsState()
 
   val dynamicBottomPadding =
       when (bottomSheetState.targetValue) {
-        SheetValue.Expanded -> 300.dp
-        SheetValue.PartiallyExpanded -> 0.dp // Adjust as needed for the partially expanded state
+        SheetValue.Expanded -> 100.dp
+        SheetValue.PartiallyExpanded -> 0.dp
         SheetValue.Hidden -> 0.dp
       }
 
-  LaunchedEffect(markers) {
-    if (markers.isNotEmpty()) {
-      val latitudes = markers.map { it.latitude }
-      val longitudes = markers.map { it.longitude }
+  LaunchedEffect(events) {
+    if (events.isNotEmpty()) {
+      val latitudes = events.map { it.location.latitude }
+      val longitudes = events.map { it.location.longitude }
       val minLat = latitudes.minOrNull()!!
       val maxLat = latitudes.maxOrNull()!!
       val minLon = longitudes.minOrNull()!!
@@ -92,10 +92,11 @@ fun MapContainer(
                 zoomControlsEnabled = false,
                 myLocationButtonEnabled = false,
                 mapToolbarEnabled = false)) {
-          for (marker in markers) {
+          for (event in events) {
             Marker(
-                state = rememberMarkerState(position = LatLng(marker.latitude, marker.longitude)),
-                title = marker.name,
+                state = rememberMarkerState(position = LatLng(event.location.latitude, event.location.longitude)),
+                title = event.title,
+                tag = event.id,
                 onClick = {
                   onMarkerClick(it)
                   true

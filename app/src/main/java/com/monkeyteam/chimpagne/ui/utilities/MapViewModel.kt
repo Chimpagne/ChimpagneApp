@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -7,19 +8,27 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class MapViewModel {
 
-  private val _markers = MutableStateFlow<List<Location>>(emptyList())
-  val markers: StateFlow<List<Location>> = _markers.asStateFlow()
+  private val _markers = MutableStateFlow<List<ChimpagneEvent>>(emptyList())
+  val markers: StateFlow<List<ChimpagneEvent>> = _markers.asStateFlow()
 
   // TODO: add a marker should not use Location but an Event
-  fun addMarker(location: Location) {
+  fun addMarker(event: ChimpagneEvent) {
     val currentMarkers = _markers.value.toMutableList()
-    currentMarkers.add(location)
+    currentMarkers.add(event)
     _markers.value = currentMarkers
   }
 
-  fun removeMarker(location: Location) {
+  fun removeMarker(event: ChimpagneEvent) {
     val currentMarkers = _markers.value.toMutableList()
-    currentMarkers.removeAll { it.name == location.name }
+    currentMarkers.removeAll { it.id == event.id }
     _markers.value = currentMarkers
+  }
+
+  fun getEventById(id: String): ChimpagneEvent? {
+    return _markers.value.find { it.id == id }
+  }
+
+  fun clearMarkers() {
+    _markers.value = emptyList()
   }
 }
