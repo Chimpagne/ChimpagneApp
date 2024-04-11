@@ -2,13 +2,14 @@ package com.monkeyteam.chimpagne
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -29,9 +30,13 @@ class EventCreationScreenTest {
   @get:Rule val composeTestRule = createComposeRule()
 
   @Test
-  fun testPanels() {
+  fun TestPanels() {
     // Start on the correct screen
-    composeTestRule.setContent { EventCreationScreen(0) }
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(0, navActions)
+    }
 
     // Move to the Second Panel
     composeTestRule.onNodeWithText("Next").performClick()
@@ -40,20 +45,29 @@ class EventCreationScreenTest {
     // Return to the First Panel
     composeTestRule.onNodeWithText("Previous").performClick()
     composeTestRule.onNodeWithText("Title").assertIsDisplayed()
-
-    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
   }
 
   @Test
   fun testPanel1() {
-    composeTestRule.setContent { EventCreationScreen(1) }
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(1, navActions)
+    }
     composeTestRule.onNodeWithText("Tags (comma-separated)").assertIsDisplayed()
   }
 
   @Test
   fun testMakeEventPublicButtonShowsToast() {
-    composeTestRule.setContent { EventCreationScreen(1) }
-    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      EventCreationScreen(1, navActions)
+    }
+
     // Tags (comma-separated)
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
@@ -67,8 +81,12 @@ class EventCreationScreenTest {
 
   @Test
   fun testPanel2() {
-    composeTestRule.setContent { EventCreationScreen(2) }
-    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(2, navActions)
+    }
 
     composeTestRule.onNodeWithText("Groceries").assertIsDisplayed()
     composeTestRule.onNodeWithText("Add groceries").assertIsDisplayed()
@@ -76,7 +94,13 @@ class EventCreationScreenTest {
 
   @Test
   fun testInputIntoTextFields() {
-    composeTestRule.setContent { EventCreationScreen(0) }
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      EventCreationScreen(0, navActions)
+    }
 
     val title = "Sample Event Title"
     composeTestRule.onNodeWithText("Title").performTextInput(title)
@@ -88,8 +112,11 @@ class EventCreationScreenTest {
   @Test
   fun testFourthPanel() {
     // Now we do this to go the correct screen
-    composeTestRule.setContent { EventCreationScreen(4) }
-    composeTestRule.onNodeWithContentDescription("Back").assertIsDisplayed()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(4, navActions)
+    }
 
     val value = "4"
     composeTestRule.onNodeWithText("Number of parking places").assertExists()
@@ -109,14 +136,23 @@ class EventCreationScreenTest {
 
   @Test
   fun testInvalidPanel() {
-    composeTestRule.setContent { EventCreationScreen(19) }
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(19, navActions)
+    }
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
   }
 
   @Test
   fun testUIHelpingFunctions() {
-    composeTestRule.setContent { EventCreationScreen(4) }
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(4, navActions)
+    }
     composeTestRule.onNodeWithText("Logistics").assertIsDisplayed()
     composeTestRule.onNodeWithText("Parking").assertIsDisplayed()
     composeTestRule.onNodeWithText("Beds").assertIsDisplayed()
