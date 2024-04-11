@@ -192,14 +192,3 @@ fun AccountChangeBody(
             }
       }
 }
-
-data class LanguageStrings(
-    val createAccount: String,
-    val editAccount: String,
-    val firstName: String,
-    val lastName: String,
-    val city: String,
-    val language: String,
-    val createAccountButton: String,
-    val saveAccountButton: String
-)

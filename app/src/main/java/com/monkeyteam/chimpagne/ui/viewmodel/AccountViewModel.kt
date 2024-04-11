@@ -21,12 +21,15 @@ class AccountViewModel(emailInit: String) : ViewModel() {
   private val _userAccount = MutableStateFlow<ChimpagneAccount?>(null)
   val userAccount: StateFlow<ChimpagneAccount?> = _userAccount.asStateFlow()
 
+  private val _tempUserAccount = MutableStateFlow<ChimpagneAccount?>(null)
+  val tempUserAccount: StateFlow<ChimpagneAccount?> = _tempUserAccount.asStateFlow()
+
   init {
     fetchUserAccount()
     Log.d("AccountViewModel", "AccountViewModel initialized")
   }
 
-  fun fetchUserAccount() {
+  private fun fetchUserAccount() {
     val email = userEmail.value // or another source if your logic requires
     viewModelScope.launch {
       accountManager.GetSpecificAccount(
@@ -42,50 +45,59 @@ class AccountViewModel(emailInit: String) : ViewModel() {
   }
 
   fun putUpdatedAccount() {
-    val account = userAccount.value
+    val account = tempUserAccount.value
     if (account == null) {
       Log.e("AccountViewModel", "Account is null, can't be added to database")
       return
     }
 
     viewModelScope.launch {
-      accountManager.PutSpecificAccount(
+      accountManager.UpdateSpecificAccount(
           account = account,
-          onSuccess = { Log.d("AccountViewModel", "Account updated") },
+          onSuccess = {
+            _userAccount.value = account
+            Log.d("AccountViewModel", "Account updated")
+          },
           onFailure = { exception ->
             Log.e("AccountViewModel", "Failed to update account", exception)
           })
     }
   }
 
+  fun moveUserAccountToTemp() {
+    _tempUserAccount.value = userAccount.value
+  }
+
   fun updateUri(uri: Uri) {
-    val newAccount = userAccount.value?.copy(profilePictureUri = uri)
-    _userAccount.value = newAccount
+    val newAccount = tempUserAccount.value?.copy(profilePictureUri = uri)
+    _tempUserAccount.value = newAccount
     Log.e("AccountViewModel", "Updated profile picture URI to $uri")
   }
 
   fun updateFirstName(firstName: String) {
-    val newAccount = userAccount.value?.copy(firstName = firstName)
-    _userAccount.value = newAccount
+    val newAccount = tempUserAccount.value?.copy(firstName = firstName)
+    _tempUserAccount.value = newAccount
     Log.e("AccountViewModel", "Updated first name to $firstName")
   }
 
   fun updateLastName(lastName: String) {
-    val newAccount = userAccount.value?.copy(lastName = lastName)
-    _userAccount.value = newAccount
+    val newAccount = tempUserAccount.value?.copy(lastName = lastName)
+    _tempUserAccount.value = newAccount
     Log.e("AccountViewModel", "Updated last name to $lastName")
   }
 
   fun updateLocationName(locationName: String) {
     val newAccount =
-        userAccount.value?.copy(location = userAccount.value?.location?.copy(name = locationName))
-    _userAccount.value = newAccount
+        tempUserAccount.value?.copy(
+            location = tempUserAccount.value?.location?.copy(name = locationName))
+    _tempUserAccount.value = newAccount
     Log.e("AccountViewModel", "Updated location name to $locationName")
   }
 
   fun updatePreferredLanguageEnglish(preferredLanguageEnglish: Boolean) {
-    val newAccount = userAccount.value?.copy(preferredLanguageEnglish = preferredLanguageEnglish)
-    _userAccount.value = newAccount
+    val newAccount =
+        tempUserAccount.value?.copy(preferredLanguageEnglish = preferredLanguageEnglish)
+    _tempUserAccount.value = newAccount
     if (preferredLanguageEnglish) {
       Log.e("AccountViewModel", "Updated preferred language to English")
     } else {

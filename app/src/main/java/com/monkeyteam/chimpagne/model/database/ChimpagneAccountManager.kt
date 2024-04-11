@@ -16,8 +16,6 @@ class ChimpagneAccountManager(private val accounts: CollectionReference) {
         .document(userEmail)
         .get()
         .addOnSuccessListener {
-          // Log the received data
-
           val data = it.data
           if (data != null) {
             Log.d("ChimpagneAccountManager", "Received data: ${data}")
@@ -51,7 +49,7 @@ class ChimpagneAccountManager(private val accounts: CollectionReference) {
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun PutSpecificAccount(
+  fun UpdateSpecificAccount(
       account: ChimpagneAccount,
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit

@@ -23,7 +23,6 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
           contract = ActivityResultContracts.PickVisualMedia(),
           onResult = { uri: Uri? ->
             if (uri != null) {
-              /*TODO add uri to account*/
               Log.d("AccountCreation", "Profile picture URI: $uri")
               accountViewModel.updateUri(uri)
             } else {

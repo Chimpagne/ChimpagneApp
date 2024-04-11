@@ -41,14 +41,6 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 fun AccountSettings(navObject: NavigationActions, accountViewModel: AccountViewModel) {
   val account = accountViewModel.userAccount.collectAsState()
 
-  /*  val selectedImageUri by remember { mutableStateOf<Uri?>(account.value?.profilePictureUri) }
-  val firstName by remember { mutableStateOf(account.value?.firstName) }
-  val lastName by remember { mutableStateOf(account.value?.lastName) }
-  val preferredLanguageEnglish by remember {
-    mutableStateOf(account.value?.preferredLanguageEnglish)
-  }
-  val location by remember { mutableStateOf(account.value?.location) }*/
-
   Scaffold(
       topBar = {
         TopAppBar(

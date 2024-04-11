@@ -7,6 +7,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -17,14 +18,15 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel) {
-  val account = accountViewModel.userAccount.collectAsState()
+
+  LaunchedEffect(Unit) { accountViewModel.moveUserAccountToTemp() }
+  val account = accountViewModel.tempUserAccount.collectAsState()
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.PickVisualMedia(),
           onResult = { uri: Uri? ->
             if (uri != null) {
-              /*TODO add uri to account*/
               Log.d("AccountEdit", "Profile picture URI: $uri")
               accountViewModel.updateUri(uri)
             } else {
@@ -46,8 +48,7 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       location = account.value?.location?.name ?: "",
       locationLabel = R.string.account_creation_screen_city,
       locationChange = { accountViewModel.updateLocationName(it) },
-      preferredLanguageEnglish =
-          accountViewModel.userAccount.value?.preferredLanguageEnglish ?: true,
+      preferredLanguageEnglish = account.value?.preferredLanguageEnglish ?: true,
       onLanguageToggle = { accountViewModel.updatePreferredLanguageEnglish(it) },
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
