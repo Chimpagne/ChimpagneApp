@@ -39,7 +39,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,11 +72,8 @@ fun EventCreationScreen(
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
       GoBackButton(navigationActions = navObject)
-        Legend(
-            "Create An Event", //TODO
-            Icons.Rounded.Create,
-            "Create"
-        )
+      Legend(
+          stringResource(id = R.string.event_creation_screen_name), Icons.Rounded.Create, "Create")
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
@@ -112,10 +108,18 @@ fun EventCreationScreen(
         Button(
             onClick = {
               if (!uiState.loading) {
-                Toast.makeText(context, "Creating the event...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.event_creation_screen_toast_creating),
+                        Toast.LENGTH_SHORT)
+                    .show()
                 eventViewModel.createTheEvent(
                     onSuccess = {
-                      Toast.makeText(context, "Event has been created !", Toast.LENGTH_SHORT).show()
+                      Toast.makeText(
+                              context,
+                              context.getString(R.string.event_creation_screen_toast_finish),
+                              Toast.LENGTH_SHORT)
+                          .show()
                       navObject.goBack()
                     })
               }
@@ -133,84 +137,72 @@ fun FirstPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   Column(modifier = Modifier.padding(16.dp)) {
-      Legend(
-          "Event Title", //TODO
-          Icons.Rounded.Title,
-          "Title"
-      )
-      Spacer(Modifier.height(16.dp))
-      OutlinedTextField(
+    Legend(
+        stringResource(id = R.string.event_creation_screen_title_legend),
+        Icons.Rounded.Title,
+        "Title")
+    Spacer(Modifier.height(16.dp))
+    OutlinedTextField(
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
-        label = { Text(stringResource(id = R.string.event_creation_screen_title)) }, //TODO
-        modifier = Modifier.fillMaxWidth()
-      )
+        label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
+        modifier = Modifier.fillMaxWidth())
 
     Spacer(modifier = Modifier.height(16.dp))
 
-      Legend(
-          "Event Description", //TODO
-          Icons.Rounded.Description,
-          "Description"
-      )
+    Legend(
+        stringResource(id = R.string.event_creation_screen_description_legend),
+        Icons.Rounded.Description,
+        "Description")
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
     OutlinedTextField(
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
         modifier = Modifier.fillMaxWidth(),
-        maxLines = 3
-    )
+        maxLines = 3)
     Spacer(modifier = Modifier.height(16.dp))
 
-      Legend(
-          "Event Location",
-          Icons.Rounded.LocationOn,
-          "Location"
-      )
+    Legend(
+        stringResource(id = R.string.event_creation_screen_location_legend),
+        Icons.Rounded.LocationOn,
+        "Location")
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-      LocationSelector(
-          uiState.location,
-          eventViewModel::updateEventLocation
-      )
+    LocationSelector(uiState.location, eventViewModel::updateEventLocation)
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-      Legend(
-          "Event Start Date And Time", //TODO
-          Icons.Rounded.CalendarToday,
-          "Start Date"
-      )
+    Legend(
+        stringResource(id = R.string.event_creation_screen_start_date_legend),
+        Icons.Rounded.CalendarToday,
+        "Start Date")
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-      DateSelector(
-          selectedDate = uiState.startsAtCalendarDate,
-          onDateSelected = eventViewModel::updateEventStartCalendarDate,
-          modifier = Modifier.align(Alignment.CenterHorizontally),
-          selectTimeOfDay = true
-      )
+    DateSelector(
+        selectedDate = uiState.startsAtCalendarDate,
+        onDateSelected = eventViewModel::updateEventStartCalendarDate,
+        modifier = Modifier.align(Alignment.CenterHorizontally),
+        selectTimeOfDay = true)
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-      Legend(
-          "Event End Date And Time", //TODO
-          Icons.Rounded.CalendarToday,
-          "End Date"
-      )
+    Legend(
+        stringResource(id = R.string.event_creation_screen_end_date_legend),
+        Icons.Rounded.CalendarToday,
+        "End Date")
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-      DateSelector(
-          selectedDate = uiState.endsAtCalendarDate,
-          onDateSelected = eventViewModel::updateEventEndCalendarDate,
-          modifier = Modifier.align(Alignment.CenterHorizontally),
-          selectTimeOfDay = true
-      )
+    DateSelector(
+        selectedDate = uiState.endsAtCalendarDate,
+        onDateSelected = eventViewModel::updateEventEndCalendarDate,
+        modifier = Modifier.align(Alignment.CenterHorizontally),
+        selectTimeOfDay = true)
   }
 }
 
@@ -218,39 +210,34 @@ fun FirstPanel(eventViewModel: EventViewModel) {
 fun SecondPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-    var tagFieldActive by remember { mutableStateOf(false) }
+  var tagFieldActive by remember { mutableStateOf(false) }
 
-  val context = LocalContext.current
   Column(modifier = Modifier.padding(16.dp)) {
+    Legend(
+        stringResource(id = R.string.event_creation_screen_tags_legend), Icons.Rounded.Tag, "Tags")
 
-      Legend(
-          "Add event tags", //TODO
-          Icons.Rounded.Tag,
-          "Tags"
-      )
-
-      TagField(
-          uiState.tags,
-          eventViewModel::updateEventTags,
-          { tagFieldActive = it },
-          Modifier.fillMaxWidth()
-      )
+    TagField(
+        uiState.tags,
+        eventViewModel::updateEventTags,
+        { tagFieldActive = it },
+        Modifier.fillMaxWidth())
 
     Spacer(modifier = Modifier.height(16.dp))
 
-      Legend(
-          "Make Event Public", //TODO
-          Icons.Rounded.Public,
-          "Public"
-      )
+    Legend(
+        stringResource(id = R.string.event_creation_screen_public_legend),
+        Icons.Rounded.Public,
+        "Public")
 
-      Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
     Row(verticalAlignment = Alignment.CenterVertically) {
       Checkbox(
           checked = uiState.public,
           onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.public) })
-      Text(stringResource(id = R.string.event_creation_screen_make_event_public))
+      if (uiState.public)
+          Text(stringResource(id = R.string.event_creation_screen_event_made_public))
+      else Text(stringResource(id = R.string.event_creation_screen_make_event_public))
     }
   }
 }
@@ -264,7 +251,7 @@ fun ThirdPanel(eventViewModel: EventViewModel) {
         stringResource(id = R.string.event_creation_screen_groceries),
         style = MaterialTheme.typography.headlineSmall)
     Spacer(modifier = Modifier.height(16.dp))
-    Button(onClick = { /* Add groceries logic */}) {
+    Button(onClick = { /* TODO Add groceries logic */}) {
       Text(stringResource(id = R.string.event_creation_screen_add_groceries))
     }
     Spacer(modifier = Modifier.height(16.dp))

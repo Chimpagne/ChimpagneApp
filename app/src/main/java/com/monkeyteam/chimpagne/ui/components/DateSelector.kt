@@ -58,29 +58,28 @@ fun DateSelector(
 ) {
 
   var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePicker by remember { mutableStateOf(false) }
+  var showTimePicker by remember { mutableStateOf(false) }
 
-    var day by remember { mutableIntStateOf(0) }
-    var month by remember { mutableIntStateOf(0) }
-    var year by remember { mutableIntStateOf(0) }
-
+  var day by remember { mutableIntStateOf(0) }
+  var month by remember { mutableIntStateOf(0) }
+  var year by remember { mutableIntStateOf(0) }
 
   val datePickerState =
       rememberDatePickerState(initialSelectedDateMillis = selectedDate.timeInMillis)
 
-    val timePickerState = rememberTimePickerState(
-        initialHour = selectedDate.get(Calendar.HOUR),
-        initialMinute = selectedDate.get(Calendar.MINUTE)
-    )
+  val timePickerState =
+      rememberTimePickerState(
+          initialHour = selectedDate.get(Calendar.HOUR),
+          initialMinute = selectedDate.get(Calendar.MINUTE))
 
   IconTextButton(
-      text = DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time) +
-                if(selectTimeOfDay){
-                     " at " + DateFormat.getTimeInstance(DateFormat.SHORT).format(selectedDate.time)
-                }else{
-                     ""
-                     }
-                 ,
+      text =
+          DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time) +
+              if (selectTimeOfDay) {
+                " at " + DateFormat.getTimeInstance(DateFormat.SHORT).format(selectedDate.time)
+              } else {
+                ""
+              },
       icon = Icons.Rounded.CalendarToday,
       onClick = { showDatePicker = true },
       modifier = modifier)
@@ -97,18 +96,17 @@ fun DateSelector(
                     datePickerState.selectedDateMillis?.let {
                       Calendar.getInstance().apply { timeInMillis = it }
                     } ?: selectedDate
-                if(selectTimeOfDay){
-                    showTimePicker = true
-                    year = dateToUse.get(Calendar.YEAR)
-                    month = dateToUse.get(Calendar.MONTH)
-                    day = dateToUse.get(Calendar.DATE)
-                }else{
-                    onDateSelected(dateToUse)
+                if (selectTimeOfDay) {
+                  showTimePicker = true
+                  year = dateToUse.get(Calendar.YEAR)
+                  month = dateToUse.get(Calendar.MONTH)
+                  day = dateToUse.get(Calendar.DATE)
+                } else {
+                  onDateSelected(dateToUse)
                 }
               }) {
                 Text("OK")
               }
-
         }) {
           DatePicker(
               state = datePickerState,
@@ -116,27 +114,24 @@ fun DateSelector(
         }
   }
 
-  if(showTimePicker){
-      TimePickerDialog(
-          onDismissRequest = { showTimePicker = false },
-          confirmButton = {
-              TextButton(
-                  onClick = {
-                      showTimePicker = false
+  if (showTimePicker) {
+    TimePickerDialog(
+        onDismissRequest = { showTimePicker = false },
+        confirmButton = {
+          TextButton(
+              onClick = {
+                showTimePicker = false
 
-                      val hour = timePickerState.hour
-                      val minute = timePickerState.minute
+                val hour = timePickerState.hour
+                val minute = timePickerState.minute
 
-                      onDateSelected(buildCalendar(day, month, year, hour, minute))
-                  }
-              ) { Text("OK") }
-          }
-      )
-      {
-          TimePicker(
-              state = timePickerState
-          )
-      }
+                onDateSelected(buildCalendar(day, month, year, hour, minute))
+              }) {
+                Text("OK")
+              }
+        }) {
+          TimePicker(state = timePickerState)
+        }
   }
 }
 
@@ -149,46 +144,32 @@ fun TimePickerDialog(
     containerColor: Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit,
 ) {
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false
-        ),
-    ) {
-        Surface(
-            shape = MaterialTheme.shapes.extraLarge,
-            tonalElevation = 6.dp,
-            modifier = Modifier
-                .width(IntrinsicSize.Min)
+  Dialog(
+      onDismissRequest = onDismissRequest,
+      properties = DialogProperties(usePlatformDefaultWidth = false),
+  ) {
+    Surface(
+        shape = MaterialTheme.shapes.extraLarge,
+        tonalElevation = 6.dp,
+        modifier =
+            Modifier.width(IntrinsicSize.Min)
                 .height(IntrinsicSize.Min)
-                .background(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    color = containerColor
-                ),
-            color = containerColor
-        ) {
-            Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                .background(shape = MaterialTheme.shapes.extraLarge, color = containerColor),
+        color = containerColor) {
+          Column(
+              modifier = Modifier.padding(24.dp),
+              horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
                     text = title,
-                    style = MaterialTheme.typography.labelMedium
-                )
+                    style = MaterialTheme.typography.labelMedium)
                 content()
-                Row(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .fillMaxWidth()
-                ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    dismissButton?.invoke()
-                    confirmButton()
+                Row(modifier = Modifier.height(40.dp).fillMaxWidth()) {
+                  Spacer(modifier = Modifier.weight(1f))
+                  dismissButton?.invoke()
+                  confirmButton()
                 }
-            }
+              }
         }
-    }
+  }
 }

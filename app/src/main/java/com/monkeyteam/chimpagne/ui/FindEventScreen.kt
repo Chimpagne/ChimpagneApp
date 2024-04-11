@@ -45,7 +45,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -159,8 +158,7 @@ fun FindEventFormScreen(
                 LocationSelector(
                     uiState.selectedLocation,
                     findViewModel::updateSelectedLocation,
-                    Modifier.fillMaxWidth()
-                )
+                    Modifier.fillMaxWidth())
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
@@ -177,7 +175,9 @@ fun FindEventFormScreen(
 
                 Slider(
                     value = uiState.radiusAroundLocationInM.toFloat() / 1000,
-                    onValueChange = { findViewModel.updateLocationSearchRadius(it.toDouble() * 1000) },
+                    onValueChange = {
+                      findViewModel.updateLocationSearchRadius(it.toDouble() * 1000)
+                    },
                     valueRange = 1f..30f,
                     modifier = Modifier.fillMaxWidth())
 
@@ -208,8 +208,7 @@ fun FindEventFormScreen(
                 DateSelector(
                     uiState.selectedDate,
                     findViewModel::updateSelectedDate,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                    modifier = Modifier.align(Alignment.CenterHorizontally))
 
                 if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))

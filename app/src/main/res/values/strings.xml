@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Chimpagne</string>
     <string name="homescreen_my_events">MY EVENTS</string>
-    <string name="homescreen_join_event">JOIN AN EVENT</string>
+    <string name="homescreen_join_event">DISCOVER EVENTS</string>
     <string name="homescreen_organize_event">ORGANIZE AN EVENT</string>
     <string name="account_creation_screen_create_account">Create your Account</string>
     <string name="account_creation_screen_first_name">First Name</string>
@@ -9,15 +9,23 @@
     <string name="account_creation_screen_city">Choose your City</string>
     <string name="account_creation_screen_language">Language</string>
     <string name="account_creation_screen_button">Create Account</string>
+    <string name="event_creation_screen_name">Create An Event</string>
     <string name="event_creation_screen_previous">Previous</string>
     <string name="event_creation_screen_next">Next</string>
     <string name="event_creation_screen_create_event">Create Event</string>
+    <string name="event_creation_screen_toast_creating">Creating the event…</string>
+    <string name="event_creation_screen_toast_finish">Event has been created successfully!</string>
     <string name="event_creation_screen_title">Add a title</string>
+    <string name="event_creation_screen_title_legend">Event Title</string>
     <string name="event_creation_screen_description">Add a description</string>
-    <string name="event_creation_screen_more_event_infos">More event infos</string>
-    <string name="event_creation_screen_tags">Tags (comma-separated)</string>
+    <string name="event_creation_screen_description_legend">Event Description</string>
+    <string name="event_creation_screen_location_legend">Event Location</string>
+    <string name="event_creation_screen_start_date_legend">Event Start Date And Time</string>
+    <string name="event_creation_screen_end_date_legend">Event End Date And Time</string>
+    <string name="event_creation_screen_tags_legend">Add Event Tags</string>
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
+    <string name="event_creation_screen_public_legend">Event Publicity</string>
     <string name="event_creation_screen_groceries">Groceries</string>
     <string name="event_creation_screen_add_groceries">Add groceries</string>
     <string name="event_creation_screen_logistics">Logistics</string>
