@@ -6,7 +6,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.monkeyteam.chimpagne.R
@@ -17,7 +16,6 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 
 @Composable
 fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
-
 
   val account by accountViewModel.account.collectAsState()
   val tempAccount by accountViewModel.tempAccount.collectAsState()

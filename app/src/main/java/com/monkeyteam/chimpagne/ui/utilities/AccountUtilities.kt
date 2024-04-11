@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 
@@ -173,11 +174,7 @@ fun AccountChangeBody(
                   label = lastNameLabel,
                   value = lastName,
                   onValueChange = lastNameChange)
-//              TextInputField(
-//                  modifier = Modifier.fillMaxWidth().testTag("locationTextField"),
-//                  label = locationLabel,
-//                  value = location,
-//                  onValueChange = locationChange)
+              LocationSelector(selectedLocation = location, updateSelectedLocation = locationChange)
               LanguageSwitch(
                   modifier = Modifier.testTag("changeLanguageSwitch"),
                   isEnglish = preferredLanguageEnglish,

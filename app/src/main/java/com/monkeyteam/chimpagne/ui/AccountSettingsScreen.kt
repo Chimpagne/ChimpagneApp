@@ -38,7 +38,11 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountSettings(navObject: NavigationActions, accountViewModel: AccountViewModel) {
+fun AccountSettings(
+    navObject: NavigationActions,
+    accountViewModel: AccountViewModel,
+    logout: () -> Unit
+) {
   val account = accountViewModel.account.collectAsState()
 
   Scaffold(
@@ -101,9 +105,13 @@ fun AccountSettings(navObject: NavigationActions, accountViewModel: AccountViewM
 
               Spacer(modifier = Modifier.height(8.dp))
               // TODO has to be changed to log out
-              Button(onClick = { /*navObject.navigateTo(Route.ACCOUNT_CREATION_SCREEN)*/}) {
-                Text("Log Out")
-              }
+              Button(
+                  onClick = {
+                    /*navObject.navigateTo(Route.ACCOUNT_CREATION_SCREEN)*/
+                    logout()
+                  }) {
+                    Text("Log Out")
+                  }
             }
       }
 }

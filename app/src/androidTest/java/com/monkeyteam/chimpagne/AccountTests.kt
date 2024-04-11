@@ -25,7 +25,7 @@ class AccountCreationUITest {
 
     composeTestRule.setContent {
       val navObject = NavigationActions(rememberNavController())
-      AccountCreation(navObject, AccountViewModel("test@gmail.com"))
+      AccountCreation(navObject, AccountViewModel())
     }
 
     /*composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Créer votre compte")
@@ -68,7 +68,7 @@ class AccountEditUITest {
 
     composeTestRule.setContent {
       val navObject = NavigationActions(rememberNavController())
-      AccountEdit(navObject, AccountViewModel("g@myrichard.ch"))
+      AccountEdit(navObject, AccountViewModel())
     }
 
     composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Edit Account")
@@ -98,7 +98,7 @@ class AccountSettingsUITest {
 
     composeTestRule.setContent {
       val navObject = NavigationActions(rememberNavController())
-      AccountSettings(navObject, AccountViewModel("g@myrichard.ch"))
+      AccountSettings(navObject, AccountViewModel())
     }
 
     val preferredLanguageIsEnglish =
