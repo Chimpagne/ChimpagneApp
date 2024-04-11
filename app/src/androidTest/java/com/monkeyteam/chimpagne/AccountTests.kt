@@ -10,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.ui.AccountEdit
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
-import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -19,8 +19,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,14 +32,14 @@ import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 import com.monkeyteam.chimpagne.ui.utilities.ProfileImage
-import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettings(
-    navObject: NavigationActions,
-    accountViewModel: AccountViewModel,
-    logout: () -> Unit
+  navObject: NavigationActions,
+  accountViewModel: AccountViewModel,
+  logout: () -> Unit = {}
 ) {
   val account = accountViewModel.account.collectAsState()
 

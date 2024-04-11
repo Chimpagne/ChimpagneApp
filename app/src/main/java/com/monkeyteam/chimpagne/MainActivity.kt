@@ -31,7 +31,7 @@ import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
-import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 class MainActivity : ComponentActivity() {
   @OptIn(ExperimentalMaterial3Api::class)

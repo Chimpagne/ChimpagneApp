@@ -12,7 +12,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.AccountChangeBody
-import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
 fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {

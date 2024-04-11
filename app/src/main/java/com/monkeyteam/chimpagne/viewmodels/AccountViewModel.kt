@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui.viewmodel
+package com.monkeyteam.chimpagne.viewmodels
 
 import android.net.Uri
 import android.util.Log
