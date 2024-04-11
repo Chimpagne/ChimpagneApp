@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -16,7 +17,8 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 @Composable
 fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
-  val account = accountViewModel.userAccount.collectAsState()
+  val account = accountViewModel.tempUserAccount.collectAsState()
+  LaunchedEffect(Unit) { accountViewModel.createEmptyAccount() }
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -44,11 +46,11 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       location = account.value?.location?.name ?: "",
       locationLabel = R.string.account_creation_screen_city,
       locationChange = { accountViewModel.updateLocationName(it) },
-      preferredLanguageEnglish =
-          accountViewModel.userAccount.value?.preferredLanguageEnglish ?: true,
+      preferredLanguageEnglish = account.value?.preferredLanguageEnglish ?: true,
       onLanguageToggle = { accountViewModel.updatePreferredLanguageEnglish(it) },
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
       to_navigate_next = Route.HOME_SCREEN,
+      commitOnClick = { accountViewModel.createAccount() },
       navObject = navObject)
 }

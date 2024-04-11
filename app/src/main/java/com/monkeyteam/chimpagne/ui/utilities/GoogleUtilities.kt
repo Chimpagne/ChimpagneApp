@@ -23,7 +23,7 @@ import com.monkeyteam.chimpagne.R
 fun GoogleAuthentication(
     onSuccessfulLogin: () -> Unit,
     onLoginFailed: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
   val signInLauncher =
       rememberLauncherForActivityResult(

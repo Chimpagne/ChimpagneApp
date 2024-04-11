@@ -74,4 +74,52 @@ class ChimpagneAccountManager(private val accounts: CollectionReference) {
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
+
+  fun CreateSpecificAccount(
+      account: ChimpagneAccount,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    Log.e("ChimpagneAccountManager", "Creating account: $account")
+    val data =
+        hashMapOf(
+            "email" to account.email,
+            "profilePictureUri" to account.profilePictureUri.toString(),
+            "firstName" to account.firstName,
+            "lastName" to account.lastName,
+            "preferredLanguageEnglish" to account.preferredLanguageEnglish,
+            "location" to
+                hashMapOf(
+                    "name" to account.location?.name,
+                    "latitude" to account.location?.latitude,
+                    "longitude" to account.location?.longitude,
+                    "geohash" to account.location?.geohash))
+    accounts
+        .document(account.email)
+        .set(data as Map<String, Any>)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun isInDatabase(
+      userEmail: String,
+      onSuccess: (Boolean) -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    Log.d("ChimpagneAccountManager", "Checking if account is in database: $userEmail")
+    accounts
+        .document(userEmail)
+        .get()
+        .addOnSuccessListener {
+          val data = it.data
+          if (data != null) {
+            Log.d("ChimpagneAccountManager", "Received data: ${data}")
+            onSuccess(true)
+          } else {
+            Log.d("ChimpagneAccountManager", "Received null data")
+            onSuccess(false)
+          }
+        }
+        .addOnFailureListener { onFailure(it) }
+  }
 }

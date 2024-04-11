@@ -44,6 +44,19 @@ class AccountViewModel(emailInit: String) : ViewModel() {
     }
   }
 
+  fun createEmptyAccount() {
+    val account =
+        ChimpagneAccount(
+            email = _userEmail.value,
+            profilePictureUri = null,
+            firstName = "",
+            lastName = "",
+            preferredLanguageEnglish = true,
+            location = null)
+    _tempUserAccount.value = account
+    Log.d("AccountViewModel", "Created empty account")
+  }
+
   fun putUpdatedAccount() {
     val account = tempUserAccount.value
     if (account == null) {
@@ -60,6 +73,26 @@ class AccountViewModel(emailInit: String) : ViewModel() {
           },
           onFailure = { exception ->
             Log.e("AccountViewModel", "Failed to update account", exception)
+          })
+    }
+  }
+
+  fun createAccount() {
+    val account = tempUserAccount.value
+    if (account == null) {
+      Log.e("AccountViewModel", "Account is null, can't be added to database")
+      return
+    }
+
+    viewModelScope.launch {
+      accountManager.CreateSpecificAccount(
+          account = account,
+          onSuccess = {
+            _userAccount.value = account
+            Log.d("AccountViewModel", "Account created")
+          },
+          onFailure = { exception ->
+            Log.e("AccountViewModel", "Failed to create account", exception)
           })
     }
   }

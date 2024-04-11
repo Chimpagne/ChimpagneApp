@@ -51,7 +51,10 @@ fun LoginScreen(successfulLogin: () -> Unit) {
           )
         }
         GoogleAuthentication(
-            { successfulLogin() }, { openAlertDialog.value = true }, Modifier.fillMaxWidth())
+            { successfulLogin() },
+            { openAlertDialog.value = true },
+            Modifier.fillMaxWidth(),
+        )
       }
   when {
     openAlertDialog.value -> {
