@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import DateSelector
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +15,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.Create
+import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Public
+import androidx.compose.material.icons.rounded.Tag
+import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -29,6 +39,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -36,6 +47,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
+import com.monkeyteam.chimpagne.ui.components.Legend
+import com.monkeyteam.chimpagne.ui.components.LocationSelector
+import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
@@ -59,6 +73,11 @@ fun EventCreationScreen(
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
       GoBackButton(navigationActions = navObject)
+        Legend(
+            "Create An Event", //TODO
+            Icons.Rounded.Create,
+            "Create"
+        )
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
@@ -108,31 +127,90 @@ fun EventCreationScreen(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FirstPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  var addressText by remember { mutableStateOf("") }
-
   Column(modifier = Modifier.padding(16.dp)) {
-    OutlinedTextField(
+      Legend(
+          "Event Title", //TODO
+          Icons.Rounded.Title,
+          "Title"
+      )
+      Spacer(Modifier.height(16.dp))
+      OutlinedTextField(
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
-        label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier.fillMaxWidth())
+        label = { Text(stringResource(id = R.string.event_creation_screen_title)) }, //TODO
+        modifier = Modifier.fillMaxWidth()
+      )
+
     Spacer(modifier = Modifier.height(16.dp))
+
+      Legend(
+          "Event Description", //TODO
+          Icons.Rounded.Description,
+          "Description"
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
     OutlinedTextField(
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
         modifier = Modifier.fillMaxWidth(),
-        maxLines = 3)
+        maxLines = 3
+    )
     Spacer(modifier = Modifier.height(16.dp))
-    OutlinedTextField(
-        value = addressText,
-        onValueChange = { addressText = it },
-        label = { Text(stringResource(id = R.string.event_creation_screen_address)) },
-        modifier = Modifier.fillMaxWidth())
+
+      Legend(
+          "Event Location",
+          Icons.Rounded.LocationOn,
+          "Location"
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      LocationSelector(
+          uiState.location,
+          eventViewModel::updateEventLocation
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      Legend(
+          "Event Start Date And Time", //TODO
+          Icons.Rounded.CalendarToday,
+          "Start Date"
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      DateSelector(
+          selectedDate = uiState.startsAtCalendarDate,
+          onDateSelected = eventViewModel::updateEventStartCalendarDate,
+          modifier = Modifier.align(Alignment.CenterHorizontally),
+          selectTimeOfDay = true
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      Legend(
+          "Event End Date And Time", //TODO
+          Icons.Rounded.CalendarToday,
+          "End Date"
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
+
+      DateSelector(
+          selectedDate = uiState.endsAtCalendarDate,
+          onDateSelected = eventViewModel::updateEventEndCalendarDate,
+          modifier = Modifier.align(Alignment.CenterHorizontally),
+          selectTimeOfDay = true
+      )
   }
 }
 
@@ -140,20 +218,33 @@ fun FirstPanel(eventViewModel: EventViewModel) {
 fun SecondPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  var tagsText by remember { mutableStateOf("") }
+    var tagFieldActive by remember { mutableStateOf(false) }
 
   val context = LocalContext.current
   Column(modifier = Modifier.padding(16.dp)) {
-    Text(
-        stringResource(id = R.string.event_creation_screen_more_event_infos),
-        style = MaterialTheme.typography.headlineSmall)
+
+      Legend(
+          "Add event tags", //TODO
+          Icons.Rounded.Tag,
+          "Tags"
+      )
+
+      TagField(
+          uiState.tags,
+          eventViewModel::updateEventTags,
+          { tagFieldActive = it },
+          Modifier.fillMaxWidth()
+      )
+
     Spacer(modifier = Modifier.height(16.dp))
-    OutlinedTextField(
-        value = uiState.tags.joinToString(","),
-        onValueChange = { eventViewModel.updateEventTags(it.split(",")) },
-        label = { Text(stringResource(id = R.string.event_creation_screen_tags)) },
-        modifier = Modifier.fillMaxWidth())
-    Spacer(modifier = Modifier.height(16.dp))
+
+      Legend(
+          "Make Event Public", //TODO
+          Icons.Rounded.Public,
+          "Public"
+      )
+
+      Spacer(modifier = Modifier.height(16.dp))
 
     Row(verticalAlignment = Alignment.CenterVertically) {
       Checkbox(

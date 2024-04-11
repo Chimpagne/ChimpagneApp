@@ -12,9 +12,8 @@
     <string name="event_creation_screen_previous">Previous</string>
     <string name="event_creation_screen_next">Next</string>
     <string name="event_creation_screen_create_event">Create Event</string>
-    <string name="event_creation_screen_title">Title</string>
-    <string name="event_creation_screen_description">Description</string>
-    <string name="event_creation_screen_address">Address</string>
+    <string name="event_creation_screen_title">Add a title</string>
+    <string name="event_creation_screen_description">Add a description</string>
     <string name="event_creation_screen_more_event_infos">More event infos</string>
     <string name="event_creation_screen_tags">Tags (comma-separated)</string>
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>

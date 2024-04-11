@@ -224,7 +224,7 @@ data class EventUIState(
     val id: String = "",
     val title: String = "",
     val description: String = "",
-    val location: Location = Location("default"),
+    val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = emptyList(),
     val guests: Map<String, Boolean> = emptyMap(),

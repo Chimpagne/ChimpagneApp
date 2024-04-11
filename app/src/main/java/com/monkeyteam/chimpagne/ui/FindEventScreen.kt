@@ -159,7 +159,8 @@ fun FindEventFormScreen(
                 LocationSelector(
                     uiState.selectedLocation,
                     findViewModel::updateSelectedLocation,
-                    Modifier.fillMaxWidth())
+                    Modifier.fillMaxWidth()
+                )
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
@@ -207,7 +208,8 @@ fun FindEventFormScreen(
                 DateSelector(
                     uiState.selectedDate,
                     findViewModel::updateSelectedDate,
-                    modifier = Modifier.align(Alignment.CenterHorizontally))
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
                 if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))
