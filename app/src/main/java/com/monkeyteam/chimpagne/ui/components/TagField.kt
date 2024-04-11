@@ -80,7 +80,7 @@ fun TagField(
       },
       onDoneActionClick = {
         if (tagInput.trim().isNotBlank()) {
-          updateSelectedTags(selectedTags + tagInput.trim().lowercase(Locale.getDefault()))
+          updateSelectedTags((selectedTags.reversed() + tagInput.trim().lowercase(Locale.getDefault())).reversed())
           tagInput = ""
         } else {
           view.clearFocus()
