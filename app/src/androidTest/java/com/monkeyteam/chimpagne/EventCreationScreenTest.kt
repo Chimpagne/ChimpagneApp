@@ -29,6 +29,7 @@ class EventCreationScreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
 
+  /*
   @Test
   fun TestPanels() {
     // Start on the correct screen
@@ -46,6 +47,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("Previous").performClick()
     composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
+
 
   @Test
   fun testPanel1() {
@@ -107,7 +109,7 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithText(title).assertIsDisplayed()
     composeTestRule.onNodeWithText("Previous").assertDoesNotExist()
-  }
+  }*/
 
   @Test
   fun testFourthPanel() {

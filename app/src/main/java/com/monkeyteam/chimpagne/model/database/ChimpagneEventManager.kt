@@ -96,8 +96,13 @@ class ChimpagneEventManager(private val events: CollectionReference) {
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun registerEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-    updateEvent(event.copy(id = events.document().id), onSuccess, onFailure)
+  fun registerEvent(
+      event: ChimpagneEvent,
+      onSuccess: (id: String) -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    val eventId = events.document().id
+    updateEvent(event.copy(id = eventId), { onSuccess(eventId) }, onFailure)
   }
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {

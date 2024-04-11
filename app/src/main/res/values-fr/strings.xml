@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Chimpagne</string>
     <string name="homescreen_my_events">MES ÉVÉNEMENTS</string>
-    <string name="homescreen_join_event">REJOINDRE UN ÉVÉNEMENT</string>
+    <string name="homescreen_join_event">TROUVER DES ÉVÉNEMENTS</string>
     <string name="homescreen_organize_event">ORGANISER UN ÉVÉNEMENT</string>
     <string name="account_creation_screen_create_account">Créer votre compte</string>
     <string name="account_creation_screen_first_name">Prénom</string>
@@ -9,16 +9,23 @@
     <string name="account_creation_screen_city">Choisissez votre ville</string>
     <string name="account_creation_screen_language">Langue</string>
     <string name="account_creation_screen_button">Créer un compte</string>
+    <string name="event_creation_screen_name">Créer Un Événement</string>
     <string name="event_creation_screen_previous">Précédent</string>
     <string name="event_creation_screen_next">Prochain</string>
     <string name="event_creation_screen_create_event">Créer l\'événement</string>
-    <string name="event_creation_screen_title">Titre</string>
-    <string name="event_creation_screen_description">Description</string>
-    <string name="event_creation_screen_address">Adresse</string>
-    <string name="event_creation_screen_more_event_infos">Plus d\'infos sur cet événement</string>
-    <string name="event_creation_screen_tags">Etiquettes (séparées par virgule)</string>
+    <string name="event_creation_screen_toast_creating">Creation de l\'événement…</string>
+    <string name="event_creation_screen_toast_finish">L\'événement a été créé !</string>
+    <string name="event_creation_screen_title">Ajouter un titre</string>
+    <string name="event_creation_screen_title_legend">Titre De L\'Événement</string>
+    <string name="event_creation_screen_description">Ajouter une description</string>
+    <string name="event_creation_screen_description_legend">Description De L\'Événement</string>
+    <string name="event_creation_screen_location_legend">Localisation De L\'Événement</string>
+    <string name="event_creation_screen_start_date_legend">Date Et Heure Du Début De L\'Événement</string>
+    <string name="event_creation_screen_end_date_legend">Date Et Heure De La Fin De L\'Événement</string>
+    <string name="event_creation_screen_tags_legend">Ajouter Des Étiquettes À L\'Événement</string>
     <string name="event_creation_screen_event_made_public">Cet événement a été rendu publique !</string>
     <string name="event_creation_screen_make_event_public">Rendre cet événement publique</string>
+    <string name="event_creation_screen_public_legend">Visibilité De L\'Événement</string>
     <string name="event_creation_screen_groceries">Courses</string>
     <string name="event_creation_screen_add_groceries">Ajouter des courses</string>
     <string name="event_creation_screen_logistics">Logistique</string>
@@ -26,5 +33,17 @@
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
     <string name="event_creation_screen_beds">Lits</string>
+    <string name="find_event_page_title">Trouver une soirée</string>
+    <string name="find_event_search_button_text">Chercher</string>
+    <string name="find_event_event_location_legend">Lieu</string>
+    <string name="find_event_event_tags_legend">Ajouter des tags de recherche</string>
+    <string name="find_event_event_location_query_label">Entrer une adresse</string>
+    <string name="find_event_event_locate_me_button">Autour de moi</string>
+    <string name="find_event_search_radius">Rayon de recherche</string>
+    <string name="find_event_search_tag_query_label">Entrer un tag</string>
+    <string name="find_event_date_legend">Date de la soirée</string>
+    <string name="find_event_join_event_button_text">Rejoindre</string>
+    <string name="find_event_no_event_available">Pas de détail à afficher</string>
+    <string name="search_location">Rechercher un lieu </string>
     <string name="accountEditScreenButton">Modifier le compte</string>
 </resources>
