@@ -12,12 +12,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.AccountEdit
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.FindAnEventScreen
@@ -35,24 +37,32 @@ class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    FirebaseAuth.getInstance().signOut()
+
     val authViewModel: AuthViewModel by viewModels()
+    val accountViewModel: AccountViewModel by viewModels()
 
     setContent {
       ChimpagneTheme {
         // A surface container using the 'background' color from the them
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
-        var accountViewModel = AccountViewModel("test@gmail.com")
+
+        var isAuthenticated by remember { mutableStateOf( FirebaseAuth.getInstance().currentUser != null ) }
+        val userAccount by accountViewModel.account.collectAsState()
+        val userAccountExists by accountViewModel.accountExists.collectAsState()
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          val isAuthenticated by authViewModel.isAuthenticated.collectAsState(initial = null)
-
+          val monkey by authViewModel.isAuthenticated.collectAsState(initial = null)
           // The LaunchedEffect should react to changes in the isAuthenticated state
-          LaunchedEffect(isAuthenticated) {
-            isAuthenticated?.let {
-              navController.navigate(if (it) Route.HOME_SCREEN else Route.LOGIN_SCREEN) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+          LaunchedEffect(monkey) {
+            monkey?.let {
+              if (it) {
+                accountViewModel.updateEmail(FirebaseAuth.getInstance().currentUser?.email!!)
               }
+//              navController.navigate(if (it) Route.HOME_SCREEN else Route.LOGIN_SCREEN) {
+//                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+//              }
             }
           }
 
@@ -61,41 +71,35 @@ class MainActivity : ComponentActivity() {
           // determined
           val startDestination =
               when (isAuthenticated) {
-                true -> Route.HOME_SCREEN
+                true -> if (userAccountExists) Route.HOME_SCREEN else Route.ACCOUNT_CREATION_SCREEN
                 false -> Route.LOGIN_SCREEN
                 else -> Route.LOADING
               }
 
+
           NavHost(navController = navController, startDestination = startDestination) {
             composable(Route.LOGIN_SCREEN) {
               LoginScreen {
-                Database.instance.accountManager.isInDatabase(
-                    FirebaseAuth.getInstance().currentUser?.email!!,
-                    onSuccess = {
-                      if (it) {
-                        Log.d("MainActivity", "Account is in database")
-                        navController.navigate(Route.HOME_SCREEN) {
-                          accountViewModel =
-                              FirebaseAuth.getInstance().currentUser?.email?.let {
-                                AccountViewModel(it)
-                              }!!
-                          popUpTo(Route.LOGIN_SCREEN) { inclusive = true }
-                        }
-                        navController.graph.setStartDestination(Route.HOME_SCREEN)
-                      } else {
-                        Log.d("MainActivity", "Account is not in database")
-                        navController.navigate(Route.ACCOUNT_CREATION_SCREEN) {
-                          popUpTo(Route.LOGIN_SCREEN) { inclusive = true }
-                        }
-                      }
-                    },
-                    onFailure = {
-                      Log.e("MainActivity", "Failed to check if account is in database: $it")
-                    })
+                accountViewModel.fetchAccount(FirebaseAuth.getInstance().currentUser?.email!!, { account ->
+                  if (account != null) {
+                    Log.d("MainActivity", "Account is in database")
+                    navController.navigate(Route.HOME_SCREEN) {
+                      popUpTo(Route.LOGIN_SCREEN) { inclusive = true }
+                    }
+                    navController.graph.setStartDestination(Route.HOME_SCREEN)
+                  } else {
+                    Log.d("MainActivity", "Account is not in database")
+                    navController.navigate(Route.ACCOUNT_CREATION_SCREEN) {
+                      popUpTo(Route.LOGIN_SCREEN) { inclusive = true }
+                    }
+                  }
+                }, {
+                  Log.e("MainActivity", "Failed to check if account is in database: $it")
+                })
               }
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
-              AccountCreation(navObject = navActions, accountViewModel = AccountViewModel(FirebaseAuth.getInstance().currentUser?.email!!))
+              AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
               AccountSettings(navObject = navActions, accountViewModel = accountViewModel)

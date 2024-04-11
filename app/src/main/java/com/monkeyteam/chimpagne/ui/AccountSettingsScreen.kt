@@ -39,7 +39,7 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettings(navObject: NavigationActions, accountViewModel: AccountViewModel) {
-  val account = accountViewModel.userAccount.collectAsState()
+  val account = accountViewModel.account.collectAsState()
 
   Scaffold(
       topBar = {

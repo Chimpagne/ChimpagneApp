@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -20,7 +21,7 @@ import com.monkeyteam.chimpagne.ui.viewmodel.AccountViewModel
 fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
   LaunchedEffect(Unit) { accountViewModel.moveUserAccountToTemp() }
-  val account = accountViewModel.tempUserAccount.collectAsState()
+  val tempAccount by accountViewModel.tempAccount.collectAsState()
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -37,22 +38,22 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
   AccountChangeBody(
       topBarText = R.string.accountEditScreenButton,
       hasBackButton = true,
-      selectedImageUri = account.value?.profilePictureUri,
+      selectedImageUri = tempAccount.profilePictureUri,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
-      firstName = account.value?.firstName ?: "",
+      firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
-      firstNameChange = { accountViewModel.updateFirstName(it) },
-      lastName = account.value?.lastName ?: "",
+      firstNameChange = accountViewModel::updateFirstName,
+      lastName = tempAccount.lastName,
       lastNameLabel = R.string.account_creation_screen_last_name,
-      lastNameChange = { accountViewModel.updateLastName(it) },
-      location = account.value?.location?.name ?: "",
+      lastNameChange = accountViewModel::updateLastName,
+      location = tempAccount.location,
       locationLabel = R.string.account_creation_screen_city,
-      locationChange = { accountViewModel.updateLocationName(it) },
-      preferredLanguageEnglish = account.value?.preferredLanguageEnglish ?: true,
-      onLanguageToggle = { accountViewModel.updatePreferredLanguageEnglish(it) },
+      locationChange = accountViewModel::updateLocation,
+      preferredLanguageEnglish = tempAccount.preferredLanguageEnglish,
+      onLanguageToggle = accountViewModel::updatePreferredLanguageEnglish,
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
-      commitOnClick = { accountViewModel.putUpdatedAccount() },
+      commitOnClick = accountViewModel::putUpdatedAccount,
       to_navigate_next = Route.ACCOUNT_SETTINGS_SCREEN,
       navObject = navObject)
 }

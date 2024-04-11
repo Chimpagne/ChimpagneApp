@@ -6,135 +6,117 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AccountViewModel(emailInit: String) : ViewModel() {
+class AccountViewModel : ViewModel() {
 
   private val accountManager = Database.instance.accountManager
 
-  private val _userEmail = MutableStateFlow(emailInit)
-  private val userEmail: StateFlow<String> = _userEmail.asStateFlow()
+  private val _accountExists = MutableStateFlow(false)
+  val accountExists: StateFlow<Boolean> = _accountExists
 
-  private val _userAccount = MutableStateFlow<ChimpagneAccount?>(null)
-  val userAccount: StateFlow<ChimpagneAccount?> = _userAccount.asStateFlow()
+  private val _account = MutableStateFlow(ChimpagneAccount())
+  val account: StateFlow<ChimpagneAccount> = _account
 
-  private val _tempUserAccount = MutableStateFlow<ChimpagneAccount?>(null)
-  val tempUserAccount: StateFlow<ChimpagneAccount?> = _tempUserAccount.asStateFlow()
+  private val _tempAccount = MutableStateFlow(ChimpagneAccount())
+  val tempAccount: StateFlow<ChimpagneAccount> = _tempAccount
 
   init {
-    fetchUserAccount()
-    Log.d("AccountViewModel", "AccountViewModel initialized")
+//    Log.d("AccountViewModel", "AccountViewModel initialized")
   }
 
-  private fun fetchUserAccount() {
-    val email = userEmail.value // or another source if your logic requires
+  fun fetchAccount(email: String, onSuccess: (ChimpagneAccount?) -> Unit, onFailure: (Exception) -> Unit) {
     viewModelScope.launch {
-      accountManager.GetSpecificAccount(
-          userEmail = email,
-          onSuccess = { account ->
-            _userAccount.value = account
-            Log.e("AccountViewModel", "Fetched user account: $account")
-          },
-          onFailure = { exception ->
-            Log.e("AccountViewModel", "Failed to fetch user account", exception)
-          })
+      accountManager.getAccountByEmail(email, onSuccess = {
+        // TODO
+        println("FETCHED")
+        Log.e("AccountViewModel", "Fetched user account: $account")
+        if (it != null) _account.value = it else _account.value = ChimpagneAccount(email = email)
+        _accountExists.value = it != null
+        onSuccess(it)
+      }, onFailure = {
+        Log.e("AccountViewModel", "Failed to fetch user account", it)
+        onFailure(it)
+      })
     }
   }
 
-  fun createEmptyAccount() {
-    val account =
-        ChimpagneAccount(
-            email = _userEmail.value,
-            profilePictureUri = null,
-            firstName = "",
-            lastName = "",
-            preferredLanguageEnglish = true,
-            location = null)
-    _tempUserAccount.value = account
-    Log.d("AccountViewModel", "Created empty account")
-  }
-
-  fun putUpdatedAccount() {
-    val account = tempUserAccount.value
-    if (account == null) {
-      Log.e("AccountViewModel", "Account is null, can't be added to database")
+  fun putUpdatedAccount(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    val account = _tempAccount.value
+    if (account.email == "") {
+      Log.e("AccountViewModel", "Account email is invalid, can't be added to database")
+      onFailure(Exception("Invalid account email"))
       return
     }
 
-    viewModelScope.launch {
-      accountManager.UpdateSpecificAccount(
-          account = account,
-          onSuccess = {
-            _userAccount.value = account
-            Log.d("AccountViewModel", "Account updated")
-          },
-          onFailure = { exception ->
-            Log.e("AccountViewModel", "Failed to update account", exception)
-          })
-    }
-  }
-
-  fun createAccount() {
-    val account = tempUserAccount.value
-    if (account == null) {
-      Log.e("AccountViewModel", "Account is null, can't be added to database")
-      return
-    }
+    println("ACCOUNT: $account")
 
     viewModelScope.launch {
-      accountManager.CreateSpecificAccount(
-          account = account,
-          onSuccess = {
-            _userAccount.value = account
-            Log.d("AccountViewModel", "Account created")
-          },
-          onFailure = { exception ->
-            Log.e("AccountViewModel", "Failed to create account", exception)
-          })
+      accountManager.updateAccount(
+        account = account,
+        onSuccess = {
+          Log.d("AccountViewModel", "Account updated")
+          _account.value = account
+          onSuccess()
+        },
+        onFailure = { exception ->
+          Log.e("AccountViewModel", "Failed to update account", exception)
+          onFailure(exception)
+        })
     }
   }
 
   fun moveUserAccountToTemp() {
-    _tempUserAccount.value = userAccount.value
+    _tempAccount.value = _account.value
+  }
+
+  fun createAccount() {
+    _tempAccount.value = _tempAccount.value.copy(email = _account.value.email)
+    putUpdatedAccount({
+      _accountExists.value = true
+      Log.d("AccountViewModel", "Account created")
+    }, {
+      println(it)
+      Log.e("AccountViewModel", "Failed to create account")
+    })
+  }
+
+  fun updateEmail(email: String) {
+    _account.value = _account.value.copy(email = email)
+    println("EMAIL UPDATED: ${_account.value}")
+    Log.d("AccountViewModel", "Updated profile email to $email")
   }
 
   fun updateUri(uri: Uri) {
-    val newAccount = tempUserAccount.value?.copy(profilePictureUri = uri)
-    _tempUserAccount.value = newAccount
-    Log.e("AccountViewModel", "Updated profile picture URI to $uri")
+    _tempAccount.value = _tempAccount.value.copy(profilePictureUri = uri)
+    Log.d("AccountViewModel", "Updated profile picture URI to $uri")
   }
 
   fun updateFirstName(firstName: String) {
-    val newAccount = tempUserAccount.value?.copy(firstName = firstName)
-    _tempUserAccount.value = newAccount
+    _tempAccount.value = _tempAccount.value.copy(firstName = firstName)
     Log.e("AccountViewModel", "Updated first name to $firstName")
   }
 
   fun updateLastName(lastName: String) {
-    val newAccount = tempUserAccount.value?.copy(lastName = lastName)
-    _tempUserAccount.value = newAccount
+    _tempAccount.value = _tempAccount.value.copy(lastName = lastName)
     Log.e("AccountViewModel", "Updated last name to $lastName")
   }
 
-  fun updateLocationName(locationName: String) {
-    val newAccount =
-        tempUserAccount.value?.copy(
-            location = tempUserAccount.value?.location?.copy(name = locationName))
-    _tempUserAccount.value = newAccount
-    Log.e("AccountViewModel", "Updated location name to $locationName")
+  fun updateLocation(location: Location) {
+    _tempAccount.value = _tempAccount.value.copy(location = location)
+    Log.d("AccountViewModel", "Updated location name to $location")
   }
 
   fun updatePreferredLanguageEnglish(preferredLanguageEnglish: Boolean) {
-    val newAccount =
-        tempUserAccount.value?.copy(preferredLanguageEnglish = preferredLanguageEnglish)
-    _tempUserAccount.value = newAccount
+    _tempAccount.value = _tempAccount.value.copy(preferredLanguageEnglish = preferredLanguageEnglish)
     if (preferredLanguageEnglish) {
-      Log.e("AccountViewModel", "Updated preferred language to English")
+      Log.d("AccountViewModel", "Updated preferred language to English")
     } else {
-      Log.e("AccountViewModel", "Updated preferred language to French")
+      Log.d("AccountViewModel", "Updated preferred language to French")
     }
   }
 }
