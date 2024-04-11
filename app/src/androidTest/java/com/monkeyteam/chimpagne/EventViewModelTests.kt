@@ -1,18 +1,14 @@
 package com.monkeyteam.chimpagne
 
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Firebase
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.firestore
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
-import com.monkeyteam.chimpagne.model.viewmodels.EventViewModel
-import java.util.Calendar
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -25,25 +21,20 @@ class EventViewModelTests {
   private val eventManager: ChimpagneEventManager =
       ChimpagneEventManager(Firebase.firestore.collection("testevents"))
 
+  private val testEvent =
+      ChimpagneEvent(
+          "0",
+          "SWENT",
+          "swent party",
+          Location("EPFL", 46.518659400000004, 6.566561505148001),
+          true,
+          listOf("vegan", "wild"),
+          emptyMap(),
+          buildTimestamp(9, 5, 2024, 0, 0),
+          buildTimestamp(10, 5, 2024, 0, 0))
+
   @Test
   fun TestVMSetterFunctions() {
-    val startCalendarDate = Calendar.getInstance()
-    startCalendarDate.set(2024, 5, 9, 0, 0, 0)
-
-    val endCalendarDate = Calendar.getInstance()
-    endCalendarDate.set(2024, 5, 10, 0, 0, 0)
-
-    val testEvent =
-        ChimpagneEvent(
-            "0",
-            "SWENT",
-            "swent party",
-            Location("EPFL", 46.518659400000004, 6.566561505148001),
-            true,
-            listOf("vegan", "wild"),
-            emptyMap(),
-            Timestamp(startCalendarDate.time),
-            Timestamp(endCalendarDate.time))
 
     val eventVM = EventViewModel(eventManager = eventManager)
 
@@ -66,55 +57,15 @@ class EventViewModelTests {
     assertTrue(eventVM.uiState.value.tags.size == testEvent.tags.size)
     assertTrue(eventVM.uiState.value.tags.toSet() == testEvent.tags.toSet())
 
-    eventVM.updateEventStartCalendarDate(testEvent.startAt)
-    assertTrue(eventVM.uiState.value.startsAtCalendarDate == testEvent.startAt)
+    eventVM.updateEventStartCalendarDate(testEvent.startsAt())
+    assertTrue(eventVM.uiState.value.startsAtCalendarDate.time == testEvent.startsAt().time)
 
-    eventVM.updateEventEndCalendarDate(testEvent.endsAt)
-    assertTrue(eventVM.uiState.value.endsAtCalendarDate == testEvent.endsAt)
+    eventVM.updateEventEndCalendarDate(testEvent.endsAt())
+    assertTrue(eventVM.uiState.value.endsAtCalendarDate.time == testEvent.endsAt().time)
   }
-
-  /*@Test
-  fun TestCalendar() {
-      val startCalendarDate = buildCalendar(9, 5, 2024, 0, 0)
-      val startTimestamp = buildTimestamp(startCalendarDate)
-      val testEvent = ChimpagneEvent(startsAtTimestamp = startTimestamp)
-
-      val eventCreationVM = EventViewModel(eventManager = eventManager)
-
-      eventCreationVM.updateEventStartCalendarDate(testEvent.startAt)
-      eventCreationVM.createTheEvent()
-
-      while (eventCreationVM.uiState.value.loading){}
-
-      val eventID = eventCreationVM.uiState.value.id
-
-      val eventSearchVM =
-          EventViewModel(eventID = eventID, eventManager = eventManager)
-
-      while (eventSearchVM.uiState.value.loading){}
-
-      Log.d("EVENTS: CALENDAR", startCalendarDate.time.toString())
-      Log.d("EVENTS: TIMESTAMP", startTimestamp.toDate().toString())
-      Log.d("EVENTS: VM ORIGINAL", eventCreationVM.uiState.value.startsAtCalendarDate.time.toString())
-      Log.d("EVENTS: VM AFTER SEARCH", eventSearchVM.uiState.value.startsAtCalendarDate.time.toString())
-  }*/
 
   @Test
   fun TestCreateSearchDeleteAnEvent() {
-    val startCalendarDate = buildCalendar(9, 5, 2024, 0, 0)
-    val endCalendarDate = buildCalendar(10, 5, 2024, 0, 0)
-
-    val testEvent =
-        ChimpagneEvent(
-            "",
-            "SWENT",
-            "swent party",
-            Location("EPFL", 46.518659400000004, 6.566561505148001),
-            true,
-            listOf("vegan", "wild"),
-            emptyMap(),
-            buildTimestamp(startCalendarDate),
-            buildTimestamp(endCalendarDate))
 
     val eventCreationVM = EventViewModel(eventManager = eventManager)
 
@@ -123,8 +74,8 @@ class EventViewModelTests {
     eventCreationVM.updateEventLocation(testEvent.location)
     eventCreationVM.updateEventPublicity(testEvent.public)
     eventCreationVM.updateEventTags(testEvent.tags)
-    eventCreationVM.updateEventStartCalendarDate(testEvent.startAt)
-    eventCreationVM.updateEventEndCalendarDate(testEvent.endsAt)
+    eventCreationVM.updateEventStartCalendarDate(testEvent.startsAt())
+    eventCreationVM.updateEventEndCalendarDate(testEvent.endsAt())
 
     eventCreationVM.createTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -153,9 +104,8 @@ class EventViewModelTests {
     assertTrue(eventSearchVM.uiState.value.public == testEvent.public)
     assertTrue(eventSearchVM.uiState.value.tags.size == testEvent.tags.size)
     assertTrue(eventSearchVM.uiState.value.tags.toSet() == testEvent.tags.toSet())
-    // assertTrue(eventSearchVM.uiState.value.startsAtCalendarDate.time ==
-    // testEvent.startAt.time)//TODO
-    // assertTrue(eventSearchVM.uiState.value.endsAtCalendarDate == testEvent.endsAt)//TODO
+    assertTrue(eventSearchVM.uiState.value.startsAtCalendarDate.time == testEvent.startsAt().time)
+    assertTrue(eventSearchVM.uiState.value.endsAtCalendarDate.time == testEvent.endsAt().time)
 
     eventSearchVM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -168,21 +118,6 @@ class EventViewModelTests {
 
   @Test
   fun TestUpdateAnEvent() {
-    val startCalendarDate = buildCalendar(28, 3, 2024, 6, 13)
-
-    val endCalendarDate = buildCalendar(28, 3, 2024, 6, 13)
-
-    val testEvent =
-        ChimpagneEvent(
-            "",
-            "",
-            "Default Description",
-            Location("Paris", 48.8534951, 2.3483915),
-            true,
-            emptyList(),
-            emptyMap(),
-            buildTimestamp(startCalendarDate),
-            buildTimestamp(endCalendarDate))
 
     val testUpdatedEvent =
         ChimpagneEvent(
@@ -193,8 +128,8 @@ class EventViewModelTests {
             false,
             listOf("magic", "wands"),
             emptyMap(),
-            buildTimestamp(startCalendarDate),
-            buildTimestamp(endCalendarDate))
+            buildTimestamp(4, 1, 2025, 2, 3),
+            buildTimestamp(5, 1, 2025, 2, 3))
 
     val eventCreationVM = EventViewModel(eventManager = eventManager)
 
@@ -203,8 +138,8 @@ class EventViewModelTests {
     eventCreationVM.updateEventLocation(testEvent.location)
     eventCreationVM.updateEventPublicity(testEvent.public)
     eventCreationVM.updateEventTags(testEvent.tags)
-    eventCreationVM.updateEventStartCalendarDate(testEvent.startAt)
-    eventCreationVM.updateEventEndCalendarDate(testEvent.endsAt)
+    eventCreationVM.updateEventStartCalendarDate(testEvent.startsAt())
+    eventCreationVM.updateEventEndCalendarDate(testEvent.endsAt())
 
     eventCreationVM.createTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -231,8 +166,8 @@ class EventViewModelTests {
     eventSearchVM.updateEventLocation(testUpdatedEvent.location)
     eventSearchVM.updateEventPublicity(testUpdatedEvent.public)
     eventSearchVM.updateEventTags(testUpdatedEvent.tags)
-    eventSearchVM.updateEventStartCalendarDate(testUpdatedEvent.startAt)
-    eventSearchVM.updateEventEndCalendarDate(testUpdatedEvent.endsAt)
+    eventSearchVM.updateEventStartCalendarDate(testUpdatedEvent.startsAt())
+    eventSearchVM.updateEventEndCalendarDate(testUpdatedEvent.endsAt())
 
     eventSearchVM.updateTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -260,10 +195,10 @@ class EventViewModelTests {
     assertTrue(eventSearch2VM.uiState.value.public == testUpdatedEvent.public)
     assertTrue(eventSearch2VM.uiState.value.tags.size == testUpdatedEvent.tags.size)
     assertTrue(eventSearch2VM.uiState.value.tags.toSet() == testUpdatedEvent.tags.toSet())
-    // assertTrue(eventSearch2VM.uiState.value.startsAtCalendarDate.time ==
-    // testEvent.startAt.time)//TODO
-    // assertTrue(eventSearch2VM.uiState.value.endsAtCalendarDate.time ==
-    // testEvent.endsAt.time)//TODO
+    assertTrue(
+        eventSearch2VM.uiState.value.startsAtCalendarDate.time == testUpdatedEvent.startsAt().time)
+    assertTrue(
+        eventSearch2VM.uiState.value.endsAtCalendarDate.time == testUpdatedEvent.endsAt().time)
 
     eventSearch2VM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })

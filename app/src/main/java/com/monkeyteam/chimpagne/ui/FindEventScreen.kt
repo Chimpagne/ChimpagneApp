@@ -63,7 +63,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.viewmodels.FindEventsViewModel
+import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector

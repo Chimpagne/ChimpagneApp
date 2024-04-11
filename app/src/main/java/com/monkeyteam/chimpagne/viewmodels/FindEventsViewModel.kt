@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.model.viewmodels
+package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

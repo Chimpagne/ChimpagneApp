@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.model.viewmodels
+package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,6 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,8 +23,6 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
-    val t = ChimpagneEvent(startsAtTimestamp = buildTimestamp(1, 1, 2021, 1, 1))
-
     if (eventID != null) {
       fetchEvent(eventID, onSuccess, onFailure)
     }

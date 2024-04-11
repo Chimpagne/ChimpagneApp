@@ -35,7 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
-import com.monkeyteam.chimpagne.model.viewmodels.EventViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.launch
