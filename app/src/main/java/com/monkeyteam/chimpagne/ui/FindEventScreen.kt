@@ -121,8 +121,6 @@ fun FindEventFormScreen(
 
   var tagFieldActive by remember { mutableStateOf(false) }
 
-  var searchRadius by remember { mutableFloatStateOf(1f) }
-
   Scaffold(
       topBar = {
         TopAppBar(
@@ -174,11 +172,11 @@ fun FindEventFormScreen(
                 Text(
                     text =
                         stringResource(id = R.string.find_event_search_radius) +
-                            " : ${searchRadius.toInt()} km")
+                            " : ${uiState.radiusAroundLocationInM.toInt() / 1000} km")
 
                 Slider(
-                    value = searchRadius,
-                    onValueChange = { searchRadius = it },
+                    value = uiState.radiusAroundLocationInM.toFloat() / 1000,
+                    onValueChange = { findViewModel.updateLocationSearchRadius(it.toDouble() * 1000) },
                     valueRange = 1f..30f,
                     modifier = Modifier.fillMaxWidth())
 
