@@ -103,7 +103,6 @@ class EventCreationScreenTest {
       val navActions = NavigationActions(navController)
       EventCreationScreen(1, navActions)
 
-
       val context = LocalContext.current
       tagsLegendS = context.getString(R.string.event_creation_screen_tags_legend)
       publicLegendS = context.getString(R.string.event_creation_screen_public_legend)
