@@ -85,7 +85,7 @@ class EventCreationScreenTest {
     // When - Then
     composeTestRule.onNodeWithText(titleLegendS).assertIsDisplayed()
     composeTestRule.onNodeWithText(descriptionLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText( locationLegendS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(locationLegendS).assertIsDisplayed()
     composeTestRule.onNodeWithText(startDateLegendS).assertIsDisplayed()
     composeTestRule.onNodeWithText(endDateLegendS).assertIsDisplayed()
 
