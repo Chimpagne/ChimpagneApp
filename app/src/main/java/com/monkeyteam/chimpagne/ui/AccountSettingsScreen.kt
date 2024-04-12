@@ -41,7 +41,7 @@ fun AccountSettings(
     accountViewModel: AccountViewModel,
     logout: () -> Unit = {}
 ) {
-  val account = accountViewModel.account.collectAsState()
+  val account = accountViewModel.userChimpagneAccount.collectAsState()
 
   Scaffold(
       topBar = {
@@ -95,21 +95,10 @@ fun AccountSettings(
                   label = "Location",
                   value = account.value?.location?.name ?: "",
                   modifierText = Modifier.testTag("locationTextField"))
-              SettingItem(
-                  label = "Preferred Language",
-                  value =
-                      if (account.value?.preferredLanguageEnglish == true) "English" else "French",
-                  modifierText = Modifier.testTag("preferredLanguageTextField"))
 
               Spacer(modifier = Modifier.height(8.dp))
               // TODO has to be changed to log out
-              Button(
-                  onClick = {
-                    /*navObject.navigateTo(Route.ACCOUNT_CREATION_SCREEN)*/
-                    logout()
-                  }) {
-                    Text("Log Out")
-                  }
+              Button(onClick = { logout() }) { Text("Log Out") }
             }
       }
 }
