@@ -5,30 +5,31 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AccountViewModel : ViewModel() {
+class AccountViewModel(
+    private val accountManager: ChimpagneAccountManager = Database.instance.accountManager
+) : ViewModel() {
 
-  private val accountManager = Database.instance.accountManager
+  private val _loggedIn = MutableStateFlow<Boolean?>(null)
+  val loggedToAChimpagneAccount: StateFlow<Boolean?> = _loggedIn
 
-  private val _accountExists = MutableStateFlow<Boolean?>(null)
-  val accountExists: StateFlow<Boolean?> = _accountExists
-
-  private val _account = MutableStateFlow(ChimpagneAccount())
-  val account: StateFlow<ChimpagneAccount> = _account
+  private val _userAccount = MutableStateFlow(ChimpagneAccount())
+  val userChimpagneAccount: StateFlow<ChimpagneAccount> = _userAccount
 
   private val _tempAccount = MutableStateFlow(ChimpagneAccount())
-  val tempAccount: StateFlow<ChimpagneAccount> = _tempAccount
+  val tempChimpagneAccount: StateFlow<ChimpagneAccount> = _tempAccount
 
   init {
     //    Log.d("AccountViewModel", "AccountViewModel initialized")
   }
 
-  fun fetchAccount(
+  fun loginToChimpagneAccount(
       email: String,
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
@@ -37,10 +38,10 @@ class AccountViewModel : ViewModel() {
       accountManager.getAccountByEmail(
           email,
           onSuccess = {
-            Log.e("AccountViewModel", "Fetched user account: $account")
-            if (it != null) _account.value = it
-            else _account.value = ChimpagneAccount(email = email)
-            _accountExists.value = it != null
+            Log.d("AccountViewModel", "Fetched user account: $it")
+            if (it != null) _userAccount.value = it
+            else _userAccount.value = ChimpagneAccount(email = email)
+            _loggedIn.value = it != null
             onSuccess(it)
           },
           onFailure = {
@@ -50,9 +51,13 @@ class AccountViewModel : ViewModel() {
     }
   }
 
+  fun logoutFromChimpagneAccount() {
+    _userAccount.value = ChimpagneAccount()
+  }
+
   fun putUpdatedAccount(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    val account = _tempAccount.value
-    if (account.email == "") {
+    val tempAccount = _tempAccount.value
+    if (tempAccount.email == "") {
       Log.e("AccountViewModel", "Account email is invalid, can't be added to database")
       onFailure(Exception("Invalid account email"))
       return
@@ -60,10 +65,10 @@ class AccountViewModel : ViewModel() {
 
     viewModelScope.launch {
       accountManager.updateAccount(
-          account = account,
+          account = tempAccount,
           onSuccess = {
             Log.d("AccountViewModel", "Account updated")
-            _account.value = account
+            _userAccount.value = tempAccount
             onSuccess()
           },
           onFailure = { exception ->
@@ -73,23 +78,18 @@ class AccountViewModel : ViewModel() {
     }
   }
 
-  fun moveUserAccountToTemp() {
-    _tempAccount.value = _account.value
+  fun copyUserAccountToTemp() {
+    _tempAccount.value = _userAccount.value
   }
 
   fun createAccount() {
-    _tempAccount.value = _tempAccount.value.copy(email = _account.value.email)
+    _tempAccount.value = _tempAccount.value.copy(email = _userAccount.value.email)
     putUpdatedAccount(
         {
-          _accountExists.value = true
+          _loggedIn.value = true
           Log.d("AccountViewModel", "Account created")
         },
         { Log.e("AccountViewModel", "Failed to create account") })
-  }
-
-  fun updateEmail(email: String) {
-    _account.value = _account.value.copy(email = email)
-    Log.d("AccountViewModel", "Updated profile email to $email")
   }
 
   fun updateUri(uri: Uri) {
@@ -111,14 +111,10 @@ class AccountViewModel : ViewModel() {
     _tempAccount.value = _tempAccount.value.copy(location = location)
     Log.d("AccountViewModel", "Updated location name to $location")
   }
-
-  fun updatePreferredLanguageEnglish(preferredLanguageEnglish: Boolean) {
-    _tempAccount.value =
-        _tempAccount.value.copy(preferredLanguageEnglish = preferredLanguageEnglish)
-    if (preferredLanguageEnglish) {
-      Log.d("AccountViewModel", "Updated preferred language to English")
-    } else {
-      Log.d("AccountViewModel", "Updated preferred language to French")
-    }
-  }
 }
+
+data class AccountState(
+    val userAccount: ChimpagneAccount = ChimpagneAccount(),
+    val tempAccount: ChimpagneAccount = ChimpagneAccount(),
+    val loggedIn: Boolean? = null
+)

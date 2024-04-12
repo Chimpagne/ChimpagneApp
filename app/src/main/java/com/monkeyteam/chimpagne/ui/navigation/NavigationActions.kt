@@ -32,4 +32,9 @@ class NavigationActions(private val navController: NavHostController) {
   fun goBack() {
     navController.navigateUp()
   }
+
+  fun clearAndNavigateTo(route: String, setAsStartDestination: Boolean = false) {
+    navController.navigate(route) { popUpTo(0) { inclusive = true } }
+    if (setAsStartDestination) navController.graph.setStartDestination(route)
+  }
 }

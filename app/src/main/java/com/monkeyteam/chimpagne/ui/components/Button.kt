@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -23,13 +24,19 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
 @Composable
 fun ChimpagneButton(
     modifier: Modifier = Modifier,
-    text: @Composable () -> Unit = { Text("Click Me") },
+    text: String,
+    fontWeight: FontWeight,
+    fontSize: TextUnit,
     onClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = RoundedCornerShape(12.dp),
@@ -37,11 +44,18 @@ fun ChimpagneButton(
 ) {
   Button(
       onClick = onClick,
-      modifier = modifier,
+      modifier = modifier.wrapContentWidth().padding(horizontal = 24.dp),
       colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
       shape = shape,
       contentPadding = padding) {
-        text()
+        Text(
+            text = text,
+            modifier = Modifier.weight(1f),
+            fontFamily = ChimpagneFontFamily,
+            fontWeight = fontWeight,
+            fontSize = fontSize,
+            lineHeight = fontSize,
+            textAlign = TextAlign.Center)
       }
 }
 

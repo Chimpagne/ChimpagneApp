@@ -54,6 +54,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -118,6 +119,8 @@ fun FindEventFormScreen(
 
   val uiState by findViewModel.uiState.collectAsState()
 
+  val context = LocalContext.current
+
   val scrollState = rememberScrollState()
 
   var tagFieldActive by remember { mutableStateOf(false) }
@@ -126,7 +129,7 @@ fun FindEventFormScreen(
       topBar = {
         TopAppBar(
             title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier.shadow(4.dp),
+            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
@@ -137,7 +140,10 @@ fun FindEventFormScreen(
         Button(
             onClick = { onSearchClick() },
             modifier =
-                Modifier.fillMaxWidth().padding(8.dp).height(56.dp), // Typical height for buttons
+                Modifier.fillMaxWidth()
+                    .padding(8.dp)
+                    .height(56.dp)
+                    .testTag("button_search"), // Typical height for buttons
             shape = MaterialTheme.shapes.extraLarge) {
               Icon(Icons.Rounded.Search, contentDescription = "Search")
               Spacer(Modifier.width(8.dp))
@@ -160,14 +166,20 @@ fun FindEventFormScreen(
                 LocationSelector(
                     uiState.selectedLocation,
                     findViewModel::updateSelectedLocation,
-                    Modifier.fillMaxWidth())
+                    Modifier.fillMaxWidth().testTag("input_location"))
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
                     text = stringResource(id = R.string.find_event_event_locate_me_button),
                     icon = Icons.Rounded.MyLocation,
-                    onClick = { /*TODO*/},
-                    modifier = Modifier.align(Alignment.CenterHorizontally))
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              context.getString(R.string.find_event_near_me_toast),
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
                 Spacer(Modifier.height(16.dp))
 
                 Text(
@@ -210,7 +222,7 @@ fun FindEventFormScreen(
                 DateSelector(
                     uiState.selectedDate,
                     findViewModel::updateSelectedDate,
-                    modifier = Modifier.align(Alignment.CenterHorizontally))
+                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"))
 
                 if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))
@@ -259,6 +271,7 @@ fun FindEventMapScreen(
   BottomSheetScaffold(
       sheetContent = { EventDetailSheet(event = currentEvent) },
       scaffoldState = scaffoldState,
+      modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
         DisposableEffect(Unit) {
           isMapInitialized = true

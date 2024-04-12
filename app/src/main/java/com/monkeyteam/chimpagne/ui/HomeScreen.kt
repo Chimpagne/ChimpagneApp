@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,12 +28,13 @@ import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navObject: NavigationActions) {
   // Dummy user Data
+
+  val context = LocalContext.current
   val dummyUser = User("0", "Lora", null)
     val context = LocalContext.current
 
@@ -64,24 +66,18 @@ fun HomeScreen(navObject: NavigationActions) {
                   })
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
+                  modifier = Modifier.testTag("discover_events_button"),
                   onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
-                  text = {
-                    Text(
-                        text = stringResource(R.string.homescreen_join_event),
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp)
-                  })
+                  text = stringResource(R.string.homescreen_join_event),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
+                  modifier = Modifier.testTag("organize_event_button"),
                   onClick = { navObject.navigateTo(Route.EVENT_CREATION_SCREEN) },
-                  text = {
-                    Text(
-                        text = stringResource(R.string.homescreen_organize_event),
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp)
-                  })
+                  text = stringResource(R.string.homescreen_organize_event),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
             }
       }
 }

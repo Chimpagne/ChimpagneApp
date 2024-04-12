@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -84,7 +85,8 @@ fun MapContainer(
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
-        modifier = Modifier.fillMaxSize().padding(bottom = dynamicBottomPadding),
+        modifier =
+            Modifier.testTag("ggle_maps").fillMaxSize().padding(bottom = dynamicBottomPadding),
         uiSettings =
             MapUiSettings(
                 zoomControlsEnabled = false,

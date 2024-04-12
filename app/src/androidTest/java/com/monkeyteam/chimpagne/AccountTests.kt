@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne
 
 import AccountSettings
 import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.rememberNavController
@@ -98,15 +97,7 @@ class AccountSettingsUITest {
       AccountSettings(navObject, AccountViewModel())
     }
 
-    val preferredLanguageIsEnglish =
-        try {
-          composeTestRule
-              .onNodeWithTag("preferredLanguageTextField")
-              .assertTextEquals("Preferred Language")
-          true
-        } catch (e: Exception) {
-          false
-        }
+    val preferredLanguageIsEnglish = true
 
     if (preferredLanguageIsEnglish) {
       composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
