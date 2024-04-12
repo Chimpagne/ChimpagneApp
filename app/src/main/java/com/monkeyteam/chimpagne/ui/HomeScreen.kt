@@ -28,7 +28,6 @@ import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,18 +54,18 @@ fun HomeScreen(navObject: NavigationActions) {
                     .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-            ChimpagneButton(
-                modifier = Modifier.testTag("open_events_button"),
-                onClick = {
+              ChimpagneButton(
+                  modifier = Modifier.testTag("open_events_button"),
+                  onClick = {
                     Toast.makeText(
-                        context,
-                        context.getString(R.string.homescreen_open_my_events_toast),
-                        Toast.LENGTH_SHORT)
+                            context,
+                            context.getString(R.string.homescreen_open_my_events_toast),
+                            Toast.LENGTH_SHORT)
                         .show()
-                },
-                text = stringResource(id = R.string.homescreen_my_events),
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp)
+                  },
+                  text = stringResource(id = R.string.homescreen_my_events),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("discover_events_button"),
