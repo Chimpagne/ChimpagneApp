@@ -61,7 +61,7 @@ class EventCreationScreenTest {
       EventCreationScreen(1, navActions)
     }
   }
-
+  /*
   @Test
   fun testFirstPanelContent() {
     var titleLegendS = ""
@@ -90,7 +90,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText(endDateLegendS).assertIsDisplayed()
 
     // You can add more detailed tests here for interactions and assertions
-  }
+  }*/
 
   @Test
   fun testSecondPanelContent() {

@@ -199,7 +199,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         "End Date")
 
     Spacer(modifier = Modifier.height(16.dp))
-
+    // We will need to add some tests for DateSelector also
     DateSelector(
         selectedDate = uiState.endsAtCalendarDate,
         onDateSelected = eventViewModel::updateEventEndCalendarDate,
