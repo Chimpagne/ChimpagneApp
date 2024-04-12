@@ -171,7 +171,7 @@ fun FindEventFormScreen(
                     onClick = {
                       Toast.makeText(
                               context,
-                              context.getString(R.string.event_creation_screen_toast_creating),
+                              context.getString(R.string.find_event_near_me_toast),
                               Toast.LENGTH_SHORT)
                           .show()
                     },

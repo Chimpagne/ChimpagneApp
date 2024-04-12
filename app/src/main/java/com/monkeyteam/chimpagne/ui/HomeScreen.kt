@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,6 +33,8 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 @Composable
 fun HomeScreen(navObject: NavigationActions) {
   // Dummy user Data
+
+  val context = LocalContext.current
   val dummyUser = User("0", "Lora", null)
 
   Scaffold(
@@ -51,34 +55,29 @@ fun HomeScreen(navObject: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneButton(
-                  onClick = { /*TODO*/},
-                  text = {
-                    Text(
-                        text = stringResource(id = R.string.homescreen_my_events),
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp)
-                  })
+                  onClick = {
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.homescreen_open_my_events_toast),
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  },
+                  text = stringResource(id = R.string.homescreen_my_events),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
+
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
-                  text = {
-                    Text(
-                        text = stringResource(R.string.homescreen_join_event),
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp)
-                  })
+                  text = stringResource(R.string.homescreen_join_event),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   onClick = { navObject.navigateTo(Route.EVENT_CREATION_SCREEN) },
-                  text = {
-                    Text(
-                        text = stringResource(R.string.homescreen_organize_event),
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp)
-                  })
+                  text = stringResource(R.string.homescreen_organize_event),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
             }
       }
 }
