@@ -42,8 +42,15 @@ https://sonarcloud.io/summary/overall?id=Chimpagne_ChimpagneApp
 
 Link to minute notes: https://docs.google.com/spreadsheets/d/141KT7RH3QI2LVfiPTD8mgh-nVC4h1Q4AaNwIAWp7860/edit#gid=0
 
-Scrum Master Sprint 1 : Juan Bautista Iaconucci
-Scrum Master Sprint 2 : Clément
+- Scrum Master Sprint 1 : Juan Bautista Iaconucci
+- Scrum Master Sprint 2 : Clément
+- Scrum Master Sprint 3 : Léa
+- Scrum Master Sprint 4 : Arnaud
+
+- Product owner Sprint 1 : The coaches
+- Product owner Sprint 2 : Arnaud
+- Product owner Sprint 3 : Gregory
+- Product owner Sprint 4 : Sacha
 
 
 ## How to setup the project on your device
