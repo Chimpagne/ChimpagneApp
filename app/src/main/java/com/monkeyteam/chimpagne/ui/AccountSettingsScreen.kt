@@ -37,9 +37,9 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettings(
-  navObject: NavigationActions,
-  accountViewModel: AccountViewModel,
-  logout: () -> Unit = {}
+    navObject: NavigationActions,
+    accountViewModel: AccountViewModel,
+    logout: () -> Unit = {}
 ) {
   val account = accountViewModel.account.collectAsState()
 
