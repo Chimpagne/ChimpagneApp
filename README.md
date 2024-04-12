@@ -38,10 +38,11 @@ https://sonarcloud.io/summary/overall?id=Chimpagne_ChimpagneApp
 
 https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&mode=design&t=2499EcLDJihLwRIx-1
 
-## Standup Meetings
+## Google Sheets
+- [Team Standup](https://docs.google.com/spreadsheets/d/1Pcl_h6zzJgwICjcaRdEEALT_xQiP15N6UBF5lKIfa4Y/edit?usp=sharing)
+- [Team Retrospective](https://docs.google.com/spreadsheets/d/13o0Ysau7RKnynANGpo9c38J0q14ie0_Pz-sv7EAwpT4/edit?usp=sharing)
 
-Link to minute notes: https://docs.google.com/spreadsheets/d/141KT7RH3QI2LVfiPTD8mgh-nVC4h1Q4AaNwIAWp7860/edit#gid=0
-
+## Scrum Masters and Owners
 - Scrum Master Sprint 1 : Juan Bautista Iaconucci
 - Scrum Master Sprint 2 : Clément
 - Scrum Master Sprint 3 : Léa
