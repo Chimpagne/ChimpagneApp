@@ -3,6 +3,7 @@
     <string name="homescreen_my_events">MY EVENTS</string>
     <string name="homescreen_join_event">DISCOVER EVENTS</string>
     <string name="homescreen_organize_event">ORGANIZE AN EVENT</string>
+    <string name="homescreen_open_my_events_toast">"Opening"</string>
     <string name="account_creation_screen_create_account">Create your Account</string>
     <string name="account_creation_screen_first_name">First Name</string>
     <string name="account_creation_screen_last_name">Last Name</string>
@@ -45,6 +46,7 @@
     <string name="find_event_date_legend">Date of the event</string>
     <string name="find_event_join_event_button_text">Join Event</string>
     <string name="find_event_no_event_available">No event details available</string>
+    <string name="find_event_near_me_toast">Locating you…</string>
     <string name="search_location">Search for a location</string>
 
 
