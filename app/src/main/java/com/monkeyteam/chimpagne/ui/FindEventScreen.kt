@@ -129,7 +129,7 @@ fun FindEventFormScreen(
       topBar = {
         TopAppBar(
             title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier.shadow(4.dp),
+            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
