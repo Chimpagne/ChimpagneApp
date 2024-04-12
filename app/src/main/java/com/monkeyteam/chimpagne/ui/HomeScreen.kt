@@ -28,6 +28,7 @@ import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +37,6 @@ fun HomeScreen(navObject: NavigationActions) {
 
   val context = LocalContext.current
   val dummyUser = User("0", "Lora", null)
-  val context = LocalContext.current
 
   Scaffold(
       topBar = {
@@ -55,21 +55,18 @@ fun HomeScreen(navObject: NavigationActions) {
                     .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-              ChimpagneButton(
-                  onClick = {
+            ChimpagneButton(
+                modifier = Modifier.testTag("open_events_button"),
+                onClick = {
                     Toast.makeText(
-                            context,
-                            "This feature is not available at this time",
-                            Toast.LENGTH_SHORT)
-                        .show() /*TODO*/
-                  },
-                  text = {
-                    Text(
-                        text = stringResource(id = R.string.homescreen_my_events),
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp)
-                  })
+                        context,
+                        context.getString(R.string.homescreen_open_my_events_toast),
+                        Toast.LENGTH_SHORT)
+                        .show()
+                },
+                text = stringResource(id = R.string.homescreen_my_events),
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp)
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("discover_events_button"),
