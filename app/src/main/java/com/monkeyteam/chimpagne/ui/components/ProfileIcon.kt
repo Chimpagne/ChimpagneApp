@@ -23,13 +23,13 @@ data class User(
 )
 
 @Composable
-fun ProfileIcon(user: User?) {
+fun ProfileIcon(user: User?, onClick: () -> Unit = {}) {
   val painter =
       if (user?.profilePictureURL != null) {
         rememberAsyncImagePainter(model = user.profilePictureURL)
       } else painterResource(id = R.drawable.default_user_profile_picture)
 
-  IconButton(onClick = { /*TODO*/}) {
+  IconButton(onClick = onClick) {
     Image(
         painter = painter,
         contentDescription = "Profile",

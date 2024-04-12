@@ -33,6 +33,7 @@
     <string name="event_creation_screen_number_parking">Number of parking places</string>
     <string name="event_creation_screen_number_beds">Number of beds</string>
     <string name="event_creation_screen_beds">Beds</string>
+    <string name="accountEditScreenButton">Edit Account</string>
     <string name="find_event_page_title">Find Event</string>
     <string name="find_event_search_button_text">Search</string>
     <string name="find_event_event_location_legend">Event Location</string>

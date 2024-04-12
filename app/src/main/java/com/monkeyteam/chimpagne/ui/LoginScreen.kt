@@ -28,7 +28,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 
 @Composable
-fun LoginScreen(successfulLogin: () -> Unit) {
+fun LoginScreen(onSuccessfulLogin: (email: String) -> Unit) {
   val openAlertDialog = remember { mutableStateOf(false) }
   Column(
       modifier = Modifier.fillMaxSize().padding(15.dp),
@@ -51,7 +51,10 @@ fun LoginScreen(successfulLogin: () -> Unit) {
           )
         }
         GoogleAuthentication(
-            { successfulLogin() }, { openAlertDialog.value = true }, Modifier.fillMaxWidth())
+            onSuccessfulLogin,
+            { openAlertDialog.value = true },
+            Modifier.fillMaxWidth(),
+        )
       }
   when {
     openAlertDialog.value -> {

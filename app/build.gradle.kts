@@ -92,6 +92,18 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.okhttp)
+
+    // Co-routine image loader (image loading library)
+    implementation(libs.coil.compose)
+    testImplementation(libs.mockwebserver)
+
+    implementation(libs.maps.compose)
+
+    implementation(libs.coil.compose)
+
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {

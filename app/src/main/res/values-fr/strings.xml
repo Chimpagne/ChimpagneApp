@@ -45,5 +45,5 @@
     <string name="find_event_join_event_button_text">Rejoindre</string>
     <string name="find_event_no_event_available">Pas de détail à afficher</string>
     <string name="search_location">Rechercher un lieu </string>
-
+    <string name="accountEditScreenButton">Modifier le compte</string>
 </resources>
