@@ -28,8 +28,5 @@ class HomescreenTest {
     composeTestRule.onNodeWithTag("open_events_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("discover_events_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("organize_event_button").assertIsDisplayed()
-
-    // composeTestRule.onNodeWithTag("discover_events_button").performClick()
-    // composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
   }
 }
