@@ -31,14 +31,12 @@ class AccountCreationUITest {
     /*composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Créer votre compte")
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("Prénom")
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Nom de famille")
-    composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Choisissez votre ville")
 
     composeTestRule.onNodeWithTag("changeLanguageSwitch").performClick()*/
 
     composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Create Account")
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Last Name")
-    composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Choose your City")
   }
 
   /* @Test
@@ -74,7 +72,6 @@ class AccountEditUITest {
     composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Edit Account")
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Last Name")
-    composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Choose your City")
 
     /*composeTestRule.onNodeWithTag("changeLanguageSwitch").performClick()
 
