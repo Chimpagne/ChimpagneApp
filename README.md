@@ -36,7 +36,7 @@ https://sonarcloud.io/summary/overall?id=Chimpagne_ChimpagneApp
 
 ## Figma
 
-[https://www.figma.com/team_invite/redeem/XYJd1jV6IDQFRKusTIYNgO](https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&mode=design&t=S1m3KVTdSztS7SgU-1)
+https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&mode=design&t=2499EcLDJihLwRIx-1
 
 ## Standup Meetings
 
