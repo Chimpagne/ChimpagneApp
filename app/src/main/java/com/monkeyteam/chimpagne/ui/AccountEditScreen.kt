@@ -19,8 +19,8 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @Composable
 fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
-  LaunchedEffect(Unit) { accountViewModel.moveUserAccountToTemp() }
-  val tempAccount by accountViewModel.tempAccount.collectAsState()
+  LaunchedEffect(Unit) { accountViewModel.copyUserAccountToTemp() }
+  val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -48,8 +48,6 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       location = tempAccount.location,
       locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
-      preferredLanguageEnglish = tempAccount.preferredLanguageEnglish,
-      onLanguageToggle = accountViewModel::updatePreferredLanguageEnglish,
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
       commitOnClick = accountViewModel::putUpdatedAccount,

@@ -49,29 +49,26 @@ class MainActivity : ComponentActivity() {
           mutableStateOf(FirebaseAuth.getInstance().currentUser != null)
         }
 
-        val userAccountExists by accountViewModel.accountExists.collectAsState()
+        val loggedToAChimpagneAccount by accountViewModel.loggedToAChimpagneAccount.collectAsState()
 
         val logout: () -> Unit = {
           AuthUI.getInstance().signOut(this)
-          // TODO: RESTART THE APP
+
+          accountViewModel.logoutFromChimpagneAccount()
+
+          navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
         }
 
-        val fetchAccount: (email: String) -> Unit = { email ->
-          accountViewModel.updateEmail(email)
-          accountViewModel.fetchAccount(
+        val loginToChimpagneAccount: (email: String) -> Unit = { email ->
+          accountViewModel.loginToChimpagneAccount(
               email,
               { account ->
                 if (account != null) {
                   Log.d("MainActivity", "Account is in database")
-                  navController.navigate(Route.HOME_SCREEN) {
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                  }
-                  navController.graph.setStartDestination(Route.HOME_SCREEN)
+                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
                 } else {
                   Log.d("MainActivity", "Account is not in database")
-                  navController.navigate(Route.ACCOUNT_CREATION_SCREEN) {
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                  }
+                  navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
                 }
               },
               { Log.e("MainActivity", "Failed to check if account is in database: $it") })
@@ -83,21 +80,20 @@ class MainActivity : ComponentActivity() {
         val startDestination =
             when (isAuthenticated) {
               true ->
-                  when (userAccountExists) {
+                  when (loggedToAChimpagneAccount) {
                     true -> Route.HOME_SCREEN
                     false -> Route.ACCOUNT_CREATION_SCREEN
                     else -> {
-                      fetchAccount(FirebaseAuth.getInstance().currentUser?.email!!)
+                      loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.email!!)
                       Route.LOADING
                     }
                   }
               false -> Route.LOGIN_SCREEN
-              else -> Route.LOADING
             }
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = startDestination) {
-            composable(Route.LOGIN_SCREEN) { LoginScreen { email -> fetchAccount(email) } }
+            composable(Route.LOGIN_SCREEN) { LoginScreen { email -> loginToChimpagneAccount(email) } }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }

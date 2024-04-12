@@ -122,8 +122,6 @@ fun AccountChangeBody(
     location: Location,
     locationLabel: Int,
     locationChange: (Location) -> Unit,
-    preferredLanguageEnglish: Boolean,
-    onLanguageToggle: (Boolean) -> Unit,
     commitButtontext: Int,
     commitButtonIcon: Int,
     commitOnClick: () -> Unit = {},
@@ -175,10 +173,6 @@ fun AccountChangeBody(
                   value = lastName,
                   onValueChange = lastNameChange)
               LocationSelector(selectedLocation = location, updateSelectedLocation = locationChange)
-              LanguageSwitch(
-                  modifier = Modifier.testTag("changeLanguageSwitch"),
-                  isEnglish = preferredLanguageEnglish,
-                  onToggleLanguage = onLanguageToggle)
               SaveChangesButton(
                   onClick = {
                     commitOnClick()

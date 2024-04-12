@@ -16,8 +16,8 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @Composable
 fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
-  val account by accountViewModel.account.collectAsState()
-  val tempAccount by accountViewModel.tempAccount.collectAsState()
+  val account by accountViewModel.userChimpagneAccount.collectAsState()
+  val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -45,8 +45,6 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       location = tempAccount.location,
       locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
-      preferredLanguageEnglish = tempAccount.preferredLanguageEnglish,
-      onLanguageToggle = accountViewModel::updatePreferredLanguageEnglish,
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
       to_navigate_next = Route.HOME_SCREEN,

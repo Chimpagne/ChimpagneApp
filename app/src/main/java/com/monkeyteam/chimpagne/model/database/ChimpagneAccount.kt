@@ -8,6 +8,5 @@ data class ChimpagneAccount(
     val profilePictureUri: Uri? = null,
     val firstName: String = "",
     val lastName: String = "",
-    val preferredLanguageEnglish: Boolean = true,
     val location: Location = Location()
 )
