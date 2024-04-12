@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
@@ -29,7 +30,6 @@ class EventCreationScreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
 
-  /*
   @Test
   fun TestPanels() {
     // Start on the correct screen
@@ -40,14 +40,16 @@ class EventCreationScreenTest {
     }
 
     // Move to the Second Panel
-    composeTestRule.onNodeWithText("Next").performClick()
-    composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
+
+    composeTestRule.onNodeWithTag("next_button").performClick()
+    // composeTestRule.onNodeWithTag("next_button")
+    // composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
 
     // Return to the First Panel
-    composeTestRule.onNodeWithText("Previous").performClick()
-    composeTestRule.onNodeWithText("Title").assertIsDisplayed()
-  }
+    composeTestRule.onNodeWithTag("previous_button").performClick()
 
+    // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
+  }
 
   @Test
   fun testPanel1() {
@@ -57,7 +59,6 @@ class EventCreationScreenTest {
       val navActions = NavigationActions(navController)
       EventCreationScreen(1, navActions)
     }
-    composeTestRule.onNodeWithText("Tags (comma-separated)").assertIsDisplayed()
   }
 
   @Test
@@ -89,27 +90,25 @@ class EventCreationScreenTest {
       val navActions = NavigationActions(navController)
       EventCreationScreen(2, navActions)
     }
-
-    composeTestRule.onNodeWithText("Groceries").assertIsDisplayed()
-    composeTestRule.onNodeWithText("Add groceries").assertIsDisplayed()
+    // composeTestRule.onNodeWithTag("tag_field").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
   }
 
   @Test
   fun testInputIntoTextFields() {
-
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-
       EventCreationScreen(0, navActions)
     }
 
     val title = "Sample Event Title"
-    composeTestRule.onNodeWithText("Title").performTextInput(title)
+    composeTestRule.onNodeWithTag("add_a_title").performTextInput(title)
 
     composeTestRule.onNodeWithText(title).assertIsDisplayed()
-    composeTestRule.onNodeWithText("Previous").assertDoesNotExist()
-  }*/
+    composeTestRule.onNodeWithTag("previous_button").assertDoesNotExist()
+  }
 
   @Test
   fun testFourthPanel() {
@@ -121,19 +120,19 @@ class EventCreationScreenTest {
     }
 
     val value = "4"
-    composeTestRule.onNodeWithText("Number of parking places").assertExists()
-    composeTestRule.onNodeWithText("Number of parking places").performTextInput(value)
+    composeTestRule.onNodeWithTag("n_parking").assertExists()
+    composeTestRule.onNodeWithTag("n_parking").performTextInput(value)
 
     composeTestRule.onNodeWithText(value).assertIsDisplayed()
 
     val valueBed = "2"
-    composeTestRule.onNodeWithText("Number of beds").assertExists()
-    composeTestRule.onNodeWithText("Number of beds").performTextInput(valueBed)
+    composeTestRule.onNodeWithTag("n_beds").assertExists()
+    composeTestRule.onNodeWithTag("n_beds").performTextInput(valueBed)
 
     composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
-    composeTestRule.onNodeWithText("Next").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
 
-    composeTestRule.onNodeWithText("Create Event").performClick()
+    composeTestRule.onNodeWithTag("create_event_button").performClick()
   }
 
   @Test
@@ -155,8 +154,8 @@ class EventCreationScreenTest {
       val navActions = NavigationActions(navController)
       EventCreationScreen(4, navActions)
     }
-    composeTestRule.onNodeWithText("Logistics").assertIsDisplayed()
-    composeTestRule.onNodeWithText("Parking").assertIsDisplayed()
-    composeTestRule.onNodeWithText("Beds").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
   }
 }

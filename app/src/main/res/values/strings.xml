@@ -16,10 +16,10 @@
     <string name="event_creation_screen_toast_creating">Creating the event…</string>
     <string name="event_creation_screen_toast_finish">Event has been created successfully!</string>
     <string name="event_creation_screen_title">Add a title</string>
-    <string name="event_creation_screen_title_legend">Event Title</string>
+    <string name="event_creation_screen_title_legend">Title</string>
     <string name="event_creation_screen_description">Add a description</string>
-    <string name="event_creation_screen_description_legend">Event Description</string>
-    <string name="event_creation_screen_location_legend">Event Location</string>
+    <string name="event_creation_screen_description_legend">Description</string>
+    <string name="event_creation_screen_location_legend">Location</string>
     <string name="event_creation_screen_start_date_legend">Event Start Date And Time</string>
     <string name="event_creation_screen_end_date_legend">Event End Date And Time</string>
     <string name="event_creation_screen_tags_legend">Add Event Tags</string>
@@ -38,7 +38,7 @@
     <string name="find_event_search_button_text">Search</string>
     <string name="find_event_event_location_legend">Event Location</string>
     <string name="find_event_event_tags_legend">Add tags to your search</string>
-    <string name="find_event_event_location_query_label">Enter en address</string>
+    <string name="find_event_event_location_query_label">Enter an address</string>
     <string name="find_event_event_locate_me_button">Near me</string>
     <string name="find_event_search_radius">Search radius</string>
     <string name="find_event_search_tag_query_label">Enter a tag</string>
@@ -46,6 +46,7 @@
     <string name="find_event_join_event_button_text">Join Event</string>
     <string name="find_event_no_event_available">No event details available</string>
     <string name="search_location">Search for a location</string>
+    <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
 
 
 </resources>
