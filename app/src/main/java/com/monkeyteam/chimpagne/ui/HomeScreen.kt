@@ -27,7 +27,6 @@ import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
