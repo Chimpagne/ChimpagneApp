@@ -20,6 +20,10 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Car pooling : number of seats, departure time, destination, etc.. ,  “trust me I am not drunk”
 - Organizing who can sleep on site with reservation 
 
+# Architecture diagram
+
+![alt text](arch.png)
+
 # UI
 
 ## Design system
