@@ -93,6 +93,30 @@ class EventCreationScreenTest {
   }
 
   @Test
+  fun testSecondPanelContent() {
+    var tagsLegendS = ""
+    var publicLegendS = ""
+
+    // Given
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(1, navActions)
+
+
+      val context = LocalContext.current
+      tagsLegendS = context.getString(R.string.event_creation_screen_tags_legend)
+      publicLegendS = context.getString(R.string.event_creation_screen_public_legend)
+    }
+
+    // When - Then
+    composeTestRule.onNodeWithText(tagsLegendS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(publicLegendS).assertIsDisplayed()
+
+    // You can add more detailed tests here for interactions and assertions
+  }
+
+  @Test
   fun testMakeEventPublicButtonShowsToast() {
 
     composeTestRule.setContent {
