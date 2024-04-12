@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,6 +34,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 fun HomeScreen(navObject: NavigationActions) {
   // Dummy user Data
   val dummyUser = User("0", "Lora", null)
+    val context = LocalContext.current
 
   Scaffold(
       topBar = {
@@ -51,7 +54,7 @@ fun HomeScreen(navObject: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneButton(
-                  onClick = { /*TODO*/},
+                  onClick = { Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT).show()/*TODO*/},
                   text = {
                     Text(
                         text = stringResource(id = R.string.homescreen_my_events),

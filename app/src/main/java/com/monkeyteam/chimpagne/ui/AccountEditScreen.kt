@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.ui
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -21,6 +23,8 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
 
   LaunchedEffect(Unit) { accountViewModel.moveUserAccountToTemp() }
   val tempAccount by accountViewModel.tempAccount.collectAsState()
+
+    val context = LocalContext.current
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -38,7 +42,11 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       topBarText = R.string.accountEditScreenButton,
       hasBackButton = true,
       selectedImageUri = tempAccount.profilePictureUri,
-      onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/},
+      onPickImage = {
+                    /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
+          Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
+              .show()
+                    },
       firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,

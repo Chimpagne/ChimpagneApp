@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui
 
 import DateSelector
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -290,6 +292,7 @@ fun FindEventMapScreen(
 
 @Composable
 fun EventDetailSheet(event: ChimpagneEvent?) {
+    val context = LocalContext.current
   if (event != null) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -321,7 +324,9 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               }
 
           Button(
-              onClick = { /* Handle join event */},
+              onClick = {
+                  Toast.makeText(context, "This feature is not available at this time" ,Toast.LENGTH_SHORT)
+                  .show()/* Handle join event */},
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))
               }

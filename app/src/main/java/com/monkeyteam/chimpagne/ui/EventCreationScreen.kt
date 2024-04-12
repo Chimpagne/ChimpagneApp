@@ -72,7 +72,7 @@ fun EventCreationScreen(
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
       GoBackButton(navigationActions = navObject)
-      Text(text = stringResource(id = R.string.event_creation_screen_title))
+      Text(text = stringResource(id = R.string.event_creation_screen_name))
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
