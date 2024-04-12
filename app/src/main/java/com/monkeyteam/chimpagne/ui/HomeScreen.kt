@@ -66,7 +66,6 @@ fun HomeScreen(navObject: NavigationActions) {
                   text = stringResource(id = R.string.homescreen_my_events),
                   fontWeight = FontWeight.Bold,
                   fontSize = 30.sp)
-
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("discover_events_button"),

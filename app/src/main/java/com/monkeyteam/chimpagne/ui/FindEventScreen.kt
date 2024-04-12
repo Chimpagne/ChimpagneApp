@@ -305,6 +305,7 @@ fun FindEventMapScreen(
 
 @Composable
 fun EventDetailSheet(event: ChimpagneEvent?) {
+  val context = LocalContext.current
   if (event != null) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -336,7 +337,11 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               }
 
           Button(
-              onClick = { /* Handle join event */},
+              onClick = {
+                Toast.makeText(
+                        context, "This feature is not available at this time", Toast.LENGTH_SHORT)
+                    .show() /* Handle join event */
+              },
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))
               }
