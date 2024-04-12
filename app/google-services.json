@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "168275920031-03hjvj6bi48mfi9ol1f1frf067b66rms.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkeyteam.chimpagne",
+            "certificate_hash": "98e4c7ae51e03e07e8b30e1822411194e2c2efb6"
+          }
+        },
+        {
           "client_id": "168275920031-3gea1cqml5cqne86ka33h6sopqq0hr8b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -22,11 +30,51 @@
           }
         },
         {
-          "client_id": "168275920031-dg9k9gtc2m8a5p9hgkirv6bmnjo6hkjc.apps.googleusercontent.com",
+          "client_id": "168275920031-6s9b6ekluc4ca3g41hrhmot9rebp9efi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.monkeyteam.chimpagne",
-            "certificate_hash": "72ea4b0f7761c0eb7b82fd0af5ea13a111386f0e"
+            "certificate_hash": "1621666982891ef22e39766a09325abc6a139adc"
+          }
+        },
+        {
+          "client_id": "168275920031-8av77iivtnjbe0ufbul53t3og0cgktrk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkeyteam.chimpagne",
+            "certificate_hash": "391d52b7cc6349244d1183ecd208cc761c696f8f"
+          }
+        },
+        {
+          "client_id": "168275920031-bbs1cseh99jm8gqah48k9iin1q810qgo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkeyteam.chimpagne",
+            "certificate_hash": "6deb625699b858ae2116557edb884f22da95fafd"
+          }
+        },
+        {
+          "client_id": "168275920031-kgk1daq07ldrvng19m51gpinh0e7u4kp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkeyteam.chimpagne",
+            "certificate_hash": "da917bb44f76e36ff8d78147cc3d7324c163c237"
+          }
+        },
+        {
+          "client_id": "168275920031-v6ch905h4h4vmhscheh8tl29nncjgip8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkeyteam.chimpagne",
+            "certificate_hash": "121c4b65720e84101d8e0f4ccc937a0ea9b6993e"
+          }
+        },
+        {
+          "client_id": "168275920031-v80ejrfebqb642vmlqe6dhcqmapmncrh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.monkeyteam.chimpagne",
+            "certificate_hash": "49dff509a3ed0b4e12da6a17c16448b414ac46ea"
           }
         },
         {
