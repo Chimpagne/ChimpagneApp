@@ -3,7 +3,6 @@ package com.monkeyteam.chimpagne.ui.theme
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,7 +35,7 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       topBarText = R.string.account_creation_screen_button,
       hasBackButton = false,
       selectedImageUri = tempAccount.profilePictureUri,
-      onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
+      onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/},
       firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
