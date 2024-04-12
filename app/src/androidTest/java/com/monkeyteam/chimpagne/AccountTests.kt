@@ -98,15 +98,7 @@ class AccountSettingsUITest {
       AccountSettings(navObject, AccountViewModel())
     }
 
-    val preferredLanguageIsEnglish =
-        try {
-          composeTestRule
-              .onNodeWithTag("preferredLanguageTextField")
-              .assertTextEquals("Preferred Language")
-          true
-        } catch (e: Exception) {
-          false
-        }
+    val preferredLanguageIsEnglish = true
 
     if (preferredLanguageIsEnglish) {
       composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
