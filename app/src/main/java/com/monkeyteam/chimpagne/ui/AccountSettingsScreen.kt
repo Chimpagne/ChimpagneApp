@@ -98,12 +98,7 @@ fun AccountSettings(
 
               Spacer(modifier = Modifier.height(8.dp))
               // TODO has to be changed to log out
-              Button(
-                  onClick = {
-                    logout()
-                  }) {
-                    Text("Log Out")
-                  }
+              Button(onClick = { logout() }) { Text("Log Out") }
             }
       }
 }

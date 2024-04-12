@@ -93,7 +93,9 @@ class MainActivity : ComponentActivity() {
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = startDestination) {
-            composable(Route.LOGIN_SCREEN) { LoginScreen { email -> loginToChimpagneAccount(email) } }
+            composable(Route.LOGIN_SCREEN) {
+              LoginScreen { email -> loginToChimpagneAccount(email) }
+            }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }

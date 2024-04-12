@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.viewmodels
 
-import android.accounts.AccountManager
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -12,9 +11,9 @@ import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
-class AccountViewModel(private val accountManager: ChimpagneAccountManager = Database.instance.accountManager
+class AccountViewModel(
+    private val accountManager: ChimpagneAccountManager = Database.instance.accountManager
 ) : ViewModel() {
 
   private val _loggedIn = MutableStateFlow<Boolean?>(null)
@@ -31,24 +30,24 @@ class AccountViewModel(private val accountManager: ChimpagneAccountManager = Dat
   }
 
   fun loginToChimpagneAccount(
-    email: String,
-    onSuccess: (ChimpagneAccount?) -> Unit,
-    onFailure: (Exception) -> Unit
+      email: String,
+      onSuccess: (ChimpagneAccount?) -> Unit,
+      onFailure: (Exception) -> Unit
   ) {
     viewModelScope.launch {
       accountManager.getAccountByEmail(
-        email,
-        onSuccess = {
-          Log.d("AccountViewModel", "Fetched user account: $it")
-          if (it != null) _userAccount.value = it
-          else _userAccount.value = ChimpagneAccount(email = email)
-          _loggedIn.value = it != null
-          onSuccess(it)
-        },
-        onFailure = {
-          Log.e("AccountViewModel", "Failed to fetch user account", it)
-          onFailure(it)
-        })
+          email,
+          onSuccess = {
+            Log.d("AccountViewModel", "Fetched user account: $it")
+            if (it != null) _userAccount.value = it
+            else _userAccount.value = ChimpagneAccount(email = email)
+            _loggedIn.value = it != null
+            onSuccess(it)
+          },
+          onFailure = {
+            Log.e("AccountViewModel", "Failed to fetch user account", it)
+            onFailure(it)
+          })
     }
   }
 
@@ -66,16 +65,16 @@ class AccountViewModel(private val accountManager: ChimpagneAccountManager = Dat
 
     viewModelScope.launch {
       accountManager.updateAccount(
-        account = tempAccount,
-        onSuccess = {
-          Log.d("AccountViewModel", "Account updated")
-          _userAccount.value = tempAccount
-          onSuccess()
-        },
-        onFailure = { exception ->
-          Log.e("AccountViewModel", "Failed to update account", exception)
-          onFailure(exception)
-        })
+          account = tempAccount,
+          onSuccess = {
+            Log.d("AccountViewModel", "Account updated")
+            _userAccount.value = tempAccount
+            onSuccess()
+          },
+          onFailure = { exception ->
+            Log.e("AccountViewModel", "Failed to update account", exception)
+            onFailure(exception)
+          })
     }
   }
 
@@ -86,11 +85,11 @@ class AccountViewModel(private val accountManager: ChimpagneAccountManager = Dat
   fun createAccount() {
     _tempAccount.value = _tempAccount.value.copy(email = _userAccount.value.email)
     putUpdatedAccount(
-      {
-        _loggedIn.value = true
-        Log.d("AccountViewModel", "Account created")
-      },
-      { Log.e("AccountViewModel", "Failed to create account") })
+        {
+          _loggedIn.value = true
+          Log.d("AccountViewModel", "Account created")
+        },
+        { Log.e("AccountViewModel", "Failed to create account") })
   }
 
   fun updateUri(uri: Uri) {
@@ -115,8 +114,7 @@ class AccountViewModel(private val accountManager: ChimpagneAccountManager = Dat
 }
 
 data class AccountState(
-  val userAccount: ChimpagneAccount = ChimpagneAccount(),
-  val tempAccount: ChimpagneAccount = ChimpagneAccount(),
-  val loggedIn: Boolean? = null
+    val userAccount: ChimpagneAccount = ChimpagneAccount(),
+    val tempAccount: ChimpagneAccount = ChimpagneAccount(),
+    val loggedIn: Boolean? = null
 )
-
