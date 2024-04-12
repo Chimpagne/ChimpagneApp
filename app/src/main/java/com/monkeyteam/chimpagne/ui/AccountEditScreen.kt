@@ -24,7 +24,7 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
   LaunchedEffect(Unit) { accountViewModel.copyUserAccountToTemp() }
   val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
 
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -43,10 +43,10 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       hasBackButton = true,
       selectedImageUri = tempAccount.profilePictureUri,
       onPickImage = {
-                    /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
-          Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
-              .show()
-                    },
+        /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
+        Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
+            .show()
+      },
       firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,

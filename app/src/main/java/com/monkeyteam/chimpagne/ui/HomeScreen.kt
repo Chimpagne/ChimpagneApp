@@ -36,7 +36,7 @@ fun HomeScreen(navObject: NavigationActions) {
 
   val context = LocalContext.current
   val dummyUser = User("0", "Lora", null)
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   Scaffold(
       topBar = {
@@ -56,7 +56,13 @@ fun HomeScreen(navObject: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneButton(
-                  onClick = { Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT).show()/*TODO*/},
+                  onClick = {
+                    Toast.makeText(
+                            context,
+                            "This feature is not available at this time",
+                            Toast.LENGTH_SHORT)
+                        .show() /*TODO*/
+                  },
                   text = {
                     Text(
                         text = stringResource(id = R.string.homescreen_my_events),
