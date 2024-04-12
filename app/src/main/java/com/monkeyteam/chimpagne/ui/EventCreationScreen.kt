@@ -17,7 +17,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
-import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Public
@@ -40,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -72,8 +72,7 @@ fun EventCreationScreen(
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
       GoBackButton(navigationActions = navObject)
-      Legend(
-          stringResource(id = R.string.event_creation_screen_name), Icons.Rounded.Create, "Create")
+      Text(text = stringResource(id = R.string.event_creation_screen_title))
     }
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
@@ -91,7 +90,8 @@ fun EventCreationScreen(
         Button(
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
-            }) {
+            },
+            modifier = Modifier.testTag("previous_button")) {
               Text(stringResource(id = R.string.event_creation_screen_previous))
             }
       } else {
@@ -101,7 +101,8 @@ fun EventCreationScreen(
         Button(
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
-            }) {
+            },
+            modifier = Modifier.testTag("next_button")) {
               Text(stringResource(id = R.string.event_creation_screen_next))
             }
       } else {
@@ -123,7 +124,8 @@ fun EventCreationScreen(
                       navObject.goBack()
                     })
               }
-            }) {
+            },
+            modifier = Modifier.testTag("create_event_button")) {
               Text(stringResource(id = R.string.event_creation_screen_create_event))
             }
       }
@@ -146,7 +148,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier.fillMaxWidth())
+        modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -161,7 +163,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
         maxLines = 3)
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -197,7 +199,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         "End Date")
 
     Spacer(modifier = Modifier.height(16.dp))
-
+    // We will need to add some tests for DateSelector also
     DateSelector(
         selectedDate = uiState.endsAtCalendarDate,
         onDateSelected = eventViewModel::updateEventEndCalendarDate,
@@ -210,7 +212,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
 fun SecondPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  var tagFieldActive by remember { mutableStateOf(false) }
+  var tagFieldActive by remember { mutableStateOf(true) }
 
   Column(modifier = Modifier.padding(16.dp)) {
     Legend(
@@ -220,7 +222,7 @@ fun SecondPanel(eventViewModel: EventViewModel) {
         uiState.tags,
         eventViewModel::updateEventTags,
         { tagFieldActive = it },
-        Modifier.fillMaxWidth())
+        Modifier.fillMaxWidth().testTag("tag_field"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -244,16 +246,24 @@ fun SecondPanel(eventViewModel: EventViewModel) {
 
 @Composable
 fun ThirdPanel(eventViewModel: EventViewModel) {
-  val uiState by eventViewModel.uiState.collectAsState()
-
+  val context = LocalContext.current
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_groceries),
-        style = MaterialTheme.typography.headlineSmall)
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = Modifier.testTag("groceries_title"))
     Spacer(modifier = Modifier.height(16.dp))
-    Button(onClick = { /* TODO Add groceries logic */}) {
-      Text(stringResource(id = R.string.event_creation_screen_add_groceries))
-    }
+    Button(
+        onClick = {
+          Toast.makeText(
+                  context,
+                  context.getString(R.string.event_creation_screen_gorceries_toast),
+                  Toast.LENGTH_SHORT)
+              .show()
+        },
+        modifier = Modifier.testTag("add_groceries_button")) {
+          Text(stringResource(id = R.string.event_creation_screen_add_groceries))
+        }
     Spacer(modifier = Modifier.height(16.dp))
     LazyColumn {
       // Populate with groceries items
@@ -264,37 +274,36 @@ fun ThirdPanel(eventViewModel: EventViewModel) {
 // Comment to make a new commit
 @Composable
 fun FourthPanel(eventViewModel: EventViewModel) {
-  val uiState by eventViewModel.uiState.collectAsState()
-
-  // TODO: SHOW SPINNER
 
   var parkingText by remember { mutableStateOf("") }
   var bedsText by remember { mutableStateOf("") }
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_logistics),
-        style = MaterialTheme.typography.headlineSmall)
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = Modifier.testTag("logistics_title"))
     Spacer(modifier = Modifier.height(16.dp))
     Text(
         stringResource(id = R.string.event_creation_screen_parking),
-        style = MaterialTheme.typography.bodyMedium)
-
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.testTag("parking_title"))
     OutlinedTextField(
         value = parkingText,
         onValueChange = { parkingText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth())
+        modifier = Modifier.fillMaxWidth().testTag("n_parking"))
 
     Spacer(modifier = Modifier.height(16.dp))
     Text(
         stringResource(id = R.string.event_creation_screen_beds),
-        style = MaterialTheme.typography.bodyMedium)
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.testTag("beds_title"))
     OutlinedTextField(
         value = bedsText,
         onValueChange = { bedsText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth())
+        modifier = Modifier.fillMaxWidth().testTag("n_beds"))
   }
 }
