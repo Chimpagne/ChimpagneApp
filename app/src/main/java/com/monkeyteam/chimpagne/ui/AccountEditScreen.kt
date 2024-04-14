@@ -16,6 +16,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.AccountChangeBody
+import com.monkeyteam.chimpagne.ui.utilities.checkNotEmpty
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,24 +52,27 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       lastNameLabel = R.string.account_creation_screen_last_name,
       lastNameChange = accountViewModel::updateLastName,
       location = tempAccount.location,
-      locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
       commitOnClick = {
-        accountViewModel.putUpdatedAccount(
-            onSuccess = {
-                //Delete last location of navobject
-                navObject.popBackStack()
-              navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-              Toast.makeText(context, "Account updated", Toast.LENGTH_SHORT).show()
-            },
-            onFailure = {
-                navObject.popBackStack()
-              navObject.navigateTo(Route.HOME_SCREEN)
-              Toast.makeText(context, "Failed to update account", Toast.LENGTH_SHORT).show()
-            })
+          if (checkNotEmpty(tempAccount,context)){
+              navObject.navigateTo(Route.LOADING)
+              accountViewModel.putUpdatedAccount(
+                  onSuccess = {
+                      // Delete last location of navobject
+                      navObject.popBackStack()
+                      navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+                      Toast.makeText(context, "Account updated", Toast.LENGTH_SHORT).show()
+                  },
+                  onFailure = {
+                      navObject.popBackStack()
+                      navObject.navigateTo(Route.HOME_SCREEN)
+                      Toast.makeText(context, "Failed to update account", Toast.LENGTH_SHORT).show()
+                  })
+          }else{
+                Log.d("AccountEdit", "Account update failed")
+          }
       },
-      to_navigate_next = Route.LOADING,
       navObject = navObject)
 }

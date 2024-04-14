@@ -14,6 +14,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.AccountChangeBody
+import com.monkeyteam.chimpagne.ui.utilities.checkNotEmpty
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
@@ -47,21 +48,25 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       lastNameLabel = R.string.account_creation_screen_last_name,
       lastNameChange = accountViewModel::updateLastName,
       location = tempAccount.location,
-      locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
-      to_navigate_next = Route.LOADING,
       commitOnClick = {
-        accountViewModel.createAccount(
-            onSuccess = {
-              navObject.navigateTo(Route.HOME_SCREEN)
-              Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
-            },
-            onFailure = {
-              navObject.navigateTo(Route.LOGIN_SCREEN)
-              Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
-            })
+          if (checkNotEmpty(tempAccount, context)){
+              navObject.navigateTo(Route.LOADING)
+              accountViewModel.createAccount(
+                  onSuccess = {
+                      navObject.navigateTo(Route.HOME_SCREEN)
+                      Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
+                  },
+                  onFailure = {
+                      navObject.navigateTo(Route.LOGIN_SCREEN)
+                      Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
+                  })
+          }else{
+                Log.d("AccountCreation", "Account creation failed")
+              navObject.popBackStack()
+          }
       },
       navObject = navObject)
 }

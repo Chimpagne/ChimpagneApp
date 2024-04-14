@@ -38,7 +38,7 @@ class NavigationActions(private val navController: NavHostController) {
     if (setAsStartDestination) navController.graph.setStartDestination(route)
   }
 
-    fun popBackStack() {
-        navController.popBackStack()
-    }
+  fun popBackStack() {
+    navController.popBackStack()
+  }
 }
