@@ -37,4 +37,8 @@ class NavigationActions(private val navController: NavHostController) {
     navController.navigate(route) { popUpTo(0) { inclusive = true } }
     if (setAsStartDestination) navController.graph.setStartDestination(route)
   }
+
+    fun popBackStack() {
+        navController.popBackStack()
+    }
 }
