@@ -2,11 +2,14 @@ package com.monkeyteam.chimpagne.ui.theme
 
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -18,6 +21,7 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
 
   val account by accountViewModel.userChimpagneAccount.collectAsState()
   val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
+  val context = LocalContext.current
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -25,7 +29,7 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
           onResult = { uri: Uri? ->
             if (uri != null) {
               Log.d("AccountCreation", "Profile picture URI: $uri")
-              accountViewModel.updateUri(uri)
+              accountViewModel.updatePicture(uri)
             } else {
               Log.d("AccountCreation", "Profile picture URI is null")
             }
@@ -34,8 +38,8 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
   AccountChangeBody(
       topBarText = R.string.account_creation_screen_button,
       hasBackButton = false,
-      selectedImageUri = tempAccount.profilePictureUri,
-      onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/},
+      selectedImageUri = accountViewModel.tempImageUri.collectAsState().value,
+      onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
@@ -47,7 +51,17 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
-      to_navigate_next = Route.HOME_SCREEN,
-      commitOnClick = { accountViewModel.createAccount() },
+      to_navigate_next = Route.LOADING,
+      commitOnClick = {
+        accountViewModel.createAccount(
+            onSuccess = {
+              navObject.navigateTo(Route.HOME_SCREEN)
+              Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
+            },
+            onFailure = {
+              navObject.navigateTo(Route.LOGIN_SCREEN)
+              Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
+            })
+      },
       navObject = navObject)
 }

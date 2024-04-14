@@ -81,7 +81,7 @@ fun AccountSettings(
             modifier = Modifier.padding(paddingValues).padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(modifier = Modifier.height(10.dp))
-              ProfileImage(imageUri = account.value?.profilePictureUri)
+              ProfileImage(imageUri = accountViewModel.imageUri.collectAsState().value)
 
               SettingItem(
                   label = "First Name",

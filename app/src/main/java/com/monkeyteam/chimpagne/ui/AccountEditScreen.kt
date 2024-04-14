@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -21,7 +22,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @Composable
 fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
-  LaunchedEffect(Unit) { accountViewModel.copyUserAccountToTemp() }
+  LaunchedEffect(Unit) { accountViewModel.copyRealToTemp() }
   val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
 
   val context = LocalContext.current
@@ -32,7 +33,7 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
           onResult = { uri: Uri? ->
             if (uri != null) {
               Log.d("AccountEdit", "Profile picture URI: $uri")
-              accountViewModel.updateUri(uri)
+              accountViewModel.updatePicture(uri)
             } else {
               Log.d("AccountEdit", "Profile picture URI is null")
             }
@@ -41,12 +42,8 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
   AccountChangeBody(
       topBarText = R.string.accountEditScreenButton,
       hasBackButton = true,
-      selectedImageUri = tempAccount.profilePictureUri,
-      onPickImage = {
-        /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
-        Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
-            .show()
-      },
+      selectedImageUri = accountViewModel.tempImageUri.collectAsState().value,
+      onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
@@ -58,7 +55,20 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
-      commitOnClick = accountViewModel::putUpdatedAccount,
-      to_navigate_next = Route.ACCOUNT_SETTINGS_SCREEN,
+      commitOnClick = {
+        accountViewModel.putUpdatedAccount(
+            onSuccess = {
+                //Delete last location of navobject
+                navObject.popBackStack()
+              navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+              Toast.makeText(context, "Account updated", Toast.LENGTH_SHORT).show()
+            },
+            onFailure = {
+                navObject.popBackStack()
+              navObject.navigateTo(Route.HOME_SCREEN)
+              Toast.makeText(context, "Failed to update account", Toast.LENGTH_SHORT).show()
+            })
+      },
+      to_navigate_next = Route.LOADING,
       navObject = navObject)
 }
