@@ -16,32 +16,22 @@ class AccountViewModel(
     private val accountManager: ChimpagneAccountManager = Database.instance.accountManager
 ) : ViewModel() {
 
-  private val _loggedIn = MutableStateFlow<Boolean?>(null)
-  val loggedToAChimpagneAccount: StateFlow<Boolean?> = _loggedIn
-
-  private val _userAccount = MutableStateFlow(ChimpagneAccount())
-  val userChimpagneAccount: StateFlow<ChimpagneAccount> = _userAccount
-
-  private val _tempAccount = MutableStateFlow(ChimpagneAccount())
-  val tempChimpagneAccount: StateFlow<ChimpagneAccount> = _tempAccount
-
-  init {
-    //    Log.d("AccountViewModel", "AccountViewModel initialized")
-  }
+  private val _uiState = MutableStateFlow(AccountUIState())
+  val uiState: StateFlow<AccountUIState> = _uiState
 
   fun loginToChimpagneAccount(
       email: String,
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    _uiState.value = _uiState.value.copy(currentUserEmail = email)
     viewModelScope.launch {
       accountManager.getAccountByEmail(
           email,
           onSuccess = {
             Log.d("AccountViewModel", "Fetched user account: $it")
-            if (it != null) _userAccount.value = it
-            else _userAccount.value = ChimpagneAccount(email = email)
-            _loggedIn.value = it != null
+            _uiState.value = _uiState.value.copy(currentUserAccount = it)
+            if (it != null) accountManager.signInTo(it)
             onSuccess(it)
           },
           onFailure = {
@@ -52,23 +42,24 @@ class AccountViewModel(
   }
 
   fun logoutFromChimpagneAccount() {
-    _userAccount.value = ChimpagneAccount()
+    _uiState.value = AccountUIState()
+    accountManager.signOut()
   }
 
-  fun putUpdatedAccount(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    val tempAccount = _tempAccount.value
-    if (tempAccount.email == "") {
+  fun submitUpdatedAccount(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    if (_uiState.value.currentUserEmail == null) {
       Log.e("AccountViewModel", "Account email is invalid, can't be added to database")
       onFailure(Exception("Invalid account email"))
       return
     }
 
+    val updatedAccount = _uiState.value.tempAccount.copy(email = _uiState.value.currentUserEmail!!)
     viewModelScope.launch {
-      accountManager.updateAccount(
-          account = tempAccount,
+      accountManager.updateCurrentAccount(
+          account = updatedAccount,
           onSuccess = {
             Log.d("AccountViewModel", "Account updated")
-            _userAccount.value = tempAccount
+            _uiState.value = _uiState.value.copy(currentUserAccount = updatedAccount)
             onSuccess()
           },
           onFailure = { exception ->
@@ -79,42 +70,42 @@ class AccountViewModel(
   }
 
   fun copyUserAccountToTemp() {
-    _tempAccount.value = _userAccount.value
+    val currentAccount = _uiState.value.currentUserAccount
+    if (currentAccount != null) _uiState.value = _uiState.value.copy(tempAccount = currentAccount)
   }
 
-  fun createAccount() {
-    _tempAccount.value = _tempAccount.value.copy(email = _userAccount.value.email)
-    putUpdatedAccount(
-        {
-          _loggedIn.value = true
-          Log.d("AccountViewModel", "Account created")
-        },
-        { Log.e("AccountViewModel", "Failed to create account") })
+  private fun updateTempAccount(newTempAccount: ChimpagneAccount) {
+    _uiState.value = _uiState.value.copy(tempAccount = newTempAccount)
   }
 
   fun updateUri(uri: Uri) {
-    _tempAccount.value = _tempAccount.value.copy(profilePictureUri = uri)
+    updateTempAccount(_uiState.value.tempAccount.copy(profilePictureUri = uri))
     Log.d("AccountViewModel", "Updated profile picture URI to $uri")
   }
 
   fun updateFirstName(firstName: String) {
-    _tempAccount.value = _tempAccount.value.copy(firstName = firstName)
+    updateTempAccount(_uiState.value.tempAccount.copy(firstName = firstName))
     Log.e("AccountViewModel", "Updated first name to $firstName")
   }
 
   fun updateLastName(lastName: String) {
-    _tempAccount.value = _tempAccount.value.copy(lastName = lastName)
+    updateTempAccount(_uiState.value.tempAccount.copy(lastName = lastName))
     Log.e("AccountViewModel", "Updated last name to $lastName")
   }
 
   fun updateLocation(location: Location) {
-    _tempAccount.value = _tempAccount.value.copy(location = location)
+    updateTempAccount(_uiState.value.tempAccount.copy(location = location))
     Log.d("AccountViewModel", "Updated location name to $location")
   }
 }
 
-data class AccountState(
-    val userAccount: ChimpagneAccount = ChimpagneAccount(),
-    val tempAccount: ChimpagneAccount = ChimpagneAccount(),
-    val loggedIn: Boolean? = null
+/**
+ * [currentUserAccount] this field will be null if the user isn't sign in to Firebase or if he
+ * doesn't have Chimpagne Account [currentUserEmail] this field will be null iff he isn't sign in to
+ * Firebase [tempAccount] this field is used to store temporal data in forms that will be submitted
+ */
+data class AccountUIState(
+    var currentUserAccount: ChimpagneAccount? = null,
+    var currentUserEmail: String? = null,
+    var tempAccount: ChimpagneAccount = ChimpagneAccount(),
 )

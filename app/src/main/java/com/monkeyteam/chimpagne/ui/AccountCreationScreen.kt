@@ -16,8 +16,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @Composable
 fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
-  val account by accountViewModel.userChimpagneAccount.collectAsState()
-  val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
+  val accountViewModelState by accountViewModel.uiState.collectAsState()
 
   val pickProfilePicture =
       rememberLauncherForActivityResult(
@@ -34,20 +33,20 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
   AccountChangeBody(
       topBarText = R.string.account_creation_screen_button,
       hasBackButton = false,
-      selectedImageUri = tempAccount.profilePictureUri,
+      selectedImageUri = accountViewModelState.tempAccount.profilePictureUri,
       onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/},
-      firstName = tempAccount.firstName,
+      firstName = accountViewModelState.tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
-      lastName = tempAccount.lastName,
+      lastName = accountViewModelState.tempAccount.lastName,
       lastNameLabel = R.string.account_creation_screen_last_name,
       lastNameChange = accountViewModel::updateLastName,
-      location = tempAccount.location,
+      location = accountViewModelState.tempAccount.location,
       locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
       to_navigate_next = Route.HOME_SCREEN,
-      commitOnClick = { accountViewModel.createAccount() },
+      commitOnClick = { accountViewModel.submitUpdatedAccount() },
       navObject = navObject)
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,16 +48,6 @@ class MainActivity : ComponentActivity() {
           mutableStateOf(FirebaseAuth.getInstance().currentUser != null)
         }
 
-        val loggedToAChimpagneAccount by accountViewModel.loggedToAChimpagneAccount.collectAsState()
-
-        val logout: () -> Unit = {
-          AuthUI.getInstance().signOut(this)
-
-          accountViewModel.logoutFromChimpagneAccount()
-
-          navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-        }
-
         val loginToChimpagneAccount: (email: String) -> Unit = { email ->
           accountViewModel.loginToChimpagneAccount(
               email,
@@ -74,21 +63,21 @@ class MainActivity : ComponentActivity() {
               { Log.e("MainActivity", "Failed to check if account is in database: $it") })
         }
 
+        val logout: () -> Unit = {
+          AuthUI.getInstance().signOut(this)
+          accountViewModel.logoutFromChimpagneAccount()
+          navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+        }
+
         // Determine the start destination based on the isAuthenticated state
-        // Using null check to decide, assuming that null means the auth state is still being
+        // Using null check to decide, assuming that null means the auth state is still being$
         // determined
         val startDestination =
-            when (isAuthenticated) {
-              true ->
-                  when (loggedToAChimpagneAccount) {
-                    true -> Route.HOME_SCREEN
-                    false -> Route.ACCOUNT_CREATION_SCREEN
-                    else -> {
-                      loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.email!!)
-                      Route.LOADING
-                    }
-                  }
-              false -> Route.LOGIN_SCREEN
+            if (isAuthenticated) {
+              loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.email!!)
+              Route.LOADING
+            } else {
+              Route.LOGIN_SCREEN
             }
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -107,7 +96,6 @@ class MainActivity : ComponentActivity() {
               AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
             }
 
-            composable("loading") { SpinnerView() }
             composable(Route.LOADING) { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
             composable(Route.FIND_AN_EVENT_SCREEN) { MainFindEventScreen(navObject = navActions) }
