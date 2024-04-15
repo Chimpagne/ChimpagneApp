@@ -50,7 +50,9 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
-      commitOnClick = accountViewModel::submitUpdatedAccount,
-      to_navigate_next = Route.ACCOUNT_SETTINGS_SCREEN,
+      commitOnClick = {
+        accountViewModel.submitUpdatedAccount()
+        navObject.clearAndNavigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+      },
       navObject = navObject)
 }

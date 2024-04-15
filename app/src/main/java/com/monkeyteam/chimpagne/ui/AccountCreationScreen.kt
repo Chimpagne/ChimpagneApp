@@ -46,7 +46,9 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
-      to_navigate_next = Route.HOME_SCREEN,
-      commitOnClick = { accountViewModel.submitUpdatedAccount() },
+      commitOnClick = {
+        accountViewModel.submitUpdatedAccount()
+        navObject.clearAndNavigateTo(Route.HOME_SCREEN)
+      },
       navObject = navObject)
 }
