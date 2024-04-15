@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.Title
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -29,6 +31,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -41,8 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
@@ -52,6 +58,70 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GroceryPopup(
+    onDismissRequest: () -> Unit,
+    onSave: (String, Int, String) -> Unit
+) {
+    var description by remember { mutableStateOf("") }
+    var quantity by remember { mutableStateOf("") }
+    var unit by remember { mutableStateOf("") }
+
+    Dialog(
+        content = {
+            Column(
+                modifier = Modifier.padding(8.dp)
+            ) {
+                TextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Description") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = quantity,
+                    onValueChange = { quantity = it },
+                    label = { Text("Quantity") },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = { /* Handle Done action */ }),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = unit,
+                    onValueChange = { unit = it },
+                    label = { Text("Unit") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row {
+                    TextButton(
+                        onClick = {
+                            onDismissRequest()
+                        }
+                    ) {
+                        Text("Cancel")
+                    }
+
+                    TextButton(
+                        onClick = {
+                            onSave(description, quantity.toIntOrNull() ?: 0, unit)
+                            onDismissRequest()
+                        }
+                    ) {
+                        Text("Add")
+                    }
+                }
+            }
+        },
+
+        onDismissRequest = {
+            onDismissRequest()
+        }
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -148,7 +218,9 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("add_a_title"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -163,7 +235,9 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
-        modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("add_a_description"),
         maxLines = 3)
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -222,7 +296,9 @@ fun SecondPanel(eventViewModel: EventViewModel) {
         uiState.tags,
         eventViewModel::updateEventTags,
         { tagFieldActive = it },
-        Modifier.fillMaxWidth().testTag("tag_field"))
+        Modifier
+            .fillMaxWidth()
+            .testTag("tag_field"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -271,7 +347,6 @@ fun ThirdPanel(eventViewModel: EventViewModel) {
   }
 }
 
-// Comment to make a new commit
 @Composable
 fun FourthPanel(eventViewModel: EventViewModel) {
 
@@ -292,7 +367,9 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         onValueChange = { parkingText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth().testTag("n_parking"))
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("n_parking"))
 
     Spacer(modifier = Modifier.height(16.dp))
     Text(
@@ -304,6 +381,8 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         onValueChange = { bedsText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth().testTag("n_beds"))
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag("n_beds"))
   }
 }
