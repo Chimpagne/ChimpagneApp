@@ -29,6 +29,7 @@ class FindEventViewModelTests {
           Location("EPFL", 46.519124, 6.567593),
           true,
           listOf("vegan", "concert", "booze"),
+          emptyList(),
           emptyMap(),
           buildTimestamp(9, 5, 2024, 5, 0),
           buildTimestamp(10, 5, 2024, 5, 0))
@@ -41,6 +42,7 @@ class FindEventViewModelTests {
           Location("EPFL", 46.519130, 6.567580),
           true,
           listOf("vegan", "concert", "family friendly"),
+          emptyList(),
           emptyMap(),
           buildTimestamp(8, 5, 2024, 6, 0),
           buildTimestamp(9, 5, 2024, 6, 0))
@@ -53,6 +55,7 @@ class FindEventViewModelTests {
           Location("center of earth", 0.0, 0.0),
           true,
           listOf("vegan", "family friendly"),
+          emptyList(),
           emptyMap(),
           buildTimestamp(7, 5, 2024, 6, 0),
           buildTimestamp(10, 5, 2024, 6, 0))

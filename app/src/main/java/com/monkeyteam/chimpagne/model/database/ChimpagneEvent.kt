@@ -14,6 +14,7 @@ data class ChimpagneEvent(
     val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = listOf(),
+    val groceries: List<String>,
     val guests: Map<String, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now()
@@ -38,6 +39,7 @@ data class ChimpagneEvent(
       location: Location,
       public: Boolean,
       tags: List<String>,
+      groceries: List<String>,
       guests: Map<String, Boolean>,
       startsAt: Calendar,
       endsAt: Calendar
@@ -48,6 +50,7 @@ data class ChimpagneEvent(
       location,
       public,
       tags,
+      groceries,
       guests,
       buildTimestamp(startsAt),
       buildTimestamp(endsAt))

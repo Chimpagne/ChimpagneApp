@@ -47,6 +47,7 @@ class EventViewModel(
                       it.location,
                       it.public,
                       it.tags,
+                      it.groceries,
                       it.guests,
                       it.startsAt(),
                       it.endsAt())
@@ -73,6 +74,7 @@ class EventViewModel(
         _uiState.value.location,
         _uiState.value.public,
         _uiState.value.tags,
+        _uiState.value.groceries,
         _uiState.value.guests,
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate)
@@ -227,8 +229,11 @@ data class EventUIState(
     val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = emptyList(),
+    val groceries: List<String> = emptyList(),
     val guests: Map<String, Boolean> = emptyMap(),
     val startsAtCalendarDate: Calendar = Calendar.getInstance(),
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
-)
+) {
+
+}

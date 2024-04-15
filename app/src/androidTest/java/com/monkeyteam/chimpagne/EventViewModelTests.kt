@@ -29,6 +29,7 @@ class EventViewModelTests {
           Location("EPFL", 46.518659400000004, 6.566561505148001),
           true,
           listOf("vegan", "wild"),
+          emptyList(),
           emptyMap(),
           buildTimestamp(9, 5, 2024, 0, 0),
           buildTimestamp(10, 5, 2024, 0, 0))
@@ -127,6 +128,7 @@ class EventViewModelTests {
             Location("United Kingdown", 38.8534951, 12.3483915),
             false,
             listOf("magic", "wands"),
+            emptyList(),
             emptyMap(),
             buildTimestamp(4, 1, 2025, 2, 3),
             buildTimestamp(5, 1, 2025, 2, 3))
