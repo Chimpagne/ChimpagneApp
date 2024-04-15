@@ -285,7 +285,9 @@ fun FindEventMapScreen(
                 cameraPositionState = cameraPositionState,
                 onMarkerClick = onMarkerClick,
                 isMapInitialized = true,
-                events = uiState.events)
+                events = uiState.events,
+                radius = uiState.radiusAroundLocationInM,
+                startingPosition = uiState.selectedLocation)
           }
 
           IconButton(

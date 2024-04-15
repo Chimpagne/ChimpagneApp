@@ -1,41 +1,60 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.Marker
+import com.google.maps.android.clustering.Cluster
+import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.CameraPositionState
+import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import kotlin.math.max
+import com.monkeyteam.chimpagne.model.location.Location
+import kotlin.math.ln
 
-@OptIn(ExperimentalMaterial3Api::class)
+// Function to calculate zoom level from radius in meters
+fun getZoomLevel(radius: Double): Float {
+  val scale = (radius + radius / 2) / 400
+  return (16 - ln(scale) / ln(2.0)).toFloat()
+}
+
+@OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
 @Composable
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     isMapInitialized: Boolean = false,
     bottomSheetState: SheetState,
     onMarkerClick: (Marker) -> Unit,
-    events: Map<String, ChimpagneEvent>
+    events: Map<String, ChimpagneEvent>,
+    radius: Double,
+    startingPosition: Location?,
 ) {
 
   val dynamicBottomPadding =
@@ -46,38 +65,13 @@ fun MapContainer(
       }
 
   LaunchedEffect(events) {
-    if (events.isNotEmpty()) {
-      val latitudes = events.values.map { it.location.latitude }
-      val longitudes = events.values.map { it.location.longitude }
-      val minLat = latitudes.minOrNull()!!
-      val maxLat = latitudes.maxOrNull()!!
-      val minLon = longitudes.minOrNull()!!
-      val maxLon = longitudes.maxOrNull()!!
+    if (events.isNotEmpty() && startingPosition != null) {
 
-      val latRange = maxLat - minLat
-      val lonRange = maxLon - minLon
-
-      val maxRange = max(latRange, lonRange)
-      val centerLat = (maxLat + minLat) / 2
-      val centerLon = (maxLon + minLon) / 2
-
-      // Occupy 3/4 of the screen for accessibility
-      // Shift of 1/8 of the screen
-      val offset = maxRange / 8
-      val adjustedCenterLat = centerLat + offset
-
-      val newMinLat = adjustedCenterLat - maxRange / 2
-      val newMaxLat = adjustedCenterLat + maxRange / 2
-      val newMinLon = centerLon - maxRange / 2
-      val newMaxLon = centerLon + maxRange / 2
-
-      val bounds =
-          LatLngBounds.Builder()
-              .include(LatLng(newMinLat, newMinLon))
-              .include(LatLng(newMaxLat, newMaxLon))
-              .build()
-
-      cameraPositionState.move(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+      val zoomLevel = getZoomLevel(radius)
+      val cameraUpdate =
+          CameraUpdateFactory.newLatLngZoom(
+              LatLng(startingPosition.latitude, startingPosition.longitude), zoomLevel)
+      cameraPositionState.move(cameraUpdate)
     }
   }
 
@@ -92,23 +86,84 @@ fun MapContainer(
                 zoomControlsEnabled = false,
                 myLocationButtonEnabled = false,
                 mapToolbarEnabled = false)) {
-          for (event in events.values) {
-            Marker(
-                state =
-                    rememberMarkerState(
-                        position = LatLng(event.location.latitude, event.location.longitude)),
-                title = event.title,
-                tag = event.id,
-                onClick = {
-                  onMarkerClick(it)
-                  true
-                })
+          if (startingPosition != null) {
+            Circle(
+                center = LatLng(startingPosition.latitude, startingPosition.longitude),
+                radius = radius,
+                strokeColor = Color.Red,
+                strokeWidth = 2f,
+                fillColor = Color(0x11FF0000) // Semi-transparent red
+                )
           }
+          val markersData =
+              listOf(events.map { (id, event) -> MarkerData(id, event.title, event.location) })
+                  .flatten()
+
+          Clustering(
+              items = markersData,
+              onClusterClick = {
+                cameraPositionState.move(CameraUpdateFactory.zoomIn())
+                false
+              },
+              onClusterItemClick = { _ -> true },
+              clusterContent = { IconAsClusterContent(it) },
+              clusterItemContent = { IconAsClusterContentItem(it) })
         }
   } else {
     // Display a placeholder or loading indicator
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
       CircularProgressIndicator() // You can customize this part as needed
     }
+  }
+}
+
+data class MarkerData(val id: String, val name: String, val location: Location) : ClusterItem {
+  override fun getPosition(): LatLng {
+    return LatLng(location.latitude, location.longitude)
+  }
+
+  override fun getTitle(): String {
+    return name
+  }
+
+  override fun getSnippet(): String {
+    return ""
+  }
+
+  override fun getZIndex(): Float {
+    return 1f
+  }
+}
+
+@Composable
+fun IconAsClusterContentItem(data: MarkerData) {
+  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Text(
+        text = if (data.name.length > 16) data.name.substring(0, 13) + "..." else data.name,
+        color = Color.Red,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp)
+    Icon(
+        modifier = Modifier.size(32.dp),
+        imageVector = Icons.Rounded.LocationOn,
+        contentDescription = "custum icon for cluster item",
+        tint = Color.Red)
+  }
+}
+
+@Composable
+fun IconAsClusterContent(cluster: Cluster<MarkerData>) {
+  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Text(
+        text = String.format("%d elements", cluster.size),
+        color = Color.Blue,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp)
+
+    Icon(
+        modifier = Modifier.size(32.dp),
+        imageVector = Icons.Rounded.LocationOn,
+        contentDescription = "custum icon for cluster",
+        tint = Color.Blue)
   }
 }

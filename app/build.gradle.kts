@@ -81,6 +81,8 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.maps.compose)
+    implementation(libs.maps.compose.utils)
+    implementation(libs.maps.compose.widgets)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockwebserver)
