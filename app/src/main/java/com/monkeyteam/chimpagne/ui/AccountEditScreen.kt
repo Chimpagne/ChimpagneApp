@@ -44,8 +44,8 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       selectedImageUri = accountViewModelState.tempAccount.profilePictureUri,
       onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
         Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
-          .show()
-                    },
+            .show()
+      },
       firstName = accountViewModelState.tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
