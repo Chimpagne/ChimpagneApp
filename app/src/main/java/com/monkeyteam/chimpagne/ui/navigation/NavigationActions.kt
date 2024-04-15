@@ -34,7 +34,10 @@ class NavigationActions(private val navController: NavHostController) {
   }
 
   fun clearAndNavigateTo(route: String, setAsStartDestination: Boolean = false) {
-    navController.navigate(route) { popUpTo(0) { inclusive = true } }
+    navController.navigate(route) {
+      popUpTo(0) { inclusive = true }
+      launchSingleTop = true
+    }
     if (setAsStartDestination) navController.graph.setStartDestination(route)
   }
 }

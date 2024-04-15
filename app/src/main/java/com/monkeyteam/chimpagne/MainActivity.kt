@@ -44,10 +44,6 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        var isAuthenticated by remember {
-          mutableStateOf(FirebaseAuth.getInstance().currentUser != null)
-        }
-
         val loginToChimpagneAccount: (email: String) -> Unit = { email ->
           accountViewModel.loginToChimpagneAccount(
               email,
@@ -73,7 +69,7 @@ class MainActivity : ComponentActivity() {
         // Using null check to decide, assuming that null means the auth state is still being$
         // determined
         val startDestination =
-            if (isAuthenticated) {
+            if (FirebaseAuth.getInstance().currentUser != null) {
               loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.email!!)
               Route.LOADING
             } else {
