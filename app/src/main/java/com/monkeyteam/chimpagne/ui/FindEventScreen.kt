@@ -129,7 +129,7 @@ fun FindEventFormScreen(
       topBar = {
         TopAppBar(
             title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier.shadow(4.dp),
+            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
@@ -305,6 +305,7 @@ fun FindEventMapScreen(
 
 @Composable
 fun EventDetailSheet(event: ChimpagneEvent?) {
+  val context = LocalContext.current
   if (event != null) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -336,7 +337,11 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
               }
 
           Button(
-              onClick = { /* Handle join event */},
+              onClick = {
+                Toast.makeText(
+                        context, "This feature is not available at this time", Toast.LENGTH_SHORT)
+                    .show() /* Handle join event */
+              },
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))
               }
