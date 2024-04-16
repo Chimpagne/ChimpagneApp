@@ -63,9 +63,9 @@ class AccountViewModel(
       accountManager.uploadImage(
           _uiState.value.tempImageUri!!,
           onSuccess = { downloadUrl ->
-            _uiState.value.tempAccount =
-                _uiState.value.tempAccount.copy(profilePictureLink = downloadUrl)
-            _uiState.value.imageUri = _uiState.value.tempImageUri
+            _uiState.value =
+                _uiState.value.copy(tempAccount = _uiState.value.tempAccount.copy(profilePictureLink = downloadUrl))
+              _uiState.value = _uiState.value.copy(imageUri = _uiState.value.tempImageUri)
             uploadAccount(_uiState.value.tempAccount, onSuccess, onFailure)
           },
           onFailure = {
