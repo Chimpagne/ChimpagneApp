@@ -68,7 +68,6 @@ fun AccountSettings(
             })
       },
       floatingActionButton = {
-        // TODO has to be changed to edit
         FloatingActionButton(onClick = { navObject.navigateTo(Route.ACCOUNT_EDIT_SCREEN) }) {
           Icon(
               painter = painterResource(id = R.drawable.edit_pen),

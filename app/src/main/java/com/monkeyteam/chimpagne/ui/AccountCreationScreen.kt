@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,7 +38,7 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       topBarText = R.string.account_creation_screen_button,
       hasBackButton = false,
       selectedImageUri = accountViewModelState.tempImageUri,
-      onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/},
+      onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = accountViewModelState.tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,

@@ -31,9 +31,14 @@ class AccountViewModel(
           onSuccess = {
             Log.d("AccountViewModel", "Fetched user account: $it")
             _uiState.value = _uiState.value.copy(currentUserAccount = it)
-            if (it != null) accountManager.signInTo(it)
-            getPicture()
-            onSuccess(it)
+            if (it != null) {
+              accountManager.signInTo(it)
+            }
+            if (it != null && it.profilePictureLink != "") {
+              getPicture(onSuccess = { onSuccess(it) }, onFailure = onFailure)
+            } else {
+              onSuccess(it)
+            }
           },
           onFailure = {
             Log.e("AccountViewModel", "Failed to fetch user account", it)
@@ -54,8 +59,6 @@ class AccountViewModel(
       return
     }
 
-    var account = _uiState.value.tempAccount
-
     viewModelScope.launch {
       accountManager.uploadImage(
           _uiState.value.tempImageUri!!,
@@ -63,11 +66,11 @@ class AccountViewModel(
             _uiState.value.tempAccount =
                 _uiState.value.tempAccount.copy(profilePictureLink = downloadUrl)
             _uiState.value.imageUri = _uiState.value.tempImageUri
-            uploadAccount(account, onSuccess, onFailure)
+            uploadAccount(_uiState.value.tempAccount, onSuccess, onFailure)
           },
           onFailure = {
             Log.e("AccountViewModel", "Failed to upload image", it)
-            uploadAccount(account, onSuccess, onFailure)
+            uploadAccount(_uiState.value.tempAccount, onSuccess, onFailure)
           })
     }
   }
@@ -100,17 +103,18 @@ class AccountViewModel(
   }
 
   fun updatePicture(uri: Uri) {
-    _uiState.value.tempImageUri = uri
-    Log.d("AccountViewModel", "Updated profile picture URI to $uri")
+    _uiState.value = _uiState.value.copy(tempImageUri = uri)
   }
 
-  fun getPicture() {
-    if (_uiState.value.currentUserAccount!!.profilePictureLink != "") {
+  fun getPicture(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    val currentPictureURI = _uiState.value.currentUserAccount!!.profilePictureLink
+    if (currentPictureURI != "") {
       accountManager.downloadImage(
-          _uiState.value.currentUserAccount!!.profilePictureLink,
+          currentPictureURI,
           onSuccess = {
             Log.d("AccountViewModel", "Got image from link: $it")
             _uiState.value.imageUri = it
+            onSuccess()
           },
           onFailure = { Log.e("AccountViewModel", "Failed to get image from link", it) })
     }
