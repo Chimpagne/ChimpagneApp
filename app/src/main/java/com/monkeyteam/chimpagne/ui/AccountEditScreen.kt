@@ -24,7 +24,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
   LaunchedEffect(Unit) { accountViewModel.copyRealToTemp() }
-  val tempAccount by accountViewModel.tempChimpagneAccount.collectAsState()
+  val accountViewModelState by accountViewModel.uiState.collectAsState()
 
   val context = LocalContext.current
 
@@ -43,18 +43,29 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
   AccountChangeBody(
       topBarText = R.string.accountEditScreenButton,
       hasBackButton = true,
+      selectedImageUri = accountViewModelState.tempAccount.profilePictureUri,
+      onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
+        Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
+            .show()
+      },
+      firstName = accountViewModelState.tempAccount.firstName,
       selectedImageUri = accountViewModel.tempImageUri.collectAsState().value,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
-      lastName = tempAccount.lastName,
+      lastName = accountViewModelState.tempAccount.lastName,
       lastNameLabel = R.string.account_creation_screen_last_name,
       lastNameChange = accountViewModel::updateLastName,
-      location = tempAccount.location,
+      location = accountViewModelState.tempAccount.location,
+      locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
+      commitOnClick = {
+        accountViewModel.submitUpdatedAccount()
+        navObject.clearAndNavigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+      },
       commitOnClick = {
           if (checkNotEmpty(tempAccount,context)){
               navObject.navigateTo(Route.LOADING)

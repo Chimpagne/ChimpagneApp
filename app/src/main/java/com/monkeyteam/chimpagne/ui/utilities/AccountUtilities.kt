@@ -123,10 +123,12 @@ fun AccountChangeBody(
     lastNameLabel: Int,
     lastNameChange: (String) -> Unit,
     location: Location,
+    locationLabel: Int,
     locationChange: (Location) -> Unit,
     commitButtontext: Int,
     commitButtonIcon: Int,
     commitOnClick: () -> Unit = {},
+    to_navigate_next: String,
     navObject: NavigationActions,
 ) {
   Scaffold(
@@ -176,9 +178,7 @@ fun AccountChangeBody(
               LocationSelector(selectedLocation = location, updateSelectedLocation = locationChange)
               Spacer(modifier = Modifier.height(10.dp))
               SaveChangesButton(
-                  onClick = {
-                    commitOnClick()
-                  },
+                  onClick = commitOnClick,
                   text = commitButtontext,
                   iconId = commitButtonIcon,
                   contentDescription = "Logout icon")
