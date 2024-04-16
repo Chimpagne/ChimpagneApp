@@ -34,7 +34,7 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
           onResult = { uri: Uri? ->
             if (uri != null) {
               Log.d("AccountEdit", "Profile picture URI: $uri")
-              accountViewModel.updatePicture(uri)
+              accountViewModel.updateProfilePicture(uri)
             } else {
               Log.d("AccountEdit", "Profile picture URI is null")
             }
@@ -43,7 +43,7 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
   AccountChangeBody(
       topBarText = R.string.accountEditScreenButton,
       hasBackButton = true,
-      selectedImageUri = accountViewModelState.tempImageUri,
+      selectedImageUri = accountViewModelState.tempProfilePicture,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = accountViewModelState.tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,

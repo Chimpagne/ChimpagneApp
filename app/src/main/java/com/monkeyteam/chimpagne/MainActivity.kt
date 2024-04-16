@@ -40,9 +40,9 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        val loginToChimpagneAccount: (email: String) -> Unit = { email ->
+        val loginToChimpagneAccount: (id: String) -> Unit = { id ->
           accountViewModel.loginToChimpagneAccount(
-              email,
+              id,
               { account ->
                 if (account != null) {
                   Log.d("MainActivity", "Account is in database")
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
         // determined
         val startDestination =
             if (FirebaseAuth.getInstance().currentUser != null) {
-              loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.email!!)
+              loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
               Route.LOADING
             } else {
               Route.LOGIN_SCREEN
@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = startDestination) {
             composable(Route.LOGIN_SCREEN) {
-              LoginScreen { email -> loginToChimpagneAccount(email) }
+              LoginScreen { uid -> loginToChimpagneAccount(uid) }
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)

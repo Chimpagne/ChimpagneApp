@@ -22,13 +22,14 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
 
   val accountViewModelState by accountViewModel.uiState.collectAsState()
   val context = LocalContext.current
+
   val pickProfilePicture =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.PickVisualMedia(),
           onResult = { uri: Uri? ->
             if (uri != null) {
               Log.d("AccountCreation", "Profile picture URI: $uri")
-              accountViewModel.updatePicture(uri)
+              accountViewModel.updateProfilePicture(uri)
             } else {
               Log.d("AccountCreation", "Profile picture URI is null")
             }
@@ -37,7 +38,7 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
   AccountChangeBody(
       topBarText = R.string.account_creation_screen_button,
       hasBackButton = false,
-      selectedImageUri = accountViewModelState.tempImageUri,
+      selectedImageUri = accountViewModelState.tempProfilePicture,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = accountViewModelState.tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,

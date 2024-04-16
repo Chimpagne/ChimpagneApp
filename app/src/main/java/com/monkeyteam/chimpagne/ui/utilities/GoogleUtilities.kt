@@ -21,7 +21,7 @@ import com.monkeyteam.chimpagne.R
 
 @Composable
 fun GoogleAuthentication(
-    onSuccessfulLogin: (email: String) -> Unit,
+    onSuccessfulLogin: (uid: String) -> Unit,
     onLoginFailed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -31,7 +31,7 @@ fun GoogleAuthentication(
       ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
           // Successfully signed in
-          onSuccessfulLogin(FirebaseAuth.getInstance().currentUser?.email!!)
+          onSuccessfulLogin(FirebaseAuth.getInstance().currentUser?.uid!!)
         } else {
           // Sign in failed. If response is null the user canceled the
           // sign-in flow using the back button. Otherwise check

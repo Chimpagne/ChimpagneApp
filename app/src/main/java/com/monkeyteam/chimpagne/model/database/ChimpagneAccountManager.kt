@@ -5,10 +5,11 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
 
 /** Use this class to interact */
-class ChimpagneAccountManager(private val accounts: CollectionReference) {
+class ChimpagneAccountManager(private val accounts: CollectionReference, private val profilePictures: StorageReference) {
 
   /**
    * This field stores the current logged user's account, you can retrieve it from any class using
@@ -38,23 +39,36 @@ class ChimpagneAccountManager(private val accounts: CollectionReference) {
   }
 
   /**
-   * Retrieve an account from Firebase with the specified email
+   * Retrieve an account from Firebase with the specified Firebase Auth Id
    *
-   * @param email It's in the name
+   * @param uid a Firebase User UID (see https://console.firebase.google.com/u/0/project/chimpagneapp/authentication/users)
    * @param onSuccess(account) Called when the request is successful. Warning: account could be null
-   *   if there is no account associated with the given email
+   *   if there is no account associated with the given id
    * @param onFailure(exception) Called in case of... failure
    */
-  fun getAccountByEmail(
-      email: String,
+  fun getAccount(
+      uid: String,
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     accounts
-        .document(email)
+        .document(uid)
         .get()
         .addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
         .addOnFailureListener { onFailure(it) }
+  }
+
+  fun getAccountWithProfilePicture(
+    uid: String,
+    onSuccess: (ChimpagneAccount?, Uri?) -> Unit,
+    onFailure: (Exception) -> Unit
+  ) {
+    getAccount(uid, { account ->
+      if (account == null) onSuccess(null, null)
+      else downloadProfilePicture(
+        account.firebaseAuthUID,
+      ) { uri -> onSuccess(account, uri) }
+    }, onFailure)
   }
 
   /** Puts the given account to Firebase and updates [currentUserAccount] accordingly */
@@ -63,12 +77,8 @@ class ChimpagneAccountManager(private val accounts: CollectionReference) {
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    if (currentUserAccount != null && account.email != currentUserAccount!!.email) {
-      accounts.document(currentUserAccount!!.email).delete()
-    }
-
     accounts
-        .document(account.email)
+        .document(account.firebaseAuthUID)
         .set(account)
         .addOnSuccessListener {
           currentUserAccount = account
@@ -77,24 +87,40 @@ class ChimpagneAccountManager(private val accounts: CollectionReference) {
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun uploadImage(uri: Uri, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
-    val imageRef = Firebase.storage.reference.child("images/${uri.lastPathSegment}")
+  fun updateCurrentAccount(
+    account: ChimpagneAccount,
+    profilePicture: Uri?,
+    onSuccess: () -> Unit,
+    onFailure: (Exception) -> Unit
+  ) {
+    if (profilePicture == null) {
+      updateCurrentAccount(account, onSuccess, onFailure)
+    } else {
+      uploadProfilePicture(account, profilePicture, {
+        updateCurrentAccount(account, onSuccess, onFailure)
+      }, onFailure)
+    }
+  }
+
+  private fun uploadProfilePicture(account: ChimpagneAccount, uri: Uri, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
+//    profilePictures.child(account.firebaseAuthUID).delete()
+    val imageRef = profilePictures.child(account.firebaseAuthUID)
     imageRef
         .putFile(uri)
         .addOnSuccessListener {
-          imageRef.downloadUrl.addOnSuccessListener { dowloadURL ->
-            Log.d("ChimpagneAccountManager", "Uploaded image to: $dowloadURL")
-            onSuccess(dowloadURL.toString())
+          imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+            Log.d("ChimpagneAccountManager", "Uploaded image to: $downloadUrl")
+            onSuccess(downloadUrl.toString())
           }
         }
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun downloadImage(link: String, onSuccess: (Uri) -> Unit, onFailure: (Exception) -> Unit) {
-    Firebase.storage
-        .getReferenceFromUrl(link)
+  private fun downloadProfilePicture(uid: String, onSuccess: (Uri?) -> Unit) {
+    profilePictures.child(uid)
         .downloadUrl
         .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
-        .addOnFailureListener { onFailure(it) }
+        .addOnFailureListener { onSuccess(null) }
+
   }
 }

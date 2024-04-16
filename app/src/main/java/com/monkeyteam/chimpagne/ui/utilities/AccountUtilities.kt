@@ -57,32 +57,6 @@ fun TextInputField(
 }
 
 @Composable
-fun LanguageSwitch(
-    modifier: Modifier = Modifier,
-    isEnglish: Boolean,
-    onToggleLanguage: (Boolean) -> Unit
-) {
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    Text("Language")
-    Spacer(modifier = Modifier.width(16.dp))
-    Switch(
-        modifier = modifier,
-        checked = isEnglish,
-        onCheckedChange = onToggleLanguage,
-        thumbContent = {
-          if (isEnglish) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_english),
-                contentDescription = "English")
-          } else {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_french), contentDescription = "French")
-          }
-        })
-  }
-}
-
-@Composable
 fun SaveChangesButton(
     onClick: () -> Unit,
     text: Int,
