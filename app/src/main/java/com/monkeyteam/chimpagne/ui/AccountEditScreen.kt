@@ -43,15 +43,9 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
   AccountChangeBody(
       topBarText = R.string.accountEditScreenButton,
       hasBackButton = true,
-      selectedImageUri = accountViewModelState.tempAccount.profilePictureUri,
-      onPickImage = { /*pickProfilePicture.launch(PickVisualMediaRequest()) TODO put back for sprint4*/
-        Toast.makeText(context, "This feature is not available at this time", Toast.LENGTH_SHORT)
-            .show()
-      },
-      firstName = accountViewModelState.tempAccount.firstName,
-      selectedImageUri = accountViewModel.tempImageUri.collectAsState().value,
+      selectedImageUri = accountViewModelState.tempImageUri,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
-      firstName = tempAccount.firstName,
+      firstName = accountViewModelState.tempAccount.firstName,
       firstNameLabel = R.string.account_creation_screen_first_name,
       firstNameChange = accountViewModel::updateFirstName,
       lastName = accountViewModelState.tempAccount.lastName,
@@ -63,27 +57,23 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       commitButtontext = R.string.accountEditScreenButton,
       commitButtonIcon = R.drawable.edit_pen,
       commitOnClick = {
-        accountViewModel.submitUpdatedAccount()
-        navObject.clearAndNavigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-      },
-      commitOnClick = {
-          if (checkNotEmpty(tempAccount,context)){
-              navObject.navigateTo(Route.LOADING)
-              accountViewModel.putUpdatedAccount(
-                  onSuccess = {
-                      // Delete last location of navobject
-                      navObject.popBackStack()
-                      navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-                      Toast.makeText(context, "Account updated", Toast.LENGTH_SHORT).show()
-                  },
-                  onFailure = {
-                      navObject.popBackStack()
-                      navObject.navigateTo(Route.HOME_SCREEN)
-                      Toast.makeText(context, "Failed to update account", Toast.LENGTH_SHORT).show()
-                  })
-          }else{
-                Log.d("AccountEdit", "Account update failed")
-          }
+        if (checkNotEmpty(accountViewModelState.tempAccount, context)) {
+          navObject.navigateTo(Route.LOADING)
+          accountViewModel.submitUpdatedAccount(
+              onSuccess = {
+                // Delete last location of navobject
+                navObject.popBackStack()
+                navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+                Toast.makeText(context, "Account updated", Toast.LENGTH_SHORT).show()
+              },
+              onFailure = {
+                navObject.popBackStack()
+                navObject.navigateTo(Route.HOME_SCREEN)
+                Toast.makeText(context, "Failed to update account", Toast.LENGTH_SHORT).show()
+              })
+        } else {
+          Log.d("AccountEdit", "Account update failed")
+        }
       },
       navObject = navObject)
 }

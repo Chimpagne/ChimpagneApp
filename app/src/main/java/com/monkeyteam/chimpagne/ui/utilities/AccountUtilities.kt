@@ -128,7 +128,6 @@ fun AccountChangeBody(
     commitButtontext: Int,
     commitButtonIcon: Int,
     commitOnClick: () -> Unit = {},
-    to_navigate_next: String,
     navObject: NavigationActions,
 ) {
   Scaffold(

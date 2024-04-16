@@ -32,7 +32,7 @@ class AccountViewModel(
             Log.d("AccountViewModel", "Fetched user account: $it")
             _uiState.value = _uiState.value.copy(currentUserAccount = it)
             if (it != null) accountManager.signInTo(it)
-              getPicture()
+            // getPicture()
             onSuccess(it)
           },
           onFailure = {
@@ -54,82 +54,63 @@ class AccountViewModel(
       return
     }
 
+    var account = _uiState.value.tempAccount
+
     viewModelScope.launch {
-
-        if (_tempImageUri.value == null) {
-            Log.e("AccountViewModel", "No image to upload")
-            uploadAccount(tempAccount, onSuccess, onFailure)
-        } else {
-            Log.d(
-                "AccountViewModel",
-                "Image url account before: ${_tempAccount.value.profilePictureLink}")
-            accountManager.uploadImage(
-                _tempImageUri.value!!,
-                onSuccess = { downloadUrl ->
-                    tempAccount = tempAccount.copy(profilePictureLink = downloadUrl)
-                    _imageUri.value = _tempImageUri.value
-                    uploadAccount(tempAccount, onSuccess, onFailure)
-                },
-                onFailure = {
-                    Log.e("AccountViewModel", "Failed to upload image", it)
-                    uploadAccount(tempAccount, onSuccess, onFailure)
-                })
-        }
-    }
-
-
-      accountManager.updateCurrentAccount(
-          account = updatedAccount,
-          onSuccess = {
-            Log.d("AccountViewModel", "Account updated")
-            _uiState.value = _uiState.value.copy(currentUserAccount = updatedAccount)
-            onSuccess()
+      accountManager.uploadImage(
+          _uiState.value.tempImageUri!!,
+          onSuccess = { downloadUrl ->
+            _uiState.value.tempAccount =
+                _uiState.value.tempAccount.copy(profilePictureLink = downloadUrl)
+            _uiState.value.imageUri = _uiState.value.tempImageUri
+            uploadAccount(account, onSuccess, onFailure)
           },
-          onFailure = { exception ->
-            Log.e("AccountViewModel", "Failed to update account", exception)
-            onFailure(exception)
+          onFailure = {
+            Log.e("AccountViewModel", "Failed to upload image", it)
+            uploadAccount(account, onSuccess, onFailure)
           })
     }
   }
-private fun uploadAccount(
-    tempAccount: ChimpagneAccount,
-    onSuccess: () -> Unit = {},
-    onFailure: (Exception) -> Unit = {}
-) {
-    accountManager.updateAccount(
+
+  private fun uploadAccount(
+      tempAccount: ChimpagneAccount,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    accountManager.updateCurrentAccount(
         account = tempAccount,
         onSuccess = {
-            Log.d("AccountViewModel", "Account updated")
-            Log.d("AccountViewModel", "Imague url account after: ${tempAccount.profilePictureLink}")
-            _userAccount.value = tempAccount
-            onSuccess()
+          Log.d("AccountViewModel", "Account updated")
+          _uiState.value = _uiState.value.copy(currentUserAccount = tempAccount)
+          onSuccess()
         },
         onFailure = { exception ->
-            Log.e("AccountViewModel", "Failed to update account", exception)
-            onFailure(exception)
+          Log.e("AccountViewModel", "Failed to update account", exception)
+          onFailure(exception)
         })
-}
+  }
 
   fun copyRealToTemp() {
-    _tempAccount.value = _userAccount.value
-    _tempImageUri.value = _imageUri.value
+    _uiState.value.tempAccount = _uiState.value.currentUserAccount!!
+    _uiState.value.tempImageUri = _uiState.value.imageUri
+  }
 
-  private fun updateTempAccount(newTempAccount: ChimpagneAccount) {
+  fun updateTempAccount(newTempAccount: ChimpagneAccount) {
     _uiState.value = _uiState.value.copy(tempAccount = newTempAccount)
   }
 
   fun updatePicture(uri: Uri) {
-    _tempImageUri.value = uri
+    _uiState.value.tempImageUri = uri
     Log.d("AccountViewModel", "Updated profile picture URI to $uri")
   }
 
   fun getPicture() {
-    if (userChimpagneAccount.value.profilePictureLink != "") {
+    if (_uiState.value.currentUserAccount!!.profilePictureLink != "") {
       accountManager.downloadImage(
-          userChimpagneAccount.value.profilePictureLink,
+          _uiState.value.currentUserAccount!!.profilePictureLink,
           onSuccess = {
             Log.d("AccountViewModel", "Got image from link: $it")
-            _imageUri.value = it
+            _uiState.value.imageUri = it
           },
           onFailure = { Log.e("AccountViewModel", "Failed to get image from link", it) })
     }
@@ -160,6 +141,6 @@ data class AccountUIState(
     var currentUserAccount: ChimpagneAccount? = null,
     var currentUserEmail: String? = null,
     var tempAccount: ChimpagneAccount = ChimpagneAccount(),
-    val imageUri: Uri? = null,
-    val tempImageUri: Uri? = null
+    var imageUri: Uri? = null,
+    var tempImageUri: Uri? = null
 )

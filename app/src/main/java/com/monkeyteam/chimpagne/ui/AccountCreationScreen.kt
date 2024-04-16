@@ -4,7 +4,6 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,7 +20,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
   val accountViewModelState by accountViewModel.uiState.collectAsState()
-    val context = LocalContext.current
+  val context = LocalContext.current
   val pickProfilePicture =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.PickVisualMedia(),
@@ -51,25 +50,21 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
       commitButtontext = R.string.account_creation_screen_button,
       commitButtonIcon = R.drawable.ic_logout,
       commitOnClick = {
-        accountViewModel.submitUpdatedAccount()
-        navObject.clearAndNavigateTo(Route.HOME_SCREEN)
-      },
-      commitOnClick = {
-          if (checkNotEmpty(tempAccount, context)){
-              navObject.navigateTo(Route.LOADING)
-              accountViewModel.createAccount(
-                  onSuccess = {
-                      navObject.navigateTo(Route.HOME_SCREEN)
-                      Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
-                  },
-                  onFailure = {
-                      navObject.navigateTo(Route.LOGIN_SCREEN)
-                      Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
-                  })
-          }else{
-                Log.d("AccountCreation", "Account creation failed")
-              navObject.popBackStack()
-          }
+        if (checkNotEmpty(accountViewModelState.tempAccount, context)) {
+          navObject.navigateTo(Route.LOADING)
+          accountViewModel.submitUpdatedAccount(
+              onSuccess = {
+                navObject.navigateTo(Route.HOME_SCREEN)
+                Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
+              },
+              onFailure = {
+                navObject.navigateTo(Route.LOGIN_SCREEN)
+                Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
+              })
+        } else {
+          Log.d("AccountCreation", "Account creation failed")
+          navObject.popBackStack()
+        }
       },
       navObject = navObject)
 }
