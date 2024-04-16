@@ -32,7 +32,7 @@ class AccountViewModel(
             Log.d("AccountViewModel", "Fetched user account: $it")
             _uiState.value = _uiState.value.copy(currentUserAccount = it)
             if (it != null) accountManager.signInTo(it)
-            // getPicture()
+            getPicture()
             onSuccess(it)
           },
           onFailure = {
