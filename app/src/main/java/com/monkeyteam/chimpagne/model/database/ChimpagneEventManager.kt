@@ -146,4 +146,16 @@ class ChimpagneEventManager(private val events: CollectionReference) {
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
-}
+
+    fun addSupplyToEvent(
+        event: ChimpagneEvent,
+        supplyItemId: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        getEventById(event.id, onSuccess={
+            if (it != null){
+                events.document(event.id).update("supplies", it.supplies +(supplyItemId)).addOnSuccessListener { onSuccess(); }
+            }
+        }, onFailure=onFailure)
+    }}

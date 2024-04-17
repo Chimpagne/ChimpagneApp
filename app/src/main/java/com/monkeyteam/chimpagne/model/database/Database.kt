@@ -11,14 +11,14 @@ class Database {
   private val db = Firebase.firestore
   private val events = db.collection(TABLES.EVENTS)
   private val accounts = db.collection(TABLES.ACCOUNTS)
-  private val groceries = db.collection(TABLES.GROCERIES)
+  private val supplies = db.collection(TABLES.SUPPLIES)
   val eventManager = ChimpagneEventManager(events)
   val accountManager = ChimpagneAccountManager(accounts)
-  val groceryManager = ChimpagneGroceryItemManager(groceries)
+  val suppliesManager = ChimpagneSuppliesManager(supplies)
 }
 
 private object TABLES {
   val EVENTS = "events"
   val ACCOUNTS = "accounts"
-  val GROCERIES = "groceries"
+  val SUPPLIES = "supplies"
 }

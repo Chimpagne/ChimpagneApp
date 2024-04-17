@@ -1,9 +1,9 @@
 package com.monkeyteam.chimpagne.model.database
 
-data class ChimpagneGroceryItem(
-    val id: String = "",
+data class ChimpagneSupply(
+    var id: String = "",
     val description: String = "",
-    val quantity: Float = 0.0f,
+    val quantity: Int = 0,
     val unit: String = "",
     // guest: <is_Assigned_this_grocery>
     val assignedTo: Map<String, Boolean> = hashMapOf(),

@@ -27,8 +27,8 @@
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
     <string name="event_creation_screen_public_legend">Event Publicity</string>
-    <string name="event_creation_screen_groceries">Groceries</string>
-    <string name="event_creation_screen_add_groceries">Add groceries</string>
+    <string name="event_creation_screen_groceries">Supplies</string>
+    <string name="event_creation_screen_add_groceries">Add supplies</string>
     <string name="event_creation_screen_logistics">Logistics</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Number of parking places</string>
@@ -49,6 +49,10 @@
     <string name="find_event_near_me_toast">Locating you…</string>
     <string name="search_location">Search for a location</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
-
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantity</string>
+    <string name="supplies_unit">Unit</string>
+    <string name="chimpagne_cancel">Cancel</string>
+    <string name="chimpagne_add">Add</string>
 
 </resources>

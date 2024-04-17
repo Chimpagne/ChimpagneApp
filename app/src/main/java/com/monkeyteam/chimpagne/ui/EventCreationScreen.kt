@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,20 +29,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -51,6 +57,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
@@ -61,7 +68,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroceryPopup(
+fun SupplyPopup(
     onDismissRequest: () -> Unit,
     onSave: (String, Int, String) -> Unit
 ) {
@@ -75,43 +82,48 @@ fun GroceryPopup(
                 modifier = Modifier.padding(8.dp)
             ) {
                 TextField(
+                    maxLines = 1,
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = { Text(stringResource(id = R.string.supplies_description)) },
+                    modifier = Modifier.fillMaxWidth().testTag("supplies_description_field")
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
+
                     value = quantity,
                     onValueChange = { quantity = it },
-                    label = { Text("Quantity") },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    label = { Text(stringResource(id = R.string.supplies_quantity)) },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
                     keyboardActions = KeyboardActions(onDone = { /* Handle Done action */ }),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().testTag("supplies_quantity_field")
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
+                    maxLines = 1,
                     value = unit,
                     onValueChange = { unit = it },
-                    label = { Text("Unit") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = { Text(stringResource(id = R.string.supplies_unit)) },
+                    modifier = Modifier.fillMaxWidth().testTag("supplies_unit_field")
                 )
                 Row {
-                    TextButton(
+                    Button(
                         onClick = {
                             onDismissRequest()
-                        }
+                        },
+                        modifier = Modifier.testTag("supplies_cancel_button")
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(id = R.string.chimpagne_cancel))
                     }
 
-                    TextButton(
+                    Button(
                         onClick = {
                             onSave(description, quantity.toIntOrNull() ?: 0, unit)
                             onDismissRequest()
-                        }
+                        },
+                        modifier = Modifier.testTag("supplies_add_button")
                     ) {
-                        Text("Add")
+                        Text(stringResource(id = R.string.chimpagne_add))
                     }
                 }
             }
@@ -138,6 +150,8 @@ fun EventCreationScreen(
 
   val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
+    val suppliesRememberList = remember { mutableStateListOf<ChimpagneSupply>() }
+
   val context = LocalContext.current
   Column {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
@@ -148,7 +162,7 @@ fun EventCreationScreen(
       when (page) {
         0 -> FirstPanel(eventViewModel)
         1 -> SecondPanel(eventViewModel)
-        2 -> ThirdPanel(eventViewModel)
+        2 -> ThirdPanel(eventViewModel, suppliesRememberList)
         3 -> FourthPanel(eventViewModel)
       }
     }
@@ -178,6 +192,7 @@ fun EventCreationScreen(
       } else {
         Button(
             onClick = {
+                eventViewModel.uiState.value.supplies = suppliesRememberList.map { s -> s.id }
               if (!uiState.loading) {
                 Toast.makeText(
                         context,
@@ -215,6 +230,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         "Title")
     Spacer(Modifier.height(16.dp))
     OutlinedTextField(
+        isError = uiState.title.isNotEmpty(),
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
@@ -321,8 +337,11 @@ fun SecondPanel(eventViewModel: EventViewModel) {
 }
 
 @Composable
-fun ThirdPanel(eventViewModel: EventViewModel) {
+fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotStateList<ChimpagneSupply>) {
   val context = LocalContext.current
+    var showAddDialog = remember {
+        mutableStateOf(false)
+    }
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_groceries),
@@ -331,19 +350,41 @@ fun ThirdPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
     Button(
         onClick = {
-          Toast.makeText(
-                  context,
-                  context.getString(R.string.event_creation_screen_gorceries_toast),
-                  Toast.LENGTH_SHORT)
-              .show()
+         showAddDialog.value = true
         },
         modifier = Modifier.testTag("add_groceries_button")) {
+
           Text(stringResource(id = R.string.event_creation_screen_add_groceries))
         }
+
+      if(showAddDialog.value){
+
+          SupplyPopup(
+              onDismissRequest = { showAddDialog.value = false },
+              onSave = {supplyDescription, supplyQuantity, supplyUnit ->
+                  eventViewModel.registerSupply(
+                      onSuccess={supply: ChimpagneSupply -> suppliesRememberList.add(supply) },
+                      onFailure = {},
+                      supply = ChimpagneSupply(description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit))
+              }
+          )
+
+      }
+
     Spacer(modifier = Modifier.height(16.dp))
-    LazyColumn {
-      // Populate with groceries items
-    }
+      LazyColumn {
+          items(suppliesRememberList) { item ->
+
+              ListItem(headlineContent = { Text(
+                  text = item.description,
+              ) }, trailingContent= {
+                  Text(
+                      text = item.quantity.toString() + " "+item.unit,
+                      color = Color.LightGray
+                  )
+              })
+          }
+      }
   }
 }
 

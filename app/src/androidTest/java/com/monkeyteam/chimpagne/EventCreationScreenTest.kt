@@ -1,5 +1,9 @@
 package com.monkeyteam.chimpagne
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -11,7 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
+import com.monkeyteam.chimpagne.ui.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import kotlinx.coroutines.delay
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -61,62 +67,6 @@ class EventCreationScreenTest {
       EventCreationScreen(1, navActions)
     }
   }
-  /*
-  @Test
-  fun testFirstPanelContent() {
-    var titleLegendS = ""
-    var descriptionLegendS = ""
-    var locationLegendS = ""
-    var startDateLegendS = ""
-    var endDateLegendS = ""
-    // Given
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions)
-      val context = LocalContext.current
-      titleLegendS = context.getString(R.string.event_creation_screen_title_legend)
-      descriptionLegendS = context.getString(R.string.event_creation_screen_description_legend)
-      locationLegendS = context.getString(R.string.event_creation_screen_location_legend)
-      startDateLegendS = context.getString(R.string.event_creation_screen_start_date_legend)
-      endDateLegendS = context.getString(R.string.event_creation_screen_end_date_legend)
-    }
-
-    // When - Then
-    composeTestRule.onNodeWithText(titleLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(descriptionLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(locationLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(startDateLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(endDateLegendS).assertIsDisplayed()
-
-    // You can add more detailed tests here for interactions and assertions
-  }*/
-  /*
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣤⣤⣠⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⢰⣤⡀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⡿⢿⡿⢻⣿⠿⣿⡿⢿⡿⠿⣿⣿⣆⠀⠀⠀⠀⠀⣀⣠⣤⣴⣶⣶⣶⣶⣶⣶⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠸⣿⣿⠄⠀⢀⣠⣴⣶⣿⡿⢿⣟⠸⣿⣶⣿⣷⣾⣿⣷⣿⣿⣾⣿⣷⣿⣿⣿⣦⣴⣶⣾⣿⣿⣿⣿⣿⡿⠿⠛⠋⠉⠙⠿⢿⣄⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀
-  ⠀⠉⣿⣷⣿⣿⣿⣟⢻⣷⣦⣿⣿⣿⣿⣿⠟⢻⣯⣉⣿⣟⣻⣿⣻⣿⡛⢻⣿⣿⣿⠿⠿⠛⠛⠋⠁⠀⠀⠀⣀⣀⣀⣀⣀⣀⣿⣿⡿⠿⠿⠿⠿⠿⣿⡇⠀⠀⠀⠀
-  ⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⠟⣻⣯⣴⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⢀⣀⣀⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀
-  ⠀⠀⠈⣿⣿⣿⣿⣿⣯⣀⣿⣷⣿⣿⣿⠿⣿⣭⣽⣷⣤⣷⣦⣶⣦⣼⣏⣈⣿⣿⢺⣶⣿⣿⣿⣿⣿⡿⠟⠛⠋⠉⠉⠀⠉⠉⠙⣤⣤⣶⣶⣶⣶⣶⣾⡇⠀⠀⠀⠀
-  ⠀⠀⠀⠙⣿⣇⣿⣿⣿⣿⠿⢿⣏⣰⣿⣶⣿⣿⣿⠿⣿⠿⣿⡿⢿⡿⠿⠿⠿⣿⣎⡿⠿⠟⠛⠉⠁⠀⠀⢀⣀⣤⣤⣤⣤⣤⣀⣹⣿⠿⠿⠟⠛⠛⠻⡇⠀⠀⠀⠀
-  ⠀⠀⠀⠀⢻⣿⡎⢻⣿⣿⣦⣾⣿⣿⡿⢿⡋⢹⣷⣴⣿⣶⣿⣷⣾⣿⣾⣿⣶⣿⣿⠀⠀⠀⣀⣠⣤⣶⣾⣿⣿⣿⠿⠿⠿⠿⠿⣧⠀⢀⣀⣀⣀⣀⣠⣷⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠈⢿⣷⡄⢻⣿⣿⣟⠉⣷⣤⣽⣷⣿⡿⠿⠛⠋⠉⠉⠀⠀⠀⠀⠀⠀⠉⢸⣿⣿⣿⣿⣿⠿⠟⠋⠀⠀⢀⣀⣀⣀⣂⣸⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠘⣿⣧⠀⠹⣿⣿⣷⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⣀⣀⣀⣀⣠⣀⣀⣀⣸⠛⠛⠋⠉⠀⠀⢀⣤⣶⣾⣿⣿⣿⣿⣿⣿⡛⠉⠉⠉⠉⠀⠈⣿⡀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⢻⣿⠛⠉⠀⠀⠀⢀⣠⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣤⣴⣶⣿⣿⣿⠿⠛⠋⠁⠀⠀⠀⢈⣷⣶⣶⣶⣶⣶⣶⣿⡆⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⢻⣿⡄⠀⣿⡆⠀⣀⣴⣾⣿⣿⣿⠿⠋⠉⠉⠀⠀⠀⠀⠀⠀⠀⢹⣿⠿⠿⠿⠛⠋⠁⠀⢀⣠⣶⣶⣶⣶⣶⣶⣾⠟⠛⠉⠉⠉⠉⢹⡇⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠘⣿⣷⠀⢸⣿⣿⣿⡿⠿⠛⠁⠀⠀⢀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣾⠁⠀⠀⣀⣀⣤⣴⣾⣿⡿⠿⠛⠛⠛⠛⠛⠛⣀⣀⣤⣤⣤⣴⣾⣿⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⣿⣟⠉⠀⠀⢀⣠⣴⣾⣿⡿⠿⠿⠿⠟⠛⠛⠛⠛⠛⣿⣿⣿⣿⣿⡿⠿⠛⠉⠀⣀⣠⣤⣤⣬⣤⣴⣿⡿⠟⠛⠛⠉⠉⢹⣧⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⡆⠸⣿⣀⣴⣶⣿⡿⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡟⠉⠉⠉⠁⠀⣀⣠⣴⣾⣿⣿⠿⠿⠿⠿⢿⡇⠀⠀⣀⣠⣤⣤⣬⣿⡀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⣿⡿⠟⠋⠁⠀⢀⣀⣤⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣇⣤⣤⣶⣶⡿⠿⠛⠉⠁⠀⠀⢀⣀⣀⡀⠀⠾⣿⣿⣿⡿⠿⠿⠿⠿⣧⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣿⣧⢸⣷⠀⣠⣴⣾⣿⣿⣿⣿⡿⠿⠟⠛⠉⠉⠉⠀⢸⡿⠿⠛⠉⠁⢀⣀⣤⣶⣾⣿⣿⣿⠿⠿⠿⠿⣿⣿⠁⠀⠀⠀⠀⠀⠀⣿⡀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣾⣿⣿⣿⣿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠁⢀⣠⣴⣾⡿⠿⠛⠋⠉⠀⠀⠀⠀⠀⠀⣼⡿⢁⣀⣤⣴⣶⣿⠿⠿⠿⠷
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡿⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡿⠿⠟⠋⠁⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-     */
   @Test
   fun testSecondPanelContent() {
     var tagsLegendS = ""
@@ -139,6 +89,107 @@ class EventCreationScreenTest {
 
     // You can add more detailed tests here for interactions and assertions
   }
+
+  @Test
+  fun testSupplyPopup() {
+    var descriptionLabelS = ""
+    var quantityLabelS = ""
+    var unitLabelS = ""
+    var cancelButtonS = ""
+    var addButtonS = ""
+
+    // Given
+    composeTestRule.setContent {
+      val context = LocalContext.current
+      descriptionLabelS = context.getString(R.string.supplies_description)
+      quantityLabelS = context.getString(R.string.supplies_quantity)
+      unitLabelS = context.getString(R.string.supplies_unit)
+      cancelButtonS = context.getString(R.string.chimpagne_cancel)
+      addButtonS = context.getString(R.string.chimpagne_add)
+
+      var showPopup by remember { mutableStateOf(true) }
+      if (showPopup) {
+        SupplyPopup(
+          onDismissRequest = { showPopup = false },
+          onSave = { _, _, _ -> }
+        )
+      }
+    }
+
+    // When - Then
+    composeTestRule.onNodeWithText(descriptionLabelS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(quantityLabelS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(unitLabelS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(cancelButtonS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(addButtonS).assertIsDisplayed()
+
+    // Enter values in the text fields
+    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Description")
+    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("10")
+    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("kg")
+
+    // Click the "Add" button
+    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
+
+    // Verify that the popup is dismissed
+    composeTestRule.onNodeWithText(descriptionLabelS).assertDoesNotExist()
+  }
+
+  @Test
+  fun testEventCreationScreenSupplyFunctionality() {
+    var groceriesTitleS = ""
+    var addGroceriesButtonS = ""
+    var suppliesDescriptionS = ""
+    var suppliesQuantityS = ""
+    var suppliesUnitS = ""
+    var chimpagneCancelS = ""
+    var chimpagneAddS = ""
+
+    // Given
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(2, navActions)
+
+      val context = LocalContext.current
+      groceriesTitleS = context.getString(R.string.event_creation_screen_groceries)
+      addGroceriesButtonS = context.getString(R.string.event_creation_screen_add_groceries)
+      suppliesDescriptionS = context.getString(R.string.supplies_description)
+      suppliesQuantityS = context.getString(R.string.supplies_quantity)
+      suppliesUnitS = context.getString(R.string.supplies_unit)
+      chimpagneCancelS = context.getString(R.string.chimpagne_cancel)
+      chimpagneAddS = context.getString(R.string.chimpagne_add)
+    }
+
+    // When - Then
+    composeTestRule.onNodeWithText(groceriesTitleS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(addGroceriesButtonS).assertIsDisplayed()
+
+    // Click the "Add Groceries" button
+    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+
+    // Verify that the supply popup is displayed
+    composeTestRule.onNodeWithText(suppliesDescriptionS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(suppliesQuantityS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(suppliesUnitS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(chimpagneCancelS).assertIsDisplayed()
+    composeTestRule.onNodeWithText(chimpagneAddS).assertIsDisplayed()
+
+    // Enter values in the text fields
+    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply")
+    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
+    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("units")
+
+    // Click the "Add" button
+    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
+    Thread.sleep(2000)
+    // Verify that the supply item is added to the list
+    composeTestRule.onNodeWithText("Test Supply").assertIsDisplayed()
+    composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
+
+  }
+
+
 
   @Test
   fun testMakeEventPublicButtonShowsToast() {

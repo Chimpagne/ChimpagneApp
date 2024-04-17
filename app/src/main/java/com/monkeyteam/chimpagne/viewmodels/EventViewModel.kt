@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
+import com.monkeyteam.chimpagne.model.database.ChimpagneSuppliesManager
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
@@ -16,7 +18,8 @@ class EventViewModel(
     eventID: String? = null,
     onSuccess: () -> Unit = {},
     onFailure: (Exception) -> Unit = {},
-    private val eventManager: ChimpagneEventManager = Database.instance.eventManager
+    private val eventManager: ChimpagneEventManager = Database.instance.eventManager,
+    private val supplyManager: ChimpagneSuppliesManager = Database.instance.suppliesManager
 ) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
@@ -47,7 +50,7 @@ class EventViewModel(
                       it.location,
                       it.public,
                       it.tags,
-                      it.groceries,
+                      it.supplies,
                       it.guests,
                       it.startsAt(),
                       it.endsAt())
@@ -57,12 +60,12 @@ class EventViewModel(
               Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
               _uiState.value = _uiState.value.copy(loading = false)
             }
-          },
-          {
-            Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
+          }
+      ) {
+          Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+      }
     }
   }
 
@@ -74,7 +77,7 @@ class EventViewModel(
         _uiState.value.location,
         _uiState.value.public,
         _uiState.value.tags,
-        _uiState.value.groceries,
+        _uiState.value.supplies,
         _uiState.value.guests,
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate)
@@ -162,6 +165,57 @@ class EventViewModel(
           })
     }
   }
+    fun registerSupply(
+        onSuccess: (supply: ChimpagneSupply) -> Unit = {},
+        onFailure: (Exception) -> Unit = {},
+        supply: ChimpagneSupply
+    ) {
+        _uiState.value = _uiState.value.copy(loading = true)
+        viewModelScope.launch {
+            supplyManager.registerSupply(
+                supply,
+                {
+                    _uiState.value = _uiState.value.copy(id = it)
+                    _uiState.value = _uiState.value.copy(loading = false)
+                    supply.id = it
+                    onSuccess(supply)
+                },
+                {
+                    Log.d("register supply", "Error : ", it)
+                    _uiState.value = _uiState.value.copy(loading = false)
+                    onFailure(it)
+                })
+        }
+    }
+
+    fun addSupplyToEvent(
+        supplyId: String,
+        onSuccess: () -> Unit = {},
+        onFailure: (Exception) -> Unit = {}
+    ) {
+        _uiState.value = _uiState.value.copy(loading = true)
+        viewModelScope.launch {
+            eventManager.addSupplyToEvent(
+                buildChimpagneEvent(),
+                supplyId,
+                {
+                    fetchEvent(
+                        id = _uiState.value.id,
+                        onSuccess = {
+                            _uiState.value = _uiState.value.copy(loading = false)
+                            onSuccess()
+                        },
+                        onFailure = {
+                            _uiState.value = _uiState.value.copy(loading = false)
+                            onFailure(it)
+                        })
+                },
+                {
+                    _uiState.value = _uiState.value.copy(loading = false)
+                    onFailure(it)
+                })
+        }
+    }
 
   fun removeGuestFromTheEvent(
       guestId: String,
@@ -229,11 +283,10 @@ data class EventUIState(
     val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = emptyList(),
-    val groceries: List<String> = emptyList(),
+    var supplies: List<String> = emptyList(),
     val guests: Map<String, Boolean> = emptyMap(),
     val startsAtCalendarDate: Calendar = Calendar.getInstance(),
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
 ) {
-
 }
