@@ -12,6 +12,7 @@ object Route {
   const val FIND_AN_EVENT_SCREEN = "FindAnEvent"
   const val LOADING = "loading"
   const val EVENT_CREATION_SCREEN = "EVENT_CREATION_SCREEN"
+  const val MY_EVENTS_SCREEN = "myEvents"
 }
 
 class NavigationActions(private val navController: NavHostController) {

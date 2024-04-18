@@ -26,12 +26,14 @@ import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
+import com.monkeyteam.chimpagne.ui.MyEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 
 class MainActivity : ComponentActivity() {
   @OptIn(ExperimentalMaterial3Api::class)
@@ -112,6 +114,9 @@ class MainActivity : ComponentActivity() {
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
             composable(Route.FIND_AN_EVENT_SCREEN) { MainFindEventScreen(navObject = navActions) }
             composable(Route.EVENT_CREATION_SCREEN) { EventCreationScreen(navObject = navActions) }
+            composable(Route.MY_EVENTS_SCREEN) {
+              MyEventScreen(navObject = navActions, myEventsViewModel = MyEventsViewModel())
+            }
           }
         }
       }

@@ -56,13 +56,7 @@ fun HomeScreen(navObject: NavigationActions) {
             verticalArrangement = Arrangement.Center) {
               ChimpagneButton(
                   modifier = Modifier.testTag("open_events_button"),
-                  onClick = {
-                    Toast.makeText(
-                            context,
-                            context.getString(R.string.homescreen_open_my_events_toast),
-                            Toast.LENGTH_SHORT)
-                        .show()
-                  },
+                  onClick = { navObject.navigateTo(Route.MY_EVENTS_SCREEN) },
                   text = stringResource(id = R.string.homescreen_my_events),
                   fontWeight = FontWeight.Bold,
                   fontSize = 30.sp)
