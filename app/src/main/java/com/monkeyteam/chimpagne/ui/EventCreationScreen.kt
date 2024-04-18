@@ -198,6 +198,9 @@ fun EventCreationScreen(
       } else {
         Button(
             onClick = {
+                suppliesRememberList.forEach {
+                    eventViewModel.registerSupply(onSuccess = {}, onFailure = {}, it)
+                }
                 eventViewModel.uiState.value.supplies = suppliesRememberList.map { s -> s.id }
               if (!uiState.loading) {
                 Toast.makeText(
@@ -367,11 +370,11 @@ fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotSta
 
           SupplyPopup(
               onDismissRequest = { showAddDialog.value = false },
-              onSave = {supplyDescription, supplyQuantity, supplyUnit ->
-                  eventViewModel.registerSupply(
-                      onSuccess={supply: ChimpagneSupply -> suppliesRememberList.add(supply) },
-                      onFailure = {},
-                      supply = ChimpagneSupply(description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit))
+              onSave = {
+                  supplyDescription, supplyQuantity, supplyUnit ->
+                  val supply = ChimpagneSupply(description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit)
+                  suppliesRememberList.add(supply)
+
               }
           )
 
@@ -390,9 +393,8 @@ fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotSta
                   )
               }, trailingContent = {
                   IconButton(
-                      onClick = {eventViewModel.deleteSupply(item.id, onSuccess = {
-                          suppliesRememberList.remove(item)
-                      }) },
+                      onClick = {
+                          suppliesRememberList.remove(item) },
                       modifier = Modifier.testTag(item.description),
                       content = {
                           Icon(active = true, activeContent = { androidx.compose.material3.Icon(
