@@ -158,7 +158,6 @@ class EventViewModel(
                 })
           },
           {
-            Log.d("ADD GUEST TO EVENT", "Error : ", it)
             _uiState.value = _uiState.value.copy(loading = false)
             onFailure(it)
           })
@@ -180,7 +179,6 @@ class EventViewModel(
                     onSuccess(supply)
                 },
                 {
-                    Log.d("register supply", "Error : ", it)
                     _uiState.value = _uiState.value.copy(loading = false)
                     onFailure(it)
                 })
@@ -198,7 +196,6 @@ class EventViewModel(
                     onSuccess()
                           },
                 onFailure={
-                    Log.d("DELETE supply", "Error : ", it)
                     _uiState.value = _uiState.value.copy(loading = false)
                 })
         }

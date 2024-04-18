@@ -6,6 +6,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -205,7 +206,7 @@ class EventViewModelTests {
     eventSearch2VM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
   }
-    /*
+
   @Test
   fun TestAddAndRemoveGuestsFromAnEvent() {
     val eventCreationVM = EventViewModel(eventManager = eventManager)
@@ -259,5 +260,77 @@ class EventViewModelTests {
 
     eventSearchVM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-  }*/
+  }
+
+
+    @Test
+    fun TestAddSuppliesToAnEvent(): Unit {
+        val eventCreationVM = EventViewModel(eventManager = ChimpagneEventManager(Firebase.firestore.collection("testevents"), Firebase.firestore.collection("testSupplies")))
+
+        eventCreationVM.createTheEvent(
+            onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+
+        // Wait for database to get the data
+        while (eventCreationVM.uiState.value.loading) {}
+
+        val eventID = eventCreationVM.uiState.value.id
+
+        val eventSearchVM =
+            EventViewModel(
+                eventID = eventID,
+                eventManager = ChimpagneEventManager(Firebase.firestore.collection("testevents"), Firebase.firestore.collection("testSupplies")),
+                onSuccess = { assertTrue(true) },
+                onFailure = { assertTrue(false) })
+
+        // Wait for database to get the data
+        while (eventSearchVM.uiState.value.loading) {}
+
+        assertTrue(eventSearchVM.uiState.value.id == eventID)
+
+        val supplyId1 = "supply1"
+        val supplyId2 = "supply2"
+        val supplyId3 = "supply3"
+
+        eventSearchVM.addSupplyToEvent(
+            supplyId1, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+        while (eventSearchVM.uiState.value.loading) {}
+        eventSearchVM.addSupplyToEvent(
+            supplyId2, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+        while (eventSearchVM.uiState.value.loading) {}
+        eventSearchVM.addSupplyToEvent(
+            supplyId3, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+        while (eventSearchVM.uiState.value.loading) {}
+
+        val supplySet = setOf(supplyId1, supplyId2, supplyId3)
+
+        assertTrue(eventSearchVM.uiState.value.supplies.size == supplySet.size)
+        assertTrue(eventSearchVM.uiState.value.supplies.toSet() == supplySet)
+    }
+
+    @Test
+    fun TestRegisterSupply() {
+        val eventCreationVM = EventViewModel(eventManager = ChimpagneEventManager(Firebase.firestore.collection("testevents"), Firebase.firestore.collection("testSupplies")))
+
+        val supplyUnit = "kg"
+        val supplyDescription = "Test supply description"
+        val supplyQuantity = 10
+
+        val supply = ChimpagneSupply(description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit)
+
+        eventCreationVM.registerSupply(
+            onSuccess = {
+                assertTrue(it.id.isNotEmpty())
+                assertTrue(it.description == supplyDescription)
+                assertTrue(it.quantity == supplyQuantity)
+            },
+            onFailure = { assertTrue(false) },
+            supply = supply
+        )
+
+        // Wait for database to get the data
+        while (eventCreationVM.uiState.value.loading) {}
+
+        assertTrue(eventCreationVM.uiState.value.id.isNotEmpty())
+    }
 }
+
