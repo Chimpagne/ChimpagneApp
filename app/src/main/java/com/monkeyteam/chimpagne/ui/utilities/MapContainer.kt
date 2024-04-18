@@ -10,6 +10,7 @@ import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -37,6 +38,7 @@ import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.ChimpagneClustering
 import kotlin.math.ln
 
 // Function to calculate zoom level from radius in meters
@@ -95,19 +97,18 @@ fun MapContainer(
                 fillColor = Color(0x11FF0000) // Semi-transparent red
                 )
           }
+
           val markersData =
               listOf(events.map { (id, event) -> MarkerData(id, event.title, event.location) })
                   .flatten()
 
-          Clustering(
+          ChimpagneClustering(
               items = markersData,
               onClusterClick = {
                 cameraPositionState.move(CameraUpdateFactory.zoomIn())
                 false
               },
-              onClusterItemClick = { _ -> true },
-              clusterContent = { IconAsClusterContent(it) },
-              clusterItemContent = { IconAsClusterContentItem(it) })
+              onClusterItemClick = { _ -> true })
         }
   } else {
     // Display a placeholder or loading indicator
@@ -140,7 +141,7 @@ fun IconAsClusterContentItem(data: MarkerData) {
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
     Text(
         text = if (data.name.length > 16) data.name.substring(0, 13) + "..." else data.name,
-        color = Color.Red,
+        color = MaterialTheme.colorScheme.tertiary,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp)
     Icon(
@@ -148,22 +149,5 @@ fun IconAsClusterContentItem(data: MarkerData) {
         imageVector = Icons.Rounded.LocationOn,
         contentDescription = "custum icon for cluster item",
         tint = Color.Red)
-  }
-}
-
-@Composable
-fun IconAsClusterContent(cluster: Cluster<MarkerData>) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Text(
-        text = String.format("%d elements", cluster.size),
-        color = Color.Blue,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp)
-
-    Icon(
-        modifier = Modifier.size(32.dp),
-        imageVector = Icons.Rounded.LocationOn,
-        contentDescription = "custum icon for cluster",
-        tint = Color.Blue)
   }
 }

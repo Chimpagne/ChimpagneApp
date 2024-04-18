@@ -103,6 +103,7 @@ dependencies {
     testImplementation(libs.mockwebserver)
 
     implementation(libs.maps.compose)
+    implementation(libs.play.services.location)
 
     implementation(libs.coil.compose)
 

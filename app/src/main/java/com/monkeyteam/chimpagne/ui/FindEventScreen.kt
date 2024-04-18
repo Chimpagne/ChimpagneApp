@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui
 
 import DateSelector
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -49,6 +50,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,6 +74,7 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
+import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
@@ -79,6 +82,7 @@ object FindEventScreens {
   const val FORM = 0
   const val MAP = 1
 }
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
@@ -89,21 +93,30 @@ fun MainFindEventScreen(
 ) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+  val showErrorToast: () -> Unit = {
+      Toast.makeText(
+          context,
+          context.getString(R.string.find_event_fetch_error),
+          Toast.LENGTH_SHORT).show()
+  }
 
   val goToForm: () -> Unit = {
     coroutineScope.launch { pagerState.animateScrollToPage(FindEventScreens.FORM) }
   }
 
   val goToMap: () -> Unit = {
-    coroutineScope.launch {
-      findViewModel.fetchEvents()
-      pagerState.animateScrollToPage(FindEventScreens.MAP)
-    }
+    coroutineScope.launch { pagerState.animateScrollToPage(FindEventScreens.MAP) }
+  }
+
+  val fetchEvents: () -> Unit = {
+    coroutineScope.launch { findViewModel.fetchEvents(onSuccess = { goToMap() }, onFailure = {showErrorToast()}) }
   }
 
   HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
     when (page) {
-      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, goToMap)
+      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents)
       FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel)
     }
   }
@@ -145,16 +158,20 @@ fun FindEventFormScreen(
                     .height(56.dp)
                     .testTag("button_search"), // Typical height for buttons
             shape = MaterialTheme.shapes.extraLarge) {
-              Icon(Icons.Rounded.Search, contentDescription = "Search")
-              Spacer(Modifier.width(8.dp))
-              Text(
-                  stringResource(id = R.string.find_event_search_button_text),
-                  style = MaterialTheme.typography.bodyLarge)
+              if (uiState.loading) {
+                SpinnerView(MaterialTheme.colorScheme.onPrimary)
+              } else {
+                Icon(Icons.Rounded.Search, contentDescription = "Search")
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    stringResource(id = R.string.find_event_search_button_text),
+                    style = MaterialTheme.typography.bodyLarge)
+              }
             }
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
-              modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
+              modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
                 Legend(
                     stringResource(id = R.string.find_event_event_location_legend),
@@ -180,6 +197,7 @@ fun FindEventFormScreen(
                           .show()
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
+
                 Spacer(Modifier.height(16.dp))
 
                 Text(

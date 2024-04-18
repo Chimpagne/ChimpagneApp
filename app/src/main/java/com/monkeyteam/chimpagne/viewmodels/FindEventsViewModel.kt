@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
@@ -19,36 +20,55 @@ import kotlinx.coroutines.launch
 class FindEventsViewModel(
     private val eventManager: ChimpagneEventManager = Database.instance.eventManager
 ) : ViewModel() {
-  // UI state exposed to the UI
+
   private val _uiState = MutableStateFlow(FindEventsUIState())
   val uiState: StateFlow<FindEventsUIState> = _uiState
 
-  fun fetchEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      var filter =
-          Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
-      if (_uiState.value.selectedTags.isNotEmpty())
-          filter = Filter.and(filter, containsTagsFilter(_uiState.value.selectedTags))
+    fun fetchEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+        if (_uiState.value.loading) return
+        setLoading(true)
+        viewModelScope.launch {
+            try {
+                var filter =
+                    Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
+                if (_uiState.value.selectedTags.isNotEmpty())
+                    filter = Filter.and(filter, containsTagsFilter(_uiState.value.selectedTags))
 
-      if (_uiState.value.selectedLocation != null) {
-        eventManager.getAllEventsByFilterAroundLocation(
-            _uiState.value.selectedLocation!!,
-            _uiState.value.radiusAroundLocationInM,
-            {
-              _uiState.value =
-                  _uiState.value.copy(
-                      events = it.associateBy { event -> event.id }, loading = false)
-              onSuccess()
-            },
-            {
-              Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
-              _uiState.value = _uiState.value.copy(loading = false)
-              onFailure(it)
-            },
-            filter)
-      }
+                if (_uiState.value.selectedLocation != null) {
+                    eventManager.getAllEventsByFilterAroundLocation(
+                        _uiState.value.selectedLocation!!,
+                        _uiState.value.radiusAroundLocationInM,
+                        {
+                            _uiState.value =
+                                _uiState.value.copy(
+                                    events = it.associateBy { event -> event.id }, loading = false)
+                            if (it.isEmpty()) {
+                                Log.d("FETCHING EVENTS BY LOCATION QUERY", "No events found")
+                                onFailure(Exception("No events found"))
+                            } else {
+                                Log.d("FETCHING EVENTS BY LOCATION QUERY", "Success")
+                                onSuccess()
+                            }
+                        },
+                        {
+                            Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
+                            setLoading(false)
+                            onFailure(it)
+                        },
+                        filter)
+                } else {
+                    setLoading(false)
+                }
+            } catch (e: Exception) {
+                setLoading(false)
+                onFailure(e)
+            }
+        }
     }
+
+
+  private fun setLoading(loading: Boolean = true) {
+    _uiState.value = _uiState.value.copy(loading = loading)
   }
 
   fun updateSelectedLocation(location: Location) {
