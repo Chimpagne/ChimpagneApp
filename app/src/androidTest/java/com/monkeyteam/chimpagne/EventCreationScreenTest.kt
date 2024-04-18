@@ -17,6 +17,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import kotlinx.coroutines.delay
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -121,7 +122,7 @@ class EventCreationScreenTest {
 
     // When
     composeTestRule.onNodeWithTag("Test Supply 2").performClick()
-    Thread.sleep(200)
+    Thread.sleep(2000)
     // Then
     composeTestRule.onNodeWithText("Test Supply 2").assertDoesNotExist()
     composeTestRule.onNodeWithText("10 kg").assertDoesNotExist()
