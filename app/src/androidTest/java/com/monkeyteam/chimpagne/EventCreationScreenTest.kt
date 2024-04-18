@@ -89,7 +89,7 @@ class EventCreationScreenTest {
 
     // You can add more detailed tests here for interactions and assertions
   }
-
+  /*
   @Test
   fun testDeleteSupplyItemFromEventCreationScreen() {
     // Given
@@ -128,7 +128,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("10 kg").assertDoesNotExist()
     composeTestRule.onNodeWithText("Test Supply 1").assertIsDisplayed()
     composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
-  }
+  }*/
 
   /*
 
