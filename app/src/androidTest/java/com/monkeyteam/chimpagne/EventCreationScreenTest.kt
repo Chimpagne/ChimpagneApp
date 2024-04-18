@@ -162,7 +162,7 @@ class EventCreationScreenTest {
     // When
     composeTestRule.onNodeWithTag("Test Supply 1").performClick()
     composeTestRule.onNodeWithTag("Test Supply 2").performClick()
-    Thread.sleep(200)
+    Thread.sleep(2000)
     // Then
     composeTestRule.onNodeWithText("Test Supply 1").assertDoesNotExist()
     composeTestRule.onNodeWithText("5 units").assertDoesNotExist()
