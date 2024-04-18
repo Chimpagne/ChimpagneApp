@@ -11,8 +11,9 @@ import okhttp3.Response
 import org.json.JSONArray
 
 object NominatimConstants {
-    const val SCHEME = "https"
-    const val HOST = "nominatim.openstreetmap.org"
+    var SCHEME = "https"
+    var HOST = "nominatim.openstreetmap.org"
+    var PORT = 443
 }
 
 fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, limit: Int = 5) {
@@ -21,6 +22,7 @@ fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, lim
     val url = HttpUrl.Builder()
         .scheme(NominatimConstants.SCHEME)
         .host(NominatimConstants.HOST)
+        .port(NominatimConstants.PORT)
         .addPathSegment("search.php")
         .addQueryParameter("q", java.net.URLEncoder.encode(name, "UTF-8"))
         .addQueryParameter("format", "jsonv2")

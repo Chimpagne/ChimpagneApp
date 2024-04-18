@@ -83,7 +83,7 @@ dependencies {
     implementation(libs.maps.compose)
 
     testImplementation(libs.junit)
-    testImplementation(libs.mockwebserver)
+    implementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -103,6 +103,10 @@ dependencies {
     implementation(libs.maps.compose)
 
     implementation(libs.coil.compose)
+
+    // For testing the locationSelector
+    implementation(libs.mockito.core)
+    implementation(libs.mockito.inline)
 
 }
 
