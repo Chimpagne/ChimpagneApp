@@ -24,13 +24,13 @@ class AccountViewModel(
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    _uiState.value = _uiState.value.copy(currentUserUID = uid)
+    _uiState.value = _uiState.value.copy(currentUserUID = uid, loading = true)
     viewModelScope.launch {
       accountManager.getAccountWithProfilePicture(
           uid,
           onSuccess = { account, profilePicture ->
             Log.d("AccountViewModel", "Fetched user account: $account with URI: $profilePicture")
-            _uiState.value = _uiState.value.copy(currentUserAccount = account, currentUserProfilePicture = profilePicture)
+            _uiState.value = _uiState.value.copy(currentUserAccount = account, currentUserProfilePicture = profilePicture, loading = false)
             if (account != null) {
               accountManager.signInTo(account)
             }
@@ -38,6 +38,7 @@ class AccountViewModel(
           },
           onFailure = {
             Log.e("AccountViewModel", "Failed to fetch user account", it)
+            _uiState.value = _uiState.value.copy(loading = false)
             onFailure(it)
           })
     }
@@ -59,17 +60,21 @@ class AccountViewModel(
     val newProfilePictureUri =
       if (_uiState.value.tempProfilePicture != _uiState.value.currentUserProfilePicture) _uiState.value.tempProfilePicture
       else null
+
+    _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.updateCurrentAccount(newAccount, newProfilePictureUri, {
         _uiState.value = _uiState.value.copy(
           currentUserAccount = newAccount,
           tempAccount = ChimpagneAccount(),
           currentUserProfilePicture = newProfilePictureUri,
-          tempProfilePicture = null
+          tempProfilePicture = null,
+          loading = false
         )
         onSuccess()
       }, {
         Log.e("AccountViewModel", "Failed to update account", it)
+        _uiState.value = _uiState.value.copy(loading = false)
         onFailure(it)
       })
     }
@@ -113,5 +118,7 @@ data class AccountUIState(
   val currentUserAccount: ChimpagneAccount? = null,
   val tempAccount: ChimpagneAccount = ChimpagneAccount(),
   val currentUserProfilePicture: Uri? = null,
-  val tempProfilePicture: Uri? = null
+  val tempProfilePicture: Uri? = null,
+
+  val loading: Boolean = false
 )
