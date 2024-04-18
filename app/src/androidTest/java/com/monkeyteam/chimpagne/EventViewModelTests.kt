@@ -349,6 +349,18 @@ class EventViewModelTests {
   }
 
   @Test
+  fun testDeletingNonExistingSupply(): Unit {
+    val suppliesManager = Firebase.firestore.collection("testSupplies")
+    val eventCreationVM =
+        EventViewModel(
+            eventManager =
+                ChimpagneEventManager(Firebase.firestore.collection("testevents"), suppliesManager))
+
+    eventCreationVM.deleteSupply(
+        "THIS_ID_DOES_NOT_EXIST", onSuccess = {}, onFailure = { assertTrue(true) })
+  }
+
+  @Test
   fun testManager(): Unit {
     val suppliesManager = ChimpagneSuppliesManager(Firebase.firestore.collection("testSupplies"))
 
