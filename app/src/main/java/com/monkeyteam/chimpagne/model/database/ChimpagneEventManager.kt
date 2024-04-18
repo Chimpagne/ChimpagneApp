@@ -82,7 +82,7 @@ class ChimpagneEventManager(private val events: CollectionReference) {
       onFailure: (Exception) -> Unit
   ) {
     if (Database.instance.accountManager.currentUserAccount == null) {
-      onFailure(Exception("User not signed in"))
+      onFailure(NotLoggedInException())
       return
     }
 
@@ -110,28 +110,53 @@ class ChimpagneEventManager(private val events: CollectionReference) {
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun addGuestToEvent(
-      event: ChimpagneEvent,
-      user: String,
+  fun addGuest(
+      eventId: ChimpagneEventId,
+      userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     events
-        .document(event.id)
-        .update("guests.${user}", true)
+        .document(eventId)
+        .update("guests.${userUID}", true)
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun removeGuestFromEvent(
-      event: ChimpagneEvent,
-      user: String,
+  fun removeGuest(
+      eventId: ChimpagneEventId,
+      userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     events
-        .document(event.id)
-        .update("guests.${user}", FieldValue.delete())
+        .document(eventId)
+        .update("guests.${userUID}", FieldValue.delete())
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+  fun addStaff(
+    eventId: ChimpagneEventId,
+    userUID: ChimpagneAccountUID,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    events
+        .document(eventId)
+        .update("staffs.${userUID}", true)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun removeStaff(
+    eventId: ChimpagneEventId,
+    userUID: ChimpagneAccountUID,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    events
+        .document(eventId)
+        .update("staffs.${userUID}", FieldValue.delete())
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }

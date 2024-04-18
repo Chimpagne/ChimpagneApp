@@ -48,6 +48,7 @@ class EventViewModel(
                       it.public,
                       it.tags,
                       it.guests,
+                      it.staffs,
                       it.startsAt(),
                       it.endsAt())
               onSuccess()
@@ -74,6 +75,7 @@ class EventViewModel(
         _uiState.value.public,
         _uiState.value.tags,
         _uiState.value.guests,
+        _uiState.value.staffs,
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate)
   }
@@ -138,8 +140,8 @@ class EventViewModel(
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      eventManager.addGuestToEvent(
-          buildChimpagneEvent(),
+      eventManager.addGuest(
+          _uiState.value.id,
           guestId,
           {
             fetchEvent(
@@ -168,8 +170,8 @@ class EventViewModel(
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      eventManager.removeGuestFromEvent(
-          buildChimpagneEvent(),
+      eventManager.removeGuest(
+          _uiState.value.id,
           guestId,
           {
             fetchEvent(
@@ -228,6 +230,7 @@ data class EventUIState(
     val public: Boolean = false,
     val tags: List<String> = emptyList(),
     val guests: Map<String, Boolean> = emptyMap(),
+    val staffs: Map<String, Boolean> = emptyMap(),
     val startsAtCalendarDate: Calendar = Calendar.getInstance(),
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false

@@ -38,6 +38,7 @@ class EventViewModelTests {
           true,
           listOf("vegan", "wild"),
           emptyMap(),
+          emptyMap(),
           buildTimestamp(9, 5, 2024, 0, 0),
           buildTimestamp(10, 5, 2024, 0, 0))
 
@@ -136,6 +137,7 @@ class EventViewModelTests {
             false,
             listOf("magic", "wands"),
             emptyMap(),
+          emptyMap(),
             buildTimestamp(4, 1, 2025, 2, 3),
             buildTimestamp(5, 1, 2025, 2, 3))
 
