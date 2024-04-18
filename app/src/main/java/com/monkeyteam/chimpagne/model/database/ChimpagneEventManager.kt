@@ -12,7 +12,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import com.monkeyteam.chimpagne.model.location.Location
 
-class ChimpagneEventManager(private val events: CollectionReference) {
+class ChimpagneEventManager(private val events: CollectionReference, private val supplies: CollectionReference) {
   fun getAllEvents(onSuccess: (List<ChimpagneEvent>) -> Unit, onFailure: (Exception) -> Unit) {
     events
         .get()
@@ -114,6 +114,17 @@ class ChimpagneEventManager(private val events: CollectionReference) {
   }
 
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+
+      getEventById(id, onSuccess={chimpagneEvent: ChimpagneEvent? ->
+
+          val suppliesManager = ChimpagneSuppliesManager(supplies)
+          if (chimpagneEvent != null){
+              chimpagneEvent.supplies.forEach {
+                  s -> suppliesManager.deleteSupply(s, onSuccess={}, onFailure={})
+              }
+          }
+      }, onFailure={})
+
     events
         .document(id)
         .delete()

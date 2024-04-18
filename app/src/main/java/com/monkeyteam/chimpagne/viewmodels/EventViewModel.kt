@@ -117,7 +117,6 @@ class EventViewModel(
           })
     }
   }
-
   fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
@@ -184,6 +183,23 @@ class EventViewModel(
                     Log.d("register supply", "Error : ", it)
                     _uiState.value = _uiState.value.copy(loading = false)
                     onFailure(it)
+                })
+        }
+    }
+
+    fun deleteSupply(supplyId: String, onSuccess: () -> Unit) {
+        _uiState.value = _uiState.value.copy(loading = true)
+        viewModelScope.launch {
+            supplyManager.deleteSupply(
+                _uiState.value.id,
+                onSuccess={
+                    _uiState.value = EventUIState()
+                    _uiState.value = _uiState.value.copy(loading = false)
+                    onSuccess()
+                          },
+                onFailure={
+                    Log.d("DELETE supply", "Error : ", it)
+                    _uiState.value = _uiState.value.copy(loading = false)
                 })
         }
     }

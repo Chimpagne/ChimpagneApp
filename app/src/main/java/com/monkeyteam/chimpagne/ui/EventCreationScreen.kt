@@ -18,25 +18,25 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material.icons.rounded.Title
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -86,7 +86,9 @@ fun SupplyPopup(
                     value = description,
                     onValueChange = { description = it },
                     label = { Text(stringResource(id = R.string.supplies_description)) },
-                    modifier = Modifier.fillMaxWidth().testTag("supplies_description_field")
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("supplies_description_field")
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
@@ -96,7 +98,9 @@ fun SupplyPopup(
                     label = { Text(stringResource(id = R.string.supplies_quantity)) },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
                     keyboardActions = KeyboardActions(onDone = { /* Handle Done action */ }),
-                    modifier = Modifier.fillMaxWidth().testTag("supplies_quantity_field")
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("supplies_quantity_field")
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TextField(
@@ -104,7 +108,9 @@ fun SupplyPopup(
                     value = unit,
                     onValueChange = { unit = it },
                     label = { Text(stringResource(id = R.string.supplies_unit)) },
-                    modifier = Modifier.fillMaxWidth().testTag("supplies_unit_field")
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("supplies_unit_field")
                 )
                 Row {
                     Button(
@@ -336,10 +342,10 @@ fun SecondPanel(eventViewModel: EventViewModel) {
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotStateList<ChimpagneSupply>) {
-  val context = LocalContext.current
-    var showAddDialog = remember {
+    val showAddDialog = remember {
         mutableStateOf(false)
     }
   Column(modifier = Modifier.padding(16.dp)) {
@@ -377,10 +383,26 @@ fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotSta
 
               ListItem(headlineContent = { Text(
                   text = item.description,
-              ) }, trailingContent= {
+              ) }, supportingContent = {
                   Text(
                       text = item.quantity.toString() + " "+item.unit,
-                      color = Color.LightGray
+                      color = Color.Gray
+                  )
+              }, trailingContent = {
+                  IconButton(
+                      onClick = {eventViewModel.deleteSupply(item.id, onSuccess = {
+                          suppliesRememberList.remove(item)
+                      }) },
+                      modifier = Modifier.testTag(item.description),
+                      content = {
+                          Icon(active = true, activeContent = { androidx.compose.material3.Icon(
+                              imageVector = Icons.Default.Cancel,
+                              contentDescription = "Delete"
+                          )}, inactiveContent = { androidx.compose.material3.Icon(
+                              imageVector = Icons.Default.Cancel,
+                              contentDescription = "Delete"
+                          )} )
+                      }
                   )
               })
           }

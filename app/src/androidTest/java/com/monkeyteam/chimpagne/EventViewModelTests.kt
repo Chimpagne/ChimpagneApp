@@ -19,7 +19,7 @@ class EventViewModelTests {
   @get:Rule val composeTestRule = createComposeRule()
 
   private val eventManager: ChimpagneEventManager =
-      ChimpagneEventManager(Firebase.firestore.collection("testevents"))
+      ChimpagneEventManager(Firebase.firestore.collection("testevents"), Firebase.firestore.collection("testSupplies"))
 
   private val testEvent =
       ChimpagneEvent(

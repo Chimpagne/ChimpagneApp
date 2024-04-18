@@ -17,7 +17,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import kotlinx.coroutines.delay
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -89,6 +88,88 @@ class EventCreationScreenTest {
 
     // You can add more detailed tests here for interactions and assertions
   }
+
+  @Test
+  fun testDeleteSupplyItemFromEventCreationScreen() {
+    // Given
+
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(2, navActions)
+    }
+
+    // When
+    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply 1")
+    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
+    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("units")
+    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
+
+    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply 2")
+    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("10")
+    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("kg")
+    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
+
+    // Then
+    composeTestRule.onNodeWithText("Test Supply 1").assertIsDisplayed()
+    composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
+    composeTestRule.onNodeWithText("Test Supply 2").assertIsDisplayed()
+    composeTestRule.onNodeWithText("10 kg").assertIsDisplayed()
+
+    // When
+    composeTestRule.onNodeWithTag("Test Supply 2").performClick()
+    Thread.sleep(200)
+    // Then
+    composeTestRule.onNodeWithText("Test Supply 2").assertDoesNotExist()
+    composeTestRule.onNodeWithText("10 kg").assertDoesNotExist()
+    composeTestRule.onNodeWithText("Test Supply 1").assertIsDisplayed()
+    composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
+  }
+
+  @Test
+  fun testDeleteAllSupplyItemsFromEventCreationScreen() {
+
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(2, navActions)
+    }
+
+    // When
+    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply 1")
+    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
+    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("units")
+    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
+
+    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply 2")
+    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("10")
+    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("kg")
+    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
+
+    // Then
+    composeTestRule.onNodeWithText("Test Supply 1").assertIsDisplayed()
+    composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
+    composeTestRule.onNodeWithText("Test Supply 2").assertIsDisplayed()
+    composeTestRule.onNodeWithText("10 kg").assertIsDisplayed()
+
+    // When
+    composeTestRule.onNodeWithTag("Test Supply 1").performClick()
+    composeTestRule.onNodeWithTag("Test Supply 2").performClick()
+    Thread.sleep(200)
+    // Then
+    composeTestRule.onNodeWithText("Test Supply 1").assertDoesNotExist()
+    composeTestRule.onNodeWithText("5 units").assertDoesNotExist()
+    composeTestRule.onNodeWithText("Test Supply 2").assertDoesNotExist()
+    composeTestRule.onNodeWithText("10 kg").assertDoesNotExist()
+
+  }
+
 
   @Test
   fun testSupplyPopup() {
