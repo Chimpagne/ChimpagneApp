@@ -75,4 +75,34 @@ class LocationSelectorTest {
 
         assertTrue("Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
     }
+
+    @Test
+    fun testEmptyResponse() {
+        val json = "[]"
+        server.enqueue(MockResponse().setBody(json).setResponseCode(200))
+        val latch = CountDownLatch(1)
+
+        convertNameToLocations("EmptyResponse", { locations ->
+            assertTrue("Expected an empty list of locations", locations.isEmpty())
+            latch.countDown()
+        }, limit = 5)
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS))
+    }
+
+    @Test
+    fun testInvalidJsonResponse() {
+        val invalidJson = "Not a JSON"
+        server.enqueue(MockResponse().setBody(invalidJson).setResponseCode(200))
+        val latch = CountDownLatch(1)
+
+        convertNameToLocations("InvalidJSON", { locations ->
+            assertTrue("Expected an empty list of locations due to invalid JSON", locations.isEmpty())
+            latch.countDown()
+        }, limit = 5)
+
+        assertTrue(latch.await(2, TimeUnit.SECONDS))
+    }
+
 }
+

@@ -44,6 +44,11 @@ fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, lim
                     onResult(listOf())
                 } else {
                     val jsonString = response.body?.string()
+                    if (jsonString.isNullOrEmpty() || !jsonString.startsWith("[")) {
+                        Log.e("LocationHelper", "Invalid JSON response")
+                        onResult(listOf())
+                        return
+                    }
                     val jsonArray = jsonString?.let { JSONArray(it) }
                     val uniqueDisplayNames = mutableSetOf<String>()
                     val locations = mutableListOf<Location>()
@@ -51,7 +56,7 @@ fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, lim
                     if (jsonArray != null) {
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)
-                            val addressObject = jsonObject.getJSONObject("address")
+                            val addressObject = jsonObject.optJSONObject("address") ?: continue
                             val category = jsonObject.optString("category", "")
                             val country = addressObject.optString("country", "")
                             val normalizedCountry = if (country == "Schweiz/Suisse/Svizzera/Svizra") "Switzerland" else country
