@@ -68,77 +68,55 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SupplyPopup(
-    onDismissRequest: () -> Unit,
-    onSave: (String, Int, String) -> Unit
-) {
-    var description by remember { mutableStateOf("") }
-    var quantity by remember { mutableStateOf("") }
-    var unit by remember { mutableStateOf("") }
+fun SupplyPopup(onDismissRequest: () -> Unit, onSave: (String, Int, String) -> Unit) {
+  var description by remember { mutableStateOf("") }
+  var quantity by remember { mutableStateOf("") }
+  var unit by remember { mutableStateOf("") }
 
-    Dialog(
-        content = {
-            Column(
-                modifier = Modifier.padding(8.dp)
-            ) {
-                TextField(
-                    maxLines = 1,
-                    value = description,
-                    onValueChange = { description = it },
-                    label = { Text(stringResource(id = R.string.supplies_description)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("supplies_description_field")
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-
-                    value = quantity,
-                    onValueChange = { quantity = it },
-                    label = { Text(stringResource(id = R.string.supplies_quantity)) },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-                    keyboardActions = KeyboardActions(onDone = { /* Handle Done action */ }),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("supplies_quantity_field")
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TextField(
-                    maxLines = 1,
-                    value = unit,
-                    onValueChange = { unit = it },
-                    label = { Text(stringResource(id = R.string.supplies_unit)) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("supplies_unit_field")
-                )
-                Row {
-                    Button(
-                        onClick = {
-                            onDismissRequest()
-                        },
-                        modifier = Modifier.testTag("supplies_cancel_button")
-                    ) {
-                        Text(stringResource(id = R.string.chimpagne_cancel))
-                    }
-
-                    Button(
-                        onClick = {
-                            onSave(description, quantity.toIntOrNull() ?: 0, unit)
-                            onDismissRequest()
-                        },
-                        modifier = Modifier.testTag("supplies_add_button")
-                    ) {
-                        Text(stringResource(id = R.string.chimpagne_add))
-                    }
+  Dialog(
+      content = {
+        Column(modifier = Modifier.padding(8.dp)) {
+          TextField(
+              maxLines = 1,
+              value = description,
+              onValueChange = { description = it },
+              label = { Text(stringResource(id = R.string.supplies_description)) },
+              modifier = Modifier.fillMaxWidth().testTag("supplies_description_field"))
+          Spacer(modifier = Modifier.height(8.dp))
+          TextField(
+              value = quantity,
+              onValueChange = { quantity = it },
+              label = { Text(stringResource(id = R.string.supplies_quantity)) },
+              keyboardOptions =
+                  KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+              keyboardActions = KeyboardActions(onDone = { /* Handle Done action */}),
+              modifier = Modifier.fillMaxWidth().testTag("supplies_quantity_field"))
+          Spacer(modifier = Modifier.height(8.dp))
+          TextField(
+              maxLines = 1,
+              value = unit,
+              onValueChange = { unit = it },
+              label = { Text(stringResource(id = R.string.supplies_unit)) },
+              modifier = Modifier.fillMaxWidth().testTag("supplies_unit_field"))
+          Row {
+            Button(
+                onClick = { onDismissRequest() },
+                modifier = Modifier.testTag("supplies_cancel_button")) {
+                  Text(stringResource(id = R.string.chimpagne_cancel))
                 }
-            }
-        },
 
-        onDismissRequest = {
-            onDismissRequest()
+            Button(
+                onClick = {
+                  onSave(description, quantity.toIntOrNull() ?: 0, unit)
+                  onDismissRequest()
+                },
+                modifier = Modifier.testTag("supplies_add_button")) {
+                  Text(stringResource(id = R.string.chimpagne_add))
+                }
+          }
         }
-    )
+      },
+      onDismissRequest = { onDismissRequest() })
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -156,7 +134,7 @@ fun EventCreationScreen(
 
   val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
-    val suppliesRememberList = remember { mutableStateListOf<ChimpagneSupply>() }
+  val suppliesRememberList = remember { mutableStateListOf<ChimpagneSupply>() }
 
   val context = LocalContext.current
   Column {
@@ -198,10 +176,10 @@ fun EventCreationScreen(
       } else {
         Button(
             onClick = {
-                suppliesRememberList.forEach {
-                    eventViewModel.registerSupply(onSuccess = {}, onFailure = {}, it)
-                }
-                eventViewModel.uiState.value.supplies = suppliesRememberList.map { s -> s.id }
+              suppliesRememberList.forEach {
+                eventViewModel.registerSupply(onSuccess = {}, onFailure = {}, it)
+              }
+              eventViewModel.uiState.value.supplies = suppliesRememberList.map { s -> s.id }
               if (!uiState.loading) {
                 Toast.makeText(
                         context,
@@ -243,9 +221,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag("add_a_title"))
+        modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -260,9 +236,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag("add_a_description"),
+        modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
         maxLines = 3)
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -321,9 +295,7 @@ fun SecondPanel(eventViewModel: EventViewModel) {
         uiState.tags,
         eventViewModel::updateEventTags,
         { tagFieldActive = it },
-        Modifier
-            .fillMaxWidth()
-            .testTag("tag_field"))
+        Modifier.fillMaxWidth().testTag("tag_field"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -347,10 +319,11 @@ fun SecondPanel(eventViewModel: EventViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotStateList<ChimpagneSupply>) {
-    val showAddDialog = remember {
-        mutableStateOf(false)
-    }
+fun ThirdPanel(
+    eventViewModel: EventViewModel,
+    suppliesRememberList: SnapshotStateList<ChimpagneSupply>
+) {
+  val showAddDialog = remember { mutableStateOf(false) }
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_groceries),
@@ -358,57 +331,54 @@ fun ThirdPanel(eventViewModel: EventViewModel, suppliesRememberList: SnapshotSta
         modifier = Modifier.testTag("groceries_title"))
     Spacer(modifier = Modifier.height(16.dp))
     Button(
-        onClick = {
-         showAddDialog.value = true
-        },
+        onClick = { showAddDialog.value = true },
         modifier = Modifier.testTag("add_groceries_button")) {
-
           Text(stringResource(id = R.string.event_creation_screen_add_groceries))
         }
 
-      if(showAddDialog.value){
+    if (showAddDialog.value) {
 
-          SupplyPopup(
-              onDismissRequest = { showAddDialog.value = false },
-              onSave = {
-                  supplyDescription, supplyQuantity, supplyUnit ->
-                  val supply = ChimpagneSupply(description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit)
-                  suppliesRememberList.add(supply)
-
-              }
-          )
-
-      }
+      SupplyPopup(
+          onDismissRequest = { showAddDialog.value = false },
+          onSave = { supplyDescription, supplyQuantity, supplyUnit ->
+            val supply =
+                ChimpagneSupply(
+                    description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit)
+            suppliesRememberList.add(supply)
+          })
+    }
 
     Spacer(modifier = Modifier.height(16.dp))
-      LazyColumn {
-          items(suppliesRememberList) { item ->
-
-              ListItem(headlineContent = { Text(
+    LazyColumn {
+      items(suppliesRememberList) { item ->
+        ListItem(
+            headlineContent = {
+              Text(
                   text = item.description,
-              ) }, supportingContent = {
-                  Text(
-                      text = item.quantity.toString() + " "+item.unit,
-                      color = Color.Gray
-                  )
-              }, trailingContent = {
-                  IconButton(
-                      onClick = {
-                          suppliesRememberList.remove(item) },
-                      modifier = Modifier.testTag(item.description),
-                      content = {
-                          Icon(active = true, activeContent = { androidx.compose.material3.Icon(
-                              imageVector = Icons.Default.Cancel,
-                              contentDescription = "Delete"
-                          )}, inactiveContent = { androidx.compose.material3.Icon(
-                              imageVector = Icons.Default.Cancel,
-                              contentDescription = "Delete"
-                          )} )
-                      }
-                  )
-              })
-          }
+              )
+            },
+            supportingContent = {
+              Text(text = item.quantity.toString() + " " + item.unit, color = Color.Gray)
+            },
+            trailingContent = {
+              IconButton(
+                  onClick = { suppliesRememberList.remove(item) },
+                  modifier = Modifier.testTag(item.description),
+                  content = {
+                    Icon(
+                        active = true,
+                        activeContent = {
+                          androidx.compose.material3.Icon(
+                              imageVector = Icons.Default.Cancel, contentDescription = "Delete")
+                        },
+                        inactiveContent = {
+                          androidx.compose.material3.Icon(
+                              imageVector = Icons.Default.Cancel, contentDescription = "Delete")
+                        })
+                  })
+            })
       }
+    }
   }
 }
 
@@ -432,9 +402,7 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         onValueChange = { parkingText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag("n_parking"))
+        modifier = Modifier.fillMaxWidth().testTag("n_parking"))
 
     Spacer(modifier = Modifier.height(16.dp))
     Text(
@@ -446,8 +414,6 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         onValueChange = { bedsText = it },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier
-            .fillMaxWidth()
-            .testTag("n_beds"))
+        modifier = Modifier.fillMaxWidth().testTag("n_beds"))
   }
 }

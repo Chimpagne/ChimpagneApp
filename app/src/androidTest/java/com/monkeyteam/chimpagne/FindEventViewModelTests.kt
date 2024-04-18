@@ -61,7 +61,9 @@ class FindEventViewModelTests {
           buildTimestamp(10, 5, 2024, 6, 0))
 
   private val eventManager: ChimpagneEventManager =
-      ChimpagneEventManager(Firebase.firestore.collection("testevents"), Firebase.firestore.collection("testSupplies"))
+      ChimpagneEventManager(
+          Firebase.firestore.collection("testevents"),
+          Firebase.firestore.collection("testSupplies"))
 
   @Test
   fun TestFindEventVMSetterFunctions() {

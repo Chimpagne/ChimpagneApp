@@ -14,10 +14,10 @@ data class ChimpagneSupply(
   }
 
   override fun toString(): String {
-      // e.g. 6 eggs: descriptions="eggs", quantity="6", unit=""
-      if (unit == ""){
-          return "$quantity $description"
-      }
-        return "$description $quantity $unit"
+    // e.g. 6 eggs: descriptions="eggs", quantity="6", unit=""
+    if (unit == "") {
+      return "$quantity $description"
+    }
+    return "$description $quantity $unit"
   }
 }

@@ -12,7 +12,10 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import com.monkeyteam.chimpagne.model.location.Location
 
-class ChimpagneEventManager(private val events: CollectionReference, private val supplies: CollectionReference) {
+class ChimpagneEventManager(
+    private val events: CollectionReference,
+    private val supplies: CollectionReference
+) {
   fun getAllEvents(onSuccess: (List<ChimpagneEvent>) -> Unit, onFailure: (Exception) -> Unit) {
     events
         .get()
@@ -115,15 +118,17 @@ class ChimpagneEventManager(private val events: CollectionReference, private val
 
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
 
-      getEventById(id, onSuccess={chimpagneEvent: ChimpagneEvent? ->
-
+    getEventById(
+        id,
+        onSuccess = { chimpagneEvent: ChimpagneEvent? ->
           val suppliesManager = ChimpagneSuppliesManager(supplies)
-          if (chimpagneEvent != null){
-              chimpagneEvent.supplies.forEach {
-                  s -> suppliesManager.deleteSupply(s, onSuccess={}, onFailure={})
-              }
+          if (chimpagneEvent != null) {
+            chimpagneEvent.supplies.forEach { s ->
+              suppliesManager.deleteSupply(s, onSuccess = {}, onFailure = {})
+            }
           }
-      }, onFailure={})
+        },
+        onFailure = {})
 
     events
         .document(id)
@@ -158,15 +163,22 @@ class ChimpagneEventManager(private val events: CollectionReference, private val
         .addOnFailureListener { onFailure(it) }
   }
 
-    fun addSupplyToEvent(
-        event: ChimpagneEvent,
-        supplyItemId: String,
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        getEventById(event.id, onSuccess={
-            if (it != null){
-                events.document(event.id).update("supplies", it.supplies +(supplyItemId)).addOnSuccessListener { onSuccess(); }
-            }
-        }, onFailure=onFailure)
-    }}
+  fun addSupplyToEvent(
+      event: ChimpagneEvent,
+      supplyItemId: String,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    getEventById(
+        event.id,
+        onSuccess = {
+          if (it != null) {
+            events
+                .document(event.id)
+                .update("supplies", it.supplies + (supplyItemId))
+                .addOnSuccessListener { onSuccess() }
+          }
+        },
+        onFailure = onFailure)
+  }
+}

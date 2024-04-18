@@ -60,12 +60,11 @@ class EventViewModel(
               Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
               _uiState.value = _uiState.value.copy(loading = false)
             }
+          }) {
+            Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
           }
-      ) {
-          Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
-          _uiState.value = _uiState.value.copy(loading = false)
-          onFailure(it)
-      }
     }
   }
 
@@ -117,6 +116,7 @@ class EventViewModel(
           })
     }
   }
+
   fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
@@ -163,72 +163,71 @@ class EventViewModel(
           })
     }
   }
-    fun registerSupply(
-        onSuccess: (supply: ChimpagneSupply) -> Unit = {},
-        onFailure: (Exception) -> Unit = {},
-        supply: ChimpagneSupply
-    ) {
-        _uiState.value = _uiState.value.copy(loading = true)
-        viewModelScope.launch {
-            supplyManager.registerSupply(
-                supply,
-                {
-                    _uiState.value = _uiState.value.copy(id = it)
-                    _uiState.value = _uiState.value.copy(loading = false)
-                    supply.id = it
-                    onSuccess(supply)
-                },
-                {
-                    _uiState.value = _uiState.value.copy(loading = false)
-                    onFailure(it)
-                })
-        }
-    }
 
-    fun deleteSupply(supplyId: String, onSuccess: () -> Unit) {
-        _uiState.value = _uiState.value.copy(loading = true)
-        viewModelScope.launch {
-            supplyManager.deleteSupply(
-                _uiState.value.id,
-                onSuccess={
-                    _uiState.value = EventUIState()
-                    _uiState.value = _uiState.value.copy(loading = false)
-                    onSuccess()
-                          },
-                onFailure={
-                    _uiState.value = _uiState.value.copy(loading = false)
-                })
-        }
+  fun registerSupply(
+      onSuccess: (supply: ChimpagneSupply) -> Unit = {},
+      onFailure: (Exception) -> Unit = {},
+      supply: ChimpagneSupply
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    viewModelScope.launch {
+      supplyManager.registerSupply(
+          supply,
+          {
+            _uiState.value = _uiState.value.copy(id = it)
+            _uiState.value = _uiState.value.copy(loading = false)
+            supply.id = it
+            onSuccess(supply)
+          },
+          {
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
+          })
     }
+  }
 
-    fun addSupplyToEvent(
-        supplyId: String,
-        onSuccess: () -> Unit = {},
-        onFailure: (Exception) -> Unit = {}
-    ) {
-        _uiState.value = _uiState.value.copy(loading = true)
-        viewModelScope.launch {
-            eventManager.addSupplyToEvent(
-                buildChimpagneEvent(),
-                supplyId,
-                {
-                    fetchEvent(
-                        id = _uiState.value.id,
-                        onSuccess = {
-                            _uiState.value = _uiState.value.copy(loading = false)
-                            onSuccess()
-                        },
-                        onFailure = {
-                            _uiState.value = _uiState.value.copy(loading = false)
-                            onFailure(it)
-                        })
-                },
-                {
-                    _uiState.value = _uiState.value.copy(loading = false)
-                    onFailure(it)
-                })
-        }
+  fun deleteSupply(supplyId: String, onSuccess: () -> Unit) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    viewModelScope.launch {
+      supplyManager.deleteSupply(
+          _uiState.value.id,
+          onSuccess = {
+            _uiState.value = EventUIState()
+            _uiState.value = _uiState.value.copy(loading = false)
+            onSuccess()
+          },
+          onFailure = { _uiState.value = _uiState.value.copy(loading = false) })
     }
+  }
+
+  fun addSupplyToEvent(
+      supplyId: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    viewModelScope.launch {
+      eventManager.addSupplyToEvent(
+          buildChimpagneEvent(),
+          supplyId,
+          {
+            fetchEvent(
+                id = _uiState.value.id,
+                onSuccess = {
+                  _uiState.value = _uiState.value.copy(loading = false)
+                  onSuccess()
+                },
+                onFailure = {
+                  _uiState.value = _uiState.value.copy(loading = false)
+                  onFailure(it)
+                })
+          },
+          {
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
+          })
+    }
+  }
 
   fun removeGuestFromTheEvent(
       guestId: String,
@@ -301,5 +300,4 @@ data class EventUIState(
     val startsAtCalendarDate: Calendar = Calendar.getInstance(),
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
-) {
-}
+) {}

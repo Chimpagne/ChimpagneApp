@@ -7,9 +7,7 @@ import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import java.util.Calendar
 
 // https://stackoverflow.com/questions/39815117/add-an-item-to-a-list-in-firebase-database
-/**
- * /!\ All attributes must have default values /!\
- */
+/** /!\ All attributes must have default values /!\ */
 data class ChimpagneEvent(
     val id: String = "",
     val title: String = "Default Name",

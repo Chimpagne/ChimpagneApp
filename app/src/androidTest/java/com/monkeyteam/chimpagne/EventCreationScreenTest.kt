@@ -17,7 +17,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import kotlinx.coroutines.delay
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -67,6 +66,7 @@ class EventCreationScreenTest {
       EventCreationScreen(1, navActions)
     }
   }
+
   @Test
   fun testSecondPanelContent() {
     var tagsLegendS = ""
@@ -130,11 +130,8 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
   }*/
 
-
-
   @Test
   fun testDeleteAllSupplyItemsFromEventCreationScreen() {
-
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -170,9 +167,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithText("5 units").assertDoesNotExist()
     composeTestRule.onNodeWithText("Test Supply 2").assertDoesNotExist()
     composeTestRule.onNodeWithText("10 kg").assertDoesNotExist()
-
   }
-
 
   @Test
   fun testSupplyPopup() {
@@ -193,10 +188,7 @@ class EventCreationScreenTest {
 
       var showPopup by remember { mutableStateOf(true) }
       if (showPopup) {
-        SupplyPopup(
-          onDismissRequest = { showPopup = false },
-          onSave = { _, _, _ -> }
-        )
+        SupplyPopup(onDismissRequest = { showPopup = false }, onSave = { _, _, _ -> })
       }
     }
 
@@ -270,10 +262,7 @@ class EventCreationScreenTest {
     // Verify that the supply item is added to the list
     composeTestRule.onNodeWithText("Test Supply").assertIsDisplayed()
     composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
-
   }
-
-
 
   @Test
   fun testMakeEventPublicButtonShowsToast() {
