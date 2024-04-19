@@ -125,7 +125,7 @@ fun MainFindEventScreen(
 
   HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
     when (page) {
-      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents)
+      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
       FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel)
     }
   }
@@ -136,7 +136,8 @@ fun MainFindEventScreen(
 fun FindEventFormScreen(
     navObject: NavigationActions,
     findViewModel: FindEventsViewModel,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    showToast: (String) -> Unit
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
@@ -196,13 +197,7 @@ fun FindEventFormScreen(
                 IconTextButton(
                     text = stringResource(id = R.string.find_event_event_locate_me_button),
                     icon = Icons.Rounded.MyLocation,
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              context.getString(R.string.find_event_near_me_toast),
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
+                    onClick = { showToast(context.getString(R.string.find_event_near_me_toast)) },
                     modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
                 Spacer(Modifier.height(16.dp))
 
