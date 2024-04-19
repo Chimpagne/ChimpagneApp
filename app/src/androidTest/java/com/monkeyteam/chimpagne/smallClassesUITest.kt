@@ -115,13 +115,15 @@ class DateSelectorTest {
                 onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ }) {
 
             }
-            composeTestRule.onNodeWithTag("title").assertIsDisplayed().assertTextContains("Select Time")
+            composeTestRule.onNodeWithTag("title").assertIsDisplayed()
+                .assertTextContains("Select Time")
 
-    }
+        }
 
-    @Test
-    fun checkDateSelection() {
+        @Test
+        fun checkDateSelection() {
 
+        }
     }
 }
 private fun getSignInText(): String {

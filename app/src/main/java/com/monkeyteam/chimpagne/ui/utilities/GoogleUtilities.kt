@@ -61,7 +61,9 @@ fun GoogleAuthentication(
           modifier = Modifier.size(40.dp).align(Alignment.CenterVertically))
       Text(
           text = stringResource(id = R.string.sign_in_with_google),
-          Modifier.testTag("googleAuthenticationButton").align(Alignment.CenterVertically).padding(start = 25.dp))
+          Modifier.testTag("googleAuthenticationButton")
+              .align(Alignment.CenterVertically)
+              .padding(start = 25.dp))
     }
   }
 }
