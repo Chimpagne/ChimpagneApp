@@ -61,7 +61,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -72,6 +71,7 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
+import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
@@ -270,11 +270,11 @@ fun FindEventMapScreen(
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
   }
-  val onMarkerClick: (Marker) -> Unit = { marker ->
+  val onMarkerClick: (MarkerData) -> Unit = { markerData ->
     coroutineScope.launch {
-      currentEvent = uiState.events[marker.tag as String]
+      currentEvent = uiState.events[markerData.id]
       launch { scaffoldState.bottomSheetState.expand() }
-      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(marker.position)) }
+      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markerData.position)) }
     }
   }
 
