@@ -49,6 +49,7 @@
     <string name="find_event_near_me_toast">Locating you…</string>
     <string name="search_location">Search for a location</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
 
 
 </resources>

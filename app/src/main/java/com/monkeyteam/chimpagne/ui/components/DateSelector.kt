@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -160,7 +161,7 @@ fun TimePickerDialog(
               modifier = Modifier.padding(24.dp),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp).testTag("title"),
                     text = title,
                     style = MaterialTheme.typography.labelMedium)
                 content()
