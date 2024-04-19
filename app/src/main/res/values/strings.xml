@@ -47,7 +47,8 @@
     <string name="find_event_join_event_button_text">Join Event</string>
     <string name="find_event_no_event_available">No event details available</string>
     <string name="find_event_near_me_toast">Locating you…</string>
-    <string name="find_event_fetch_error">No result</string>
+    <string name="find_event_no_result">No result</string>
+    <string name="find_event_location_not_selected">No location selected</string>
     <string name="search_location">Search for a location</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
 

@@ -92,9 +92,16 @@ fun MainFindEventScreen(
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
 
-  val showErrorToast: () -> Unit = {
-    Toast.makeText(context, context.getString(R.string.find_event_fetch_error), Toast.LENGTH_SHORT)
-        .show()
+  var toast: Toast? by remember { mutableStateOf(null) }
+
+  val showToast: (String) -> Unit = { message ->
+    toast?.cancel()
+    toast = Toast.makeText(context, message, Toast.LENGTH_SHORT).apply { show() }
+  }
+
+  val noResultToast: () -> Unit = { showToast(context.getString(R.string.find_event_no_result)) }
+  val noSelectedLocationToast: () -> Unit = {
+    showToast(context.getString(R.string.find_event_location_not_selected))
   }
 
   val goToForm: () -> Unit = {
@@ -107,8 +114,12 @@ fun MainFindEventScreen(
   }
 
   val fetchEvents: () -> Unit = {
-    coroutineScope.launch {
-      findViewModel.fetchEvents(onSuccess = { goToMap() }, onFailure = { showErrorToast() })
+    if (findViewModel.uiState.value.selectedLocation == null) {
+      noSelectedLocationToast()
+    } else {
+      coroutineScope.launch {
+        findViewModel.fetchEvents(onSuccess = { goToMap() }, onFailure = { noResultToast() })
+      }
     }
   }
 

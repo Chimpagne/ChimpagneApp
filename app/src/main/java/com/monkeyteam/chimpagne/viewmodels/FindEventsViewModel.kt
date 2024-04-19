@@ -44,7 +44,8 @@ class FindEventsViewModel(
                   setLoading(false)
                   onFailure(Exception("No events found"))
                 } else {
-                  // DO NO FORGET TO SETLOADING TO FALSE AFTER SUCCESS (AFTER UI RECOMPOSITION)
+                  // DO NO FORGET TO SETLOADING TO FALSE AFTER SUCCESS (where function is called)
+                  // (AFTER UI RECOMPOSITION)
                   Log.d("FETCHING EVENTS BY LOCATION QUERY", "Success")
                   onSuccess()
                 }
@@ -56,7 +57,6 @@ class FindEventsViewModel(
               },
               filter)
         } else {
-          onFailure(Exception("Selected location is null"))
           setLoading(false)
         }
       } catch (e: Exception) {
@@ -90,7 +90,7 @@ class FindEventsViewModel(
 data class FindEventsUIState(
     val events: Map<String, ChimpagneEvent> = emptyMap(),
     val selectedLocation: Location? = null,
-    val radiusAroundLocationInM: Double = 0.0,
+    val radiusAroundLocationInM: Double = 1000.0,
     val selectedTags: List<String> = emptyList(),
     val selectedDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
