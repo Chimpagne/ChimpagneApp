@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
 import DateSelector
-import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -50,7 +49,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -83,7 +81,6 @@ object FindEventScreens {
   const val MAP = 1
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
@@ -93,17 +90,16 @@ fun MainFindEventScreen(
 ) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   val showErrorToast: () -> Unit = {
-      Toast.makeText(
-          context,
-          context.getString(R.string.find_event_fetch_error),
-          Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, context.getString(R.string.find_event_fetch_error), Toast.LENGTH_SHORT)
+        .show()
   }
 
   val goToForm: () -> Unit = {
     coroutineScope.launch { pagerState.animateScrollToPage(FindEventScreens.FORM) }
+    findViewModel.setLoading(false)
   }
 
   val goToMap: () -> Unit = {
@@ -111,7 +107,9 @@ fun MainFindEventScreen(
   }
 
   val fetchEvents: () -> Unit = {
-    coroutineScope.launch { findViewModel.fetchEvents(onSuccess = { goToMap() }, onFailure = {showErrorToast()}) }
+    coroutineScope.launch {
+      findViewModel.fetchEvents(onSuccess = { goToMap() }, onFailure = { showErrorToast() })
+    }
   }
 
   HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
@@ -131,11 +129,8 @@ fun FindEventFormScreen(
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
-
   val context = LocalContext.current
-
   val scrollState = rememberScrollState()
-
   var tagFieldActive by remember { mutableStateOf(false) }
 
   Scaffold(
@@ -171,7 +166,8 @@ fun FindEventFormScreen(
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
           Column(
-              modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(scrollState),
+              modifier =
+                  Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
                 Legend(
                     stringResource(id = R.string.find_event_event_location_legend),
@@ -197,7 +193,6 @@ fun FindEventFormScreen(
                           .show()
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
-
                 Spacer(Modifier.height(16.dp))
 
                 Text(
