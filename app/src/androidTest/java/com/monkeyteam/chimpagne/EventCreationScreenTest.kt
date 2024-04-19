@@ -1,17 +1,26 @@
 package com.monkeyteam.chimpagne
 
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.navigation.compose.rememberNavController
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -32,7 +41,7 @@ class EventCreationScreenTest {
   @get:Rule val composeTestRule = createComposeRule()
 
   @Test
-  fun TestPanels() {
+  fun testPanels() {
     // Start on the correct screen
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -53,6 +62,19 @@ class EventCreationScreenTest {
   }
 
   @Test
+  fun testLocationSelector() {
+    // Start on the correct screen
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(0, navActions)
+    }
+
+    composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
+
+  }
+
+    @Test
   fun testPanel1() {
 
     composeTestRule.setContent {

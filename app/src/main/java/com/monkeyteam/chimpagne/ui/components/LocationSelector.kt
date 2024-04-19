@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
@@ -77,7 +78,7 @@ fun LocationSelector(
       active = showSearchBar,
       onActiveChange = { showSearchBar = it},
       placeholder = { Text(stringResource(id = R.string.search_location)) },
-      modifier = modifier,
+      modifier = modifier.testTag("LocationComponent"),
         trailingIcon = {
             when {
                 searching -> CircularProgressIndicator()
