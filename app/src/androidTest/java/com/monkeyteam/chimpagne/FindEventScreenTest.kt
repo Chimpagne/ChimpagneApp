@@ -39,7 +39,7 @@ class FindEventScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      FindEventFormScreen(navActions, FindEventsViewModel()) {}
+      FindEventFormScreen(navActions, FindEventsViewModel(), {}, {})
     }
 
     // Check if the location selector is displayed
