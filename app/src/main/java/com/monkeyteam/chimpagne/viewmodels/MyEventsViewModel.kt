@@ -27,12 +27,20 @@ class MyEventsViewModel(
             /*TODO ADD DATABASE FUNCTION*/
             _uiState.value = _uiState.value.copy(
                 createdEvents = mapOf(
-                    Pair("000", ChimpagneEvent(title =  "Juan party")),
-                    Pair("001", ChimpagneEvent(title =  "Clément party"))
+                    Pair("000", ChimpagneEvent(title =  "party 1")),
+                    Pair("001", ChimpagneEvent(title =  "party 2")),
+                    Pair("002", ChimpagneEvent(title =  "party 3")),
+                    Pair("003", ChimpagneEvent(title =  "party 4")),
+                    Pair("004", ChimpagneEvent(title =  "party 5")),
+                    Pair("005", ChimpagneEvent(title =  "party 6")),
                 ),
                 joinedEvents = mapOf(
-                    Pair("000", ChimpagneEvent(title =  "Juan party 2")),
-                    Pair("001", ChimpagneEvent(title =  "Clément party 2"))
+                    Pair("000", ChimpagneEvent(title =  "party 1")),
+                    Pair("001", ChimpagneEvent(title =  "party 2")),
+                    Pair("002", ChimpagneEvent(title =  "party 3")),
+                    Pair("003", ChimpagneEvent(title =  "party 4")),
+                    Pair("004", ChimpagneEvent(title =  "party 5")),
+                    Pair("005", ChimpagneEvent(title =  "party 6")),
             )
             )
         }
