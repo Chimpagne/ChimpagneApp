@@ -50,4 +50,5 @@
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
+    <string name="welcome_screen_title">Bienvenue à</string>
 </resources>
