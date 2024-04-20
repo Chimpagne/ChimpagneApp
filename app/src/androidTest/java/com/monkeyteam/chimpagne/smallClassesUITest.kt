@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
+import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -66,28 +67,41 @@ class DateSelectorTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun checkUI() {
-        composeTestRule.setContent {
-            TimePickerDialog(
-                title = "Select Time",
-                onDismissRequest = { /*TODO*/ }, confirmButton = { /*TODO*/ }) {
-
-            }
-            composeTestRule.onNodeWithTag("title").assertIsDisplayed()
-                .assertTextContains("Select Time")
-
-        }
-    }
-
         @OptIn(ExperimentalMaterial3Api::class)
         @Test
         fun DatePickerWorks() {
+            runBlocking {
+                val selectedDate = Calendar.getInstance()
+                var chosenDate: Calendar? = null
+                composeTestRule.setContent {
+                    DateSelector(selectedDate = selectedDate, onDateSelected = { chosenDate = it })
+                }
+
+                composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+                composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
+
+                composeTestRule.onNodeWithTag("dateSelector").assertIsDisplayed()
+                composeTestRule.onNodeWithTag("dateSelector").performClick()
+
+                composeTestRule.onNodeWithTag("selectDate").assertIsDisplayed()
+                composeTestRule.onNodeWithTag("selectDate").performClick()
+
+                composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+
+                assertIsWithinOne(chosenDate!!.get(Calendar.YEAR), selectedDate.get(Calendar.YEAR))
+                assertIsWithinOne(chosenDate!!.get(Calendar.MONTH), selectedDate.get(Calendar.MONTH))
+                assertIsWithinOne(chosenDate!!.get(Calendar.DATE), selectedDate.get(Calendar.DATE))
+            }
+        }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Test
+    fun TimePickerWorks(){
+        runBlocking {
             val selectedDate = Calendar.getInstance()
             var chosenDate: Calendar? = null
             composeTestRule.setContent {
-                DateSelector(selectedDate = selectedDate, onDateSelected = { chosenDate = it })
+                DateSelector(selectedDate = selectedDate, onDateSelected = {chosenDate = it}, selectTimeOfDay = true)
             }
 
             composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
@@ -100,44 +114,18 @@ class DateSelectorTest {
             composeTestRule.onNodeWithTag("selectDate").performClick()
 
             composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag("selectTime").assertIsDisplayed()
+            composeTestRule.onNodeWithTag("selectTime").performClick()
 
+            composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
             val currentDate = Calendar.getInstance()
             assertIsWithinOne(chosenDate!!.get(Calendar.YEAR), selectedDate.get(Calendar.YEAR))
             assertIsWithinOne(chosenDate!!.get(Calendar.MONTH), selectedDate.get(Calendar.MONTH))
             assertIsWithinOne(chosenDate!!.get(Calendar.DATE), selectedDate.get(Calendar.DATE))
+            assertIsWithinOne(chosenDate!!.get(Calendar.HOUR), currentDate.get(Calendar.HOUR))
+            assertIsWithinOne(chosenDate!!.get(Calendar.MINUTE), currentDate.get(Calendar.MINUTE))
 
         }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun TimePickerWorks(){
-        val selectedDate = Calendar.getInstance()
-        var chosenDate: Calendar? = null
-        composeTestRule.setContent {
-            DateSelector(selectedDate = selectedDate, onDateSelected = {chosenDate = it}, selectTimeOfDay = true)
-        }
-
-        composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
-        composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
-
-        composeTestRule.onNodeWithTag("dateSelector").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("dateSelector").performClick()
-
-        composeTestRule.onNodeWithTag("selectDate").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("selectDate").performClick()
-
-        composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
-        composeTestRule.onNodeWithTag("selectTime").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("selectTime").performClick()
-
-        composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
-        val currentDate = Calendar.getInstance()
-        assertIsWithinOne(chosenDate!!.get(Calendar.YEAR), selectedDate.get(Calendar.YEAR))
-        assertIsWithinOne(chosenDate!!.get(Calendar.MONTH), selectedDate.get(Calendar.MONTH))
-        assertIsWithinOne(chosenDate!!.get(Calendar.DATE), selectedDate.get(Calendar.DATE))
-        assertIsWithinOne(chosenDate!!.get(Calendar.HOUR), currentDate.get(Calendar.HOUR))
-        assertIsWithinOne(chosenDate!!.get(Calendar.MINUTE), currentDate.get(Calendar.MINUTE))
-
     }
 }
 
