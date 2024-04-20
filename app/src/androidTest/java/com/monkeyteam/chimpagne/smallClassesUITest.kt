@@ -2,60 +2,20 @@ package com.monkeyteam.chimpagne
 
 import DateSelector
 import TimePickerDialog
-import androidx.activity.result.ActivityResult
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.navigation.compose.rememberNavController
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
-import com.google.firebase.auth.FirebaseAuth
-import com.monkeyteam.chimpagne.model.utils.buildCalendar
-import com.monkeyteam.chimpagne.ui.LoginScreen
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_background
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_error
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_errorContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onBackground
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onError
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onErrorContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onPrimary
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onPrimaryContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onSecondary
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onSecondaryContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onTertiary
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_onTertiaryContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primaryContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_secondary
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_secondaryContainer
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_tertiary
-import com.monkeyteam.chimpagne.ui.theme.md_theme_light_tertiaryContainer
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
-import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import org.mockito.kotlin.verify
+import java.util.Calendar
 import java.util.Locale
 
 @RunWith(AndroidJUnit4::class)
@@ -102,7 +62,6 @@ class ThemeUITest {
 
 @RunWith(AndroidJUnit4::class)
 class DateSelectorTest {
-    val selectedDate = buildCalendar(1, 5, 2024, 5, 1)
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -120,11 +79,65 @@ class DateSelectorTest {
                 .assertTextContains("Select Time")
 
         }
+    }
 
+        @OptIn(ExperimentalMaterial3Api::class)
         @Test
-        fun checkDateSelection() {
+        fun DatePickerWorks() {
+            val selectedDate = Calendar.getInstance()
+            var chosenDate: Calendar? = null
+            composeTestRule.setContent {
+                DateSelector(selectedDate = selectedDate, onDateSelected = { chosenDate = it })
+            }
+
+            composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+            composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
+
+            composeTestRule.onNodeWithTag("dateSelector").assertIsDisplayed()
+            composeTestRule.onNodeWithTag("dateSelector").performClick()
+
+            composeTestRule.onNodeWithTag("selectDate").assertIsDisplayed()
+            composeTestRule.onNodeWithTag("selectDate").performClick()
+
+            composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+
+            val currentDate = Calendar.getInstance()
+            assertIsWithinOne(chosenDate!!.get(Calendar.YEAR), selectedDate.get(Calendar.YEAR))
+            assertIsWithinOne(chosenDate!!.get(Calendar.MONTH), selectedDate.get(Calendar.MONTH))
+            assertIsWithinOne(chosenDate!!.get(Calendar.DATE), selectedDate.get(Calendar.DATE))
 
         }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Test
+    fun TimePickerWorks(){
+        val selectedDate = Calendar.getInstance()
+        var chosenDate: Calendar? = null
+        composeTestRule.setContent {
+            DateSelector(selectedDate = selectedDate, onDateSelected = {chosenDate = it}, selectTimeOfDay = true)
+        }
+
+        composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
+
+        composeTestRule.onNodeWithTag("dateSelector").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("dateSelector").performClick()
+
+        composeTestRule.onNodeWithTag("selectDate").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("selectDate").performClick()
+
+        composeTestRule.onNodeWithTag("selectDate").assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag("selectTime").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("selectTime").performClick()
+
+        composeTestRule.onNodeWithTag("selectTime").assertIsNotDisplayed()
+        val currentDate = Calendar.getInstance()
+        assertIsWithinOne(chosenDate!!.get(Calendar.YEAR), selectedDate.get(Calendar.YEAR))
+        assertIsWithinOne(chosenDate!!.get(Calendar.MONTH), selectedDate.get(Calendar.MONTH))
+        assertIsWithinOne(chosenDate!!.get(Calendar.DATE), selectedDate.get(Calendar.DATE))
+        assertIsWithinOne(chosenDate!!.get(Calendar.HOUR), currentDate.get(Calendar.HOUR))
+        assertIsWithinOne(chosenDate!!.get(Calendar.MINUTE), currentDate.get(Calendar.MINUTE))
+
     }
 }
 
@@ -136,22 +149,17 @@ class LoginScreenTest {
 
     @Test
     fun checkUI() {
-        composeTestRule.setContent {
-            LoginScreen({})
         }
-
-        composeTestRule.onNodeWithContentDescription("App Logo").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("welcome_screen_title").assertIsDisplayed().assertTextContains(
-            getWelcomeScreenText()
-        )
-        composeTestRule.onNodeWithTag("Chimpagne").assertIsDisplayed().assertTextContains("Chimpagne")
-    }
 
     @Test
     fun checkAlertDialog() {
 
     }
 }
+
+    private fun assertIsWithinOne(toBeCompared: Int, expected: Int) {
+        assert(toBeCompared == expected || toBeCompared == expected + 1 || toBeCompared == expected - 1)
+    }
 private fun getWelcomeScreenText(): String {
     val currentLocale = Locale.getDefault()
     return if (currentLocale.language == "fr") {

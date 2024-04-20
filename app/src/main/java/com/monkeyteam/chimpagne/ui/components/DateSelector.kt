@@ -83,7 +83,7 @@ fun DateSelector(
               },
       icon = Icons.Rounded.CalendarToday,
       onClick = { showDatePicker = true },
-      modifier = modifier)
+      modifier = modifier.testTag("dateSelector"))
 
   // Show date picker dialog when showDatePicker is true
   if (showDatePicker) {
@@ -105,7 +105,8 @@ fun DateSelector(
                 } else {
                   onDateSelected(dateToUse)
                 }
-              }) {
+              },
+              modifier = Modifier.testTag("selectDate")) {
                 Text("OK")
               }
         }) {
@@ -127,7 +128,8 @@ fun DateSelector(
                 val minute = timePickerState.minute
 
                 onDateSelected(buildCalendar(day, month, year, hour, minute))
-              }) {
+              },
+              modifier = Modifier.testTag("selectTime")) {
                 Text("OK")
               }
         }) {
