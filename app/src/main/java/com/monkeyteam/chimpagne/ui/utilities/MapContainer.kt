@@ -108,8 +108,10 @@ fun MapContainer(
         }
   } else {
     // Display a placeholder or loading indicator
-    Box(modifier = Modifier.fillMaxSize().testTag("progressBar"), contentAlignment = Alignment.Center) {
-      CircularProgressIndicator() // You can customize this part as needed
+    Box(
+        modifier = Modifier.fillMaxSize().testTag("progressBar"),
+        contentAlignment = Alignment.Center) {
+          CircularProgressIndicator() // You can customize this part as needed
     }
   }
 }
