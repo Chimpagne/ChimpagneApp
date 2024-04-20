@@ -27,12 +27,14 @@ import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.MyEventScreen
+import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 
 class MainActivity : ComponentActivity() {
@@ -117,6 +119,14 @@ class MainActivity : ComponentActivity() {
             composable(Route.MY_EVENTS_SCREEN) {
               MyEventScreen(navObject = navActions, myEventsViewModel = MyEventsViewModel())
             }
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
+              ViewDetailEventScreen(
+                navObject = navActions,
+                eventViewModel = EventViewModel(backStackEntry.arguments?.getString("EventID")),
+                canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean()
+              )
+            }
+
           }
         }
       }

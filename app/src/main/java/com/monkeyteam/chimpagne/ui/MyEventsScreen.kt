@@ -83,14 +83,15 @@ fun MyEventScreen(
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
-                        onClick = { /* TODO Handle event button click */ }
+                        onClick = {
+                        /* TODO Handle event button click */
+                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/true")
+                        }
                     )
                 }
             }
             item {
                 Spacer(Modifier.height(16.dp))
-            }
-            item {
                 Legend(
                     text = "Joined Events:",
                     imageVector = Icons.Rounded.Public,
@@ -112,17 +113,13 @@ fun MyEventScreen(
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
-                        onClick = { /* TODO Handle event button click */ }
+                        onClick = {
+                        /* TODO Handle event button click */
+                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/false")
+                        }
                     )
                 }
             }
         }
-
-
-
-
-
-
-
     }
 }
