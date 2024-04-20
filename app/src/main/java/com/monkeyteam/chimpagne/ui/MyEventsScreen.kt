@@ -41,8 +41,7 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 
-@SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalFoundationApi::class)
+
 @ExperimentalMaterial3Api
 @Composable
 fun MyEventScreen(
@@ -62,18 +61,22 @@ fun MyEventScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        Legend(
-            text = "Created Events:",
-            imageVector = Icons.Rounded.Create,
-            contentDescription = "Created Events"
-        )
-        if (uiState.createdEvents.isEmpty()) {
-            Text(
-                text = "You have not created any events yet",
-                modifier = Modifier.padding(16.dp)
-            )
-        } else {
-            LazyColumn(modifier = Modifier.heightIn(0.dp, 270.dp)) {
+        LazyColumn {
+            item {
+                Legend(
+                    text = "Created Events:",
+                    imageVector = Icons.Rounded.Create,
+                    contentDescription = "Created Events"
+                )
+            }
+            if (uiState.createdEvents.isEmpty()) {
+                item {
+                    Text(
+                        text = "You have not created any events yet",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            } else {
                 items(uiState.createdEvents.values.toList()) { event ->
                     ChimpagneButton(
                         text = event.title,
@@ -84,22 +87,25 @@ fun MyEventScreen(
                     )
                 }
             }
-        }
+            item {
+                Spacer(Modifier.height(16.dp))
+            }
+            item {
+                Legend(
+                    text = "Joined Events:",
+                    imageVector = Icons.Rounded.Public,
+                    contentDescription = "Joined Events"
+                )
+            }
+            if (uiState.joinedEvents.isEmpty()) {
+                item {
+                    Text(
+                        text = "You have not joined any events yet",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
 
-        Spacer(Modifier.height(16.dp))
-
-        Legend(
-            text = "Joined Events:",
-            imageVector = Icons.Rounded.Public,
-            contentDescription = "Joined Events"
-        )
-        if (uiState.joinedEvents.isEmpty()) {
-            Text(
-                text = "You have not joined any events yet",
-                modifier = Modifier.padding(16.dp)
-            )
-        } else {
-            LazyColumn(modifier = Modifier.heightIn(0.dp, 270.dp)) {
+            } else {
                 items(uiState.joinedEvents.values.toList()) { event ->
                     ChimpagneButton(
                         text = event.title,
@@ -111,5 +117,12 @@ fun MyEventScreen(
                 }
             }
         }
+
+
+
+
+
+
+
     }
 }
