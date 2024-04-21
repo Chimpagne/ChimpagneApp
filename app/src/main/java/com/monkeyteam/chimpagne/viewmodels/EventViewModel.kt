@@ -38,10 +38,24 @@ class EventViewModel(
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
+      val tempList = mutableListOf<ChimpagneSupply>()
+
       eventManager.getEventById(
           id,
           {
             if (it != null) {
+
+              it.supplies.forEach {
+                supplyManager.getSupplyById(
+                    it,
+                    onSuccess = {
+                      if (it != null) {
+                        tempList.add(it)
+                      }
+                    },
+                    onFailure = {})
+              }
+
               _uiState.value =
                   EventUIState(
                       it.id,
@@ -50,7 +64,8 @@ class EventViewModel(
                       it.location,
                       it.public,
                       it.tags,
-                      it.supplies,
+                      tempList.toList(),
+                      mutableListOf(),
                       it.guests,
                       it.startsAt(),
                       it.endsAt())
@@ -76,7 +91,7 @@ class EventViewModel(
         _uiState.value.location,
         _uiState.value.public,
         _uiState.value.tags,
-        _uiState.value.supplies,
+        _uiState.value.supplies.map { it.id },
         _uiState.value.guests,
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate)
@@ -165,9 +180,9 @@ class EventViewModel(
   }
 
   fun registerSupply(
+      supply: ChimpagneSupply,
       onSuccess: (supply: ChimpagneSupply) -> Unit = {},
       onFailure: (Exception) -> Unit = {},
-      supply: ChimpagneSupply
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
@@ -197,35 +212,6 @@ class EventViewModel(
             onSuccess()
           },
           onFailure = onFailure)
-    }
-  }
-
-  fun addSupplyToEvent(
-      supplyId: String,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.addSupplyToEvent(
-          buildChimpagneEvent(),
-          supplyId,
-          {
-            fetchEvent(
-                id = _uiState.value.id,
-                onSuccess = {
-                  _uiState.value = _uiState.value.copy(loading = false)
-                  onSuccess()
-                },
-                onFailure = {
-                  _uiState.value = _uiState.value.copy(loading = false)
-                  onFailure(it)
-                })
-          },
-          {
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
     }
   }
 
@@ -279,6 +265,38 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(tags = newTags)
   }
 
+  fun registerAllSupplies(onSuccess: () -> Unit = {}) {
+    _uiState.value = _uiState.value.copy(loading = true)
+
+    viewModelScope.launch {
+      _uiState.value.supplies.forEach { supply ->
+        supplyManager.registerSupply(
+            supply,
+            {
+              _uiState.value = _uiState.value.copy(id = it)
+
+              supply.id = it
+              _uiState.value.mSuppliesList.add(supply)
+              println("msupplieslist count:")
+              println(_uiState.value.mSuppliesList.count())
+
+              println("supplies count:")
+              println(_uiState.value.supplies.count())
+              if (_uiState.value.supplies.count() == _uiState.value.mSuppliesList.count()) {
+                println("Calling onSuccess")
+                onSuccess()
+              }
+            },
+            { println(it) })
+      }
+    }
+  }
+
+  fun updateEventSupplies(newSupplies: List<ChimpagneSupply>) {
+    _uiState.value = _uiState.value.copy(supplies = newSupplies)
+    _uiState.value = _uiState.value.copy(loading = false)
+  }
+
   fun updateEventStartCalendarDate(newStartCalendarDate: Calendar) {
     _uiState.value = _uiState.value.copy(startsAtCalendarDate = newStartCalendarDate)
   }
@@ -295,7 +313,8 @@ data class EventUIState(
     val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = emptyList(),
-    var supplies: List<String> = emptyList(),
+    val supplies: List<ChimpagneSupply> = emptyList(),
+    val mSuppliesList: MutableList<ChimpagneSupply> = mutableListOf<ChimpagneSupply>(),
     val guests: Map<String, Boolean> = emptyMap(),
     val startsAtCalendarDate: Calendar = Calendar.getInstance(),
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),

@@ -296,25 +296,6 @@ class EventViewModelTests {
     while (eventSearchVM.uiState.value.loading) {}
 
     assertTrue(eventSearchVM.uiState.value.id == eventID)
-
-    val supplyId1 = "supply1"
-    val supplyId2 = "supply2"
-    val supplyId3 = "supply3"
-
-    eventSearchVM.addSupplyToEvent(
-        supplyId1, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-    while (eventSearchVM.uiState.value.loading) {}
-    eventSearchVM.addSupplyToEvent(
-        supplyId2, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-    while (eventSearchVM.uiState.value.loading) {}
-    eventSearchVM.addSupplyToEvent(
-        supplyId3, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-    while (eventSearchVM.uiState.value.loading) {}
-
-    val supplySet = setOf(supplyId1, supplyId2, supplyId3)
-
-    assertTrue(eventSearchVM.uiState.value.supplies.size == supplySet.size)
-    assertTrue(eventSearchVM.uiState.value.supplies.toSet() == supplySet)
   }
 
   @Test

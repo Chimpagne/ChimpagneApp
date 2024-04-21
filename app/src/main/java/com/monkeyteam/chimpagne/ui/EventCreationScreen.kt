@@ -39,12 +39,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -134,7 +132,6 @@ fun EventCreationScreen(
 
   val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val coroutineScope = rememberCoroutineScope()
-  val suppliesRememberList = remember { mutableStateListOf<ChimpagneSupply>() }
 
   val context = LocalContext.current
   Column {
@@ -146,7 +143,7 @@ fun EventCreationScreen(
       when (page) {
         0 -> FirstPanel(eventViewModel)
         1 -> SecondPanel(eventViewModel)
-        2 -> ThirdPanel(eventViewModel, suppliesRememberList)
+        2 -> ThirdPanel(eventViewModel)
         3 -> FourthPanel(eventViewModel)
       }
     }
@@ -176,26 +173,24 @@ fun EventCreationScreen(
       } else {
         Button(
             onClick = {
-              suppliesRememberList.forEach {
-                eventViewModel.registerSupply(onSuccess = {}, onFailure = {}, it)
-              }
-              eventViewModel.uiState.value.supplies = suppliesRememberList.map { s -> s.id }
-              if (!uiState.loading) {
-                Toast.makeText(
-                        context,
-                        context.getString(R.string.event_creation_screen_toast_creating),
-                        Toast.LENGTH_SHORT)
-                    .show()
-                eventViewModel.createTheEvent(
-                    onSuccess = {
-                      Toast.makeText(
-                              context,
-                              context.getString(R.string.event_creation_screen_toast_finish),
-                              Toast.LENGTH_SHORT)
-                          .show()
-                      navObject.goBack()
-                    })
-              }
+              eventViewModel.registerAllSupplies(
+                  onSuccess = {
+                    eventViewModel.updateEventSupplies(uiState.mSuppliesList.toList())
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.event_creation_screen_toast_creating),
+                            Toast.LENGTH_SHORT)
+                        .show()
+                    eventViewModel.createTheEvent(
+                        onSuccess = {
+                          Toast.makeText(
+                                  context,
+                                  context.getString(R.string.event_creation_screen_toast_finish),
+                                  Toast.LENGTH_SHORT)
+                              .show()
+                          navObject.goBack()
+                        })
+                  })
             },
             modifier = Modifier.testTag("create_event_button")) {
               Text(stringResource(id = R.string.event_creation_screen_create_event))
@@ -319,11 +314,9 @@ fun SecondPanel(eventViewModel: EventViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThirdPanel(
-    eventViewModel: EventViewModel,
-    suppliesRememberList: SnapshotStateList<ChimpagneSupply>
-) {
+fun ThirdPanel(eventViewModel: EventViewModel) {
   val showAddDialog = remember { mutableStateOf(false) }
+  val uiState by eventViewModel.uiState.collectAsState()
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_groceries),
@@ -341,16 +334,20 @@ fun ThirdPanel(
       SupplyPopup(
           onDismissRequest = { showAddDialog.value = false },
           onSave = { supplyDescription, supplyQuantity, supplyUnit ->
-            val supply =
-                ChimpagneSupply(
-                    description = supplyDescription, quantity = supplyQuantity, unit = supplyUnit)
-            suppliesRememberList.add(supply)
+            val newList =
+                uiState.supplies +
+                    ChimpagneSupply(
+                        id = (uiState.supplies.count() + 1).toString(),
+                        description = supplyDescription,
+                        quantity = supplyQuantity,
+                        unit = supplyUnit)
+            eventViewModel.updateEventSupplies(newList)
           })
     }
 
     Spacer(modifier = Modifier.height(16.dp))
     LazyColumn {
-      items(suppliesRememberList) { item ->
+      items(uiState.supplies) { item ->
         ListItem(
             headlineContent = {
               Text(
@@ -362,7 +359,10 @@ fun ThirdPanel(
             },
             trailingContent = {
               IconButton(
-                  onClick = { suppliesRememberList.remove(item) },
+                  onClick = {
+                    val newList = uiState.supplies - item
+                    eventViewModel.updateEventSupplies(newList)
+                  },
                   modifier = Modifier.testTag(item.description),
                   content = {
                     Icon(
