@@ -173,24 +173,22 @@ fun EventCreationScreen(
       } else {
         Button(
             onClick = {
-              eventViewModel.registerAllSupplies(
-                  onSuccess = {
-                    eventViewModel.updateEventSupplies(uiState.mSuppliesList.toList())
-                    Toast.makeText(
-                            context,
-                            context.getString(R.string.event_creation_screen_toast_creating),
-                            Toast.LENGTH_SHORT)
-                        .show()
-                    eventViewModel.createTheEvent(
-                        onSuccess = {
-                          Toast.makeText(
-                                  context,
-                                  context.getString(R.string.event_creation_screen_toast_finish),
-                                  Toast.LENGTH_SHORT)
-                              .show()
-                          navObject.goBack()
-                        })
-                  })
+              eventViewModel.createTheEvent({
+                  Toast.makeText(
+                      context,
+                      context.getString(R.string.event_creation_screen_toast_creating),
+                      Toast.LENGTH_SHORT)
+                      .show()
+
+                  Toast.makeText(
+                      context,
+                      context.getString(R.string.event_creation_screen_toast_finish),
+                      Toast.LENGTH_SHORT)
+                      .show()
+
+                  navObject.goBack()
+
+              }, {})
             },
             modifier = Modifier.testTag("create_event_button")) {
               Text(stringResource(id = R.string.event_creation_screen_create_event))

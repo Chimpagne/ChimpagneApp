@@ -1,8 +1,10 @@
 package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.ChimpagneSuppliesManager
@@ -91,28 +93,33 @@ class EventViewModel(
         _uiState.value.location,
         _uiState.value.public,
         _uiState.value.tags,
-        _uiState.value.supplies.map { it.id },
+        _uiState.value.mSuppliesList.map { it.id },
         _uiState.value.guests,
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.registerEvent(
-          buildChimpagneEvent(),
-          {
-            _uiState.value = _uiState.value.copy(id = it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onSuccess(it)
-          },
-          {
-            Log.d("CREATE AN EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
+
+      registerAllSupplies(
+          onSuccess = {
+
+              _uiState.value = _uiState.value.copy(loading = true)
+              viewModelScope.launch {
+                  eventManager.registerEvent(
+                      buildChimpagneEvent(),
+                      {
+                          _uiState.value = _uiState.value.copy(id = it)
+                          _uiState.value = _uiState.value.copy(loading = false)
+                          onSuccess(it)
+                      },
+                      {
+                          Log.d("CREATE AN EVENT", "Error : ", it)
+                          _uiState.value = _uiState.value.copy(loading = false)
+                          onFailure(it)
+                      })
+              }
           })
-    }
   }
 
   fun updateTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -273,17 +280,10 @@ class EventViewModel(
         supplyManager.registerSupply(
             supply,
             {
-              _uiState.value = _uiState.value.copy(id = it)
-
               supply.id = it
               _uiState.value.mSuppliesList.add(supply)
-              println("msupplieslist count:")
-              println(_uiState.value.mSuppliesList.count())
-
-              println("supplies count:")
-              println(_uiState.value.supplies.count())
               if (_uiState.value.supplies.count() == _uiState.value.mSuppliesList.count()) {
-                println("Calling onSuccess")
+                  _uiState.value = _uiState.value.copy(loading = false)
                 onSuccess()
               }
             },
@@ -291,6 +291,10 @@ class EventViewModel(
       }
     }
   }
+
+    fun registerAndCreate(onSu: () -> Unit, afterEventCreation: ()-> Unit){
+
+    }
 
   fun updateEventSupplies(newSupplies: List<ChimpagneSupply>) {
     _uiState.value = _uiState.value.copy(supplies = newSupplies)
