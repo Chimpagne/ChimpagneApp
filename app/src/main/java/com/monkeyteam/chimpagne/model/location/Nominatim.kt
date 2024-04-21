@@ -49,48 +49,81 @@ fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, lim
                         onResult(listOf())
                         return
                     }
-                    val jsonArray = jsonString?.let { JSONArray(it) }
+                    val jsonArray = JSONArray(jsonString)
                     val uniqueDisplayNames = mutableSetOf<String>()
                     val locations = mutableListOf<Location>()
 
-                    if (jsonArray != null) {
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject = jsonArray.getJSONObject(i)
-                            val addressObject = jsonObject.optJSONObject("address") ?: continue
-                            val category = jsonObject.optString("category", "")
-                            val country = addressObject.optString("country", "")
-                            val normalizedCountry = if (country == "Schweiz/Suisse/Svizzera/Svizra") "Switzerland" else country
+                    for (i in 0 until jsonArray.length()) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        val addressObject = jsonObject.optJSONObject("address") ?: continue
+                        val category = jsonObject.optString("category", "")
+                        val country = addressObject.optString("country", "")
+                        val normalizedCountry = if (country == "Schweiz/Suisse/Svizzera/Svizra") "Switzerland" else country
 
-                            val displayName = when {
-                                category == "building" -> {
-                                    val road = addressObject.optString("road", "")
-                                    val houseNumber = addressObject.optString("house_number", "")
-                                    val postcode = addressObject.optString("postcode", "")
-                                    val village = addressObject.optString("village", addressObject.optString("town", addressObject.optString("city", "")))
-                                    "$road $houseNumber, $postcode, $village, $normalizedCountry"
-                                }
-                                category == "amenity" -> {
-                                    val amenity = addressObject.optString("amenity", "")
-                                    val locality = addressObject.optString("city", addressObject.optString("town", addressObject.optString("village", "")))
-                                    val postcode = addressObject.optString("postcode", "")
-                                    "$amenity, $locality, $postcode, $normalizedCountry"
-                                }
-                                else -> {
-                                    val specificCategoryValue = addressObject.optString(category, "")
-                                    val locality = addressObject.optString("city", addressObject.optString("town", addressObject.optString("village", "")))
-                                    val postcode = addressObject.optString("postcode", "")
-                                    if (specificCategoryValue.isNotEmpty()) "$specificCategoryValue, $category, $locality, $postcode, $normalizedCountry"
-                                    else "$locality, $postcode, $normalizedCountry"
-                                }
+                        val displayName = when (category) {
+                            "building" -> {
+                                val components = listOfNotNull(
+                                    addressObject.optString("road", "").takeIf { it.isNotEmpty() },
+                                    addressObject.optString("house_number", "")
+                                        .takeIf { it.isNotEmpty() },
+                                    addressObject.optString("postcode", "")
+                                        .takeIf { it.isNotEmpty() },
+                                    addressObject.optString(
+                                        "village",
+                                        addressObject.optString(
+                                            "town",
+                                            addressObject.optString("city", "")
+                                        )
+                                    ).takeIf { it.isNotEmpty() },
+                                    normalizedCountry.takeIf { it.isNotEmpty() }
+                                )
+
+                                components.joinToString(", ")
                             }
+                            "amenity" -> {
+                                val components = listOfNotNull(
+                                    addressObject.optString("amenity", "")
+                                        .takeIf { it.isNotEmpty() },
+                                    addressObject.optString(
+                                        "city",
+                                        addressObject.optString(
+                                            "town",
+                                            addressObject.optString("village", "")
+                                        )
+                                    ).takeIf { it.isNotEmpty() },
+                                    addressObject.optString("postcode", "")
+                                        .takeIf { it.isNotEmpty() },
+                                    normalizedCountry.takeIf { it.isNotEmpty() }
+                                )
 
-                            // Deduplication based on display name
-                            if (uniqueDisplayNames.add(displayName)) {
-                                val lat = jsonObject.getDouble("lat")
-                                val lon = jsonObject.getDouble("lon")
-                                locations.add(Location(displayName, lat, lon))
+                                components.joinToString(", ")
+                            }
+                            else -> {
+                                val components = listOfNotNull(
+                                    addressObject.optString(category, "")
+                                        .takeIf { it.isNotEmpty() },
+                                    addressObject.optString(
+                                        "city",
+                                        addressObject.optString(
+                                            "town",
+                                            addressObject.optString("village", "")
+                                        )
+                                    ).takeIf { it.isNotEmpty() },
+                                    addressObject.optString("postcode", "")
+                                        .takeIf { it.isNotEmpty() },
+                                    normalizedCountry.takeIf { it.isNotEmpty() }
+                                )
+
+                                components.joinToString(", ")
                             }
                         }
+
+                        if (uniqueDisplayNames.add(displayName)) {
+                            val lat = jsonObject.getDouble("lat")
+                            val lon = jsonObject.getDouble("lon")
+                            locations.add(Location(displayName, lat, lon))
+                        }
+
                     }
 
                     if (locations.isNotEmpty()) {
