@@ -86,7 +86,7 @@ class LocationSelectorTest {
 
         convertNameToLocations("Empire State", { locations ->
             assertTrue(locations.isNotEmpty())
-            assertEquals("Wilshire Boulevard 123, 90210, Beverly Hills, USA", locations.first().name)
+            assertEquals("Wilshire Boulevard, 123, 90210, Beverly Hills, USA", locations.first().name)
             assertEquals(34.069, locations.first().latitude, 0.001)
             assertEquals(-118.406, locations.first().longitude, 0.001)
             latch.countDown()
