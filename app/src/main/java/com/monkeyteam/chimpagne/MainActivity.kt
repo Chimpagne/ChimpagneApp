@@ -62,8 +62,7 @@ class MainActivity : ComponentActivity() {
         }
 
         // Determine the start destination based on the isAuthenticated state
-        // Using null check to decide, assuming that null means the auth state is still being$
-        // determined
+        // Using null check to decide, assuming that null means the auth state is still being determined
         val startDestination =
             if (FirebaseAuth.getInstance().currentUser != null) {
               loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
