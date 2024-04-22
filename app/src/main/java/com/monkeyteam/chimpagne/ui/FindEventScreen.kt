@@ -42,7 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -105,12 +104,12 @@ fun MainFindEventScreen(
   }
 
   val goToForm: () -> Unit = {
-    coroutineScope.launch { pagerState.animateScrollToPage(FindEventScreens.FORM) }
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.FORM) }
     findViewModel.setLoading(false)
   }
 
-  val goToMap: () -> Unit = {
-    coroutineScope.launch { pagerState.animateScrollToPage(FindEventScreens.MAP) }
+  val displayResult: () -> Unit = {
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.MAP) }
   }
 
   val fetchEvents: () -> Unit = {
@@ -118,12 +117,13 @@ fun MainFindEventScreen(
       noSelectedLocationToast()
     } else {
       coroutineScope.launch {
-        findViewModel.fetchEvents(onSuccess = { goToMap() }, onFailure = { noResultToast() })
+        findViewModel.fetchEvents(onSuccess = { displayResult() }, onFailure = { noResultToast() })
       }
     }
   }
 
-  HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
+  HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 1) { page
+    ->
     when (page) {
       FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
       FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel)
@@ -264,7 +264,6 @@ fun FindEventMapScreen(
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  var isMapInitialized by remember { mutableStateOf(false) }
   var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
 
   val cameraPositionState = rememberCameraPositionState {
@@ -273,8 +272,9 @@ fun FindEventMapScreen(
   val onMarkerClick: (MarkerData) -> Unit = { markerData ->
     coroutineScope.launch {
       currentEvent = uiState.events[markerData.id]
-      launch { scaffoldState.bottomSheetState.expand() }
       launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markerData.position)) }
+
+      launch { scaffoldState.bottomSheetState.expand() }
     }
   }
 
@@ -292,22 +292,14 @@ fun FindEventMapScreen(
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
-        DisposableEffect(Unit) {
-          isMapInitialized = true
-          onDispose { isMapInitialized = false }
-        }
-
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
-          if (isMapInitialized) {
-            MapContainer(
-                bottomSheetState = scaffoldState.bottomSheetState,
-                cameraPositionState = cameraPositionState,
-                onMarkerClick = onMarkerClick,
-                isMapInitialized = true,
-                events = uiState.events,
-                radius = uiState.radiusAroundLocationInM,
-                startingPosition = uiState.selectedLocation)
-          }
+          MapContainer(
+              cameraPositionState = cameraPositionState,
+              onMarkerClick = onMarkerClick,
+              isMapInitialized = true,
+              events = uiState.events,
+              radius = uiState.radiusAroundLocationInM,
+              startingPosition = uiState.selectedLocation)
 
           IconButton(
               modifier =

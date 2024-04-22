@@ -3,16 +3,12 @@ package com.monkeyteam.chimpagne.ui.utilities
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,26 +40,18 @@ fun getZoomLevel(radius: Double): Float {
   return (16 - ln(scale) / ln(2.0)).toFloat()
 }
 
-@OptIn(ExperimentalMaterial3Api::class, MapsComposeExperimentalApi::class)
+@OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     isMapInitialized: Boolean = false,
-    bottomSheetState: SheetState,
     onMarkerClick: (MarkerData) -> Unit,
     events: Map<String, ChimpagneEvent>,
     radius: Double,
     startingPosition: Location?,
 ) {
 
-  val dynamicBottomPadding =
-      when (bottomSheetState.targetValue) {
-        SheetValue.Expanded -> 180.dp
-        SheetValue.PartiallyExpanded -> 0.dp
-        SheetValue.Hidden -> 0.dp
-      }
-
-  LaunchedEffect(events) {
+  LaunchedEffect(events, radius, startingPosition) {
     if (events.isNotEmpty() && startingPosition != null) {
 
       val zoomLevel = getZoomLevel(radius)
@@ -78,8 +66,7 @@ fun MapContainer(
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
-        modifier =
-            Modifier.testTag("ggle_maps").fillMaxSize().padding(bottom = dynamicBottomPadding),
+        modifier = Modifier.testTag("ggle_maps").fillMaxSize(),
         uiSettings =
             MapUiSettings(
                 zoomControlsEnabled = false,
