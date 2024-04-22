@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -134,10 +135,10 @@ fun ViewDetailEventScreen(
                                 .absolutePadding(left = 16.dp, right = 16.dp)
                         )
                         Spacer(Modifier.height(16.dp))
-                        Spacer(Modifier.height(16.dp))
                         if (canEditEvent) {
                             ChimpagneButton(
                                 text = "Edit this event",
+                                icon = Icons.Rounded.Edit,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier = Modifier

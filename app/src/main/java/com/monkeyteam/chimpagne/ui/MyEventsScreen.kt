@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Create
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material3.Button

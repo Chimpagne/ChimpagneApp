@@ -69,12 +69,13 @@ fun IconTextButton(
   Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier =
-          modifier
-              .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-              .background(
-                  shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant)
-              .clickable(onClick = onClick)
-              .padding(horizontal = 24.dp, vertical = 12.dp)) {
+      modifier
+          .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+          .background(
+              shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant
+          )
+          .clickable(onClick = onClick)
+          .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
         Text(text)
