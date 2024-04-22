@@ -14,10 +14,9 @@ import junit.framework.TestCase.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.File
 
 @RunWith(AndroidJUnit4::class)
-class AccountViewModelTests {
+class AccountSystemTests {
   val accounts = Firebase.firestore.collection("testAccounts")
   val profilePictures = Firebase.storage.reference.child("testAccounts")
 
@@ -42,19 +41,22 @@ class AccountViewModelTests {
 
   @Before
   fun signIn() {
+    var count = 3
     accounts.get().addOnSuccessListener { documents ->
       for (doc in documents) {
         doc.reference.delete()
       }
     }.addOnCompleteListener {
-      accounts.document(testAccount1.firebaseAuthUID).set(testAccount1)
-      accounts.document(testAccount2.firebaseAuthUID).set(testAccount2)
+      accounts.document(testAccount1.firebaseAuthUID).set(testAccount1).addOnCompleteListener { count-- }
+      accounts.document(testAccount2.firebaseAuthUID).set(testAccount2).addOnCompleteListener { count-- }
     }
     profilePictures.delete().addOnCompleteListener {
 
-    val uri = Uri.parse("android.resource://com.monkeyteam.chimpagne/" + R.drawable.chimpagne_app_logo)
-      profilePictures.child(testAccount1.firebaseAuthUID).putFile(uri)
+      val uri = Uri.parse("android.resource://com.monkeyteam.chimpagne/" + R.drawable.chimpagne_app_logo)
+        profilePictures.child(testAccount1.firebaseAuthUID).putFile(uri).addOnCompleteListener { count-- }
     }
+
+    while (count > 0) {}
   }
 
 
@@ -71,6 +73,7 @@ class AccountViewModelTests {
     accountViewModel.loginToChimpagneAccount("banana", {}, {})
     while (accountViewModel.uiState.value.loading) {}
 
+    assertEquals(null, accountManager.currentUserAccount)
     assertEquals(null, accountViewModel.uiState.value.currentUserAccount)
     assertEquals(null, accountViewModel.uiState.value.currentUserProfilePicture)
     assertEquals("banana", accountViewModel.uiState.value.currentUserUID)
@@ -95,5 +98,28 @@ class AccountViewModelTests {
     assertEquals(testAccount2, accountViewModel.uiState.value.currentUserAccount)
     assertEquals(null, accountViewModel.uiState.value.currentUserProfilePicture)
     assertEquals(testAccount2.firebaseAuthUID, accountViewModel.uiState.value.currentUserUID)
+  }
+
+  @Test
+  fun testAccountEdition() {
+    val accountViewModel = AccountViewModel(accountManager = accountManager)
+
+    accountViewModel.loginToChimpagneAccount(testAccount1.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    assertEquals(testAccount1, accountViewModel.uiState.value.currentUserAccount)
+    assertEquals(ChimpagneAccount(), accountViewModel.uiState.value.tempAccount)
+    accountViewModel.copyRealToTemp()
+    assertEquals(testAccount1, accountViewModel.uiState.value.tempAccount)
+
+    accountViewModel.updateFirstName("Quiche")
+    accountViewModel.updateLastName("Lorraine")
+    accountViewModel.updateLocation(Location("USA"))
+    assertEquals(testAccount1, accountViewModel.uiState.value.currentUserAccount)
+    assertEquals(testAccount1.copy(firstName = "Quiche", lastName = "Lorraine", location = Location("USA")), accountViewModel.uiState.value.tempAccount)
+    accountViewModel.submitUpdatedAccount({}, {})
+    while (accountViewModel.uiState.value.loading) {}
+    assertEquals(testAccount1.copy(firstName = "Quiche", lastName = "Lorraine", location = Location("USA")), accountViewModel.uiState.value.currentUserAccount)
+
   }
 }
