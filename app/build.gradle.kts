@@ -81,6 +81,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.maps.compose)
+    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockwebserver)
@@ -89,6 +90,11 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    //For mockk
+    androidTestImplementation(libs.mockito.core)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockito.kotlin)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -103,6 +109,7 @@ dependencies {
     implementation(libs.maps.compose)
 
     implementation(libs.coil.compose)
+
 
 }
 

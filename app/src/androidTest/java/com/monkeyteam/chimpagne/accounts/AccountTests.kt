@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne
+package com.monkeyteam.chimpagne.accounts
 
 import AccountSettings
 import androidx.compose.ui.test.assertTextContains

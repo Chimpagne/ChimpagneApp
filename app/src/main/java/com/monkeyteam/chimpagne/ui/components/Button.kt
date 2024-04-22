@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +36,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 fun ChimpagneButton(
     modifier: Modifier = Modifier,
     text: String,
+    icon: ImageVector? = null,
     fontWeight: FontWeight,
     fontSize: TextUnit,
     onClick: () -> Unit,
@@ -42,12 +44,21 @@ fun ChimpagneButton(
     shape: Shape = RoundedCornerShape(12.dp),
     padding: PaddingValues = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
 ) {
-  Button(
-      onClick = onClick,
-      modifier = modifier.wrapContentWidth().padding(horizontal = 24.dp),
-      colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-      shape = shape,
-      contentPadding = padding) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .wrapContentWidth()
+            .padding(horizontal = 24.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+        shape = shape,
+        contentPadding = padding) {
+        if(icon != null){
+            Icon(
+                imageVector = icon,
+                contentDescription = "Button icon desc"
+            )
+            Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+        }
         Text(
             text = text,
             modifier = Modifier.weight(1f),
@@ -56,7 +67,7 @@ fun ChimpagneButton(
             fontSize = fontSize,
             lineHeight = fontSize,
             textAlign = TextAlign.Center)
-      }
+    }
 }
 
 @Composable

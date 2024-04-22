@@ -1,6 +1,8 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
+import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -51,32 +54,6 @@ fun TextInputField(
       onValueChange = onValueChange,
       label = { Text(stringResource(id = label)) })
   Spacer(modifier = Modifier.height(16.dp))
-}
-
-@Composable
-fun LanguageSwitch(
-    modifier: Modifier = Modifier,
-    isEnglish: Boolean,
-    onToggleLanguage: (Boolean) -> Unit
-) {
-  Row(verticalAlignment = Alignment.CenterVertically) {
-    Text("Language")
-    Spacer(modifier = Modifier.width(16.dp))
-    Switch(
-        modifier = modifier,
-        checked = isEnglish,
-        onCheckedChange = onToggleLanguage,
-        thumbContent = {
-          if (isEnglish) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_english),
-                contentDescription = "English")
-          } else {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_french), contentDescription = "French")
-          }
-        })
-  }
 }
 
 @Composable
@@ -125,7 +102,6 @@ fun AccountChangeBody(
     commitButtontext: Int,
     commitButtonIcon: Int,
     commitOnClick: () -> Unit = {},
-    to_navigate_next: String,
     navObject: NavigationActions,
 ) {
   Scaffold(
@@ -173,14 +149,27 @@ fun AccountChangeBody(
                   value = lastName,
                   onValueChange = lastNameChange)
               LocationSelector(selectedLocation = location, updateSelectedLocation = locationChange)
+              Spacer(modifier = Modifier.height(10.dp))
               SaveChangesButton(
-                  onClick = {
-                    commitOnClick()
-                    navObject.navigateTo(to_navigate_next)
-                  },
+                  onClick = commitOnClick,
                   text = commitButtontext,
                   iconId = commitButtonIcon,
                   contentDescription = "Logout icon")
             }
       }
+}
+
+fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
+  return if (account.firstName == "") {
+    Toast.makeText(context, "First name cannot be empty", Toast.LENGTH_SHORT).show()
+    false
+  } else if (account.lastName == "") {
+    Toast.makeText(context, "Last name cannot be empty", Toast.LENGTH_SHORT).show()
+    false
+  } else if (account.location.name == "") {
+    Toast.makeText(context, "Location cannot be empty", Toast.LENGTH_SHORT).show()
+    false
+  } else {
+    true
+  }
 }

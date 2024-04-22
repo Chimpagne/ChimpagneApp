@@ -21,14 +21,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 
 @Composable
-fun LoginScreen(onSuccessfulLogin: (email: String) -> Unit) {
+fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit) {
   val openAlertDialog = remember { mutableStateOf(false) }
   Column(
       modifier = Modifier.fillMaxSize().padding(15.dp),
@@ -42,13 +44,10 @@ fun LoginScreen(onSuccessfulLogin: (email: String) -> Unit) {
 
         Column {
           Text(
-              text = "Welcome to",
+              text = stringResource(id = R.string.welcome_screen_title),
               fontSize = 60.sp,
-          )
-          Text(
-              text = "Chimpagne",
-              fontSize = 60.sp,
-          )
+              modifier = Modifier.testTag("welcome_screen_title"))
+          Text(text = "Chimpagne", fontSize = 60.sp, modifier = Modifier.testTag("Chimpagne"))
         }
         GoogleAuthentication(
             onSuccessfulLogin,
