@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
@@ -137,17 +138,26 @@ class LoginScreenTest {
 
     @Test
     fun checkUI() {
+        composeTestRule.setContent {
+            LoginScreen({})
         }
+
+        composeTestRule.onNodeWithContentDescription("App Logo").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("welcome_screen_title").assertTextContains(getWelcomeScreenText())
+
+    }
 
     @Test
     fun checkAlertDialog() {
-
+        composeTestRule.setContent {
+            LoginScreen({})
+        }
     }
 }
 
-    private fun assertIsWithinOne(toBeCompared: Int, expected: Int) {
-        assert(toBeCompared == expected || toBeCompared == expected + 1 || toBeCompared == expected - 1)
-    }
+private fun assertIsWithinOne(toBeCompared: Int, expected: Int) {
+    assert(toBeCompared == expected || toBeCompared == expected + 1 || toBeCompared == expected - 1)
+}
 private fun getWelcomeScreenText(): String {
     val currentLocale = Locale.getDefault()
     return if (currentLocale.language == "fr") {
