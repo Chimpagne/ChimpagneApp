@@ -138,7 +138,7 @@ fun ViewDetailEventScreen(
                         if (canEditEvent) {
                             ChimpagneButton(
                                 text = "Edit this event",
-                                icon = Icons.Rounded.Edit,
+                                //icon = Icons.Rounded.Edit,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier = Modifier
