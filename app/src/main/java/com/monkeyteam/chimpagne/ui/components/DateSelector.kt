@@ -31,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -82,7 +83,7 @@ fun DateSelector(
               },
       icon = Icons.Rounded.CalendarToday,
       onClick = { showDatePicker = true },
-      modifier = modifier)
+      modifier = modifier.testTag("dateSelector"))
 
   // Show date picker dialog when showDatePicker is true
   if (showDatePicker) {
@@ -104,7 +105,8 @@ fun DateSelector(
                 } else {
                   onDateSelected(dateToUse)
                 }
-              }) {
+              },
+              modifier = Modifier.testTag("selectDate")) {
                 Text("OK")
               }
         }) {
@@ -126,7 +128,8 @@ fun DateSelector(
                 val minute = timePickerState.minute
 
                 onDateSelected(buildCalendar(day, month, year, hour, minute))
-              }) {
+              },
+              modifier = Modifier.testTag("selectTime")) {
                 Text("OK")
               }
         }) {
@@ -160,7 +163,7 @@ fun TimePickerDialog(
               modifier = Modifier.padding(24.dp),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp).testTag("title"),
                     text = title,
                     style = MaterialTheme.typography.labelMedium)
                 content()

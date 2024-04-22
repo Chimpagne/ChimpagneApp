@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -51,17 +53,19 @@ fun GoogleAuthentication(
   val signInIntent =
       AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build()
 
-  OutlinedButton(onClick = { signInLauncher.launch(signInIntent) }, modifier = modifier) {
-    Row {
-      Image(
-          painter = painterResource(id = R.drawable.google_logo),
-          contentDescription = "Google Logo",
-          modifier = Modifier.size(40.dp).align(Alignment.CenterVertically))
-      Text(
-          text = "Sign in with Google",
-          Modifier.align(Alignment.CenterVertically).padding(start = 25.dp))
-    }
-  }
+  OutlinedButton(
+      onClick = { signInLauncher.launch(signInIntent) },
+      modifier = modifier.testTag("googleAuthenticationButton")) {
+        Row {
+          Image(
+              painter = painterResource(id = R.drawable.google_logo),
+              contentDescription = "Google Logo",
+              modifier = Modifier.size(40.dp).align(Alignment.CenterVertically))
+          Text(
+              text = stringResource(id = R.string.sign_in_with_google),
+              modifier = Modifier.align(Alignment.CenterVertically).padding(start = 25.dp))
+        }
+      }
 }
 
 fun getFireBaseUser(): FirebaseUser? {

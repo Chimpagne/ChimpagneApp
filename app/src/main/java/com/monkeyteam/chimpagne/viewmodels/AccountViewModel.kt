@@ -111,7 +111,7 @@ class AccountViewModel(
 /**
  * [currentUserUID] this field will be null iff he isn't sign in to Firebase
  * [currentUserAccount] this field will be null if the user isn't sign in to Firebase or if he doesn't have Chimpagne Account
- * [tempAccount] this field is used to store temporal data in forms that will be submitted
+ * [tempAccount] this field is used to store temporary data in forms that will be submitted
  */
 data class AccountUIState(
   val currentUserUID: String? = null,
