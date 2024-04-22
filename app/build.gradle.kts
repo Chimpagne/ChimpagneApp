@@ -81,6 +81,7 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.maps.compose)
+    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockwebserver)

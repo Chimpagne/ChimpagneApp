@@ -30,7 +30,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 
 @Composable
-fun LoginScreen(onSuccessfulLogin: (email: String) -> Unit) {
+fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit) {
   val openAlertDialog = remember { mutableStateOf(false) }
   Column(
       modifier = Modifier.fillMaxSize().padding(15.dp),

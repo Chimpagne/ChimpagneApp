@@ -9,29 +9,9 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
-import com.google.firebase.firestore.toObjects
 import com.monkeyteam.chimpagne.model.location.Location
 
 class ChimpagneEventManager(private val events: CollectionReference) {
-  fun getAllEvents(onSuccess: (List<ChimpagneEvent>) -> Unit, onFailure: (Exception) -> Unit) {
-    events
-        .get()
-        .addOnSuccessListener { onSuccess(it.toObjects<ChimpagneEvent>()) }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  fun getAllEventsByFilter(
-      filter: Filter,
-      onSuccess: (List<ChimpagneEvent>) -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .where(filter)
-        .get()
-        .addOnSuccessListener { onSuccess(it.toObjects<ChimpagneEvent>()) }
-        .addOnFailureListener { onFailure(it) }
-  }
-
   fun getAllEventsByFilterAroundLocation(
       center: Location,
       radiusInM: Double,
@@ -96,13 +76,22 @@ class ChimpagneEventManager(private val events: CollectionReference) {
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun registerEvent(
+  fun createEvent(
       event: ChimpagneEvent,
       onSuccess: (id: String) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (Database.instance.accountManager.currentUserAccount == null) {
+      onFailure(Exception("User not signed in"))
+      return
+    }
+
     val eventId = events.document().id
-    updateEvent(event.copy(id = eventId), { onSuccess(eventId) }, onFailure)
+    updateEvent(
+        event.copy(
+            id = eventId, ownerId = Database.instance.accountManager.currentUserAccount?.firebaseAuthUID!!),
+        { onSuccess(eventId) },
+        onFailure)
   }
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
