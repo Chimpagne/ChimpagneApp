@@ -17,9 +17,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Backpack
 import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.Chat
+import androidx.compose.material.icons.rounded.ChatBubbleOutline
+import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -138,7 +143,7 @@ fun ViewDetailEventScreen(
                         if (canEditEvent) {
                             ChimpagneButton(
                                 text = "Edit this event",
-                                //icon = Icons.Rounded.Edit,
+                                icon = Icons.Rounded.Edit,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier = Modifier
@@ -152,6 +157,7 @@ fun ViewDetailEventScreen(
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = "Chat",
+                            icon = Icons.Rounded.ChatBubbleOutline,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier = Modifier
@@ -170,6 +176,7 @@ fun ViewDetailEventScreen(
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = "Location",
+                            icon = Icons.Rounded.LocationOn,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier = Modifier
@@ -188,6 +195,7 @@ fun ViewDetailEventScreen(
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = "Supplies",
+                            icon = Icons.Rounded.Backpack,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier = Modifier
@@ -206,6 +214,7 @@ fun ViewDetailEventScreen(
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = "Polls and voting",
+                            icon = Icons.Rounded.Poll,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier = Modifier
@@ -224,6 +233,7 @@ fun ViewDetailEventScreen(
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = "Car pooling",
+                            icon = Icons.Rounded.DirectionsCar,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier = Modifier
