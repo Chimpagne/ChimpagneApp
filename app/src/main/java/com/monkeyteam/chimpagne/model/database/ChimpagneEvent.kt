@@ -9,14 +9,15 @@ import java.util.Calendar
 // https://stackoverflow.com/questions/39815117/add-an-item-to-a-list-in-firebase-database
 data class ChimpagneEvent(
     val id: String = "",
-    val title: String = "Default Name",
-    val description: String = "Default Description",
+    val title: String = "",
+    val description: String = "",
     val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = listOf(),
     val guests: Map<String, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
-    val endsAtTimestamp: Timestamp = Timestamp.now()
+    val endsAtTimestamp: Timestamp = Timestamp.now(),
+    val ownerId: String = ""
 ) {
 
   fun guestList(): Set<String> {

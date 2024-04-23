@@ -4,18 +4,26 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class EventViewModelTests {
+  @Before
+  fun signIn() {
+    Database.instance.accountManager.signInTo(ChimpagneAccount())
+  }
+
   @get:Rule val composeTestRule = createComposeRule()
 
   private val eventManager: ChimpagneEventManager =

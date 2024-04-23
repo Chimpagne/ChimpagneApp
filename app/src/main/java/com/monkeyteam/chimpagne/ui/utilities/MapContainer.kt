@@ -72,6 +72,7 @@ fun MapContainer(
                 zoomControlsEnabled = false,
                 myLocationButtonEnabled = false,
                 mapToolbarEnabled = false)) {
+
           if (startingPosition != null) {
             Circle(
                 center = LatLng(startingPosition.latitude, startingPosition.longitude),
@@ -99,8 +100,10 @@ fun MapContainer(
         }
   } else {
     // Display a placeholder or loading indicator
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-      CircularProgressIndicator() // You can customize this part as needed
+    Box(
+        modifier = Modifier.fillMaxSize().testTag("progressBar"),
+        contentAlignment = Alignment.Center) {
+          CircularProgressIndicator() // You can customize this part as needed
     }
   }
 }

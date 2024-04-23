@@ -81,7 +81,7 @@ class EventViewModel(
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      eventManager.registerEvent(
+      eventManager.createEvent(
           buildChimpagneEvent(),
           {
             _uiState.value = _uiState.value.copy(id = it)
