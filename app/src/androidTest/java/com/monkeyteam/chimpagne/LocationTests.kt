@@ -1,31 +1,19 @@
 package com.monkeyteam.chimpagne
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
-import androidx.compose.ui.test.printToLog
 import com.monkeyteam.chimpagne.model.location.NominatimConstants
 import com.monkeyteam.chimpagne.model.location.convertNameToLocations
-import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 
-class LocationSelectorTest {
+class LocationTests {
 
     private lateinit var server: MockWebServer
 
