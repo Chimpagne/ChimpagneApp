@@ -44,20 +44,15 @@ fun ChimpagneButton(
     shape: Shape = RoundedCornerShape(12.dp),
     padding: PaddingValues = PaddingValues(horizontal = 18.dp, vertical = 10.dp)
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .wrapContentWidth()
-            .padding(horizontal = 24.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
-        shape = shape,
-        contentPadding = padding) {
-        if(icon != null){
-            Icon(
-                imageVector = icon,
-                contentDescription = "Button icon desc"
-            )
-            Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+  Button(
+      onClick = onClick,
+      modifier = modifier.wrapContentWidth().padding(horizontal = 24.dp),
+      colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
+      shape = shape,
+      contentPadding = padding) {
+        if (icon != null) {
+          Icon(imageVector = icon, contentDescription = "Button icon desc")
+          Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
         }
         Text(
             text = text,
@@ -67,7 +62,7 @@ fun ChimpagneButton(
             fontSize = fontSize,
             lineHeight = fontSize,
             textAlign = TextAlign.Center)
-    }
+      }
 }
 
 @Composable
@@ -80,13 +75,12 @@ fun IconTextButton(
   Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier =
-      modifier
-          .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-          .background(
-              shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant
-          )
-          .clickable(onClick = onClick)
-          .padding(horizontal = 24.dp, vertical = 12.dp)) {
+          modifier
+              .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+              .background(
+                  shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant)
+              .clickable(onClick = onClick)
+              .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
         Text(text)

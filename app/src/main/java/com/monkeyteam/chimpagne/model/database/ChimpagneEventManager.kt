@@ -89,7 +89,8 @@ class ChimpagneEventManager(private val events: CollectionReference) {
     val eventId = events.document().id
     updateEvent(
         event.copy(
-            id = eventId, ownerId = Database.instance.accountManager.currentUserAccount?.firebaseAuthUID!!),
+            id = eventId,
+            ownerId = Database.instance.accountManager.currentUserAccount?.firebaseAuthUID!!),
         { onSuccess(eventId) },
         onFailure)
   }

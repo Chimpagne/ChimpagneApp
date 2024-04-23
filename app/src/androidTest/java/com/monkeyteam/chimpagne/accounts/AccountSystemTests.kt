@@ -21,45 +21,51 @@ class AccountSystemTests {
   val accounts = Firebase.firestore.collection("testAccounts")
   val profilePictures = Firebase.storage.reference.child("testAccounts")
 
-  private val accountManager: ChimpagneAccountManager = ChimpagneAccountManager(
-    accounts,
-    profilePictures
-  )
+  private val accountManager: ChimpagneAccountManager =
+      ChimpagneAccountManager(accounts, profilePictures)
 
-  private val testAccount1 = ChimpagneAccount(
-    firebaseAuthUID = "ILOVEBANANAS",
-    firstName = "Monkey",
-    lastName = "Prince",
-    location = Location(name = "The monkeys' jungle")
-  )
+  private val testAccount1 =
+      ChimpagneAccount(
+          firebaseAuthUID = "ILOVEBANANAS",
+          firstName = "Monkey",
+          lastName = "Prince",
+          location = Location(name = "The monkeys' jungle"))
 
-  private val testAccount2 = ChimpagneAccount(
-    firebaseAuthUID = "JOJO",
-    firstName = "Manu",
-    lastName = "Jojo",
-    location = Location(name = "The monkeys' jungle")
-  )
+  private val testAccount2 =
+      ChimpagneAccount(
+          firebaseAuthUID = "JOJO",
+          firstName = "Manu",
+          lastName = "Jojo",
+          location = Location(name = "The monkeys' jungle"))
 
   @Before
   fun signIn() {
     var count = 3
-    accounts.get().addOnSuccessListener { documents ->
-      for (doc in documents) {
-        doc.reference.delete()
-      }
-    }.addOnCompleteListener {
-      accounts.document(testAccount1.firebaseAuthUID).set(testAccount1).addOnCompleteListener { count-- }
-      accounts.document(testAccount2.firebaseAuthUID).set(testAccount2).addOnCompleteListener { count-- }
-    }
+    accounts
+        .get()
+        .addOnSuccessListener { documents ->
+          for (doc in documents) {
+            doc.reference.delete()
+          }
+        }
+        .addOnCompleteListener {
+          accounts.document(testAccount1.firebaseAuthUID).set(testAccount1).addOnCompleteListener {
+            count--
+          }
+          accounts.document(testAccount2.firebaseAuthUID).set(testAccount2).addOnCompleteListener {
+            count--
+          }
+        }
     profilePictures.delete().addOnCompleteListener {
-
-      val uri = Uri.parse("android.resource://com.monkeyteam.chimpagne/" + R.drawable.chimpagne_app_logo)
-        profilePictures.child(testAccount1.firebaseAuthUID).putFile(uri).addOnCompleteListener { count-- }
+      val uri =
+          Uri.parse("android.resource://com.monkeyteam.chimpagne/" + R.drawable.chimpagne_app_logo)
+      profilePictures.child(testAccount1.firebaseAuthUID).putFile(uri).addOnCompleteListener {
+        count--
+      }
     }
 
     while (count > 0) {}
   }
-
 
   @Test
   fun testLogin() {
@@ -117,10 +123,13 @@ class AccountSystemTests {
     accountViewModel.updateLastName("Lorraine")
     accountViewModel.updateLocation(Location("USA"))
     assertEquals(testAccount1, accountViewModel.uiState.value.currentUserAccount)
-    assertEquals(testAccount1.copy(firstName = "Quiche", lastName = "Lorraine", location = Location("USA")), accountViewModel.uiState.value.tempAccount)
+    assertEquals(
+        testAccount1.copy(firstName = "Quiche", lastName = "Lorraine", location = Location("USA")),
+        accountViewModel.uiState.value.tempAccount)
     accountViewModel.submitUpdatedAccount({}, {})
     while (accountViewModel.uiState.value.loading) {}
-    assertEquals(testAccount1.copy(firstName = "Quiche", lastName = "Lorraine", location = Location("USA")), accountViewModel.uiState.value.currentUserAccount)
-
+    assertEquals(
+        testAccount1.copy(firstName = "Quiche", lastName = "Lorraine", location = Location("USA")),
+        accountViewModel.uiState.value.currentUserAccount)
   }
 }

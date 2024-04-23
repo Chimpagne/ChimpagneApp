@@ -66,7 +66,8 @@ class MainActivity : ComponentActivity() {
         }
 
         // Determine the start destination based on the isAuthenticated state
-        // Using null check to decide, assuming that null means the auth state is still being determined
+        // Using null check to decide, assuming that null means the auth state is still being
+        // determined
         val startDestination =
             if (FirebaseAuth.getInstance().currentUser != null) {
               loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
@@ -77,9 +78,7 @@ class MainActivity : ComponentActivity() {
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = startDestination) {
-            composable(Route.LOGIN_SCREEN) {
-              LoginScreen { uid -> loginToChimpagneAccount(uid) }
-            }
+            composable(Route.LOGIN_SCREEN) { LoginScreen { uid -> loginToChimpagneAccount(uid) } }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }
@@ -100,12 +99,10 @@ class MainActivity : ComponentActivity() {
             }
             composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
               ViewDetailEventScreen(
-                navObject = navActions,
-                eventViewModel = EventViewModel(backStackEntry.arguments?.getString("EventID")),
-                canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean()
-              )
+                  navObject = navActions,
+                  eventViewModel = EventViewModel(backStackEntry.arguments?.getString("EventID")),
+                  canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
             }
-
           }
         }
       }
