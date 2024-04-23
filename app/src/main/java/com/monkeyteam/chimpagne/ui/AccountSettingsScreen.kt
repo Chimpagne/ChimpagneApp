@@ -19,6 +19,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +42,7 @@ fun AccountSettings(
     accountViewModel: AccountViewModel,
     logout: () -> Unit = {}
 ) {
-  val account = accountViewModel.userChimpagneAccount.collectAsState()
+  val accountViewModelState by accountViewModel.uiState.collectAsState()
 
   Scaffold(
       topBar = {
@@ -67,7 +68,6 @@ fun AccountSettings(
             })
       },
       floatingActionButton = {
-        // TODO has to be changed to edit
         FloatingActionButton(onClick = { navObject.navigateTo(Route.ACCOUNT_EDIT_SCREEN) }) {
           Icon(
               painter = painterResource(id = R.drawable.edit_pen),
@@ -81,19 +81,19 @@ fun AccountSettings(
             modifier = Modifier.padding(paddingValues).padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(modifier = Modifier.height(10.dp))
-              ProfileImage(imageUri = account.value?.profilePictureUri)
+              ProfileImage(imageUri = accountViewModelState.currentUserProfilePicture)
 
               SettingItem(
                   label = "First Name",
-                  value = account.value?.firstName ?: "",
+                  value = accountViewModelState.currentUserAccount?.firstName ?: "",
                   modifierText = Modifier.testTag("firstNameTextField"))
               SettingItem(
                   label = "Last Name",
-                  value = account.value?.lastName ?: "",
+                  value = accountViewModelState.currentUserAccount?.lastName ?: "",
                   modifierText = Modifier.testTag("lastNameTextField"))
               SettingItem(
                   label = "Location",
-                  value = account.value?.location?.name ?: "",
+                  value = accountViewModelState.currentUserAccount?.location?.name ?: "",
                   modifierText = Modifier.testTag("locationTextField"))
 
               Spacer(modifier = Modifier.height(8.dp))

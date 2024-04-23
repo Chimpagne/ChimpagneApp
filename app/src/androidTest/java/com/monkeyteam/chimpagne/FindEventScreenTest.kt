@@ -22,8 +22,7 @@ class FindEventScreenTest {
 
   @Test
   fun testEventDetailSheetDisplay() {
-    // Should work like that, see ChimpagneEvent.kt
-    val sampleEvent = ChimpagneEvent()
+    val sampleEvent = ChimpagneEvent(title="banana", description = "MONKEY" )
 
     composeTestRule.setContent { EventDetailSheet(sampleEvent) }
 

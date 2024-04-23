@@ -54,5 +54,8 @@
     <string name="supplies_unit">Unit</string>
     <string name="chimpagne_cancel">Cancel</string>
     <string name="chimpagne_add">Add</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="welcome_screen_title">Welcome to</string>
+
 
 </resources>

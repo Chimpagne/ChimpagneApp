@@ -10,15 +10,16 @@ import java.util.Calendar
 /** /!\ All attributes must have default values /!\ */
 data class ChimpagneEvent(
     val id: String = "",
-    val title: String = "Default Name",
-    val description: String = "Default Description",
+    val title: String = "",
+    val description: String = "",
     val location: Location = Location(),
     val public: Boolean = false,
     val tags: List<String> = listOf(),
     val supplies: List<String> = listOf(),
     val guests: Map<String, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
-    val endsAtTimestamp: Timestamp = Timestamp.now()
+    val endsAtTimestamp: Timestamp = Timestamp.now(),
+    val ownerId: String = ""
 ) {
 
   fun guestList(): Set<String> {

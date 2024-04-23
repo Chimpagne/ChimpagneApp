@@ -94,6 +94,7 @@ fun MapContainer(
                 mapToolbarEnabled = false)) {
           for (event in events.values) {
             Marker(
+                contentDescription = event.title,
                 state =
                     rememberMarkerState(
                         position = LatLng(event.location.latitude, event.location.longitude)),
@@ -107,8 +108,10 @@ fun MapContainer(
         }
   } else {
     // Display a placeholder or loading indicator
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-      CircularProgressIndicator() // You can customize this part as needed
+    Box(
+        modifier = Modifier.fillMaxSize().testTag("progressBar"),
+        contentAlignment = Alignment.Center) {
+          CircularProgressIndicator() // You can customize this part as needed
     }
   }
 }
