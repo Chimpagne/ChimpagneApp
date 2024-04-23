@@ -13,12 +13,11 @@ class Database {
   private val events = db.collection(TABLES.EVENTS)
   private val accounts = db.collection(TABLES.ACCOUNTS)
   private val supplies = db.collection(TABLES.SUPPLIES)
-  val eventManager = ChimpagneEventManager(events, supplies)
-  val accountManager = ChimpagneAccountManager(accounts)
+
   val suppliesManager = ChimpagneSuppliesManager(supplies)
   private val profilePictures = Firebase.storage.reference.child(TABLES.ACCOUNTS)
 
-  val eventManager = ChimpagneEventManager(events)
+  val eventManager = ChimpagneEventManager(events, supplies)
   val accountManager = ChimpagneAccountManager(accounts, profilePictures)
 }
 

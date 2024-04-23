@@ -7,9 +7,9 @@ import com.google.firebase.firestore.firestore
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
-import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.ChimpagneSuppliesManager
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel

@@ -2,14 +2,15 @@ package com.monkeyteam.chimpagne.model.database
 
 import android.net.Uri
 import android.util.Log
-import com.google.firebase.Firebase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.storage
 
 /** Use this class to interact */
-class ChimpagneAccountManager(private val accounts: CollectionReference, private val profilePictures: StorageReference) {
+class ChimpagneAccountManager(
+    private val accounts: CollectionReference,
+    private val profilePictures: StorageReference
+) {
 
   /**
    * This field stores the current logged user's account, you can retrieve it from any class using
@@ -41,7 +42,8 @@ class ChimpagneAccountManager(private val accounts: CollectionReference, private
   /**
    * Retrieve an account from Firebase with the specified Firebase Auth Id
    *
-   * @param uid a Firebase User UID (see https://console.firebase.google.com/u/0/project/chimpagneapp/authentication/users)
+   * @param uid a Firebase User UID (see
+   *   https://console.firebase.google.com/u/0/project/chimpagneapp/authentication/users)
    * @param onSuccess(account) Called when the request is successful. Warning: account could be null
    *   if there is no account associated with the given id
    * @param onFailure(exception) Called in case of... failure
@@ -59,16 +61,22 @@ class ChimpagneAccountManager(private val accounts: CollectionReference, private
   }
 
   fun getAccountWithProfilePicture(
-    uid: String,
-    onSuccess: (ChimpagneAccount?, Uri?) -> Unit,
-    onFailure: (Exception) -> Unit
+      uid: String,
+      onSuccess: (ChimpagneAccount?, Uri?) -> Unit,
+      onFailure: (Exception) -> Unit
   ) {
-    getAccount(uid, { account ->
-      if (account == null) onSuccess(null, null)
-      else downloadProfilePicture(
-        account.firebaseAuthUID,
-      ) { uri -> onSuccess(account, uri) }
-    }, onFailure)
+    getAccount(
+        uid,
+        { account ->
+          if (account == null) onSuccess(null, null)
+          else
+              downloadProfilePicture(
+                  account.firebaseAuthUID,
+              ) { uri ->
+                onSuccess(account, uri)
+              }
+        },
+        onFailure)
   }
 
   /** Puts the given account to Firebase and updates [currentUserAccount] accordingly */
@@ -88,22 +96,29 @@ class ChimpagneAccountManager(private val accounts: CollectionReference, private
   }
 
   fun updateCurrentAccount(
-    account: ChimpagneAccount,
-    profilePicture: Uri?,
-    onSuccess: () -> Unit,
-    onFailure: (Exception) -> Unit
+      account: ChimpagneAccount,
+      profilePicture: Uri?,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
   ) {
     if (profilePicture == null) {
       updateCurrentAccount(account, onSuccess, onFailure)
     } else {
-      uploadProfilePicture(account, profilePicture, {
-        updateCurrentAccount(account, onSuccess, onFailure)
-      }, onFailure)
+      uploadProfilePicture(
+          account,
+          profilePicture,
+          { updateCurrentAccount(account, onSuccess, onFailure) },
+          onFailure)
     }
   }
 
-  private fun uploadProfilePicture(account: ChimpagneAccount, uri: Uri, onSuccess: (String) -> Unit, onFailure: (Exception) -> Unit) {
-//    profilePictures.child(account.firebaseAuthUID).delete()
+  private fun uploadProfilePicture(
+      account: ChimpagneAccount,
+      uri: Uri,
+      onSuccess: (String) -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    //    profilePictures.child(account.firebaseAuthUID).delete()
     val imageRef = profilePictures.child(account.firebaseAuthUID)
     imageRef
         .putFile(uri)
@@ -117,10 +132,10 @@ class ChimpagneAccountManager(private val accounts: CollectionReference, private
   }
 
   private fun downloadProfilePicture(uid: String, onSuccess: (Uri?) -> Unit) {
-    profilePictures.child(uid)
+    profilePictures
+        .child(uid)
         .downloadUrl
         .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
         .addOnFailureListener { onSuccess(null) }
-
   }
 }
