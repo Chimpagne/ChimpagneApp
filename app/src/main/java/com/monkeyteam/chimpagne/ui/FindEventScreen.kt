@@ -277,7 +277,6 @@ fun FindEventMapScreen(
       launch { scaffoldState.bottomSheetState.expand() }
     }
   }
-
   val goBack = {
     scope.launch {
       scaffoldState.bottomSheetState.partialExpand()
