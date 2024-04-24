@@ -1,7 +1,8 @@
 package com.monkeyteam.chimpagne.model.database
 
+typealias ChimpagneRole = Int
 object ChimpagneRoles {
-  val OWNER = 0
-  val STAFF = 1
-  val GUEST = 2
+  val OWNER : ChimpagneRole = 0
+  val STAFF : ChimpagneRole = 1
+  val GUEST : ChimpagneRole = 2
 }

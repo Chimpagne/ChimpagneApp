@@ -119,6 +119,10 @@ class ChimpagneAccountManager(
   }
 
   private val eventManager = database.eventManager
+
+  /**
+   * @param role: ChimpagneRole (for instance ChimpagneRoles.GUEST)
+   */
   fun joinEvent(
     id: ChimpagneEventId, role: Int, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
   ) {

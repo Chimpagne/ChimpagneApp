@@ -110,7 +110,7 @@ class ChimpagneEventManager(private val database: Database, private val events: 
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun addGuest(
+  internal fun addGuest(
       eventId: ChimpagneEventId,
       userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
@@ -123,7 +123,7 @@ class ChimpagneEventManager(private val database: Database, private val events: 
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun removeGuest(
+  internal fun removeGuest(
       eventId: ChimpagneEventId,
       userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
@@ -135,7 +135,7 @@ class ChimpagneEventManager(private val database: Database, private val events: 
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
-  fun addStaff(
+  internal fun addStaff(
     eventId: ChimpagneEventId,
     userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
@@ -148,7 +148,7 @@ class ChimpagneEventManager(private val database: Database, private val events: 
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun removeStaff(
+  internal fun removeStaff(
     eventId: ChimpagneEventId,
     userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
