@@ -56,7 +56,9 @@ class EventViewModel(
                       it.guests,
                       it.staffs,
                       it.startsAt(),
-                      it.endsAt())
+                      it.endsAt(),
+                      it.supplies
+                  )
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
