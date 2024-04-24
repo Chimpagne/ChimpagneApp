@@ -19,15 +19,18 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class EventViewModelTests {
+
+  val database = Database()
+
   @Before
   fun signIn() {
-    Database.instance.accountManager.signInTo(ChimpagneAccount())
+    database.accountManager.signInTo(ChimpagneAccount())
   }
 
   @get:Rule val composeTestRule = createComposeRule()
 
   private val eventManager: ChimpagneEventManager =
-      ChimpagneEventManager(Firebase.firestore.collection("testevents"))
+      ChimpagneEventManager(database, Firebase.firestore.collection("testevents"))
 
   private val testEvent =
       ChimpagneEvent(
@@ -38,13 +41,14 @@ class EventViewModelTests {
           true,
           listOf("vegan", "wild"),
           emptyMap(),
+          emptyMap(),
           buildTimestamp(9, 5, 2024, 0, 0),
           buildTimestamp(10, 5, 2024, 0, 0))
 
   @Test
   fun TestVMSetterFunctions() {
 
-    val eventVM = EventViewModel(eventManager = eventManager)
+    val eventVM = EventViewModel(database = database)
 
     eventVM.updateEventTitle(testEvent.title)
     assertTrue(eventVM.uiState.value.title == testEvent.title)
@@ -75,7 +79,7 @@ class EventViewModelTests {
   @Test
   fun TestCreateSearchDeleteAnEvent() {
 
-    val eventCreationVM = EventViewModel(eventManager = eventManager)
+    val eventCreationVM = EventViewModel(database = database)
 
     eventCreationVM.updateEventTitle(testEvent.title)
     eventCreationVM.updateEventDescription(testEvent.description)
@@ -96,7 +100,7 @@ class EventViewModelTests {
     val eventSearchVM =
         EventViewModel(
             eventID = eventID,
-            eventManager = eventManager,
+            database = database,
             onSuccess = { assertTrue(true) },
             onFailure = { assertTrue(false) })
 
@@ -136,10 +140,11 @@ class EventViewModelTests {
             false,
             listOf("magic", "wands"),
             emptyMap(),
+            emptyMap(),
             buildTimestamp(4, 1, 2025, 2, 3),
             buildTimestamp(5, 1, 2025, 2, 3))
 
-    val eventCreationVM = EventViewModel(eventManager = eventManager)
+    val eventCreationVM = EventViewModel(database = database)
 
     eventCreationVM.updateEventTitle(testEvent.title)
     eventCreationVM.updateEventDescription(testEvent.description)
@@ -160,7 +165,7 @@ class EventViewModelTests {
     val eventSearchVM =
         EventViewModel(
             eventID = eventID,
-            eventManager = eventManager,
+            database = database,
             onSuccess = { assertTrue(true) },
             onFailure = { assertTrue(false) })
 
@@ -186,7 +191,7 @@ class EventViewModelTests {
     val eventSearch2VM =
         EventViewModel(
             eventID = eventID,
-            eventManager = eventManager,
+            database = database,
             onSuccess = { assertTrue(true) },
             onFailure = { assertTrue(false) })
 
@@ -214,7 +219,7 @@ class EventViewModelTests {
 
   @Test
   fun TestAddAndRemoveGuestsFromAnEvent() {
-    val eventCreationVM = EventViewModel(eventManager = eventManager)
+    val eventCreationVM = EventViewModel(database = database)
 
     eventCreationVM.createTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -227,7 +232,7 @@ class EventViewModelTests {
     val eventSearchVM =
         EventViewModel(
             eventID = eventID,
-            eventManager = eventManager,
+            database = database,
             onSuccess = { assertTrue(true) },
             onFailure = { assertTrue(false) })
 

@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventDetailSheet
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -18,11 +19,13 @@ import org.junit.Test
 
 class FindEventScreenTest {
 
+  val database = Database()
+
   @get:Rule val composeTestRule = createComposeRule()
 
   @Test
   fun testEventDetailSheetDisplay() {
-    val sampleEvent = ChimpagneEvent(title="banana", description = "MONKEY" )
+    val sampleEvent = ChimpagneEvent(title = "banana", description = "MONKEY")
 
     composeTestRule.setContent { EventDetailSheet(sampleEvent) }
 
@@ -39,7 +42,7 @@ class FindEventScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      FindEventFormScreen(navActions, FindEventsViewModel()) {}
+      FindEventFormScreen(navActions, FindEventsViewModel(database = database)) {}
     }
 
     // Check if the location selector is displayed

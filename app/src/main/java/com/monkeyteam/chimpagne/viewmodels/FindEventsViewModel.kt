@@ -2,10 +2,12 @@ package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
+import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.happensOnThisDateFilter
@@ -16,9 +18,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class FindEventsViewModel(
-    private val eventManager: ChimpagneEventManager = Database.instance.eventManager
-) : ViewModel() {
+class FindEventsViewModel(database: Database) : ViewModel() {
+
+  private val eventManager = database.eventManager
+  private val accountManager = database.accountManager
+
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
   val uiState: StateFlow<FindEventsUIState> = _uiState
@@ -66,6 +70,10 @@ class FindEventsViewModel(
   fun updateSelectedDate(newQuery: Calendar) {
     _uiState.value = _uiState.value.copy(selectedDate = newQuery)
   }
+
+  fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+    accountManager.joinEvent(eventId, ChimpagneRoles.GUEST, onSuccess, onFailure)
+  }
 }
 
 data class FindEventsUIState(
@@ -76,3 +84,9 @@ data class FindEventsUIState(
     val selectedDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
 )
+
+class FindEventsViewModelFactory(private val database: Database) : ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    return FindEventsViewModel(database) as T
+  }
+}
