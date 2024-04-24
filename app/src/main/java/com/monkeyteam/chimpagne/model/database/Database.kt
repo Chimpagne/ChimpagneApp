@@ -26,7 +26,7 @@ object PUBLIC_TABLES : Tables {
 }
 
 object TEST_TABLES : Tables {
-  override val EVENTS = "testEvents"
+  override val EVENTS = "testevents"
   override val ACCOUNTS = "testAccounts"
   override val PROFILE_PICTURES = "testProfilePictures"
 }

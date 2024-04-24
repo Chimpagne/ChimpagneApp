@@ -4,8 +4,10 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
@@ -13,12 +15,16 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class FindEventViewModelTests {
+
+  val database = Database()
+
   @get:Rule val composeTestRule = createComposeRule()
 
   private val testEvent1 =
@@ -29,6 +35,7 @@ class FindEventViewModelTests {
           Location("EPFL", 46.519124, 6.567593),
           true,
           listOf("vegan", "concert", "booze"),
+          emptyMap(),
           emptyMap(),
           buildTimestamp(9, 5, 2024, 5, 0),
           buildTimestamp(10, 5, 2024, 5, 0))
@@ -42,6 +49,7 @@ class FindEventViewModelTests {
           true,
           listOf("vegan", "concert", "family friendly"),
           emptyMap(),
+          emptyMap(),
           buildTimestamp(8, 5, 2024, 6, 0),
           buildTimestamp(9, 5, 2024, 6, 0))
 
@@ -54,15 +62,18 @@ class FindEventViewModelTests {
           true,
           listOf("vegan", "family friendly"),
           emptyMap(),
+          emptyMap(),
           buildTimestamp(7, 5, 2024, 6, 0),
           buildTimestamp(10, 5, 2024, 6, 0))
 
-  private val eventManager: ChimpagneEventManager =
-      ChimpagneEventManager(Firebase.firestore.collection("testevents"))
+  @Before
+  fun signIn() {
+    database.accountManager.signInTo(ChimpagneAccount())
+  }
 
   @Test
   fun TestFindEventVMSetterFunctions() {
-    val findEventVM = FindEventsViewModel(eventManager)
+    val findEventVM = FindEventsViewModel(database = database)
     val location = Location("EPFL", 2.0, 4.0)
     val searchRadius = 6.25
     val tags = listOf("this tag", "that tag", "our tag")
@@ -91,7 +102,7 @@ class FindEventViewModelTests {
     val eventID2: String
     val eventID3: String
 
-    val eventCreationVM1 = EventViewModel(eventManager = eventManager)
+    val eventCreationVM1 = EventViewModel(database = database)
 
     eventCreationVM1.updateEventTitle(testEvent1.title)
     eventCreationVM1.updateEventDescription(testEvent1.description)
@@ -106,7 +117,7 @@ class FindEventViewModelTests {
     while (eventCreationVM1.uiState.value.loading) {}
     eventID1 = eventCreationVM1.uiState.value.id
 
-    val eventCreationVM2 = EventViewModel(eventManager = eventManager)
+    val eventCreationVM2 = EventViewModel(database = database)
 
     eventCreationVM2.updateEventTitle(testEvent2.title)
     eventCreationVM2.updateEventDescription(testEvent2.description)
@@ -121,7 +132,7 @@ class FindEventViewModelTests {
     while (eventCreationVM2.uiState.value.loading) {}
     eventID2 = eventCreationVM2.uiState.value.id
 
-    val eventCreationVM3 = EventViewModel(eventManager = eventManager)
+    val eventCreationVM3 = EventViewModel(database = database)
 
     eventCreationVM3.updateEventTitle(testEvent3.title)
     eventCreationVM3.updateEventDescription(testEvent3.description)
@@ -136,7 +147,7 @@ class FindEventViewModelTests {
     while (eventCreationVM3.uiState.value.loading) {}
     eventID3 = eventCreationVM3.uiState.value.id
 
-    val eventFinderVM = FindEventsViewModel(eventManager)
+    val eventFinderVM = FindEventsViewModel(database = database)
 
     eventFinderVM.updateSelectedLocation(testEvent1.location)
     eventFinderVM.updateLocationSearchRadius(1.0)
