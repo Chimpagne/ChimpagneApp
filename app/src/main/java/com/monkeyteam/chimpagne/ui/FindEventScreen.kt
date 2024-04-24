@@ -339,6 +339,7 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
           Button(
               onClick = {
                 Toast.makeText(
+
                         context, "This feature is not available at this time", Toast.LENGTH_SHORT)
                     .show() /* Handle join event */
               },

@@ -19,8 +19,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class FindEventsViewModel(
-    private val eventManager: ChimpagneEventManager
+    database: Database
 ) : ViewModel() {
+
+  private val eventManager = database.eventManager
+
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
   val uiState: StateFlow<FindEventsUIState> = _uiState
@@ -79,9 +82,9 @@ data class FindEventsUIState(
     val loading: Boolean = false
 )
 
-class FindEventsViewModelFactory(private val eventManager: ChimpagneEventManager) :
+class FindEventsViewModelFactory(private val database: Database) :
   ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return FindEventsViewModel(eventManager) as T
+    return FindEventsViewModel(database) as T
   }
 }

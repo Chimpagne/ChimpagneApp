@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
@@ -39,8 +40,8 @@ import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-  val database = Database()
-  val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database.accountManager) }
+  val database = Database(PUBLIC_TABLES)
+  val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
   @OptIn(ExperimentalMaterial3Api::class)
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,13 +100,13 @@ class MainActivity : ComponentActivity() {
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                 navObject = navActions,
-                findViewModel = viewModel(factory = FindEventsViewModelFactory(database.eventManager))
+                findViewModel = viewModel(factory = FindEventsViewModelFactory(database))
               )
             }
             composable(Route.EVENT_CREATION_SCREEN) {
               EventCreationScreen(
                 navObject = navActions,
-                eventViewModel = viewModel(factory = EventViewModelFactory(null, database.eventManager))
+                eventViewModel = viewModel(factory = EventViewModelFactory(null, database))
               )
             }
           }

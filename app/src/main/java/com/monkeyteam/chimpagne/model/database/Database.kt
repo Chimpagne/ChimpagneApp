@@ -4,11 +4,11 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 
-class Database(tables: Tables = PUBLIC_TABLES) {
+class Database(tables: Tables = TEST_TABLES) {
   private val db = Firebase.firestore
   private val events = db.collection(tables.EVENTS)
   private val accounts = db.collection(tables.ACCOUNTS)
-  private val profilePictures = Firebase.storage.reference.child(tables.ACCOUNTS)
+  private val profilePictures = Firebase.storage.reference.child(tables.PROFILE_PICTURES)
 
   val eventManager = ChimpagneEventManager(this, events)
   val accountManager = ChimpagneAccountManager(this, accounts, profilePictures)

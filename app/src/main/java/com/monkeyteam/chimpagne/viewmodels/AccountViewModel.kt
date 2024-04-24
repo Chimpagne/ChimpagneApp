@@ -19,8 +19,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AccountViewModel(
-    private val accountManager: ChimpagneAccountManager
+    database: Database
 ) : ViewModel() {
+
+  private val accountManager = database.accountManager
 
   private val _uiState = MutableStateFlow(AccountUIState())
   val uiState: StateFlow<AccountUIState> = _uiState
@@ -108,6 +110,7 @@ class AccountViewModel(
     updateTempAccount(_uiState.value.tempAccount.copy(location = location))
     Log.d("AccountViewModel", "Updated location name to $location")
   }
+
   fun updateProfilePicture(uri: Uri) {
     _uiState.value = _uiState.value.copy(tempProfilePicture = uri)
     Log.d("AccountViewModel", "Updated Profile Picture to $uri")
@@ -129,9 +132,9 @@ data class AccountUIState(
   val loading: Boolean = false
 )
 
-class AccountViewModelFactory(private val accountManager: ChimpagneAccountManager) :
+class AccountViewModelFactory(private val database: Database) :
   ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return AccountViewModel(accountManager) as T
+    return AccountViewModel(database) as T
   }
 }

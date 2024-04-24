@@ -15,10 +15,13 @@ import kotlinx.coroutines.launch
 
 class EventViewModel(
     eventID: String? = null,
-    private val eventManager: ChimpagneEventManager,
+    database: Database,
     onSuccess: () -> Unit = {},
     onFailure: (Exception) -> Unit = {},
 ) : ViewModel() {
+
+  private val eventManager = database.eventManager
+
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
   val uiState: StateFlow<EventUIState> = _uiState
@@ -238,9 +241,8 @@ data class EventUIState(
 )
 
 class EventViewModelFactory(
-  private val eventID: String? = null, private val eventManager: ChimpagneEventManager
-) : ViewModelProvider.Factory {
+  private val eventID: String? = null, private val database: Database) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return EventViewModel(eventID, eventManager) as T
+    return EventViewModel(eventID, database) as T
   }
 }
