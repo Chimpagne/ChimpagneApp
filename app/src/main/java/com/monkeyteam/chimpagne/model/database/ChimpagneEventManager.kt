@@ -11,7 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import com.monkeyteam.chimpagne.model.location.Location
 
-class ChimpagneEventManager(private val events: CollectionReference) {
+class ChimpagneEventManager(private val database: Database, private val events: CollectionReference) {
   fun getAllEventsByFilterAroundLocation(
       center: Location,
       radiusInM: Double,
@@ -81,7 +81,7 @@ class ChimpagneEventManager(private val events: CollectionReference) {
       onSuccess: (id: String) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    if (Database.instance.accountManager.currentUserAccount == null) {
+    if (database.accountManager.currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
     }
@@ -89,7 +89,7 @@ class ChimpagneEventManager(private val events: CollectionReference) {
     val eventId = events.document().id
     updateEvent(
         event.copy(
-            id = eventId, ownerId = Database.instance.accountManager.currentUserAccount?.firebaseAuthUID!!),
+            id = eventId, ownerId = database.accountManager.currentUserAccount?.firebaseAuthUID!!),
         { onSuccess(eventId) },
         onFailure)
   }

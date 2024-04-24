@@ -3,7 +3,13 @@ package com.monkeyteam.chimpagne.viewmodels
 import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.monkeyteam.chimpagne.MainActivity
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountManager
 import com.monkeyteam.chimpagne.model.database.Database
@@ -13,7 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class AccountViewModel(
-    private val accountManager: ChimpagneAccountManager = Database.instance.accountManager
+    private val accountManager: ChimpagneAccountManager
 ) : ViewModel() {
 
   private val _uiState = MutableStateFlow(AccountUIState())
@@ -122,3 +128,10 @@ data class AccountUIState(
 
   val loading: Boolean = false
 )
+
+class AccountViewModelFactory(private val accountManager: ChimpagneAccountManager) :
+  ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    return AccountViewModel(accountManager) as T
+  }
+}
