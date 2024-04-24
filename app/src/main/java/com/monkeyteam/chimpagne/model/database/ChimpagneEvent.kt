@@ -20,7 +20,8 @@ data class ChimpagneEvent(
     val staffs: Map<ChimpagneAccountUID, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now(),
-    val ownerId: String = ""
+    val ownerId: String = "",
+    val supplies: List<ChimpagneSupply> = listOf()
 ) {
 
   fun guestList(): Set<String> {
@@ -49,7 +50,8 @@ data class ChimpagneEvent(
       guests: Map<String, Boolean>,
       staffs: Map<String, Boolean>,
       startsAt: Calendar,
-      endsAt: Calendar
+      endsAt: Calendar,
+      supplies: List<ChimpagneSupply> = listOf()
   ) : this(
       id,
       title,
@@ -60,5 +62,8 @@ data class ChimpagneEvent(
       guests,
       staffs,
       buildTimestamp(startsAt),
-      buildTimestamp(endsAt))
+      buildTimestamp(endsAt),
+      supplies = supplies
+  )
+
 }
