@@ -152,7 +152,7 @@ fun FindEventFormScreen(
                   style = MaterialTheme.typography.bodyLarge)
             }
       }) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
               modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
