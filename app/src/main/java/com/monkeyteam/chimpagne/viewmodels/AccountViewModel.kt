@@ -4,23 +4,15 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.monkeyteam.chimpagne.MainActivity
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccountManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AccountViewModel(
-    database: Database
-) : ViewModel() {
+class AccountViewModel(database: Database) : ViewModel() {
 
   private val accountManager = database.accountManager
 
@@ -38,7 +30,11 @@ class AccountViewModel(
           uid,
           onSuccess = { account, profilePicture ->
             Log.d("AccountViewModel", "Fetched user account: $account with URI: $profilePicture")
-            _uiState.value = _uiState.value.copy(currentUserAccount = account, currentUserProfilePicture = profilePicture, loading = false)
+            _uiState.value =
+                _uiState.value.copy(
+                    currentUserAccount = account,
+                    currentUserProfilePicture = profilePicture,
+                    loading = false)
             if (account != null) {
               accountManager.signInTo(account)
             }
@@ -64,32 +60,41 @@ class AccountViewModel(
       return
     }
 
-    val newAccount = _uiState.value.tempAccount.copy(firebaseAuthUID = _uiState.value.currentUserUID!!)
+    val newAccount =
+        _uiState.value.tempAccount.copy(firebaseAuthUID = _uiState.value.currentUserUID!!)
     val newProfilePictureUri =
-      if (_uiState.value.tempProfilePicture != _uiState.value.currentUserProfilePicture) _uiState.value.tempProfilePicture
-      else null
+        if (_uiState.value.tempProfilePicture != _uiState.value.currentUserProfilePicture)
+            _uiState.value.tempProfilePicture
+        else null
 
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      accountManager.updateCurrentAccount(newAccount, newProfilePictureUri, {
-        _uiState.value = _uiState.value.copy(
-          currentUserAccount = newAccount,
-          tempAccount = ChimpagneAccount(),
-          currentUserProfilePicture = newProfilePictureUri,
-          tempProfilePicture = null,
-          loading = false
-        )
-        onSuccess()
-      }, {
-        Log.e("AccountViewModel", "Failed to update account", it)
-        _uiState.value = _uiState.value.copy(loading = false)
-        onFailure(it)
-      })
+      accountManager.updateCurrentAccount(
+          newAccount,
+          newProfilePictureUri,
+          {
+            _uiState.value =
+                _uiState.value.copy(
+                    currentUserAccount = newAccount,
+                    tempAccount = ChimpagneAccount(),
+                    currentUserProfilePicture = newProfilePictureUri,
+                    tempProfilePicture = null,
+                    loading = false)
+            onSuccess()
+          },
+          {
+            Log.e("AccountViewModel", "Failed to update account", it)
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
+          })
     }
   }
 
   fun copyRealToTemp() {
-    _uiState.value = _uiState.value.copy(tempAccount = _uiState.value.currentUserAccount ?: ChimpagneAccount(), tempProfilePicture = _uiState.value.currentUserProfilePicture)
+    _uiState.value =
+        _uiState.value.copy(
+            tempAccount = _uiState.value.currentUserAccount ?: ChimpagneAccount(),
+            tempProfilePicture = _uiState.value.currentUserProfilePicture)
   }
 
   private fun updateTempAccount(newTempAccount: ChimpagneAccount) {
@@ -118,22 +123,20 @@ class AccountViewModel(
 }
 
 /**
- * [currentUserUID] this field will be null iff he isn't sign in to Firebase
- * [currentUserAccount] this field will be null if the user isn't sign in to Firebase or if he doesn't have Chimpagne Account
- * [tempAccount] this field is used to store temporary data in forms that will be submitted
+ * [currentUserUID] this field will be null iff he isn't sign in to Firebase [currentUserAccount]
+ * this field will be null if the user isn't sign in to Firebase or if he doesn't have Chimpagne
+ * Account [tempAccount] this field is used to store temporary data in forms that will be submitted
  */
 data class AccountUIState(
-  val currentUserUID: String? = null,
-  val currentUserAccount: ChimpagneAccount? = null,
-  val tempAccount: ChimpagneAccount = ChimpagneAccount(),
-  val currentUserProfilePicture: Uri? = null,
-  val tempProfilePicture: Uri? = null,
-
-  val loading: Boolean = false
+    val currentUserUID: String? = null,
+    val currentUserAccount: ChimpagneAccount? = null,
+    val tempAccount: ChimpagneAccount = ChimpagneAccount(),
+    val currentUserProfilePicture: Uri? = null,
+    val tempProfilePicture: Uri? = null,
+    val loading: Boolean = false
 )
 
-class AccountViewModelFactory(private val database: Database) :
-  ViewModelProvider.Factory {
+class AccountViewModelFactory(private val database: Database) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     return AccountViewModel(database) as T
   }

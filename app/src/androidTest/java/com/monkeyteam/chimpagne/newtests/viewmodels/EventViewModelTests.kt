@@ -2,11 +2,8 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
@@ -138,7 +135,7 @@ class EventViewModelTests {
             false,
             listOf("magic", "wands"),
             emptyMap(),
-          emptyMap(),
+            emptyMap(),
             buildTimestamp(4, 1, 2025, 2, 3),
             buildTimestamp(5, 1, 2025, 2, 3))
 

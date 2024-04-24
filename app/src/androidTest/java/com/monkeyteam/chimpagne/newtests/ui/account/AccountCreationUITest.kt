@@ -18,8 +18,7 @@ class AccountCreationUITest {
 
   val database = Database()
 
-  @get:Rule
-  val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
   @Test
   fun testLanguageChangeWorks() {
@@ -33,5 +32,4 @@ class AccountCreationUITest {
     composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
     composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Last Name")
   }
-
 }

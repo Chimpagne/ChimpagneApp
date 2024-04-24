@@ -18,8 +18,7 @@ class AccountSettingsUITest {
 
   val database = Database()
 
-  @get:Rule
-  val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
   @Test
   fun testSettingsCorrect() {

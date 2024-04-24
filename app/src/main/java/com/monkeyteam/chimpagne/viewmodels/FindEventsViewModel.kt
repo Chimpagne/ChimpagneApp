@@ -5,10 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccountManager
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
@@ -20,9 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class FindEventsViewModel(
-    database: Database
-) : ViewModel() {
+class FindEventsViewModel(database: Database) : ViewModel() {
 
   private val eventManager = database.eventManager
   private val accountManager = database.accountManager
@@ -89,8 +85,7 @@ data class FindEventsUIState(
     val loading: Boolean = false
 )
 
-class FindEventsViewModelFactory(private val database: Database) :
-  ViewModelProvider.Factory {
+class FindEventsViewModelFactory(private val database: Database) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     return FindEventsViewModel(database) as T
   }

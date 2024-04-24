@@ -19,6 +19,7 @@ interface Tables {
   val ACCOUNTS: String
   val PROFILE_PICTURES: String
 }
+
 object PUBLIC_TABLES : Tables {
   override val EVENTS = "events"
   override val ACCOUNTS = "accounts"

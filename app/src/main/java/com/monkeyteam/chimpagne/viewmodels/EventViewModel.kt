@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
@@ -240,8 +239,8 @@ data class EventUIState(
     val loading: Boolean = false
 )
 
-class EventViewModelFactory(
-  private val eventID: String? = null, private val database: Database) : ViewModelProvider.Factory {
+class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
+    ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     return EventViewModel(eventID, database) as T
   }

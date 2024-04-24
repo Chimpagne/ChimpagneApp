@@ -140,7 +140,7 @@ class EventViewModelTests {
             false,
             listOf("magic", "wands"),
             emptyMap(),
-          emptyMap(),
+            emptyMap(),
             buildTimestamp(4, 1, 2025, 2, 3),
             buildTimestamp(5, 1, 2025, 2, 3))
 

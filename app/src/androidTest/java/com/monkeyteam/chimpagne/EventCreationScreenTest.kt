@@ -224,7 +224,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(19, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          19, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()

@@ -37,8 +37,7 @@ class AccountViewModelTests {
     assertEquals(null, accountViewModel.uiState.value.tempProfilePicture)
 
     accountViewModel.loginToChimpagneAccount("banana", {}, {})
-    while (accountViewModel.uiState.value.loading) {
-    }
+    while (accountViewModel.uiState.value.loading) {}
 
     assertEquals(null, accountManager.currentUserAccount)
     assertEquals(null, accountViewModel.uiState.value.currentUserAccount)
@@ -46,24 +45,21 @@ class AccountViewModelTests {
     assertEquals("banana", accountViewModel.uiState.value.currentUserUID)
 
     accountViewModel.logoutFromChimpagneAccount()
-    while (accountViewModel.uiState.value.loading) {
-    }
+    while (accountViewModel.uiState.value.loading) {}
 
     assertEquals(null, accountViewModel.uiState.value.currentUserAccount)
     assertEquals(null, accountViewModel.uiState.value.currentUserProfilePicture)
     assertEquals(null, accountViewModel.uiState.value.currentUserUID)
 
     accountViewModel.loginToChimpagneAccount(testAccount1.firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {
-    }
+    while (accountViewModel.uiState.value.loading) {}
 
     assertEquals(testAccount1, accountViewModel.uiState.value.currentUserAccount)
     assertNotNull(accountViewModel.uiState.value.currentUserProfilePicture)
     assertEquals(testAccount1.firebaseAuthUID, accountViewModel.uiState.value.currentUserUID)
 
     accountViewModel.loginToChimpagneAccount(testAccount2.firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {
-    }
+    while (accountViewModel.uiState.value.loading) {}
 
     assertEquals(testAccount2, accountViewModel.uiState.value.currentUserAccount)
     assertEquals(null, accountViewModel.uiState.value.currentUserProfilePicture)
