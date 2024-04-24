@@ -269,7 +269,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { EventDetailSheet(event = currentEvent) },
+      sheetContent = { EventDetailSheet(event = currentEvent, findViewModel) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
@@ -304,7 +304,7 @@ fun FindEventMapScreen(
 }
 
 @Composable
-fun EventDetailSheet(event: ChimpagneEvent?) {
+fun EventDetailSheet(event: ChimpagneEvent?, findViewModel: FindEventsViewModel) {
   val context = LocalContext.current
   if (event != null) {
     Column(
@@ -338,10 +338,13 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
 
           Button(
               onClick = {
-                Toast.makeText(
+                Toast.makeText(context, "Joining ${event.title}", Toast.LENGTH_SHORT).show()
+                findViewModel.joinEvent(event.id, {
+                  Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
+                }, {
+                  Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show()
+                })
 
-                        context, "This feature is not available at this time", Toast.LENGTH_SHORT)
-                    .show() /* Handle join event */
               },
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))

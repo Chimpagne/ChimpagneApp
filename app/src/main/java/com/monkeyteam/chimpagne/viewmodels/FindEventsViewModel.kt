@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountManager
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
+import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.happensOnThisDateFilter
@@ -23,6 +25,7 @@ class FindEventsViewModel(
 ) : ViewModel() {
 
   private val eventManager = database.eventManager
+  private val accountManager = database.accountManager
 
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
@@ -70,6 +73,10 @@ class FindEventsViewModel(
 
   fun updateSelectedDate(newQuery: Calendar) {
     _uiState.value = _uiState.value.copy(selectedDate = newQuery)
+  }
+
+  fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+    accountManager.joinEvent(eventId, ChimpagneRoles.GUEST, onSuccess, onFailure)
   }
 }
 

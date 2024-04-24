@@ -137,7 +137,7 @@ class EventViewModel(
     }
   }
 
-  fun addGuestToTheEvent(
+  fun joinTheEvent(
       guestId: String,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
