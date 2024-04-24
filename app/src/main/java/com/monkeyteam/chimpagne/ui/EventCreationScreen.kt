@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 fun EventCreationScreen(
     initialPage: Int = 0,
     navObject: NavigationActions,
-    eventViewModel: EventViewModel = viewModel()
+    eventViewModel: EventViewModel
 ) {
   // This screen is made of several panels
   // The user can go from panel either by swiping left and right,

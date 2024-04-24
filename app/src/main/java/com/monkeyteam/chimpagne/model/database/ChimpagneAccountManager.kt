@@ -7,10 +7,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.storage
+import com.monkeyteam.chimpagne.MainActivity
 
 /** Use this class to interact */
 class ChimpagneAccountManager(
-  private val accounts: CollectionReference, private val profilePictures: StorageReference
+  private val database: Database,
+  private val accounts: CollectionReference,
+  private val profilePictures: StorageReference
 ) {
 
   /**
@@ -23,7 +26,7 @@ class ChimpagneAccountManager(
 
   private fun currentUserAccountSample() {
     // Use this to get the current logged user
-    val currentUserAccount = Database.instance.accountManager.currentUserAccount
+    val currentUserAccount = database.accountManager.currentUserAccount
   }
 
   /**
@@ -49,14 +52,16 @@ class ChimpagneAccountManager(
    * @param onFailure(exception) Called in case of... failure
    */
   fun getAccount(
-    uid: String, onSuccess: (ChimpagneAccount?) -> Unit, onFailure: (Exception) -> Unit
+    uid: ChimpagneAccountUID, onSuccess: (ChimpagneAccount?) -> Unit, onFailure: (Exception) -> Unit
   ) {
     accounts.document(uid).get().addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
       .addOnFailureListener { onFailure(it) }
   }
 
   fun getAccountWithProfilePicture(
-    uid: String, onSuccess: (ChimpagneAccount?, Uri?) -> Unit, onFailure: (Exception) -> Unit
+    uid: ChimpagneAccountUID,
+    onSuccess: (ChimpagneAccount?, Uri?) -> Unit,
+    onFailure: (Exception) -> Unit
   ) {
     getAccount(uid, { account ->
       if (account == null) onSuccess(null, null)
@@ -113,9 +118,9 @@ class ChimpagneAccountManager(
 
   }
 
-  private val eventManager = Database.instance.eventManager
+  private val eventManager = database.eventManager
   fun joinEvent(
-    id: ChimpagneEventId, role: Int, onSuccess: () -> Unit, onFailure: (Exception) -> Unit
+    id: ChimpagneEventId, role: Int, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
   ) {
     if (currentUserAccount == null) {
       onFailure(NotLoggedInException())
@@ -125,11 +130,11 @@ class ChimpagneAccountManager(
     val updatedAccount =
       currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents + (id to true))
     when (role) {
-      0 -> eventManager.addGuest(id, updatedAccount.firebaseAuthUID, {
+      ChimpagneRoles.GUEST -> eventManager.addGuest(id, updatedAccount.firebaseAuthUID, {
         updateCurrentAccount(updatedAccount, onSuccess, onFailure)
       }, onFailure)
 
-      1 -> eventManager.addStaff(id, updatedAccount.firebaseAuthUID, {
+      ChimpagneRoles.STAFF -> eventManager.addStaff(id, updatedAccount.firebaseAuthUID, {
         updateCurrentAccount(updatedAccount, onSuccess, onFailure)
       }, onFailure)
 
@@ -138,7 +143,7 @@ class ChimpagneAccountManager(
   }
 
   fun leaveEvent(
-    id: ChimpagneEventId, onSuccess: () -> Unit, onFailure: (Exception) -> Unit
+    id: ChimpagneEventId, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}
   ) {
     if (currentUserAccount == null) {
       onFailure(NotLoggedInException())

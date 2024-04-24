@@ -2,8 +2,10 @@ package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountManager
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
@@ -17,7 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class FindEventsViewModel(
-    private val eventManager: ChimpagneEventManager = Database.instance.eventManager
+    private val eventManager: ChimpagneEventManager
 ) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
@@ -76,3 +78,10 @@ data class FindEventsUIState(
     val selectedDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
 )
+
+class FindEventsViewModelFactory(private val eventManager: ChimpagneEventManager) :
+  ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    return FindEventsViewModel(eventManager) as T
+  }
+}

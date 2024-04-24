@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
@@ -14,9 +15,9 @@ import kotlinx.coroutines.launch
 
 class EventViewModel(
     eventID: String? = null,
+    private val eventManager: ChimpagneEventManager,
     onSuccess: () -> Unit = {},
     onFailure: (Exception) -> Unit = {},
-    private val eventManager: ChimpagneEventManager = Database.instance.eventManager
 ) : ViewModel() {
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
@@ -235,3 +236,11 @@ data class EventUIState(
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
 )
+
+class EventViewModelFactory(
+  private val eventID: String? = null, private val eventManager: ChimpagneEventManager
+) : ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    return EventViewModel(eventID, eventManager) as T
+  }
+}

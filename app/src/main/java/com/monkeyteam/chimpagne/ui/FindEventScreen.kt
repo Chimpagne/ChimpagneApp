@@ -85,7 +85,7 @@ object FindEventScreens {
 @Composable
 fun MainFindEventScreen(
     navObject: NavigationActions,
-    findViewModel: FindEventsViewModel = viewModel()
+    findViewModel: FindEventsViewModel
 ) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
