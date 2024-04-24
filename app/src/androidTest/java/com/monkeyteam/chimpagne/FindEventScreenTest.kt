@@ -87,7 +87,6 @@ class FindEventScreenTest {
     // Assert that initially, the FindEventFormScreen is displayed
     composeTestRule.onNodeWithTag("find_event_form_screen").assertExists()
 
-    // Assert that tapping on the button to switch to the map screen works correctly
     composeTestRule.onNodeWithTag("button_search").performClick()
     composeTestRule.waitForIdle()
     composeTestRule.onNodeWithTag("map_screen").assertExists()
