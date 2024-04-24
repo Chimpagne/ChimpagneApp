@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
@@ -82,7 +83,9 @@ class EventViewModel(
         _uiState.value.guests,
         _uiState.value.staffs,
         _uiState.value.startsAtCalendarDate,
-        _uiState.value.endsAtCalendarDate)
+        _uiState.value.endsAtCalendarDate,
+        _uiState.value.supplies
+    )
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -166,8 +169,16 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(endsAtCalendarDate = newEndCalendarDate)
   }
 
-  fun updateEventSupplies(newSupplies: List<ChimpagneSupply>) {
+  fun updateEventSupplies(newSupplies: Map<ChimpagneSupplyId, ChimpagneSupply>) {
     _uiState.value = _uiState.value.copy(supplies = newSupplies)
+  }
+
+  fun addSuply(supply: ChimpagneSupply) {
+    _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies + (supply.id to supply))
+  }
+
+  fun removeSupply(supplyId: ChimpagneSupplyId) {
+    _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies - supplyId)
   }
 
 }
@@ -183,7 +194,7 @@ data class EventUIState(
   val staffs: Map<String, Boolean> = emptyMap(),
   val startsAtCalendarDate: Calendar = Calendar.getInstance(),
   val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-  val supplies: List<ChimpagneSupply> = listOf(),
+  val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
   val loading: Boolean = false
 )
 

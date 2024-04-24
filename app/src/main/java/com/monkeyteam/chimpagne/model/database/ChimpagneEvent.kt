@@ -21,7 +21,7 @@ data class ChimpagneEvent(
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now(),
     val ownerId: String = "",
-    val supplies: List<ChimpagneSupply> = listOf()
+    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf()
 ) {
 
   fun guestList(): Set<String> {
@@ -51,7 +51,7 @@ data class ChimpagneEvent(
       staffs: Map<String, Boolean>,
       startsAt: Calendar,
       endsAt: Calendar,
-      supplies: List<ChimpagneSupply> = listOf()
+      supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf()
   ) : this(
       id,
       title,

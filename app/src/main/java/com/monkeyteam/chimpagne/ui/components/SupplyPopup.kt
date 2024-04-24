@@ -25,10 +25,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SupplyPopup(onDismissRequest: () -> Unit, onSave: (String, Int, String) -> Unit) {
+fun SupplyPopup(onDismissRequest: () -> Unit, onSave: (ChimpagneSupply) -> Unit) {
   var description by remember { mutableStateOf("") }
   var quantity by remember { mutableStateOf("") }
   var unit by remember { mutableStateOf("") }
@@ -67,7 +67,7 @@ fun SupplyPopup(onDismissRequest: () -> Unit, onSave: (String, Int, String) -> U
 
           Button(
             onClick = {
-              onSave(description, quantity.toIntOrNull() ?: 0, unit)
+              onSave(ChimpagneSupply(description = description, quantity = quantity.toIntOrNull() ?: 0, unit = unit))
               onDismissRequest()
             },
             modifier = Modifier.testTag("supplies_add_button")) {
