@@ -2,7 +2,8 @@ package com.monkeyteam.chimpagne.model.database
 
 import com.monkeyteam.chimpagne.model.location.Location
 
-typealias  ChimpagneAccountUID = String
+typealias ChimpagneAccountUID = String
+
 data class ChimpagneAccount(
     val firebaseAuthUID: ChimpagneAccountUID = "",
     val firstName: String = "",

@@ -57,7 +57,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -83,10 +82,7 @@ object FindEventScreens {
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
-fun MainFindEventScreen(
-    navObject: NavigationActions,
-    findViewModel: FindEventsViewModel
-) {
+fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsViewModel) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
 
@@ -339,12 +335,10 @@ fun EventDetailSheet(event: ChimpagneEvent?, findViewModel: FindEventsViewModel)
           Button(
               onClick = {
                 Toast.makeText(context, "Joining ${event.title}", Toast.LENGTH_SHORT).show()
-                findViewModel.joinEvent(event.id, {
-                  Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show()
-                }, {
-                  Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show()
-                })
-
+                findViewModel.joinEvent(
+                    event.id,
+                    { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
+                    { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
               },
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))
