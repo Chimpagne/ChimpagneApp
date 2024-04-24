@@ -4,22 +4,29 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 
-class Database {
-  companion object {
-    val instance = Database()
-  }
-
+class Database(tables: Tables = PUBLIC_TABLES) {
   private val db = Firebase.firestore
-  private val events = db.collection(TABLES.EVENTS)
-  private val accounts = db.collection(TABLES.ACCOUNTS)
-  private val profilePictures = Firebase.storage.reference.child(TABLES.ACCOUNTS)
+  private val events = db.collection(tables.EVENTS)
+  private val accounts = db.collection(tables.ACCOUNTS)
+  private val profilePictures = Firebase.storage.reference.child(tables.ACCOUNTS)
 
-  val eventManager = ChimpagneEventManager(events)
-  val accountManager = ChimpagneAccountManager(accounts, profilePictures)
+  val eventManager = ChimpagneEventManager(this, events)
+  val accountManager = ChimpagneAccountManager(this, accounts, profilePictures)
 }
 
-private object TABLES {
-  val EVENTS = "events"
-  val ACCOUNTS = "accounts"
-  val PROFILE_PICTURES = "profile_pictures"
+interface Tables {
+  val EVENTS: String
+  val ACCOUNTS: String
+  val PROFILE_PICTURES: String
+}
+object PUBLIC_TABLES : Tables {
+  override val EVENTS = "events"
+  override val ACCOUNTS = "accounts"
+  override val PROFILE_PICTURES = "profilePictures"
+}
+
+object TEST_TABLES : Tables {
+  override val EVENTS = "testEvents"
+  override val ACCOUNTS = "testAccounts"
+  override val PROFILE_PICTURES = "testProfilePictures"
 }
