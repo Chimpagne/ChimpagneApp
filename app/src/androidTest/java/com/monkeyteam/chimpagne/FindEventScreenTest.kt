@@ -74,7 +74,7 @@ class FindEventScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      FindEventFormScreen(navActions, FindEventsViewModel()) {}
+      FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {})
     }
 
     composeTestRule.onNodeWithContentDescription("back").performClick()
@@ -83,7 +83,7 @@ class FindEventScreenTest {
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testMainFindEventScreen() {
-    val findViewModel = FindEventsViewModel()
+    val findViewModel = FindEventsViewModel(database)
 
     composeTestRule.setContent {
       val navController = rememberNavController()
