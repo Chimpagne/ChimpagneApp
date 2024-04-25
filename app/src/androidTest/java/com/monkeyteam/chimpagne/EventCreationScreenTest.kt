@@ -25,7 +25,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
-import com.monkeyteam.chimpagne.ui.SupplyPopup
+import com.monkeyteam.chimpagne.ui.components.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import org.hamcrest.CoreMatchers.`is`
@@ -121,7 +121,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(2, navActions)
+      EventCreationScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     // When
@@ -173,7 +173,7 @@ class EventCreationScreenTest {
 
       var showPopup by remember { mutableStateOf(true) }
       if (showPopup) {
-        SupplyPopup(onDismissRequest = { showPopup = false }, onSave = { _, _, _ -> })
+        SupplyPopup(onDismissRequest = { showPopup = false }, onSave = { _ -> })
       }
     }
 
@@ -210,7 +210,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(2, navActions)
+      EventCreationScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
 
       val context = LocalContext.current
       groceriesTitleS = context.getString(R.string.event_creation_screen_groceries)
