@@ -53,7 +53,10 @@ class EventViewModel(
                       it.guests,
                       it.staffs,
                       it.startsAt(),
-                      it.endsAt())
+                      it.endsAt(),
+                      it.parkingSpaces,
+                      it.beds
+                      )
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
@@ -80,7 +83,9 @@ class EventViewModel(
         _uiState.value.guests,
         _uiState.value.staffs,
         _uiState.value.startsAtCalendarDate,
-        _uiState.value.endsAtCalendarDate)
+        _uiState.value.endsAtCalendarDate),
+        _uiState.value.parkingSpaces,
+        _uiState.value.beds
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -200,6 +205,14 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(title = newTitle)
   }
 
+  fun updateParkingSpaces(newParkingSpaces: Integer) {
+    _uiState.value = _uiState.value.copy(parkingSpaces = newParkingSpaces)
+  }
+
+  fun updateBeds(newBeds: Integer) {
+    _uiState.value = _uiState.value.copy(beds = newBeds)
+  }
+
   fun updateEventDescription(newDescription: String) {
     _uiState.value = _uiState.value.copy(description = newDescription)
   }
@@ -236,7 +249,9 @@ data class EventUIState(
     val staffs: Map<String, Boolean> = emptyMap(),
     val startsAtCalendarDate: Calendar = Calendar.getInstance(),
     val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val parkingSpaces: Integer = 0,
+    val beds: Integer = 0
 )
 
 class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
