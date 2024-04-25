@@ -56,7 +56,3 @@ fun happensOnThisDateFilter(calendar: Calendar): Filter {
 fun eventByOwnerFilter(ownerID: String): Filter {
   return Filter.equalTo("ownerId", ownerID)
 }
-
-fun eventWithGuestFilter(guestID: String): Filter {
-  return Filter.arrayContains("guests", guestID)
-}

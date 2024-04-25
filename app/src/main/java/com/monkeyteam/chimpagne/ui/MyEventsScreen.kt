@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -95,23 +96,12 @@ fun MyEventScreen(
                   items(uiState.createdEvents.values.toList()) { event ->
                       ShortEventCard(
                           title = event.title,
-                          date = " From " +
-                                  DateFormat.getDateInstance(DateFormat.MEDIUM)
-                                      .format(event.startsAt()) +
-                                  " at " +
-                                  DateFormat.getTimeInstance(DateFormat.SHORT)
-                                      .format(event.startsAt()) +
-                                  "\n until " +
-                                  DateFormat.getDateInstance(DateFormat.MEDIUM)
-                                      .format(Calendar.getInstance().time) +
-                                  " at " +
-                                  DateFormat.getTimeInstance(DateFormat.SHORT)
-                                      .format(Calendar.getInstance().time),
-                          location = event.location.toString()
+                          date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
+                          location = event.location.name
                       ){
                           navObject.navigateTo(
                               Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/true")
-                      }
+                        }
                   }
                 }
                 item {
@@ -131,19 +121,8 @@ fun MyEventScreen(
                   items(uiState.joinedEvents.values.toList()) { event ->
                       ShortEventCard(
                           title = event.title,
-                          date = " From " +
-                                  DateFormat.getDateInstance(DateFormat.MEDIUM)
-                                      .format(event.startsAt()) +
-                                  " at " +
-                                  DateFormat.getTimeInstance(DateFormat.SHORT)
-                                      .format(event.startsAt()) +
-                                  "\n until " +
-                                  DateFormat.getDateInstance(DateFormat.MEDIUM)
-                                      .format(Calendar.getInstance().time) +
-                                  " at " +
-                                  DateFormat.getTimeInstance(DateFormat.SHORT)
-                                      .format(Calendar.getInstance().time),
-                          location = event.location.toString()
+                          date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
+                          location = event.location.name
                       ){
                           navObject.navigateTo(
                           Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/false")

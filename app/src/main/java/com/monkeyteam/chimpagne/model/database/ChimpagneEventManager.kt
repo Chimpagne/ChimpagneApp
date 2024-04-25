@@ -160,4 +160,46 @@ class ChimpagneEventManager(private val database: Database, private val events: 
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
+
+    fun getAllOfMyEvents(
+        onSuccess: (createdEvents :List<ChimpagneEvent>, joinedEvents :List<ChimpagneEvent>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+
+        if (database.accountManager.currentUserAccount == null) {
+            return onFailure(NotLoggedInException())
+        }
+
+        val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
+        if (eventIDs == null) {
+            return onSuccess(emptyList(), emptyList())
+        }
+
+        val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
+        for (eventID in eventIDs.keys) {
+            tasks.add(events.where(Filter.equalTo("id", eventID)).get())
+        }
+
+        // Collect all the query results together into a single list
+        Tasks.whenAllComplete(tasks)
+            .addOnCompleteListener {
+                val joinedEvents: MutableList<ChimpagneEvent> = ArrayList()
+                val createdEvents: MutableList<ChimpagneEvent> = ArrayList()
+                for (task in tasks) {
+                    val snap = task.result
+                    for (doc in snap!!.documents) {
+                        val event = doc.toObject<ChimpagneEvent>()!!
+
+                        if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID)
+                            createdEvents.add(event)
+                        else
+                            joinedEvents.add(event)
+                    }
+                }
+
+                // matchingEvents contains the results
+                onSuccess(createdEvents, joinedEvents)
+            }
+            .addOnFailureListener { onFailure(it) }
+    }
 }

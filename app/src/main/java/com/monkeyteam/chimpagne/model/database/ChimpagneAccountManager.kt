@@ -163,7 +163,6 @@ class ChimpagneAccountManager(
       }, onFailure)
     }, onFailure)
   }
-
 }
 
 class NotLoggedInException : Exception("Not logged in")

@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.model.utils
 
 import com.google.firebase.Timestamp
+import java.text.DateFormat
 import java.util.Calendar
 
 fun buildTimestamp(calendar: Calendar): Timestamp {
@@ -21,4 +22,12 @@ fun buildCalendar(day: Int, month: Int, year: Int, hour: Int, minute: Int): Cale
 
 fun buildTimestamp(day: Int, month: Int, year: Int, hour: Int, minute: Int): Timestamp {
   return buildTimestamp(buildCalendar(day, month, year, hour, minute))
+}
+
+fun timestampToStringWithDateAndTime(timestamp: Timestamp): String{
+  return DateFormat.getDateInstance(DateFormat.LONG)
+            .format(timestamp.toDate()) +
+          " at " +
+          DateFormat.getTimeInstance(DateFormat.SHORT)
+            .format(timestamp.toDate())
 }
