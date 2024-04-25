@@ -56,7 +56,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -83,10 +82,7 @@ object FindEventScreens {
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
-fun MainFindEventScreen(
-    navObject: NavigationActions,
-    findViewModel: FindEventsViewModel = viewModel()
-) {
+fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsViewModel) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -287,7 +283,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { EventDetailSheet(event = currentEvent) },
+      sheetContent = { EventDetailSheet(event = currentEvent, findViewModel) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
@@ -316,7 +312,7 @@ fun FindEventMapScreen(
 }
 
 @Composable
-fun EventDetailSheet(event: ChimpagneEvent?) {
+fun EventDetailSheet(event: ChimpagneEvent?, findViewModel: FindEventsViewModel) {
   val context = LocalContext.current
   if (event != null) {
     Column(
@@ -350,9 +346,11 @@ fun EventDetailSheet(event: ChimpagneEvent?) {
 
           Button(
               onClick = {
-                Toast.makeText(
-                        context, "This feature is not available at this time", Toast.LENGTH_SHORT)
-                    .show() /* Handle join event */
+                Toast.makeText(context, "Joining ${event.title}", Toast.LENGTH_SHORT).show()
+                findViewModel.joinEvent(
+                    event.id,
+                    { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
+                    { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
               },
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))

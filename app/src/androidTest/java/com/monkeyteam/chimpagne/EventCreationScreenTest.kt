@@ -1,17 +1,29 @@
 package com.monkeyteam.chimpagne
 
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
+import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -29,15 +41,17 @@ class InstrumentEventCreationScreenTest {
 @RunWith(AndroidJUnit4::class)
 class EventCreationScreenTest {
 
+  val database = Database()
+
   @get:Rule val composeTestRule = createComposeRule()
 
   @Test
-  fun TestPanels() {
+  fun testPanels() {
     // Start on the correct screen
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions)
+      EventCreationScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     // Move to the Second Panel
@@ -53,12 +67,25 @@ class EventCreationScreenTest {
   }
 
   @Test
+  fun testLocationSelector() {
+    // Start on the correct screen
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(0, navActions)
+    }
+
+    composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
+
+  }
+
+    @Test
   fun testPanel1() {
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(1, navActions)
+      EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
   }
   /*
@@ -126,7 +153,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(1, navActions)
+      EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
 
       val context = LocalContext.current
       tagsLegendS = context.getString(R.string.event_creation_screen_tags_legend)
@@ -147,7 +174,7 @@ class EventCreationScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      EventCreationScreen(1, navActions)
+      EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     // Tags (comma-separated)
@@ -167,7 +194,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(2, navActions)
+      EventCreationScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     // composeTestRule.onNodeWithTag("tag_field").assertIsDisplayed()
     composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
@@ -179,7 +206,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions)
+      EventCreationScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     val title = "Sample Event Title"
@@ -195,7 +222,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(4, navActions)
+      EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     val value = "4"
@@ -219,7 +246,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(19, navActions)
+      EventCreationScreen(
+          19, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
@@ -231,7 +259,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(4, navActions)
+      EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()

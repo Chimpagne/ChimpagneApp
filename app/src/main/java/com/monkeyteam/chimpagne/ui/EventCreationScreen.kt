@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.Legend
@@ -58,7 +57,7 @@ import kotlinx.coroutines.launch
 fun EventCreationScreen(
     initialPage: Int = 0,
     navObject: NavigationActions,
-    eventViewModel: EventViewModel = viewModel()
+    eventViewModel: EventViewModel
 ) {
   // This screen is made of several panels
   // The user can go from panel either by swiping left and right,
