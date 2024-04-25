@@ -48,22 +48,26 @@ fun LocationSelector(
   var possibleLocations by remember { mutableStateOf(emptyList<Location>()) }
 
   val launchSearch = {
-    searching = true
-      showSearchBar = true
-    convertNameToLocations(
-        locationQuery,
-        {
-          possibleLocations = it
-          searching = false
-          searchCompleted = it.isNotEmpty()
-        },
-        10)
+      if(locationQuery.isNotEmpty()){
+          searching = true
+          convertNameToLocations(
+              locationQuery,
+              {
+                  possibleLocations = it
+                  searching = false
+                  searchCompleted = it.isNotEmpty()
+                  showSearchBar = it.isNotEmpty()
+              },
+              10
+          )
+      }
   }
 
     val clearLocationInput = {
         locationQuery = ""
         possibleLocations = emptyList()
         searchCompleted = false
+        showSearchBar = false
         updateSelectedLocation(Location())
     }
 
@@ -73,10 +77,21 @@ fun LocationSelector(
       onQueryChange = {
           locationQuery = it
           searchCompleted= false
+          if (it.isNotEmpty()) {
+              showSearchBar = true
+          }
       },
       onSearch = { launchSearch() },
       active = showSearchBar,
-      onActiveChange = { showSearchBar = it},
+        onActiveChange = {
+            if (!it) {
+                if (locationQuery.isEmpty() && !searching) {
+                    showSearchBar = false
+                }
+            } else {
+                showSearchBar = searching || searchCompleted || locationQuery.isNotEmpty()
+            }
+        },
       placeholder = { Text(stringResource(id = R.string.search_location)) },
       modifier = modifier.testTag("LocationComponent"),
         trailingIcon = {
