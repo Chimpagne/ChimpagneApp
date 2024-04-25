@@ -288,7 +288,10 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.testTag("parking_title"))
     OutlinedTextField(
         value = parkingText,
-        onValueChange = { parkingText = it },
+        onValueChange = {
+          parkingText = it
+          eventViewModel.updateParkingSpaces(parkingText.toInt())
+        },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth().testTag("n_parking"))
@@ -300,7 +303,10 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.testTag("beds_title"))
     OutlinedTextField(
         value = bedsText,
-        onValueChange = { bedsText = it },
+        onValueChange = {
+          bedsText = it
+          eventViewModel.updateBeds(bedsText.toInt())
+        },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier.fillMaxWidth().testTag("n_beds"))

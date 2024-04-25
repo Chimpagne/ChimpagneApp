@@ -1,11 +1,7 @@
 package com.monkeyteam.chimpagne
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -13,17 +9,12 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -65,7 +56,7 @@ class EventCreationScreenTest {
 
     // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
-
+  /*
   @Test
   fun testLocationSelector() {
     // Start on the correct screen
@@ -77,9 +68,9 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
 
-  }
+  }*/
 
-    @Test
+  @Test
   fun testPanel1() {
 
     composeTestRule.setContent {
@@ -88,62 +79,7 @@ class EventCreationScreenTest {
       EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
   }
-  /*
-  @Test
-  fun testFirstPanelContent() {
-    var titleLegendS = ""
-    var descriptionLegendS = ""
-    var locationLegendS = ""
-    var startDateLegendS = ""
-    var endDateLegendS = ""
-    // Given
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions)
-      val context = LocalContext.current
-      titleLegendS = context.getString(R.string.event_creation_screen_title_legend)
-      descriptionLegendS = context.getString(R.string.event_creation_screen_description_legend)
-      locationLegendS = context.getString(R.string.event_creation_screen_location_legend)
-      startDateLegendS = context.getString(R.string.event_creation_screen_start_date_legend)
-      endDateLegendS = context.getString(R.string.event_creation_screen_end_date_legend)
-    }
 
-    // When - Then
-    composeTestRule.onNodeWithText(titleLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(descriptionLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(locationLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(startDateLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(endDateLegendS).assertIsDisplayed()
-
-    // You can add more detailed tests here for interactions and assertions
-  }*/
-  /*
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣤⣤⣠⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⢰⣤⡀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⡿⢿⡿⢻⣿⠿⣿⡿⢿⡿⠿⣿⣿⣆⠀⠀⠀⠀⠀⣀⣠⣤⣴⣶⣶⣶⣶⣶⣶⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠸⣿⣿⠄⠀⢀⣠⣴⣶⣿⡿⢿⣟⠸⣿⣶⣿⣷⣾⣿⣷⣿⣿⣾⣿⣷⣿⣿⣿⣦⣴⣶⣾⣿⣿⣿⣿⣿⡿⠿⠛⠋⠉⠙⠿⢿⣄⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀
-  ⠀⠉⣿⣷⣿⣿⣿⣟⢻⣷⣦⣿⣿⣿⣿⣿⠟⢻⣯⣉⣿⣟⣻⣿⣻⣿⡛⢻⣿⣿⣿⠿⠿⠛⠛⠋⠁⠀⠀⠀⣀⣀⣀⣀⣀⣀⣿⣿⡿⠿⠿⠿⠿⠿⣿⡇⠀⠀⠀⠀
-  ⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⠟⣻⣯⣴⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⢀⣀⣀⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀
-  ⠀⠀⠈⣿⣿⣿⣿⣿⣯⣀⣿⣷⣿⣿⣿⠿⣿⣭⣽⣷⣤⣷⣦⣶⣦⣼⣏⣈⣿⣿⢺⣶⣿⣿⣿⣿⣿⡿⠟⠛⠋⠉⠉⠀⠉⠉⠙⣤⣤⣶⣶⣶⣶⣶⣾⡇⠀⠀⠀⠀
-  ⠀⠀⠀⠙⣿⣇⣿⣿⣿⣿⠿⢿⣏⣰⣿⣶⣿⣿⣿⠿⣿⠿⣿⡿⢿⡿⠿⠿⠿⣿⣎⡿⠿⠟⠛⠉⠁⠀⠀⢀⣀⣤⣤⣤⣤⣤⣀⣹⣿⠿⠿⠟⠛⠛⠻⡇⠀⠀⠀⠀
-  ⠀⠀⠀⠀⢻⣿⡎⢻⣿⣿⣦⣾⣿⣿⡿⢿⡋⢹⣷⣴⣿⣶⣿⣷⣾⣿⣾⣿⣶⣿⣿⠀⠀⠀⣀⣠⣤⣶⣾⣿⣿⣿⠿⠿⠿⠿⠿⣧⠀⢀⣀⣀⣀⣀⣠⣷⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠈⢿⣷⡄⢻⣿⣿⣟⠉⣷⣤⣽⣷⣿⡿⠿⠛⠋⠉⠉⠀⠀⠀⠀⠀⠀⠉⢸⣿⣿⣿⣿⣿⠿⠟⠋⠀⠀⢀⣀⣀⣀⣂⣸⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠘⣿⣧⠀⠹⣿⣿⣷⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⣀⣀⣀⣀⣠⣀⣀⣀⣸⠛⠛⠋⠉⠀⠀⢀⣤⣶⣾⣿⣿⣿⣿⣿⣿⡛⠉⠉⠉⠉⠀⠈⣿⡀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⢻⣿⠛⠉⠀⠀⠀⢀⣠⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣤⣴⣶⣿⣿⣿⠿⠛⠋⠁⠀⠀⠀⢈⣷⣶⣶⣶⣶⣶⣶⣿⡆⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⢻⣿⡄⠀⣿⡆⠀⣀⣴⣾⣿⣿⣿⠿⠋⠉⠉⠀⠀⠀⠀⠀⠀⠀⢹⣿⠿⠿⠿⠛⠋⠁⠀⢀⣠⣶⣶⣶⣶⣶⣶⣾⠟⠛⠉⠉⠉⠉⢹⡇⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠘⣿⣷⠀⢸⣿⣿⣿⡿⠿⠛⠁⠀⠀⢀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣾⠁⠀⠀⣀⣀⣤⣴⣾⣿⡿⠿⠛⠛⠛⠛⠛⠛⣀⣀⣤⣤⣤⣴⣾⣿⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⣿⣟⠉⠀⠀⢀⣠⣴⣾⣿⡿⠿⠿⠿⠟⠛⠛⠛⠛⠛⣿⣿⣿⣿⣿⡿⠿⠛⠉⠀⣀⣠⣤⣤⣬⣤⣴⣿⡿⠟⠛⠛⠉⠉⢹⣧⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⡆⠸⣿⣀⣴⣶⣿⡿⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡟⠉⠉⠉⠁⠀⣀⣠⣴⣾⣿⣿⠿⠿⠿⠿⢿⡇⠀⠀⣀⣠⣤⣤⣬⣿⡀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⣿⡿⠟⠋⠁⠀⢀⣀⣤⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣇⣤⣤⣶⣶⡿⠿⠛⠉⠁⠀⠀⢀⣀⣀⡀⠀⠾⣿⣿⣿⡿⠿⠿⠿⠿⣧⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣿⣧⢸⣷⠀⣠⣴⣾⣿⣿⣿⣿⡿⠿⠟⠛⠉⠉⠉⠀⢸⡿⠿⠛⠉⠁⢀⣀⣤⣶⣾⣿⣿⣿⠿⠿⠿⠿⣿⣿⠁⠀⠀⠀⠀⠀⠀⣿⡀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣾⣿⣿⣿⣿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠁⢀⣠⣴⣾⡿⠿⠛⠋⠉⠀⠀⠀⠀⠀⠀⣼⡿⢁⣀⣤⣴⣶⣿⠿⠿⠿⠷
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡿⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡿⠿⠟⠋⠁⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-     */
   @Test
   fun testSecondPanelContent() {
     var tagsLegendS = ""

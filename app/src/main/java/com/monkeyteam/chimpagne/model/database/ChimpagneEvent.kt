@@ -20,9 +20,9 @@ data class ChimpagneEvent(
     val staffs: Map<ChimpagneAccountUID, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now(),
-    val ownerId: String = "",
-    val parkingSpaces: Integer = 0,
-    val beds: Integer = 0
+    val ownerId: ChimpagneAccountUID = "",
+    val parkingSpaces: Int = 0,
+    val beds: Int = 0
 ) {
 
   fun guestList(): Set<String> {
@@ -48,12 +48,13 @@ data class ChimpagneEvent(
       location: Location,
       public: Boolean,
       tags: List<String>,
-      guests: Map<String, Boolean>,
-      staffs: Map<String, Boolean>,
+      guests: Map<ChimpagneAccountUID, Boolean>,
+      staffs: Map<ChimpagneAccountUID, Boolean>,
       startsAt: Calendar,
       endsAt: Calendar,
-      parkingSpaces: Integer,
-      beds: Integer
+      ownerId: ChimpagneAccountUID,
+      parkingSpaces: Int,
+      beds: Int
   ) : this(
       id,
       title,
@@ -64,7 +65,8 @@ data class ChimpagneEvent(
       guests,
       staffs,
       buildTimestamp(startsAt),
-      buildTimestamp(endsAt)),
+      buildTimestamp(endsAt),
+      ownerId,
       parkingSpaces,
-      beds
+      beds)
 }

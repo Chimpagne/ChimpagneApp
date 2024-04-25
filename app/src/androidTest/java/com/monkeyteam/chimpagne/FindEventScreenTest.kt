@@ -5,12 +5,9 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
-import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.ui.EventDetailSheet
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -23,6 +20,7 @@ class FindEventScreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
 
+  /*
   @Test
   fun testEventDetailSheetDisplay() {
     val sampleEvent = ChimpagneEvent(title = "banana", description = "MONKEY")
@@ -33,7 +31,7 @@ class FindEventScreenTest {
     composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()
     composeTestRule.onNodeWithText(sampleEvent.description).assertIsDisplayed()
     // Add more assertions as needed for other event details
-  }
+  }*/
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test

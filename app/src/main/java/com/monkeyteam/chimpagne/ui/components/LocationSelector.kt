@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -43,13 +42,13 @@ fun LocationSelector(
 
   var locationQuery by remember { mutableStateOf(selectedLocation?.name ?: "") }
   var searching by remember { mutableStateOf(false) }
-    var showSearchBar by remember { mutableStateOf(false) }
+  var showSearchBar by remember { mutableStateOf(false) }
   var searchCompleted by remember { mutableStateOf(false) }
   var possibleLocations by remember { mutableStateOf(emptyList<Location>()) }
 
   val launchSearch = {
     searching = true
-      showSearchBar = true
+    showSearchBar = true
     convertNameToLocations(
         locationQuery,
         {
@@ -60,60 +59,59 @@ fun LocationSelector(
         10)
   }
 
-    val clearLocationInput = {
-        locationQuery = ""
-        possibleLocations = emptyList()
-        searchCompleted = false
-        updateSelectedLocation(Location())
-    }
+  val clearLocationInput = {
+    locationQuery = ""
+    possibleLocations = emptyList()
+    searchCompleted = false
+    updateSelectedLocation(Location())
+  }
 
-
-    DockedSearchBar(
+  DockedSearchBar(
       query = locationQuery,
       onQueryChange = {
-          locationQuery = it
-          searchCompleted= false
+        locationQuery = it
+        searchCompleted = false
       },
       onSearch = { launchSearch() },
       active = showSearchBar,
-      onActiveChange = { showSearchBar = it},
+      onActiveChange = { showSearchBar = it },
       placeholder = { Text(stringResource(id = R.string.search_location)) },
       modifier = modifier.testTag("LocationComponent"),
-        trailingIcon = {
-            when {
-                searching -> CircularProgressIndicator()
-                locationQuery.isNotEmpty() && searchCompleted -> IconButton(onClick = clearLocationInput) {
-                    Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
-                }
-                locationQuery.isNotEmpty() && !searchCompleted -> IconButton(onClick = launchSearch) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
-                }
-            }
-        }) {
-        if(possibleLocations.isNotEmpty()) {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp), // Set a rounded corner shape
-                color = MaterialTheme.colorScheme.surface
-            ) {
+      trailingIcon = {
+        when {
+          searching -> CircularProgressIndicator()
+          locationQuery.isNotEmpty() && searchCompleted ->
+              IconButton(onClick = clearLocationInput) {
+                Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
+              }
+          locationQuery.isNotEmpty() && !searchCompleted ->
+              IconButton(onClick = launchSearch) {
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+              }
+        }
+      }) {
+        if (possibleLocations.isNotEmpty()) {
+          Surface(
+              modifier = Modifier.fillMaxWidth(),
+              shape = RoundedCornerShape(8.dp), // Set a rounded corner shape
+              color = MaterialTheme.colorScheme.surface) {
                 LazyColumn {
-                    items(possibleLocations) { location ->
-                        Text(
-                            text = location.name,
-                            modifier = Modifier
-                                .clickable {
-                                    locationQuery = location.name
-                                    searchCompleted = true
-                                    showSearchBar = false
-                                    updateSelectedLocation(location)
+                  items(possibleLocations) { location ->
+                    Text(
+                        text = location.name,
+                        modifier =
+                            Modifier.clickable {
+                                  locationQuery = location.name
+                                  searchCompleted = true
+                                  showSearchBar = false
+                                  updateSelectedLocation(location)
                                 }
                                 .fillMaxWidth()
-                                .padding(16.dp)
-                        )
-                        HorizontalDivider(color = Color.LightGray)
-                    }
+                                .padding(16.dp))
+                    HorizontalDivider(color = Color.LightGray)
+                  }
                 }
-            }
+              }
         }
-    }
+      }
 }
