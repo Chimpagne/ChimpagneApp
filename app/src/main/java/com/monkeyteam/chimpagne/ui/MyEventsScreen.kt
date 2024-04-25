@@ -37,11 +37,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
@@ -62,7 +64,7 @@ fun MyEventScreen(
   Scaffold(
       topBar = {
         TopAppBar(
-            title = { Text("My Events") },
+            title = { Text(stringResource(id = R.string.my_events_screen_name)) },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
@@ -82,14 +84,14 @@ fun MyEventScreen(
               LazyColumn {
                 item {
                   Legend(
-                      text = "Created Events:",
+                      text = stringResource(id = R.string.my_events_screen_created_event_list_name),
                       imageVector = Icons.Rounded.Create,
                       contentDescription = "Created Events")
                 }
                 if (uiState.createdEvents.isEmpty()) {
                   item {
                     Text(
-                        text = "You have not created any events yet",
+                        text = stringResource(id = R.string.my_events_screen_empty_create_event_list),
                         modifier = Modifier.padding(16.dp))
                   }
                 } else {
@@ -107,14 +109,14 @@ fun MyEventScreen(
                 item {
                   Spacer(Modifier.height(16.dp))
                   Legend(
-                      text = "Joined Events:",
+                      text = stringResource(id = R.string.my_events_screen_joined_event_list_name),
                       imageVector = Icons.Rounded.Public,
                       contentDescription = "Joined Events")
                 }
                 if (uiState.joinedEvents.isEmpty()) {
                   item {
                     Text(
-                        text = "You have not joined any events yet",
+                        text = stringResource(id = R.string.my_events_screen_empty_join_event_list),
                         modifier = Modifier.padding(16.dp))
                   }
                 } else {

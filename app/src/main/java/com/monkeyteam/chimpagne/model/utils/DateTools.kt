@@ -1,6 +1,9 @@
 package com.monkeyteam.chimpagne.model.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.google.firebase.Timestamp
+import com.monkeyteam.chimpagne.R
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -24,10 +27,11 @@ fun buildTimestamp(day: Int, month: Int, year: Int, hour: Int, minute: Int): Tim
   return buildTimestamp(buildCalendar(day, month, year, hour, minute))
 }
 
+@Composable
 fun timestampToStringWithDateAndTime(timestamp: Timestamp): String{
   return DateFormat.getDateInstance(DateFormat.LONG)
             .format(timestamp.toDate()) +
-          " at " +
+          " " + stringResource(id = R.string.date_tools_at) + " "+
           DateFormat.getTimeInstance(DateFormat.SHORT)
             .format(timestamp.toDate())
 }

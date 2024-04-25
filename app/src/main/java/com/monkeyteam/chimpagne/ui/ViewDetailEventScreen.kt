@@ -38,10 +38,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
@@ -63,7 +65,8 @@ fun ViewDetailEventScreen(
 ) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
-  Scaffold(
+
+    Scaffold(
       topBar = {
         TopAppBar(
             title = {
@@ -81,9 +84,10 @@ fun ViewDetailEventScreen(
       }) { innerPadding ->
         Column(
             modifier =
-                Modifier.fillMaxSize()
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background)) {
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background)) {
               LazyColumn {
                 item {
                   Column(
@@ -95,14 +99,14 @@ fun ViewDetailEventScreen(
                         }
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            text = uiState.guests.count().toString() + " Monkeys joined",
+                            text = uiState.guests.count().toString() + " " + stringResource(id = R.string.event_details_screen_number_of_guests),
                             fontSize = 24.sp,
                             fontFamily = ChimpagneFontFamily)
                         Spacer(Modifier.height(16.dp))
                         Legend(
-                            text = " From " +
+                            text = stringResource(id = R.string.date_tools_from) + " " +
                                     timestampToStringWithDateAndTime(buildTimestamp(uiState.startsAtCalendarDate))
-                                    + "\n until " +
+                                    + "\n " + stringResource(id = R.string.date_tools_until) + " " +
                                     timestampToStringWithDateAndTime(buildTimestamp(uiState.endsAtCalendarDate)),
                             imageVector = Icons.Rounded.CalendarToday,
                             contentDescription = "event date")
@@ -113,17 +117,19 @@ fun ViewDetailEventScreen(
                             fontFamily = ChimpagneFontFamily,
                             color = Color.LightGray,
                             modifier =
-                                Modifier.fillMaxWidth()
-                                    .absolutePadding(left = 16.dp, right = 16.dp))
+                            Modifier
+                                .fillMaxWidth()
+                                .absolutePadding(left = 16.dp, right = 16.dp))
                         Spacer(Modifier.height(16.dp))
                           if (!canEditEvent) {
                               ChimpagneButton(
-                                  text = "Leave this event",
+                                  text = stringResource(id = R.string.event_details_screen_leave_button),
                                   icon = Icons.Rounded.RemoveCircleOutline,
                                   fontWeight = FontWeight.Bold,
                                   fontSize = 30.sp,
                                   modifier =
-                                  Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                  Modifier
+                                      .padding(horizontal = 16.dp, vertical = 8.dp)
                                       .fillMaxWidth(),
                                   onClick = {
                                       //TODO LEAVE DOES WORk BUT THE MY EVENTS ONLY UPDATES AFTER RE ENTRY TO IT
@@ -131,22 +137,23 @@ fun ViewDetailEventScreen(
                                             onSuccess = {
                                                 Toast.makeText(
                                                     context,
-                                                    "Leaving was successful",
+                                                    context.getString(R.string.event_details_screen_leave_toast_success),
                                                     Toast.LENGTH_SHORT)
                                                     .show()
-                                                //navObject.goBack()
+                                                navObject.navigateTo(Route.HOME_SCREEN)
                                             })
                                   })
                           }
                         if (canEditEvent) {
                           ChimpagneButton(
-                              text = "Edit this event",
+                              text =  stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,
                               fontWeight = FontWeight.Bold,
                               fontSize = 30.sp,
                               modifier =
-                                  Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                      .fillMaxWidth(),
+                              Modifier
+                                  .padding(horizontal = 16.dp, vertical = 8.dp)
+                                  .fillMaxWidth(),
                               onClick = {
                                   /* TODO Implement this later */
                                   Toast.makeText(
@@ -158,13 +165,14 @@ fun ViewDetailEventScreen(
                         }
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = "Chat",
+                            text = stringResource(id = R.string.event_details_screen_chat_button),
                             icon = Icons.Rounded.ChatBubbleOutline,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth(),
+                            Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .fillMaxWidth(),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -175,13 +183,14 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = "Location",
+                            text = stringResource(id = R.string.event_details_screen_location_button),
                             icon = Icons.Rounded.LocationOn,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth(),
+                            Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .fillMaxWidth(),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -192,13 +201,14 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = "Supplies",
+                            text = stringResource(id = R.string.event_details_screen_supplies_button),
                             icon = Icons.Rounded.Backpack,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth(),
+                            Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .fillMaxWidth(),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -209,13 +219,14 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = "Polls and voting",
+                            text = stringResource(id = R.string.event_details_screen_voting_button),
                             icon = Icons.Rounded.Poll,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth(),
+                            Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .fillMaxWidth(),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -226,13 +237,14 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = "Car pooling",
+                            text = stringResource(id = R.string.event_details_screen_car_pooling_button),
                             icon = Icons.Rounded.DirectionsCar,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth(),
+                            Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .fillMaxWidth(),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
