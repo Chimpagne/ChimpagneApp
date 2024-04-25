@@ -102,6 +102,7 @@ class EventViewModelTests {
         // Wait for database to get the data
         while (eventSearchVM.uiState.value.loading) {}
 
+
         assertTrue(eventSearchVM.uiState.value.title == testEvent.title)
         assertTrue(eventSearchVM.uiState.value.description == testEvent.description)
         assertTrue(eventSearchVM.uiState.value.location.name == testEvent.location.name)
