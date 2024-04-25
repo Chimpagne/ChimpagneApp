@@ -1,0 +1,95 @@
+package com.monkeyteam.chimpagne.newtests.viewmodels
+
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.buildCalendar
+import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class FindEventViewModelTests {
+
+  val database = Database()
+
+  @get:Rule val composeTestRule = createComposeRule()
+
+  private val testEvent1 =
+      ChimpagneEvent(
+          "0",
+          "Party 1",
+          "",
+          Location("EPFL", 46.519124, 6.567593),
+          true,
+          listOf("vegan", "concert", "booze"),
+          emptyMap(),
+          emptyMap(),
+          buildTimestamp(9, 5, 2024, 5, 0),
+          buildTimestamp(10, 5, 2024, 5, 0))
+
+  private val testEvent2 =
+      ChimpagneEvent(
+          "1",
+          "Party 2",
+          "",
+          Location("EPFL", 46.519130, 6.567580),
+          true,
+          listOf("vegan", "concert", "family friendly"),
+          emptyMap(),
+          emptyMap(),
+          buildTimestamp(8, 5, 2024, 6, 0),
+          buildTimestamp(9, 5, 2024, 6, 0))
+
+  private val testEvent3 =
+      ChimpagneEvent(
+          "2",
+          "Party 3",
+          "",
+          Location("center of earth", 0.0, 0.0),
+          true,
+          listOf("vegan", "family friendly"),
+          emptyMap(),
+          emptyMap(),
+          buildTimestamp(7, 5, 2024, 6, 0),
+          buildTimestamp(10, 5, 2024, 6, 0))
+
+  @Before
+  fun signIn() {
+    database.accountManager.signInTo(ChimpagneAccount())
+  }
+
+  @Test
+  fun TestFindEventVMSetterFunctions() {
+    val findEventVM = FindEventsViewModel(database = database)
+    val location = Location("EPFL", 2.0, 4.0)
+    val searchRadius = 6.25
+    val tags = listOf("this tag", "that tag", "our tag")
+    val date = buildCalendar(4, 2, 4, 0, 0)
+
+    findEventVM.updateSelectedLocation(location)
+    assert(findEventVM.uiState.value.selectedLocation!!.name == location.name)
+    assert(findEventVM.uiState.value.selectedLocation!!.latitude == location.latitude)
+    assert(findEventVM.uiState.value.selectedLocation!!.longitude == location.longitude)
+    assert(findEventVM.uiState.value.selectedLocation!!.geohash == location.geohash)
+
+    findEventVM.updateLocationSearchRadius(searchRadius)
+    assert(findEventVM.uiState.value.radiusAroundLocationInM == searchRadius)
+
+    findEventVM.updateTags(tags)
+    assert(findEventVM.uiState.value.selectedTags.size == tags.size)
+    assert(findEventVM.uiState.value.selectedTags.toSet() == tags.toSet())
+
+    findEventVM.updateSelectedDate(date)
+    assert(findEventVM.uiState.value.selectedDate == date)
+  }
+}

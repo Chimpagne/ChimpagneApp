@@ -11,11 +11,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
@@ -31,14 +34,18 @@ import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
+  val database = Database(PUBLIC_TABLES)
+  val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
+
   @OptIn(ExperimentalMaterial3Api::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
-    val accountViewModel: AccountViewModel by viewModels()
-
     setContent {
       ChimpagneTheme {
         val navController = rememberNavController()
@@ -92,13 +99,23 @@ class MainActivity : ComponentActivity() {
 
             composable(Route.LOADING) { SpinnerView() }
             composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
-            composable(Route.FIND_AN_EVENT_SCREEN) { MainFindEventScreen(navObject = navActions) }
-            composable(Route.EVENT_CREATION_SCREEN) { EventCreationScreen(navObject = navActions) }
+            composable(Route.FIND_AN_EVENT_SCREEN) {
+              MainFindEventScreen(
+                  navObject = navActions,
+                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)))
+            }
+            composable(Route.EVENT_CREATION_SCREEN) {
+              EventCreationScreen(
+                  navObject = navActions,
+                  eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
+            }
             composable(Route.MY_EVENTS_SCREEN) {
+                //TODO ADD FACTORY
               MyEventScreen(navObject = navActions, myEventsViewModel = MyEventsViewModel())
             }
             composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
-              ViewDetailEventScreen(
+                //TODO ADD FACTORY
+                ViewDetailEventScreen(
                   navObject = navActions,
                   eventViewModel = EventViewModel(backStackEntry.arguments?.getString("EventID")),
                   canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())

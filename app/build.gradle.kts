@@ -81,10 +81,15 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.maps.compose)
+
+    implementation(libs.maps.compose.utils)
+    implementation(libs.maps.compose.widgets)
+
     implementation(libs.firebase.storage.ktx)
 
+
     testImplementation(libs.junit)
-    testImplementation(libs.mockwebserver)
+    implementation(libs.mockwebserver)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -107,9 +112,13 @@ dependencies {
     testImplementation(libs.mockwebserver)
 
     implementation(libs.maps.compose)
+    implementation(libs.play.services.location)
 
     implementation(libs.coil.compose)
 
+    // For testing the locationSelector
+    implementation(libs.mockito.core)
+    implementation(libs.mockito.inline)
 
 }
 

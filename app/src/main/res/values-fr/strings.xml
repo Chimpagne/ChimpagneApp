@@ -46,6 +46,8 @@
     <string name="find_event_join_event_button_text">Rejoindre</string>
     <string name="find_event_no_event_available">Pas de détail à afficher</string>
     <string name="find_event_near_me_toast">Localisation…</string>
+    <string name="find_event_no_result">Pas de résultat</string>
+    <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
     <string name="search_location">Rechercher un lieu </string>
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
