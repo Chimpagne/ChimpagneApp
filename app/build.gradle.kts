@@ -81,7 +81,12 @@ dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
     implementation(libs.maps.compose)
+
+    implementation(libs.maps.compose.utils)
+    implementation(libs.maps.compose.widgets)
+
     implementation(libs.firebase.storage.ktx)
+
 
     testImplementation(libs.junit)
     implementation(libs.mockwebserver)
@@ -107,6 +112,7 @@ dependencies {
     testImplementation(libs.mockwebserver)
 
     implementation(libs.maps.compose)
+    implementation(libs.play.services.location)
 
     implementation(libs.coil.compose)
 

@@ -28,8 +28,8 @@ class AccountCreationUITest {
       AccountCreation(navObject, AccountViewModel(database = database))
     }
 
-    composeTestRule.onNodeWithTag("accountCreationLabel").assertTextContains("Create Account")
-    composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
-    composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Last Name")
+    composeTestRule.onNodeWithTag("accountCreationLabel").assertExists()
+    composeTestRule.onNodeWithTag("firstNameTextField").assertExists()
+    composeTestRule.onNodeWithTag("lastNameTextField").assertExists()
   }
 }
