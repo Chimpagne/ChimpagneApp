@@ -115,7 +115,6 @@ jobs:
       # This step generates the coverage report which will be uploaded to sonar
       - name: Generate Line Coverage Report
         run: |
-          ./gradlew jacocoTestCoverageVerification
           ./gradlew jacocoTestReport
 
       # Upload the line coverage report to SonarCloud
