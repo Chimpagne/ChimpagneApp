@@ -7,14 +7,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
-import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import org.junit.Rule
 import org.junit.Test
 

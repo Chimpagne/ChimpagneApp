@@ -69,7 +69,7 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
   }
 
-    @Test
+  @Test
   fun testPanel1() {
 
     composeTestRule.setContent {
