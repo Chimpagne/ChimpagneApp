@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.model.database
 
-import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
@@ -169,48 +168,29 @@ class ChimpagneEventManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun getAllOfMyEvents(
-      onSuccess: (createdEvents: List<ChimpagneEvent>, joinedEvents: List<ChimpagneEvent>) -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
+  fun getEvents(
+      listOfEventIDs: List<ChimpagneEventId>,
+      onSuccess: (List<ChimpagneEvent>) -> Unit,
+      onFailure: (Exception) -> Unit = {}
+  ){
+      val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
+      for (eventID in listOfEventIDs) {
+          tasks.add(events.where(Filter.equalTo("id", eventID)).get())
+      }
 
-    if (database.accountManager.currentUserAccount == null) {
-      return onFailure(NotLoggedInException())
-    }
-
-    val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
-    if (eventIDs == null) {
-      return onSuccess(emptyList(), emptyList())
-    }
-
-    val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
-    for (eventID in eventIDs.keys) {
-      tasks.add(events.where(Filter.equalTo("id", eventID)).get())
-    }
-
-    // Collect all the query results together into a single list
-    Tasks.whenAllComplete(tasks)
-        .addOnCompleteListener {
-          val joinedEvents: MutableList<ChimpagneEvent> = ArrayList()
-          val createdEvents: MutableList<ChimpagneEvent> = ArrayList()
-          for (task in tasks) {
-            val snap = task.result
-            for (doc in snap!!.documents) {
-              val event = doc.toObject<ChimpagneEvent>()!!
-              Log.d(
-                  "TESTING",
-                  event.ownerId +
-                      " == " +
-                      database.accountManager.currentUserAccount!!.firebaseAuthUID)
-              if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID)
-                  createdEvents.add(event)
-              else joinedEvents.add(event)
-            }
+      // Collect all the query results together into a single list
+      Tasks.whenAllComplete(tasks)
+          .addOnCompleteListener {
+              val events: MutableList<ChimpagneEvent> = ArrayList()
+              for (task in tasks) {
+                  val snap = task.result
+                  for (doc in snap!!.documents) {
+                      val event = doc.toObject<ChimpagneEvent>()!!
+                      events.add(event)
+                  }
+              }
+              onSuccess(events)
           }
-
-          // matchingEvents contains the results
-          onSuccess(createdEvents, joinedEvents)
-        }
-        .addOnFailureListener { onFailure(it) }
+          .addOnFailureListener { onFailure(it) }
   }
 }

@@ -19,7 +19,7 @@ class MyEventsViewModel(
   private val _uiState = MutableStateFlow(MyEventsUIState())
   val uiState: StateFlow<MyEventsUIState> = _uiState
 
-  private val eventManager = database.eventManager
+  private val accountManager = database.accountManager
 
   init {
     fetchMyEvents(onSuccess, onFailure)
@@ -28,7 +28,7 @@ class MyEventsViewModel(
   private fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      eventManager.getAllOfMyEvents(
+        accountManager.getAllOfMyEvents(
           { createdEvents, joinedEvents ->
             _uiState.value =
                 _uiState.value.copy(
