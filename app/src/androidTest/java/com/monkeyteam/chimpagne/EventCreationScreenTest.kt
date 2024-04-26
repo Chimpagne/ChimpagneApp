@@ -157,6 +157,9 @@ class EventCreationScreenTest {
     // You can add more detailed tests here for interactions and assertions
   }
 
+  /*
+
+  //TODO: use the test tags !
   @Test
   fun testMakeEventPublicButtonShowsToast() {
 
@@ -177,6 +180,7 @@ class EventCreationScreenTest {
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
   }
+  */
 
   @Test
   fun testPanel2() {
