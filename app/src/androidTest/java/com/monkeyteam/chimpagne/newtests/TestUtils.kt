@@ -60,10 +60,7 @@ val TEST_EVENTS =
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(1, 7, 2024, 0, 0),
             endsAtTimestamp = buildTimestamp(2, 7, 2024, 0, 0),
-            ownerId = "PRINCE"
-        )
-    )
-
+            ownerId = "PRINCE"))
 
 val TEST_ACCOUNTS =
     listOf(
@@ -72,8 +69,7 @@ val TEST_ACCOUNTS =
             firstName = "Monkey",
             lastName = "Prince",
             location = Location("The jungle"),
-            joinedEvents = mapOf(Pair("LOTR", true), Pair("THIRD_EVENT", true))
-        ),
+            joinedEvents = mapOf(Pair("LOTR", true), Pair("THIRD_EVENT", true))),
         ChimpagneAccount(
             firebaseAuthUID = "JUAN",
             firstName = "Juan",

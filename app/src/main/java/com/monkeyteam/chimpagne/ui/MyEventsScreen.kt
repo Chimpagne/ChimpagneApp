@@ -31,7 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,10 +57,10 @@ fun MyEventsScreen(
       topBar = {
         TopAppBar(
             title = {
-                Text(
-                    stringResource(id = R.string.my_events_screen_name),
-                    Modifier.testTag("screen title")
-                ) },
+              Text(
+                  stringResource(id = R.string.my_events_screen_name),
+                  Modifier.testTag("screen title"))
+            },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
@@ -140,7 +139,7 @@ fun ShortEventCard(
     location: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
-    ) {
+) {
   Card(
       modifier =
           modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth().clickable {

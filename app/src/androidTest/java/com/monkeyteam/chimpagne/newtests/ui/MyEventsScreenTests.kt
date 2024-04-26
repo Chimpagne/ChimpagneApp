@@ -9,18 +9,14 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
-import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,91 +25,82 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MyEventsScreenTests {
 
-    val database = Database()
+  val database = Database()
 
-    @get:Rule
-    val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
-    @Before
-    fun initTests() {
-        initializeTestDatabase()
+  @Before
+  fun initTests() {
+    initializeTestDatabase()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun generalTextTest() {
+    val event = TEST_EVENTS[0]
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun generalTextTest() {
-        val event = TEST_EVENTS[0]
+    composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Created Events").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Joined Events").assertIsDisplayed()
+  }
 
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            val navActions = NavigationActions(navController)
-            MyEventsScreen(
-                navActions, viewModel(factory = MyEventsViewModelFactory(database))
-            )
-        }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testNavigationBackFunctionality() {
+    val event = TEST_EVENTS[0]
 
-        composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("Created Events").assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("Joined Events").assertIsDisplayed()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testNavigationBackFunctionality() {
-        val event = TEST_EVENTS[0]
+    composeTestRule.onNodeWithContentDescription("back").performClick()
+  }
 
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            val navActions = NavigationActions(navController)
-            MyEventsScreen(
-                navActions, viewModel(factory = MyEventsViewModelFactory(database))
-            )
-        }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testUserWithJoinedAndCreatedEvents() {
 
-        composeTestRule.onNodeWithContentDescription("back").performClick()
+    val accountViewModel = AccountViewModel(database = database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[0].firebaseAuthUID, {}, {})
+
+    while (accountViewModel.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testUserWithJoinedAndCreatedEvents() {
+    composeTestRule.onNodeWithTag("a created event").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("a joined event").assertIsDisplayed()
+  }
 
-        val accountViewModel = AccountViewModel(database = database)
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testUserWithNoEvents() {
 
-        accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[0].firebaseAuthUID, {}, {})
+    val accountViewModel = AccountViewModel(database = database)
 
-        while (accountViewModel.uiState.value.loading) {}
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
 
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            val navActions = NavigationActions(navController)
-            MyEventsScreen(
-                navActions, viewModel(factory = MyEventsViewModelFactory(database))
-            )
-        }
+    while (accountViewModel.uiState.value.loading) {}
 
-        composeTestRule.onNodeWithTag("a created event").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("a joined event").assertIsDisplayed()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testUserWithNoEvents() {
-
-        val accountViewModel = AccountViewModel(database = database)
-
-        accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-
-        while (accountViewModel.uiState.value.loading) {}
-
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            val navActions = NavigationActions(navController)
-            MyEventsScreen(
-                navActions, viewModel(factory = MyEventsViewModelFactory(database))
-            )
-        }
-
-        composeTestRule.onNodeWithTag("empty join event list").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("empty create event list").assertIsDisplayed()
-    }
+    composeTestRule.onNodeWithTag("empty join event list").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("empty create event list").assertIsDisplayed()
+  }
 }
