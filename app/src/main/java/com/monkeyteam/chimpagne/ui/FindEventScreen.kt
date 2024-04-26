@@ -223,7 +223,7 @@ fun FindEventFormScreen(
               }
             }
       }) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
               modifier =
                   Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(scrollState),
