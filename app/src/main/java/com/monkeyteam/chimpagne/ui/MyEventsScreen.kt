@@ -2,9 +2,7 @@ package com.monkeyteam.chimpagne.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,15 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Public
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,6 +31,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,18 +41,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
-import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
-import java.text.DateFormat
-import java.util.Calendar
 
 @ExperimentalMaterial3Api
 @Composable
-fun MyEventScreen(
+fun MyEventsScreen(
     navObject: NavigationActions,
     myEventsViewModel: MyEventsViewModel = viewModel()
 ) {
@@ -64,7 +57,11 @@ fun MyEventScreen(
   Scaffold(
       topBar = {
         TopAppBar(
-            title = { Text(stringResource(id = R.string.my_events_screen_name)) },
+            title = {
+                Text(
+                    stringResource(id = R.string.my_events_screen_name),
+                    Modifier.testTag("screen title")
+                ) },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
@@ -74,10 +71,9 @@ fun MyEventScreen(
       }) { innerPadding ->
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background),
+                Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(Modifier.height(16.dp))
 
@@ -91,16 +87,17 @@ fun MyEventScreen(
                 if (uiState.createdEvents.isEmpty()) {
                   item {
                     Text(
-                        text = stringResource(id = R.string.my_events_screen_empty_create_event_list),
-                        modifier = Modifier.padding(16.dp))
+                        text =
+                            stringResource(id = R.string.my_events_screen_empty_create_event_list),
+                        modifier = Modifier.padding(16.dp).testTag("empty create event list"))
                   }
                 } else {
                   items(uiState.createdEvents.values.toList()) { event ->
-                      ShortEventCard(
-                          title = event.title,
-                          date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
-                          location = event.location.name
-                      ){
+                    ShortEventCard(
+                        title = event.title,
+                        date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
+                        location = event.location.name,
+                        modifier = Modifier.testTag("a created event")) {
                           navObject.navigateTo(
                               Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/true")
                         }
@@ -117,18 +114,18 @@ fun MyEventScreen(
                   item {
                     Text(
                         text = stringResource(id = R.string.my_events_screen_empty_join_event_list),
-                        modifier = Modifier.padding(16.dp))
+                        modifier = Modifier.padding(16.dp).testTag("empty join event list"))
                   }
                 } else {
                   items(uiState.joinedEvents.values.toList()) { event ->
-                      ShortEventCard(
-                          title = event.title,
-                          date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
-                          location = event.location.name
-                      ){
+                    ShortEventCard(
+                        title = event.title,
+                        date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
+                        location = event.location.name,
+                        modifier = Modifier.testTag("a joined event")) {
                           navObject.navigateTo(
-                          Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/false")
-                      }
+                              Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/false")
+                        }
                   }
                 }
               }
@@ -141,40 +138,38 @@ fun ShortEventCard(
     title: String,
     date: String,
     location: String,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth().clickable{onClick()},
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-        ) {
-            Column {
-                Text(
-                    text = title,
-                    fontFamily = ChimpagneFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = date,
-                    fontFamily = ChimpagneFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 15.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+  Card(
+      modifier =
+          modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth().clickable {
+            onClick()
+          },
+      shape = RoundedCornerShape(16.dp),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+          Column {
             Text(
-                text = location,
+                text = title,
+                fontFamily = ChimpagneFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                textAlign = TextAlign.Center)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = date,
                 fontFamily = ChimpagneFontFamily,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 15.sp,
-                textAlign = TextAlign.Center
-            )
+                textAlign = TextAlign.Center)
+          }
+          Text(
+              text = location,
+              fontFamily = ChimpagneFontFamily,
+              fontWeight = FontWeight.SemiBold,
+              fontSize = 15.sp,
+              textAlign = TextAlign.Center)
         }
-    }
+      }
 }

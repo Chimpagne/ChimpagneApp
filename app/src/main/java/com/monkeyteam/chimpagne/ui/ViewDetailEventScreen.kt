@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -53,8 +54,6 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
-import java.text.DateFormat
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,101 +65,119 @@ fun ViewDetailEventScreen(
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
 
-    Scaffold(
+  Scaffold(
       topBar = {
         TopAppBar(
             title = {
               Text(
                   text = uiState.title,
                   fontSize = 30.sp,
-                  fontFamily = ChimpagneFontFamily)
+                  fontFamily = ChimpagneFontFamily,
+                  modifier = Modifier.testTag("event title"))
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
-              IconButton(onClick = { navObject.goBack() }) {
+              IconButton(onClick = { navObject.goBack() }, modifier = Modifier.testTag("go back")) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
               }
             })
       }) { innerPadding ->
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)) {
+                Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background)) {
               LazyColumn {
                 item {
                   Column(
                       modifier = Modifier.fillMaxSize(),
                       horizontalAlignment = Alignment.CenterHorizontally) {
                         Spacer(Modifier.height(16.dp))
-                        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                            uiState.tags.forEach { tag -> SimpleTagChip(tag) }
-                        }
+                        Row(
+                            modifier =
+                                Modifier.horizontalScroll(rememberScrollState())
+                                    .testTag("tag list")) {
+                              uiState.tags.forEach { tag -> SimpleTagChip(tag) }
+                            }
                         Spacer(Modifier.height(16.dp))
                         Text(
-                            text = uiState.guests.count().toString() + " " + stringResource(id = R.string.event_details_screen_number_of_guests),
+                            text =
+                                uiState.guests.count().toString() +
+                                    " " +
+                                    stringResource(
+                                        id = R.string.event_details_screen_number_of_guests),
                             fontSize = 24.sp,
-                            fontFamily = ChimpagneFontFamily)
+                            fontFamily = ChimpagneFontFamily,
+                            modifier = Modifier.testTag("number of guests"))
                         Spacer(Modifier.height(16.dp))
                         Legend(
-                            text = stringResource(id = R.string.date_tools_from) + " " +
-                                    timestampToStringWithDateAndTime(buildTimestamp(uiState.startsAtCalendarDate))
-                                    + "\n " + stringResource(id = R.string.date_tools_until) + " " +
-                                    timestampToStringWithDateAndTime(buildTimestamp(uiState.endsAtCalendarDate)),
+                            text =
+                                stringResource(id = R.string.date_tools_from) +
+                                    " " +
+                                    timestampToStringWithDateAndTime(
+                                        buildTimestamp(uiState.startsAtCalendarDate)) +
+                                    "\n " +
+                                    stringResource(id = R.string.date_tools_until) +
+                                    " " +
+                                    timestampToStringWithDateAndTime(
+                                        buildTimestamp(uiState.endsAtCalendarDate)),
                             imageVector = Icons.Rounded.CalendarToday,
                             contentDescription = "event date")
                         Spacer(Modifier.height(16.dp))
                         Text(
                             text = uiState.description,
-                             fontSize = 20.sp,
+                            fontSize = 20.sp,
                             fontFamily = ChimpagneFontFamily,
                             color = Color.LightGray,
                             modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .absolutePadding(left = 16.dp, right = 16.dp))
+                                Modifier.fillMaxWidth()
+                                    .absolutePadding(left = 16.dp, right = 16.dp)
+                                    .testTag("description"))
                         Spacer(Modifier.height(16.dp))
-                          if (!canEditEvent) {
-                              ChimpagneButton(
-                                  text = stringResource(id = R.string.event_details_screen_leave_button),
-                                  icon = Icons.Rounded.RemoveCircleOutline,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 30.sp,
-                                  modifier =
-                                  Modifier
-                                      .padding(horizontal = 16.dp, vertical = 8.dp)
-                                      .fillMaxWidth(),
-                                  onClick = {
-                                      //TODO LEAVE DOES WORk BUT THE MY EVENTS ONLY UPDATES AFTER RE ENTRY TO IT
-                                        eventViewModel.leaveTheEvent(
-                                            onSuccess = {
-                                                Toast.makeText(
-                                                    context,
-                                                    context.getString(R.string.event_details_screen_leave_toast_success),
-                                                    Toast.LENGTH_SHORT)
-                                                    .show()
-                                                navObject.navigateTo(Route.HOME_SCREEN)
-                                            })
-                                  })
-                          }
+                        if (!canEditEvent) {
+                          ChimpagneButton(
+                              text =
+                                  stringResource(id = R.string.event_details_screen_leave_button),
+                              icon = Icons.Rounded.RemoveCircleOutline,
+                              fontWeight = FontWeight.Bold,
+                              fontSize = 30.sp,
+                              modifier =
+                                  Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                      .fillMaxWidth()
+                                      .testTag("leave"),
+                              onClick = {
+                                // TODO LEAVE DOES WORk BUT THE MY EVENTS ONLY UPDATES AFTER RE
+                                // ENTRY TO IT
+                                eventViewModel.leaveTheEvent(
+                                    onSuccess = {
+                                      Toast.makeText(
+                                              context,
+                                              context.getString(
+                                                  R.string
+                                                      .event_details_screen_leave_toast_success),
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                      navObject.navigateTo(Route.HOME_SCREEN)
+                                    })
+                              })
+                        }
                         if (canEditEvent) {
                           ChimpagneButton(
-                              text =  stringResource(id = R.string.event_details_screen_edit_button),
+                              text = stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,
                               fontWeight = FontWeight.Bold,
                               fontSize = 30.sp,
                               modifier =
-                              Modifier
-                                  .padding(horizontal = 16.dp, vertical = 8.dp)
-                                  .fillMaxWidth(),
+                                  Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                      .fillMaxWidth()
+                                      .testTag("edit"),
                               onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                      .show()
+                                /* TODO Implement this later */
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
                               })
                         }
                         Spacer(Modifier.height(16.dp))
@@ -170,9 +187,9 @@ fun ViewDetailEventScreen(
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
+                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                                    .testTag("chat"),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -183,14 +200,15 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = stringResource(id = R.string.event_details_screen_location_button),
+                            text =
+                                stringResource(id = R.string.event_details_screen_location_button),
                             icon = Icons.Rounded.LocationOn,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
+                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                                    .testTag("location"),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -201,14 +219,15 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = stringResource(id = R.string.event_details_screen_supplies_button),
+                            text =
+                                stringResource(id = R.string.event_details_screen_supplies_button),
                             icon = Icons.Rounded.Backpack,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
+                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                                    .testTag("supplies"),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -224,9 +243,9 @@ fun ViewDetailEventScreen(
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
+                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                                    .testTag("polls"),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(
@@ -237,14 +256,16 @@ fun ViewDetailEventScreen(
                             })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
-                            text = stringResource(id = R.string.event_details_screen_car_pooling_button),
+                            text =
+                                stringResource(
+                                    id = R.string.event_details_screen_car_pooling_button),
                             icon = Icons.Rounded.DirectionsCar,
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier =
-                            Modifier
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
-                                .fillMaxWidth(),
+                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    .fillMaxWidth()
+                                    .testTag("car pooling"),
                             onClick = {
                               /* TODO Implement this later */
                               Toast.makeText(

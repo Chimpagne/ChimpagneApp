@@ -28,10 +28,10 @@ fun buildTimestamp(day: Int, month: Int, year: Int, hour: Int, minute: Int): Tim
 }
 
 @Composable
-fun timestampToStringWithDateAndTime(timestamp: Timestamp): String{
-  return DateFormat.getDateInstance(DateFormat.LONG)
-            .format(timestamp.toDate()) +
-          " " + stringResource(id = R.string.date_tools_at) + " "+
-          DateFormat.getTimeInstance(DateFormat.SHORT)
-            .format(timestamp.toDate())
+fun timestampToStringWithDateAndTime(timestamp: Timestamp): String {
+  return DateFormat.getDateInstance(DateFormat.LONG).format(timestamp.toDate()) +
+      " " +
+      stringResource(id = R.string.date_tools_at) +
+      " " +
+      DateFormat.getTimeInstance(DateFormat.SHORT).format(timestamp.toDate())
 }

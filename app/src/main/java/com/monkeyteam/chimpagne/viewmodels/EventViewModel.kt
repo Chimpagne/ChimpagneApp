@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
-import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
@@ -20,7 +19,7 @@ class EventViewModel(
     onSuccess: () -> Unit = {},
     onFailure: (Exception) -> Unit = {},
 ) : ViewModel() {
-  private  val accountManager = database.accountManager
+  private val accountManager = database.accountManager
   private val eventManager = database.eventManager
 
   // UI state exposed to the UI
@@ -145,9 +144,9 @@ class EventViewModel(
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-        accountManager.joinEvent(
+      accountManager.joinEvent(
           _uiState.value.id,
-            role,
+          role,
           {
             fetchEvent(
                 id = _uiState.value.id,
@@ -168,10 +167,7 @@ class EventViewModel(
     }
   }
 
-  fun leaveTheEvent(
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
+  fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.leaveEvent(

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +19,7 @@ class MyEventsViewModel(
   private val _uiState = MutableStateFlow(MyEventsUIState())
   val uiState: StateFlow<MyEventsUIState> = _uiState
 
-    private val eventManager = database.eventManager
+  private val eventManager = database.eventManager
 
   init {
     fetchMyEvents(onSuccess, onFailure)
@@ -29,19 +28,20 @@ class MyEventsViewModel(
   private fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-        eventManager.getAllOfMyEvents({createdEvents, joinedEvents ->
+      eventManager.getAllOfMyEvents(
+          { createdEvents, joinedEvents ->
             _uiState.value =
                 _uiState.value.copy(
                     createdEvents = createdEvents.associateBy { event -> event.id },
                     joinedEvents = joinedEvents.associateBy { event -> event.id },
-                    loading = false
-                )
+                    loading = false)
             onSuccess()
-        }, {
+          },
+          {
             Log.d("MY EVENTS", it.toString())
             _uiState.value = _uiState.value.copy(loading = false)
             onFailure(it)
-        })
+          })
     }
   }
 }
@@ -52,9 +52,8 @@ data class MyEventsUIState(
     val loading: Boolean = false
 )
 
-class MyEventsViewModelFactory(private val database: Database) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MyEventsViewModel(database) as T
-    }
+class MyEventsViewModelFactory(private val database: Database) : ViewModelProvider.Factory {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    return MyEventsViewModel(database) as T
+  }
 }
