@@ -106,10 +106,13 @@ fun LocationSelector(
         trailingIcon = {
             when {
                 searching -> CircularProgressIndicator()
-                locationQuery.isNotEmpty() && searchCompleted -> IconButton(onClick = clearLocationInput) {
+                locationQuery.isNotEmpty() && searchCompleted -> IconButton(
+                    onClick = clearLocationInput,
+                    modifier = Modifier.testTag("ClearIcon"
+                    )) {
                     Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
                 }
-                locationQuery.isNotEmpty() && !searchCompleted -> IconButton(onClick = launchSearch) {
+                locationQuery.isNotEmpty() && !searchCompleted -> IconButton(onClick = launchSearch, modifier = Modifier.testTag("SearchIcon")) {
                     Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
                 }
             }

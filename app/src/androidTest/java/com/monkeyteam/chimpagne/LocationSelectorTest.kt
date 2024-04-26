@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.onNodeWithTag
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import org.junit.Rule
@@ -52,6 +53,21 @@ class LocationSelectorTest {
 
         composeTestRule.onNodeWithText(selectedLocation.name).performClick()
     }
+
+    @Test
+    fun testSearchIconVisibilityAndFunctionality() {
+        composeTestRule.setContent {
+            LocationSelectorTestView(
+                selectedLocation = null,
+                updateSelectedLocation = {}
+            )
+        }
+        composeTestRule.onNodeWithTag("SearchIcon").assertDoesNotExist()
+        composeTestRule.onNodeWithText("Search for a location").performTextInput("New York")
+        composeTestRule.onNodeWithTag("SearchIcon").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("SearchIcon").performClick()
+    }
+
 }
 
 @Composable
