@@ -14,8 +14,11 @@ import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
+import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 import org.junit.Before
 import org.junit.Rule
@@ -38,10 +41,14 @@ class MyEventsScreenTests {
   @Test
   fun generalTextTest() {
 
+    val myEventVM = MyEventsViewModel(database)
+
+    while (myEventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
+      MyEventsScreen(navActions, myEventVM)
     }
 
     composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
@@ -53,10 +60,14 @@ class MyEventsScreenTests {
   @Test
   fun testNavigationBackFunctionality() {
 
+    val myEventVM = MyEventsViewModel(database)
+
+    while (myEventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
+      MyEventsScreen(navActions, myEventVM)
     }
 
     composeTestRule.onNodeWithContentDescription("back").performClick()
@@ -72,10 +83,14 @@ class MyEventsScreenTests {
 
     while (accountViewModel.uiState.value.loading) {}
 
+    val myEventVM = MyEventsViewModel(database)
+
+    while (myEventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
+      MyEventsScreen(navActions, myEventVM)
     }
 
     composeTestRule.onNodeWithTag("a created event").assertIsDisplayed()
@@ -92,10 +107,14 @@ class MyEventsScreenTests {
 
     while (accountViewModel.uiState.value.loading) {}
 
+    val myEventVM = MyEventsViewModel(database)
+
+    while (myEventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      MyEventsScreen(navActions, viewModel(factory = MyEventsViewModelFactory(database)))
+      MyEventsScreen(navActions, myEventVM)
     }
 
     composeTestRule.onNodeWithTag("empty join event list").assertIsDisplayed()

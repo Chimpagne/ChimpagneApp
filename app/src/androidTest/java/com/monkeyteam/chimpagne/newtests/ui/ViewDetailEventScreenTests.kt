@@ -13,6 +13,7 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import org.junit.Before
 import org.junit.Rule
@@ -35,11 +36,14 @@ class ViewDetailEventScreenTests {
   fun generalTextTest() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
@@ -53,11 +57,14 @@ class ViewDetailEventScreenTests {
   fun testNavigationBackFunctionality() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("go back").performClick()
@@ -67,11 +74,14 @@ class ViewDetailEventScreenTests {
   fun testLeaveButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("leave").performClick()
@@ -81,11 +91,14 @@ class ViewDetailEventScreenTests {
   fun testEditButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)), true)
+      ViewDetailEventScreen(navActions, eventVM, true)
     }
 
     composeTestRule.onNodeWithTag("edit").performClick()
@@ -95,11 +108,14 @@ class ViewDetailEventScreenTests {
   fun testChatButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("chat").performClick()
@@ -109,11 +125,14 @@ class ViewDetailEventScreenTests {
   fun testLocationButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("location").performClick()
@@ -123,11 +142,14 @@ class ViewDetailEventScreenTests {
   fun testSuppliesButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("supplies").performClick()
@@ -137,11 +159,14 @@ class ViewDetailEventScreenTests {
   fun testPollsButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("polls").performClick()
@@ -151,11 +176,14 @@ class ViewDetailEventScreenTests {
   fun testCarPoolingButton() {
     val event = TEST_EVENTS[0]
 
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(
-          navActions, viewModel(factory = EventViewModelFactory(event.id, database)))
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("car pooling").performClick()
