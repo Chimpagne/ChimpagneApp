@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -65,7 +66,7 @@ class MyEventsScreenTests {
       MyEventsScreen(navActions, myEventVM)
     }
 
-    composeTestRule.onNodeWithContentDescription("back").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("back").assertHasClickAction()
     composeTestRule.onNodeWithContentDescription("back").performClick()
   }
 

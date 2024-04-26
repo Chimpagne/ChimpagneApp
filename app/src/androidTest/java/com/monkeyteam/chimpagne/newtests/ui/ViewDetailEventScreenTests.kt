@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -65,7 +66,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("go back").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("go back").assertHasClickAction()
     composeTestRule.onNodeWithTag("go back").performClick()
   }
 
@@ -83,7 +84,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("leave").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("leave").assertHasClickAction()
     composeTestRule.onNodeWithTag("leave").performClick()
   }
 
@@ -101,7 +102,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, true)
     }
 
-    composeTestRule.onNodeWithTag("edit").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("edit").assertHasClickAction()
     composeTestRule.onNodeWithTag("edit").performClick()
   }
 
@@ -119,7 +120,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("chat").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("chat").assertHasClickAction()
     composeTestRule.onNodeWithTag("chat").performClick()
   }
 
@@ -137,7 +138,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("location").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("location").assertHasClickAction()
     composeTestRule.onNodeWithTag("location").performClick()
   }
 
@@ -155,7 +156,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("supplies").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("supplies").assertHasClickAction()
     composeTestRule.onNodeWithTag("supplies").performClick()
   }
 
@@ -173,7 +174,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("polls").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("polls").assertHasClickAction()
     composeTestRule.onNodeWithTag("polls").performClick()
   }
 
@@ -191,7 +192,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("car pooling").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("car pooling").assertHasClickAction()
     composeTestRule.onNodeWithTag("car pooling").performClick()
   }
 }
