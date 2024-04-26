@@ -18,7 +18,6 @@ import org.junit.runner.RunWith
 class EventViewModelTests {
 
   val database = Database()
-  private val eventManager = database.eventManager
 
   @Before
   fun signIn() {

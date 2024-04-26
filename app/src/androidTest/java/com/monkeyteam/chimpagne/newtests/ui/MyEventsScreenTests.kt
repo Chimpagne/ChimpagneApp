@@ -28,7 +28,7 @@ class MyEventsScreenTests {
   val database = Database()
 
   @get:Rule val composeTestRule = createComposeRule()
-  /*
+
   @Before
   fun initTests() {
     initializeTestDatabase()
@@ -100,5 +100,5 @@ class MyEventsScreenTests {
 
     composeTestRule.onNodeWithTag("empty join event list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty create event list").assertIsDisplayed()
-  }*/
+  }
 }
