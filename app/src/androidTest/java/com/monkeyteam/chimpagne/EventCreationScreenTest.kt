@@ -1,11 +1,7 @@
 package com.monkeyteam.chimpagne
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -13,17 +9,12 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.matcher.ViewMatchers.withTagValue
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -76,10 +67,9 @@ class EventCreationScreenTest {
     }
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
-
   }
 
-    @Test
+  @Test
   fun testPanel1() {
 
     composeTestRule.setContent {

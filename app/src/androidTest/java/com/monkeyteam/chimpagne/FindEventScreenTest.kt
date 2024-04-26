@@ -13,6 +13,8 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventDetailSheet
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
+import com.monkeyteam.chimpagne.ui.FindEventMapScreen
+import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
@@ -25,11 +27,92 @@ class FindEventScreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
 
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayTitle() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displaySearchButton() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayLocationInput() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("input_location").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displaySelectLocationButton() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("sel_location").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displaySelectDateSelector() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("sel_date").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayMapScreen() {
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventMapScreen({}, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
+  }
+
   @Test
   fun testEventDetailSheetDisplay() {
     val sampleEvent = ChimpagneEvent(title = "banana", description = "MONKEY")
 
-    composeTestRule.setContent { EventDetailSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database))) }
+    composeTestRule.setContent {
+      EventDetailSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))
+    }
 
     // Assert that event details are displayed correctly
     composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()
@@ -46,7 +129,6 @@ class FindEventScreenTest {
       val navActions = NavigationActions(navController)
 
       FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {})
-
     }
 
     // Check if the location selector is displayed

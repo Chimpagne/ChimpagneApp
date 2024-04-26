@@ -11,7 +11,10 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import com.monkeyteam.chimpagne.model.location.Location
 
-class ChimpagneEventManager(private val database: Database, private val events: CollectionReference) {
+class ChimpagneEventManager(
+    private val database: Database,
+    private val events: CollectionReference
+) {
   fun getAllEventsByFilterAroundLocation(
       center: Location,
       radiusInM: Double,
@@ -135,9 +138,10 @@ class ChimpagneEventManager(private val database: Database, private val events: 
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
+
   internal fun addStaff(
-    eventId: ChimpagneEventId,
-    userUID: ChimpagneAccountUID,
+      eventId: ChimpagneEventId,
+      userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
@@ -149,8 +153,8 @@ class ChimpagneEventManager(private val database: Database, private val events: 
   }
 
   internal fun removeStaff(
-    eventId: ChimpagneEventId,
-    userUID: ChimpagneAccountUID,
+      eventId: ChimpagneEventId,
+      userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
