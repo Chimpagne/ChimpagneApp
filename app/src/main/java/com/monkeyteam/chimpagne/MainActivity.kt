@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
-import com.monkeyteam.chimpagne.ui.EventCreationScreen
+import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen

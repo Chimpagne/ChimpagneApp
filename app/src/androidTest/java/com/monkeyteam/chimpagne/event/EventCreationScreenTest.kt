@@ -13,7 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.ui.EventCreationScreen
+import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import org.junit.Assert.*
