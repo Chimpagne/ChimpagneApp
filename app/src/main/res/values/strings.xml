@@ -53,6 +53,8 @@
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="welcome_screen_title">Welcome to</string>
+    <string name="save_changes">Save changes</string>
+    <string name="event_changes_saved">The event\'s changes have been saved</string>
 
 
 </resources>
