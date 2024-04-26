@@ -65,6 +65,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("go back").assertIsDisplayed()
     composeTestRule.onNodeWithTag("go back").performClick()
   }
 
@@ -82,6 +83,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("leave").assertIsDisplayed()
     composeTestRule.onNodeWithTag("leave").performClick()
   }
 
@@ -99,6 +101,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, true)
     }
 
+    composeTestRule.onNodeWithTag("edit").assertIsDisplayed()
     composeTestRule.onNodeWithTag("edit").performClick()
   }
 
@@ -116,6 +119,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("chat").assertIsDisplayed()
     composeTestRule.onNodeWithTag("chat").performClick()
   }
 
@@ -133,6 +137,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("location").assertIsDisplayed()
     composeTestRule.onNodeWithTag("location").performClick()
   }
 
@@ -150,6 +155,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("supplies").assertIsDisplayed()
     composeTestRule.onNodeWithTag("supplies").performClick()
   }
 
@@ -167,6 +173,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("polls").assertIsDisplayed()
     composeTestRule.onNodeWithTag("polls").performClick()
   }
 
@@ -184,6 +191,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
+    composeTestRule.onNodeWithTag("car pooling").assertIsDisplayed()
     composeTestRule.onNodeWithTag("car pooling").performClick()
   }
 }

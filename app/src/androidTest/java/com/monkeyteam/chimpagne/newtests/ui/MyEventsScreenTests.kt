@@ -65,6 +65,7 @@ class MyEventsScreenTests {
       MyEventsScreen(navActions, myEventVM)
     }
 
+    composeTestRule.onNodeWithContentDescription("back").assertIsDisplayed()
     composeTestRule.onNodeWithContentDescription("back").performClick()
   }
 
