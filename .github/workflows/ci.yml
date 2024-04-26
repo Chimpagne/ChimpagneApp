@@ -79,10 +79,6 @@ jobs:
         run: |
           chmod +x ./gradlew
 
-      - name: Format code with KTFmt
-        run: |
-          ./gradlew ktfmtFormat
-
       # Check formatting
       - name: Check code formatted with KTFmt
         run: |
