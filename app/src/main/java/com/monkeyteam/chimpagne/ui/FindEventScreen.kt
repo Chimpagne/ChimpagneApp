@@ -42,7 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -71,6 +69,8 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
+import com.monkeyteam.chimpagne.ui.utilities.MarkerData
+import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
@@ -85,21 +85,43 @@ object FindEventScreens {
 fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsViewModel) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
+  val context = LocalContext.current
 
-  val goToForm: () -> Unit = {
-    coroutineScope.launch { pagerState.animateScrollToPage(FindEventScreens.FORM) }
+  var toast: Toast? by remember { mutableStateOf(null) }
+
+  val showToast: (String) -> Unit = { message ->
+    toast?.cancel()
+    toast = Toast.makeText(context, message, Toast.LENGTH_SHORT).apply { show() }
   }
 
-  val goToMap: () -> Unit = {
-    coroutineScope.launch {
-      findViewModel.fetchEvents()
-      pagerState.animateScrollToPage(FindEventScreens.MAP)
+  val noResultToast: () -> Unit = { showToast(context.getString(R.string.find_event_no_result)) }
+  val noSelectedLocationToast: () -> Unit = {
+    showToast(context.getString(R.string.find_event_location_not_selected))
+  }
+
+  val goToForm: () -> Unit = {
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.FORM) }
+    findViewModel.setLoading(false)
+  }
+
+  val displayResult: () -> Unit = {
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.MAP) }
+  }
+
+  val fetchEvents: () -> Unit = {
+    if (findViewModel.uiState.value.selectedLocation == null) {
+      noSelectedLocationToast()
+    } else {
+      coroutineScope.launch {
+        findViewModel.fetchEvents(onSuccess = { displayResult() }, onFailure = { noResultToast() })
+      }
     }
   }
 
-  HorizontalPager(state = pagerState, userScrollEnabled = false) { page ->
+  HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 1) { page
+    ->
     when (page) {
-      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, goToMap)
+      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
       FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel)
     }
   }
@@ -110,15 +132,13 @@ fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsV
 fun FindEventFormScreen(
     navObject: NavigationActions,
     findViewModel: FindEventsViewModel,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    showToast: (String) -> Unit
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
-
   val context = LocalContext.current
-
   val scrollState = rememberScrollState()
-
   var tagFieldActive by remember { mutableStateOf(false) }
 
   Scaffold(
@@ -141,16 +161,21 @@ fun FindEventFormScreen(
                     .height(56.dp)
                     .testTag("button_search"), // Typical height for buttons
             shape = MaterialTheme.shapes.extraLarge) {
-              Icon(Icons.Rounded.Search, contentDescription = "Search")
-              Spacer(Modifier.width(8.dp))
-              Text(
-                  stringResource(id = R.string.find_event_search_button_text),
-                  style = MaterialTheme.typography.bodyLarge)
+              if (uiState.loading) {
+                SpinnerView(MaterialTheme.colorScheme.onPrimary)
+              } else {
+                Icon(Icons.Rounded.Search, contentDescription = "Search")
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    stringResource(id = R.string.find_event_search_button_text),
+                    style = MaterialTheme.typography.bodyLarge)
+              }
             }
       }) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
-              modifier = Modifier.fillMaxSize().padding(16.dp).verticalScroll(scrollState),
+              modifier =
+                  Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
                 Legend(
                     stringResource(id = R.string.find_event_event_location_legend),
@@ -168,13 +193,7 @@ fun FindEventFormScreen(
                 IconTextButton(
                     text = stringResource(id = R.string.find_event_event_locate_me_button),
                     icon = Icons.Rounded.MyLocation,
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              context.getString(R.string.find_event_near_me_toast),
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
+                    onClick = { showToast(context.getString(R.string.find_event_near_me_toast)) },
                     modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
                 Spacer(Modifier.height(16.dp))
 
@@ -241,20 +260,19 @@ fun FindEventMapScreen(
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  var isMapInitialized by remember { mutableStateOf(false) }
   var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
   }
-  val onMarkerClick: (Marker) -> Unit = { marker ->
+  val onMarkerClick: (MarkerData) -> Unit = { markerData ->
     coroutineScope.launch {
-      currentEvent = uiState.events[marker.tag as String]
+      currentEvent = uiState.events[markerData.id]
+      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markerData.position)) }
+
       launch { scaffoldState.bottomSheetState.expand() }
-      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(marker.position)) }
     }
   }
-
   val goBack = {
     scope.launch {
       scaffoldState.bottomSheetState.partialExpand()
@@ -269,20 +287,14 @@ fun FindEventMapScreen(
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
-        DisposableEffect(Unit) {
-          isMapInitialized = true
-          onDispose { isMapInitialized = false }
-        }
-
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
-          if (isMapInitialized) {
-            MapContainer(
-                bottomSheetState = scaffoldState.bottomSheetState,
-                cameraPositionState = cameraPositionState,
-                onMarkerClick = onMarkerClick,
-                isMapInitialized = true,
-                events = uiState.events)
-          }
+          MapContainer(
+              cameraPositionState = cameraPositionState,
+              onMarkerClick = onMarkerClick,
+              isMapInitialized = true,
+              events = uiState.events,
+              radius = uiState.radiusAroundLocationInM,
+              startingPosition = uiState.selectedLocation)
 
           IconButton(
               modifier =

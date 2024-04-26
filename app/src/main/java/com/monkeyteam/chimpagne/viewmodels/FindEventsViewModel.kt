@@ -18,41 +18,60 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+
 class FindEventsViewModel(database: Database) : ViewModel() {
 
   private val eventManager = database.eventManager
   private val accountManager = database.accountManager
 
-  // UI state exposed to the UI
   private val _uiState = MutableStateFlow(FindEventsUIState())
   val uiState: StateFlow<FindEventsUIState> = _uiState
 
   fun fetchEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true)
+    if (_uiState.value.loading) return
+    setLoading(true)
     viewModelScope.launch {
-      var filter =
-          Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
-      if (_uiState.value.selectedTags.isNotEmpty())
-          filter = Filter.and(filter, containsTagsFilter(_uiState.value.selectedTags))
+      try {
+        var filter =
+            Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
+        if (_uiState.value.selectedTags.isNotEmpty())
+            filter = Filter.and(filter, containsTagsFilter(_uiState.value.selectedTags))
 
-      if (_uiState.value.selectedLocation != null) {
-        eventManager.getAllEventsByFilterAroundLocation(
-            _uiState.value.selectedLocation!!,
-            _uiState.value.radiusAroundLocationInM,
-            {
-              _uiState.value =
-                  _uiState.value.copy(
-                      events = it.associateBy { event -> event.id }, loading = false)
-              onSuccess()
-            },
-            {
-              Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
-              _uiState.value = _uiState.value.copy(loading = false)
-              onFailure(it)
-            },
-            filter)
+        if (_uiState.value.selectedLocation != null) {
+          eventManager.getAllEventsByFilterAroundLocation(
+              _uiState.value.selectedLocation!!,
+              _uiState.value.radiusAroundLocationInM,
+              {
+                _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id })
+                if (it.isEmpty()) {
+                  Log.d("FETCHING EVENTS BY LOCATION QUERY", "No events found")
+                  setLoading(false)
+                  onFailure(Exception("No events found"))
+                } else {
+                  // DO NO FORGET TO SETLOADING TO FALSE AFTER SUCCESS (where function is called)
+                  // (AFTER UI RECOMPOSITION)
+                  Log.d("FETCHING EVENTS BY LOCATION QUERY", "Success")
+                  onSuccess()
+                }
+              },
+              {
+                Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
+                setLoading(false)
+                onFailure(it)
+              },
+              filter)
+        } else {
+          setLoading(false)
+        }
+      } catch (e: Exception) {
+        setLoading(false)
+        onFailure(e)
       }
     }
+  }
+
+  fun setLoading(loading: Boolean = true) {
+    _uiState.value = _uiState.value.copy(loading = loading)
   }
 
   fun updateSelectedLocation(location: Location) {
@@ -79,7 +98,7 @@ class FindEventsViewModel(database: Database) : ViewModel() {
 data class FindEventsUIState(
     val events: Map<String, ChimpagneEvent> = emptyMap(),
     val selectedLocation: Location? = null,
-    val radiusAroundLocationInM: Double = 0.0,
+    val radiusAroundLocationInM: Double = 1000.0,
     val selectedTags: List<String> = emptyList(),
     val selectedDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
