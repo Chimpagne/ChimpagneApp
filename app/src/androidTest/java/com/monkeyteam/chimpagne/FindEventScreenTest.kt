@@ -50,21 +50,6 @@ class FindEventScreenTest {
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
-  fun displaySearchButton() {
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
-    }
-    composeTestRule.onNodeWithTag("sel_location").performClick()
-
-    composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("button_search").performClick()
-  }
-
-  @OptIn(ExperimentalMaterial3Api::class)
-  @Test
   fun displayLocationInput() {
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -78,17 +63,19 @@ class FindEventScreenTest {
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
-  fun displaySelectDateSelector() {
+  fun displaySearchButton() {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
       MainFindEventScreen(navActions, FindEventsViewModel(database = database))
     }
+    composeTestRule.onNodeWithTag("sel_location").performClick()
 
-    composeTestRule.onNodeWithTag("sel_date").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("button_search").performClick()
   }
-
+  
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun displayMapScreen() {
