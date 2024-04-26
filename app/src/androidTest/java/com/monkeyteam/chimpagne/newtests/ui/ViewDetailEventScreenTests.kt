@@ -5,7 +5,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
@@ -14,7 +13,6 @@ import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +36,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -59,7 +57,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -76,7 +74,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -93,7 +91,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -110,7 +108,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -127,7 +125,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -144,7 +142,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -161,7 +159,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -178,7 +176,7 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading){}
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()

@@ -33,8 +33,8 @@ class MyEventsViewModel(
             _uiState.value =
                 _uiState.value.copy(
                     createdEvents = createdEvents.associateBy { event -> event.id },
-                    joinedEvents = joinedEvents.associateBy { event -> event.id },
-                    loading = false)
+                    joinedEvents = joinedEvents.associateBy { event -> event.id })
+            _uiState.value = _uiState.value.copy(loading = false)
             onSuccess()
           },
           {

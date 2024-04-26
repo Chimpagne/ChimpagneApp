@@ -6,20 +6,15 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
-import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
-import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -43,7 +38,7 @@ class MyEventsScreenTests {
 
     val myEventVM = MyEventsViewModel(database)
 
-    while (myEventVM.uiState.value.loading){}
+    while (myEventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -62,7 +57,7 @@ class MyEventsScreenTests {
 
     val myEventVM = MyEventsViewModel(database)
 
-    while (myEventVM.uiState.value.loading){}
+    while (myEventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -85,7 +80,7 @@ class MyEventsScreenTests {
 
     val myEventVM = MyEventsViewModel(database)
 
-    while (myEventVM.uiState.value.loading){}
+    while (myEventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -109,7 +104,7 @@ class MyEventsScreenTests {
 
     val myEventVM = MyEventsViewModel(database)
 
-    while (myEventVM.uiState.value.loading){}
+    while (myEventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
