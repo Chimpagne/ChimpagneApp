@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.newtests.ui.account
 
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.rememberNavController

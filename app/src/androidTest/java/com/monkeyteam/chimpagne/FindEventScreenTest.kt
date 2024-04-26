@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -19,7 +18,6 @@ import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import org.junit.Rule
 import org.junit.Test
 
-
 class FindEventScreenTest {
 
   val database = Database()
@@ -31,7 +29,9 @@ class FindEventScreenTest {
   fun testEventDetailSheetDisplay() {
     val sampleEvent = ChimpagneEvent(title = "banana", description = "MONKEY")
 
-    composeTestRule.setContent { EventDetailSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database))) }
+    composeTestRule.setContent {
+      EventDetailSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))
+    }
 
     // Assert that event details are displayed correctly
     composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()
@@ -48,7 +48,6 @@ class FindEventScreenTest {
       val navActions = NavigationActions(navController)
 
       FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {})
-
     }
 
     // Check if the location selector is displayed
@@ -96,5 +95,4 @@ class FindEventScreenTest {
     composeTestRule.waitForIdle()
     composeTestRule.onNodeWithTag("map_screen").assertExists()
   }
-
 }

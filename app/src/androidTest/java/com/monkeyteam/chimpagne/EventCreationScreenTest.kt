@@ -56,7 +56,7 @@ class EventCreationScreenTest {
 
     // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
-  /*
+
   @Test
   fun testLocationSelector() {
     // Start on the correct screen
@@ -67,10 +67,9 @@ class EventCreationScreenTest {
     }
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
+  }
 
-  }*/
-
-  @Test
+    @Test
   fun testPanel1() {
 
     composeTestRule.setContent {
