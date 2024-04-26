@@ -74,7 +74,7 @@ class MapTest {
     composeTestRule.onNodeWithTag("progressBar").assertExists().assertIsDisplayed()
   }
 
-    /*
+  /*
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun checkUIShowing() {

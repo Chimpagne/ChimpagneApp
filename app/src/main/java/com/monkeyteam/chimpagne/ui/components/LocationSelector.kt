@@ -98,7 +98,7 @@ fun LocationSelector(
                     showSearchBar = false
                 }
             } else {
-                showSearchBar = searching ||  searchCompleted || locationQuery.isNotEmpty()
+                showSearchBar = searching || searchCompleted || locationQuery.isNotEmpty()
             }
         },
         placeholder = { Text(stringResource(id = R.string.search_location)) },

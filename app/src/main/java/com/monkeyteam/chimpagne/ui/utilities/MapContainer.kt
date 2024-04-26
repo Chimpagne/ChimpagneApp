@@ -72,7 +72,6 @@ fun MapContainer(
                 zoomControlsEnabled = false,
                 myLocationButtonEnabled = false,
                 mapToolbarEnabled = false)) {
-
           if (startingPosition != null) {
             Circle(
                 center = LatLng(startingPosition.latitude, startingPosition.longitude),
