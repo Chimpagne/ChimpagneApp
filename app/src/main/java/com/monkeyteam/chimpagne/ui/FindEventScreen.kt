@@ -1,7 +1,11 @@
 package com.monkeyteam.chimpagne.ui
 
 import DateSelector
+import android.Manifest
+import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -56,12 +60,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import com.google.android.gms.location.CurrentLocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
@@ -141,6 +149,49 @@ fun FindEventFormScreen(
   val scrollState = rememberScrollState()
   var tagFieldActive by remember { mutableStateOf(false) }
 
+  val fusedLocationProviderClient = remember {
+    LocationServices.getFusedLocationProviderClient(context)
+  }
+
+  val locationPermissionRequest =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.RequestMultiplePermissions(),
+          onResult = { permissions ->
+            when {
+              permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                  permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
+                if (ActivityCompat.checkSelfPermission(
+                    context, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(
+                        context, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                  showToast("Location permission denied")
+                  return@rememberLauncherForActivityResult
+                }
+
+                showToast("Getting location")
+                fusedLocationProviderClient
+                    .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
+                    .addOnSuccessListener { location ->
+                      location?.let {
+                        showToast("Location set")
+                        findViewModel.updateSelectedLocation(
+                            Location("mylocation", it.latitude, it.longitude))
+                      }
+                    }
+                    .addOnFailureListener { showToast("Unable to get location: ${it.message}") }
+              }
+              else -> showToast("Location permission denied")
+            }
+          })
+
+  val requestLocationPermission = {
+    locationPermissionRequest.launch(
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+  }
+
   Scaffold(
       topBar = {
         TopAppBar(
@@ -193,7 +244,7 @@ fun FindEventFormScreen(
                 IconTextButton(
                     text = stringResource(id = R.string.find_event_event_locate_me_button),
                     icon = Icons.Rounded.MyLocation,
-                    onClick = { showToast(context.getString(R.string.find_event_near_me_toast)) },
+                    onClick = { requestLocationPermission() },
                     modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
                 Spacer(Modifier.height(16.dp))
 
