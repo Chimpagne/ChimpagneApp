@@ -51,6 +51,12 @@
     <string name="search_location">Rechercher un lieu </string>
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantité</string>
+    <string name="supplies_unit">Unité</string>
+    <string name="chimpagne_cancel">Annuler</string>
+    <string name="chimpagne_add">Ajouter</string>
+
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="my_events_screen_name">Mes Événements</string>
