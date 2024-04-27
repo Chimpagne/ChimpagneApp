@@ -199,37 +199,35 @@ class ChimpagneAccountManager(
         onFailure)
   }
 
-    fun getAllOfMyEvents(
-        onSuccess: (createdEvents: List<ChimpagneEvent>, joinedEvents: List<ChimpagneEvent>) -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        if (database.accountManager.currentUserAccount == null) {
-            return onFailure(NotLoggedInException())
-        }
-
-        val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
-        if (eventIDs == null) {
-            return onSuccess(emptyList(), emptyList())
-        }
-
-        database
-            .eventManager
-            .getEvents(
-                eventIDs.keys.toList(),
-                {
-                    val joinedEvents: MutableList<ChimpagneEvent> = ArrayList()
-                    val createdEvents: MutableList<ChimpagneEvent> = ArrayList()
-
-                    for (event in it) {
-                        if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID)
-                            createdEvents.add(event)
-                        else joinedEvents.add(event)
-                    }
-
-                    onSuccess(createdEvents, joinedEvents)
-                },{onFailure(it)}
-            )
+  fun getAllOfMyEvents(
+      onSuccess: (createdEvents: List<ChimpagneEvent>, joinedEvents: List<ChimpagneEvent>) -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    if (database.accountManager.currentUserAccount == null) {
+      return onFailure(NotLoggedInException())
     }
+
+    val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
+    if (eventIDs == null) {
+      return onSuccess(emptyList(), emptyList())
+    }
+
+    database.eventManager.getEvents(
+        eventIDs.keys.toList(),
+        {
+          val joinedEvents: MutableList<ChimpagneEvent> = ArrayList()
+          val createdEvents: MutableList<ChimpagneEvent> = ArrayList()
+
+          for (event in it) {
+            if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID)
+                createdEvents.add(event)
+            else joinedEvents.add(event)
+          }
+
+          onSuccess(createdEvents, joinedEvents)
+        },
+        { onFailure(it) })
+  }
 }
 
 class NotLoggedInException : Exception("Not logged in")

@@ -172,25 +172,25 @@ class ChimpagneEventManager(
       listOfEventIDs: List<ChimpagneEventId>,
       onSuccess: (List<ChimpagneEvent>) -> Unit,
       onFailure: (Exception) -> Unit = {}
-  ){
-      val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
-      for (eventID in listOfEventIDs) {
-          tasks.add(events.where(Filter.equalTo("id", eventID)).get())
-      }
+  ) {
+    val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
+    for (eventID in listOfEventIDs) {
+      tasks.add(events.where(Filter.equalTo("id", eventID)).get())
+    }
 
-      // Collect all the query results together into a single list
-      Tasks.whenAllComplete(tasks)
-          .addOnCompleteListener {
-              val events: MutableList<ChimpagneEvent> = ArrayList()
-              for (task in tasks) {
-                  val snap = task.result
-                  for (doc in snap!!.documents) {
-                      val event = doc.toObject<ChimpagneEvent>()!!
-                      events.add(event)
-                  }
-              }
-              onSuccess(events)
+    // Collect all the query results together into a single list
+    Tasks.whenAllComplete(tasks)
+        .addOnCompleteListener {
+          val events: MutableList<ChimpagneEvent> = ArrayList()
+          for (task in tasks) {
+            val snap = task.result
+            for (doc in snap!!.documents) {
+              val event = doc.toObject<ChimpagneEvent>()!!
+              events.add(event)
+            }
           }
-          .addOnFailureListener { onFailure(it) }
+          onSuccess(events)
+        }
+        .addOnFailureListener { onFailure(it) }
   }
 }
