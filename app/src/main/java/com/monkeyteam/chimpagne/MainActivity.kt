@@ -40,7 +40,7 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 class MainActivity : ComponentActivity() {
 
   val database = Database(PUBLIC_TABLES)
-  val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
+  private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
   @OptIn(ExperimentalMaterial3Api::class)
   override fun onCreate(savedInstanceState: Bundle?) {
