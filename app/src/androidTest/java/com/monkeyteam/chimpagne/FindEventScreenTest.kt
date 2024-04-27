@@ -75,7 +75,7 @@ class FindEventScreenTest {
     composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
     composeTestRule.onNodeWithTag("button_search").performClick()
   }
-  
+
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun displayMapScreen() {
