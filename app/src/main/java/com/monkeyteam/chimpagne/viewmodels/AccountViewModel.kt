@@ -1,16 +1,21 @@
 package com.monkeyteam.chimpagne.viewmodels
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import okhttp3.Route
 
 class AccountViewModel(database: Database) : ViewModel() {
 
@@ -120,6 +125,16 @@ class AccountViewModel(database: Database) : ViewModel() {
     _uiState.value = _uiState.value.copy(tempProfilePicture = uri)
     Log.d("AccountViewModel", "Updated Profile Picture to $uri")
   }
+
+    fun promptLogin(context: Context, navActions: NavigationActions) {
+        Toast.makeText(context, "Please login/create an account to continue", Toast.LENGTH_LONG).show()
+        navActions.navigateTo("Login")
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return FirebaseAuth.getInstance().currentUser != null
+    }
+
 }
 
 /**
