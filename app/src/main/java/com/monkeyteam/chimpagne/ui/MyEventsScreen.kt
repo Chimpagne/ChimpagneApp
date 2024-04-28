@@ -50,7 +50,7 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 @Composable
 fun MyEventsScreen(
     navObject: NavigationActions,
-    myEventsViewModel: MyEventsViewModel = viewModel()
+    myEventsViewModel: MyEventsViewModel
 ) {
   val uiState by myEventsViewModel.uiState.collectAsState()
   Scaffold(

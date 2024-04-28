@@ -59,7 +59,7 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 @Composable
 fun ViewDetailEventScreen(
     navObject: NavigationActions,
-    eventViewModel: EventViewModel = viewModel(),
+    eventViewModel: EventViewModel,
     canEditEvent: Boolean = false
 ) {
   val uiState by eventViewModel.uiState.collectAsState()

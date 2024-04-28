@@ -208,7 +208,7 @@ class ChimpagneAccountManager(
     }
 
     val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
-    if (eventIDs == null) {
+    if (eventIDs!!.keys.isEmpty()) {
       return onSuccess(emptyList(), emptyList())
     }
 

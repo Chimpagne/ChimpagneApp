@@ -52,7 +52,3 @@ fun happensOnThisDateFilter(calendar: Calendar): Filter {
       Filter.and(startsAfterFilter(startTimestampValidity), endsBeforeFilter(endTimestampValidity)),
       Filter.and(startsBeforeFilter(endTimestampValidity), endsAfterFilter(endTimestampValidity)))
 }
-
-fun eventByOwnerFilter(ownerID: String): Filter {
-  return Filter.equalTo("ownerId", ownerID)
-}
