@@ -154,9 +154,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier
-          .fillMaxWidth()
-          .testTag("add_a_title"))
+        modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -171,9 +169,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
-        modifier = Modifier
-          .fillMaxWidth()
-          .testTag("add_a_description"),
+        modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
         maxLines = 3)
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -232,9 +228,7 @@ fun SecondPanel(eventViewModel: EventViewModel) {
         uiState.tags,
         eventViewModel::updateEventTags,
         { tagFieldActive = it },
-      Modifier
-        .fillMaxWidth()
-        .testTag("tag_field"))
+        Modifier.fillMaxWidth().testTag("tag_field"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -270,16 +264,15 @@ fun ThirdPanel(eventViewModel: EventViewModel) {
 
     val showAddDialog = remember { mutableStateOf(false) }
     Button(
-      onClick = { showAddDialog.value = true },
-      modifier = Modifier.testTag("add_groceries_button")) {
-      Text(stringResource(id = R.string.event_creation_screen_add_groceries))
-    }
+        onClick = { showAddDialog.value = true },
+        modifier = Modifier.testTag("add_groceries_button")) {
+          Text(stringResource(id = R.string.event_creation_screen_add_groceries))
+        }
 
     if (showAddDialog.value) {
 
       SupplyPopup(
-        onDismissRequest = { showAddDialog.value = false },
-        onSave = eventViewModel::addSuply)
+          onDismissRequest = { showAddDialog.value = false }, onSave = eventViewModel::addSuply)
     }
 
     Spacer(modifier = Modifier.height(16.dp))
@@ -287,35 +280,31 @@ fun ThirdPanel(eventViewModel: EventViewModel) {
     LazyColumn {
       items(uiState.supplies.values.toList()) { item ->
         ListItem(
-          headlineContent = {
-            Text(
-              text = item.description,
-            )
-          },
-          supportingContent = {
-            Text(text = item.quantity.toString() + " " + item.unit, color = Color.Gray)
-          },
-          trailingContent = {
-            IconButton(
-              onClick = {
-                eventViewModel.removeSupply(item.id)
-              },
-              modifier = Modifier.testTag(item.description),
-              content = {
-                Icon(
-                  active = true,
-                  activeContent = {
-                    androidx.compose.material3.Icon(
-                      imageVector = Icons.Default.Cancel, contentDescription = "Delete"
-                    )
-                  },
-                  inactiveContent = {
-                    androidx.compose.material3.Icon(
-                      imageVector = Icons.Default.Cancel, contentDescription = "Delete"
-                    )
+            headlineContent = {
+              Text(
+                  text = item.description,
+              )
+            },
+            supportingContent = {
+              Text(text = item.quantity.toString() + " " + item.unit, color = Color.Gray)
+            },
+            trailingContent = {
+              IconButton(
+                  onClick = { eventViewModel.removeSupply(item.id) },
+                  modifier = Modifier.testTag(item.description),
+                  content = {
+                    Icon(
+                        active = true,
+                        activeContent = {
+                          androidx.compose.material3.Icon(
+                              imageVector = Icons.Default.Cancel, contentDescription = "Delete")
+                        },
+                        inactiveContent = {
+                          androidx.compose.material3.Icon(
+                              imageVector = Icons.Default.Cancel, contentDescription = "Delete")
+                        })
                   })
-              })
-          })
+            })
       }
     }
   }
@@ -339,12 +328,13 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.testTag("parking_title"))
     OutlinedTextField(
         value = parkingText,
-        onValueChange = { parkingText = it },
+        onValueChange = {
+          parkingText = it
+          eventViewModel.updateParkingSpaces(parkingText.toInt())
+        },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier
-          .fillMaxWidth()
-          .testTag("n_parking"))
+        modifier = Modifier.fillMaxWidth().testTag("n_parking"))
 
     Spacer(modifier = Modifier.height(16.dp))
     Text(
@@ -353,11 +343,12 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.testTag("beds_title"))
     OutlinedTextField(
         value = bedsText,
-        onValueChange = { bedsText = it },
+        onValueChange = {
+          bedsText = it
+          eventViewModel.updateBeds(bedsText.toInt())
+        },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier
-          .fillMaxWidth()
-          .testTag("n_beds"))
+        modifier = Modifier.fillMaxWidth().testTag("n_beds"))
   }
 }

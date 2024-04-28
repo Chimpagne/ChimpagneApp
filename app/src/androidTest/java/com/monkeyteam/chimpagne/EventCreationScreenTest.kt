@@ -83,62 +83,7 @@ class EventCreationScreenTest {
       EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
   }
-  /*
-  @Test
-  fun testFirstPanelContent() {
-    var titleLegendS = ""
-    var descriptionLegendS = ""
-    var locationLegendS = ""
-    var startDateLegendS = ""
-    var endDateLegendS = ""
-    // Given
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions)
-      val context = LocalContext.current
-      titleLegendS = context.getString(R.string.event_creation_screen_title_legend)
-      descriptionLegendS = context.getString(R.string.event_creation_screen_description_legend)
-      locationLegendS = context.getString(R.string.event_creation_screen_location_legend)
-      startDateLegendS = context.getString(R.string.event_creation_screen_start_date_legend)
-      endDateLegendS = context.getString(R.string.event_creation_screen_end_date_legend)
-    }
 
-    // When - Then
-    composeTestRule.onNodeWithText(titleLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(descriptionLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(locationLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(startDateLegendS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(endDateLegendS).assertIsDisplayed()
-
-    // You can add more detailed tests here for interactions and assertions
-  }*/
-  /*
-    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣤⣤⣠⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⢰⣤⡀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣶⣿⣿⡿⢿⡿⢻⣿⠿⣿⡿⢿⡿⠿⣿⣿⣆⠀⠀⠀⠀⠀⣀⣠⣤⣴⣶⣶⣶⣶⣶⣶⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠸⣿⣿⠄⠀⢀⣠⣴⣶⣿⡿⢿⣟⠸⣿⣶⣿⣷⣾⣿⣷⣿⣿⣾⣿⣷⣿⣿⣿⣦⣴⣶⣾⣿⣿⣿⣿⣿⡿⠿⠛⠋⠉⠙⠿⢿⣄⣀⣀⣀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀
-  ⠀⠉⣿⣷⣿⣿⣿⣟⢻⣷⣦⣿⣿⣿⣿⣿⠟⢻⣯⣉⣿⣟⣻⣿⣻⣿⡛⢻⣿⣿⣿⠿⠿⠛⠛⠋⠁⠀⠀⠀⣀⣀⣀⣀⣀⣀⣿⣿⡿⠿⠿⠿⠿⠿⣿⡇⠀⠀⠀⠀
-  ⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⠟⣻⣯⣴⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⢀⣀⣀⣤⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀
-  ⠀⠀⠈⣿⣿⣿⣿⣿⣯⣀⣿⣷⣿⣿⣿⠿⣿⣭⣽⣷⣤⣷⣦⣶⣦⣼⣏⣈⣿⣿⢺⣶⣿⣿⣿⣿⣿⡿⠟⠛⠋⠉⠉⠀⠉⠉⠙⣤⣤⣶⣶⣶⣶⣶⣾⡇⠀⠀⠀⠀
-  ⠀⠀⠀⠙⣿⣇⣿⣿⣿⣿⠿⢿⣏⣰⣿⣶⣿⣿⣿⠿⣿⠿⣿⡿⢿⡿⠿⠿⠿⣿⣎⡿⠿⠟⠛⠉⠁⠀⠀⢀⣀⣤⣤⣤⣤⣤⣀⣹⣿⠿⠿⠟⠛⠛⠻⡇⠀⠀⠀⠀
-  ⠀⠀⠀⠀⢻⣿⡎⢻⣿⣿⣦⣾⣿⣿⡿⢿⡋⢹⣷⣴⣿⣶⣿⣷⣾⣿⣾⣿⣶⣿⣿⠀⠀⠀⣀⣠⣤⣶⣾⣿⣿⣿⠿⠿⠿⠿⠿⣧⠀⢀⣀⣀⣀⣀⣠⣷⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠈⢿⣷⡄⢻⣿⣿⣟⠉⣷⣤⣽⣷⣿⡿⠿⠛⠋⠉⠉⠀⠀⠀⠀⠀⠀⠉⢸⣿⣿⣿⣿⣿⠿⠟⠋⠀⠀⢀⣀⣀⣀⣂⣸⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠘⣿⣧⠀⠹⣿⣿⣷⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⣀⣀⣀⣀⣠⣀⣀⣀⣸⠛⠛⠋⠉⠀⠀⢀⣤⣶⣾⣿⣿⣿⣿⣿⣿⡛⠉⠉⠉⠉⠀⠈⣿⡀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⢻⣿⠛⠉⠀⠀⠀⢀⣠⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣀⣤⣤⣴⣶⣿⣿⣿⠿⠛⠋⠁⠀⠀⠀⢈⣷⣶⣶⣶⣶⣶⣶⣿⡆⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⢻⣿⡄⠀⣿⡆⠀⣀⣴⣾⣿⣿⣿⠿⠋⠉⠉⠀⠀⠀⠀⠀⠀⠀⢹⣿⠿⠿⠿⠛⠋⠁⠀⢀⣠⣶⣶⣶⣶⣶⣶⣾⠟⠛⠉⠉⠉⠉⢹⡇⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠘⣿⣷⠀⢸⣿⣿⣿⡿⠿⠛⠁⠀⠀⢀⣀⣠⣤⣤⣤⣤⣤⣤⣤⣾⠁⠀⠀⣀⣀⣤⣴⣾⣿⡿⠿⠛⠛⠛⠛⠛⠛⣀⣀⣤⣤⣤⣴⣾⣿⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⣿⣟⠉⠀⠀⢀⣠⣴⣾⣿⡿⠿⠿⠿⠟⠛⠛⠛⠛⠛⣿⣿⣿⣿⣿⡿⠿⠛⠉⠀⣀⣠⣤⣤⣬⣤⣴⣿⡿⠟⠛⠛⠉⠉⢹⣧⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⡆⠸⣿⣀⣴⣶⣿⡿⠛⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡟⠉⠉⠉⠁⠀⣀⣠⣴⣾⣿⣿⠿⠿⠿⠿⢿⡇⠀⠀⣀⣠⣤⣤⣬⣿⡀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⣿⡿⠟⠋⠁⠀⢀⣀⣤⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣇⣤⣤⣶⣶⡿⠿⠛⠉⠁⠀⠀⢀⣀⣀⡀⠀⠾⣿⣿⣿⡿⠿⠿⠿⠿⣧⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣿⣧⢸⣷⠀⣠⣴⣾⣿⣿⣿⣿⡿⠿⠟⠛⠉⠉⠉⠀⢸⡿⠿⠛⠉⠁⢀⣀⣤⣶⣾⣿⣿⣿⠿⠿⠿⠿⣿⣿⠁⠀⠀⠀⠀⠀⠀⣿⡀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣾⣿⣿⣿⣿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠁⢀⣠⣴⣾⡿⠿⠛⠋⠉⠀⠀⠀⠀⠀⠀⣼⡿⢁⣀⣤⣴⣶⣿⠿⠿⠿⠷
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⡿⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡿⠿⠟⠋⠁⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-     */
   @Test
   fun testSecondPanelContent() {
     var tagsLegendS = ""
