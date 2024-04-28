@@ -59,8 +59,7 @@ class EventViewModel(
                       it.endsAt(),
                       it.supplies,
                       it.parkingSpaces,
-                      it.beds
-                  )
+                      it.beds)
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
@@ -194,24 +193,23 @@ class EventViewModel(
   fun removeSupply(supplyId: ChimpagneSupplyId) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies - supplyId)
   }
-
 }
 
 data class EventUIState(
-  val id: String = "",
-  val title: String = "",
-  val description: String = "",
-  val location: Location = Location(),
-  val public: Boolean = false,
-  val tags: List<String> = emptyList(),
-  val guests: Map<String, Boolean> = emptyMap(),
-  val staffs: Map<String, Boolean> = emptyMap(),
-  val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-  val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-  val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
-  val parkingSpaces: Int = 0,
-  val beds: Int = 0,
-  val loading: Boolean = false,
+    val id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val location: Location = Location(),
+    val public: Boolean = false,
+    val tags: List<String> = emptyList(),
+    val guests: Map<String, Boolean> = emptyMap(),
+    val staffs: Map<String, Boolean> = emptyMap(),
+    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
+    val parkingSpaces: Int = 0,
+    val beds: Int = 0,
+    val loading: Boolean = false,
 )
 
 class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :

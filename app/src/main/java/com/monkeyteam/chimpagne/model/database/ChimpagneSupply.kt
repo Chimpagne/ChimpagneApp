@@ -3,13 +3,14 @@ package com.monkeyteam.chimpagne.model.database
 import java.util.UUID
 
 typealias ChimpagneSupplyId = String
+
 data class ChimpagneSupply(
-  var id: ChimpagneSupplyId = UUID.randomUUID().toString(),
-  val description: String = "",
-  val quantity: Int = 0,
-  val unit: String = "",
+    var id: ChimpagneSupplyId = UUID.randomUUID().toString(),
+    val description: String = "",
+    val quantity: Int = 0,
+    val unit: String = "",
     // guest: <is_Assigned_this_grocery>
-  val assignedTo: Map<String, Boolean> = hashMapOf(),
+    val assignedTo: Map<String, Boolean> = hashMapOf(),
 ) {
 
   fun assignedList(): Set<String> {
