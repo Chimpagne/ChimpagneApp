@@ -63,7 +63,5 @@ data class ChimpagneEvent(
       staffs,
       buildTimestamp(startsAt),
       buildTimestamp(endsAt),
-      supplies = supplies
-  )
-
+      supplies = supplies)
 }

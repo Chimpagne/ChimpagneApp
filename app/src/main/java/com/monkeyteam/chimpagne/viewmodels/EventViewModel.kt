@@ -57,8 +57,7 @@ class EventViewModel(
                       it.staffs,
                       it.startsAt(),
                       it.endsAt(),
-                      it.supplies
-                  )
+                      it.supplies)
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
@@ -86,8 +85,7 @@ class EventViewModel(
         _uiState.value.staffs,
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate,
-        _uiState.value.supplies
-    )
+        _uiState.value.supplies)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -182,22 +180,21 @@ class EventViewModel(
   fun removeSupply(supplyId: ChimpagneSupplyId) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies - supplyId)
   }
-
 }
 
 data class EventUIState(
-  val id: String = "",
-  val title: String = "",
-  val description: String = "",
-  val location: Location = Location(),
-  val public: Boolean = false,
-  val tags: List<String> = emptyList(),
-  val guests: Map<String, Boolean> = emptyMap(),
-  val staffs: Map<String, Boolean> = emptyMap(),
-  val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-  val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-  val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
-  val loading: Boolean = false
+    val id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val location: Location = Location(),
+    val public: Boolean = false,
+    val tags: List<String> = emptyList(),
+    val guests: Map<String, Boolean> = emptyMap(),
+    val staffs: Map<String, Boolean> = emptyMap(),
+    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
+    val loading: Boolean = false
 )
 
 class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
