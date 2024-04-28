@@ -72,12 +72,11 @@ class EventViewModelTests {
 
   @Test
   fun TestCreateSearchDeleteAnEvent() {
-      /* Juan fixes this in this PR: https://github.com/Chimpagne/ChimpagneApp/pull/112*/
+    /* Juan fixes this in this PR: https://github.com/Chimpagne/ChimpagneApp/pull/112*/
   }
 
   @Test
   fun TestUpdateAnEvent() {
-      /* Juan fixes this in this PR: https://github.com/Chimpagne/ChimpagneApp/pull/112*/
+    /* Juan fixes this in this PR: https://github.com/Chimpagne/ChimpagneApp/pull/112*/
   }
-
 }
