@@ -10,6 +10,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
@@ -22,11 +23,20 @@ val TEST_EVENTS =
             description = "a random description",
             location = Location("Paris"),
             public = true,
-            tags = listOf("vegan"),
+            tags = listOf("vegan", "monkeys"),
             guests = emptyMap(),
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(9, 5, 2024, 0, 0),
-            endsAtTimestamp = buildTimestamp(10, 5, 2024, 0, 0)),
+            endsAtTimestamp = buildTimestamp(10, 5, 2024, 0, 0),
+            ownerId = "JUAN",
+            supplies = mapOf(
+                Pair("1", ChimpagneSupply("1", "d", 1, "g")),
+                Pair("2", ChimpagneSupply("2", "ff", 2, "d")),
+                Pair("3", ChimpagneSupply("3", "ee", 3, "e"))
+            ),
+            parkingSpaces = 1,
+            beds = 2
+        ),
         ChimpagneEvent(
             id = "SECOND_EVENT",
             title = "Second event",
@@ -37,7 +47,15 @@ val TEST_EVENTS =
             guests = emptyMap(),
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(1, 8, 2024, 0, 0),
-            endsAtTimestamp = buildTimestamp(3, 9, 2024, 10, 0)),
+            endsAtTimestamp = buildTimestamp(3, 9, 2024, 10, 0),
+            ownerId = "JUAN",
+            supplies = mapOf(
+                Pair("1", ChimpagneSupply("1", "c", 1, "h")),
+                Pair("2", ChimpagneSupply("2", "kk", 2, "j")),
+                Pair("3", ChimpagneSupply("3", "gbn", 3, "h"))
+            ),
+            parkingSpaces = 10,
+            beds = 5),
         ChimpagneEvent(
             id = "THIRD_EVENT",
             title = "Third event",

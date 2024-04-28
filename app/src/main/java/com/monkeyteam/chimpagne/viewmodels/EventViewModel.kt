@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
+import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
@@ -148,7 +149,6 @@ class EventViewModel(
   }
 
   fun joinTheEvent(
-      role: ChimpagneRole,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
@@ -156,7 +156,7 @@ class EventViewModel(
     viewModelScope.launch {
       accountManager.joinEvent(
           _uiState.value.id,
-          role,
+          ChimpagneRoles.GUEST,
           {
             fetchEvent(
                 id = _uiState.value.id,
@@ -242,7 +242,7 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(supplies = newSupplies)
   }
 
-  fun addSuply(supply: ChimpagneSupply) {
+  fun addSupply(supply: ChimpagneSupply) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies + (supply.id to supply))
   }
 

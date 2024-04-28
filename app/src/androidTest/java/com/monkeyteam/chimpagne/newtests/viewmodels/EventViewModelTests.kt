@@ -7,6 +7,9 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
+import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
@@ -21,71 +24,76 @@ class EventViewModelTests {
 
   @Before
   fun signIn() {
-    database.accountManager.signInTo(ChimpagneAccount())
+      changeAccount(TEST_ACCOUNTS[1])
   }
 
   @get:Rule val composeTestRule = createComposeRule()
 
-  private val testEvent =
-      ChimpagneEvent(
-          "0",
-          "SWENT",
-          "swent party",
-          Location("EPFL", 46.518659400000004, 6.566561505148001),
-          true,
-          listOf("vegan", "wild"),
-          emptyMap(),
-          emptyMap(),
-          buildTimestamp(9, 5, 2024, 0, 0),
-          buildTimestamp(10, 5, 2024, 0, 0))
+  private val testEvent = TEST_EVENTS[0]
+    private val testUpdateEvent = TEST_EVENTS[1]
+
+  private fun changeAccount(account: ChimpagneAccount){
+      val accountViewModel = AccountViewModel(database = database)
+      accountViewModel.loginToChimpagneAccount(account.firebaseAuthUID, {}, {})
+      while (accountViewModel.uiState.value.loading) {}
+  }
+  private fun replaceVMEventBy(eventVM: EventViewModel, event: ChimpagneEvent){
+      eventVM.updateEventTitle(event.title)
+      eventVM.updateEventDescription(event.description)
+      eventVM.updateEventLocation(event.location)
+      eventVM.updateEventPublicity(event.public)
+      eventVM.updateEventTags(event.tags)
+      eventVM.updateEventStartCalendarDate(event.startsAt())
+      eventVM.updateEventEndCalendarDate(event.endsAt())
+      eventVM.updateEventSupplies(event.supplies)
+      eventVM.updateParkingSpaces(event.parkingSpaces)
+      eventVM.updateBeds(event.beds)
+  }
+
+    //DOESN'T COMPARE GUEST OR STAFF LIST BECAUSE IT IS UPDATED DIFFERENTLY//
+  private fun assertEqualEventVMWithEvent(eventVM: EventViewModel, event: ChimpagneEvent) {
+      assertTrue(eventVM.uiState.value.title == event.title)
+
+      assertTrue(eventVM.uiState.value.location.name == event.location.name)
+      assertTrue(eventVM.uiState.value.location.latitude == event.location.latitude)
+      assertTrue(eventVM.uiState.value.location.longitude == event.location.longitude)
+      assertTrue(eventVM.uiState.value.location.geohash == event.location.geohash)
+
+      assertTrue(eventVM.uiState.value.public == event.public)
+
+      assertTrue(eventVM.uiState.value.tags.size == event.tags.size)
+      assertTrue(eventVM.uiState.value.tags.toSet() == event.tags.toSet())
+
+      assertTrue(eventVM.uiState.value.startsAtCalendarDate.time == event.startsAt().time)
+      assertTrue(eventVM.uiState.value.endsAtCalendarDate.time == event.endsAt().time)
+
+      assertTrue(eventVM.uiState.value.supplies.size == event.supplies.size)
+      assertTrue(eventVM.uiState.value.supplies.values.toSet() == event.supplies.values.toSet())
+
+      assertTrue(eventVM.uiState.value.parkingSpaces == event.parkingSpaces)
+      assertTrue(eventVM.uiState.value.beds == event.beds)
+  }
 
   @Test
   fun TestVMSetterFunctions() {
 
     val eventVM = EventViewModel(database = database)
 
-    eventVM.updateEventTitle(testEvent.title)
-    assertTrue(eventVM.uiState.value.title == testEvent.title)
-
-    eventVM.updateEventDescription(testEvent.description)
-    assertTrue(eventVM.uiState.value.description == testEvent.description)
-
-    eventVM.updateEventLocation(testEvent.location)
-    assertTrue(eventVM.uiState.value.location.name == testEvent.location.name)
-    assertTrue(eventVM.uiState.value.location.latitude == testEvent.location.latitude)
-    assertTrue(eventVM.uiState.value.location.longitude == testEvent.location.longitude)
-    assertTrue(eventVM.uiState.value.location.geohash == testEvent.location.geohash)
-
-    eventVM.updateEventPublicity(testEvent.public)
-    assertTrue(eventVM.uiState.value.public == testEvent.public)
-
-    eventVM.updateEventTags(testEvent.tags)
-    assertTrue(eventVM.uiState.value.tags.size == testEvent.tags.size)
-    assertTrue(eventVM.uiState.value.tags.toSet() == testEvent.tags.toSet())
-
-    eventVM.updateEventStartCalendarDate(testEvent.startsAt())
-    assertTrue(eventVM.uiState.value.startsAtCalendarDate.time == testEvent.startsAt().time)
-
-    eventVM.updateEventEndCalendarDate(testEvent.endsAt())
-    assertTrue(eventVM.uiState.value.endsAtCalendarDate.time == testEvent.endsAt().time)
+    replaceVMEventBy(eventVM, testEvent)
+    assertEqualEventVMWithEvent(eventVM, testEvent)
   }
 
   @Test
   fun TestCreateSearchDeleteAnEvent() {
-    /* TODO JUAN FIX THIS LATER
 
     val eventCreationVM = EventViewModel(database = database)
 
-    eventCreationVM.updateEventTitle(testEvent.title)
-    eventCreationVM.updateEventDescription(testEvent.description)
-    eventCreationVM.updateEventLocation(testEvent.location)
-    eventCreationVM.updateEventPublicity(testEvent.public)
-    eventCreationVM.updateEventTags(testEvent.tags)
-    eventCreationVM.updateEventStartCalendarDate(testEvent.startsAt())
-    eventCreationVM.updateEventEndCalendarDate(testEvent.endsAt())
+      replaceVMEventBy(eventCreationVM, testEvent)
+      assertEqualEventVMWithEvent(eventCreationVM, testEvent)
 
     eventCreationVM.createTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) }
+    )
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
@@ -102,17 +110,7 @@ class EventViewModelTests {
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
 
-    assertTrue(eventSearchVM.uiState.value.title == testEvent.title)
-    assertTrue(eventSearchVM.uiState.value.description == testEvent.description)
-    assertTrue(eventSearchVM.uiState.value.location.name == testEvent.location.name)
-    assertTrue(eventSearchVM.uiState.value.location.latitude == testEvent.location.latitude)
-    assertTrue(eventSearchVM.uiState.value.location.longitude == testEvent.location.longitude)
-    assertTrue(eventSearchVM.uiState.value.location.geohash == testEvent.location.geohash)
-    assertTrue(eventSearchVM.uiState.value.public == testEvent.public)
-    assertTrue(eventSearchVM.uiState.value.tags.size == testEvent.tags.size)
-    assertTrue(eventSearchVM.uiState.value.tags.toSet() == testEvent.tags.toSet())
-    assertTrue(eventSearchVM.uiState.value.startsAtCalendarDate.time == testEvent.startsAt().time)
-    assertTrue(eventSearchVM.uiState.value.endsAtCalendarDate.time == testEvent.endsAt().time)
+    assertEqualEventVMWithEvent(eventSearchVM, testEvent)
 
     eventSearchVM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -121,36 +119,13 @@ class EventViewModelTests {
     while (eventSearchVM.uiState.value.loading) {}
 
     assertTrue(eventSearchVM.uiState.value.id == "")
-
-     */
   }
 
   @Test
   fun TestUpdateAnEvent() {
-
-    /* TODO JUAN FIX THIS LATER
-    val testUpdatedEvent =
-        ChimpagneEvent(
-            "",
-            "London",
-            "Harry Potter",
-            Location("United Kingdown", 38.8534951, 12.3483915),
-            false,
-            listOf("magic", "wands"),
-            emptyMap(),
-            emptyMap(),
-            buildTimestamp(4, 1, 2025, 2, 3),
-            buildTimestamp(5, 1, 2025, 2, 3))
-
     val eventCreationVM = EventViewModel(database = database)
 
-    eventCreationVM.updateEventTitle(testEvent.title)
-    eventCreationVM.updateEventDescription(testEvent.description)
-    eventCreationVM.updateEventLocation(testEvent.location)
-    eventCreationVM.updateEventPublicity(testEvent.public)
-    eventCreationVM.updateEventTags(testEvent.tags)
-    eventCreationVM.updateEventStartCalendarDate(testEvent.startsAt())
-    eventCreationVM.updateEventEndCalendarDate(testEvent.endsAt())
+    replaceVMEventBy(eventCreationVM, testEvent)
 
     eventCreationVM.createTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -172,13 +147,8 @@ class EventViewModelTests {
 
     assertTrue(eventSearchVM.uiState.value.id == eventID)
 
-    eventSearchVM.updateEventTitle(testUpdatedEvent.title)
-    eventSearchVM.updateEventDescription(testUpdatedEvent.description)
-    eventSearchVM.updateEventLocation(testUpdatedEvent.location)
-    eventSearchVM.updateEventPublicity(testUpdatedEvent.public)
-    eventSearchVM.updateEventTags(testUpdatedEvent.tags)
-    eventSearchVM.updateEventStartCalendarDate(testUpdatedEvent.startsAt())
-    eventSearchVM.updateEventEndCalendarDate(testUpdatedEvent.endsAt())
+    replaceVMEventBy(eventSearchVM, testUpdateEvent)
+      assertEqualEventVMWithEvent(eventSearchVM, testUpdateEvent)
 
     eventSearchVM.updateTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
@@ -196,24 +166,91 @@ class EventViewModelTests {
     // Wait for database to get the data
     while (eventSearch2VM.uiState.value.loading) {}
 
-    assertTrue(eventSearch2VM.uiState.value.title == testUpdatedEvent.title)
-    assertTrue(eventSearch2VM.uiState.value.description == testUpdatedEvent.description)
-    assertTrue(eventSearch2VM.uiState.value.location.name == testUpdatedEvent.location.name)
-    assertTrue(eventSearch2VM.uiState.value.location.latitude == testUpdatedEvent.location.latitude)
-    assertTrue(
-        eventSearch2VM.uiState.value.location.longitude == testUpdatedEvent.location.longitude)
-    assertTrue(eventSearch2VM.uiState.value.location.geohash == testUpdatedEvent.location.geohash)
-    assertTrue(eventSearch2VM.uiState.value.public == testUpdatedEvent.public)
-    assertTrue(eventSearch2VM.uiState.value.tags.size == testUpdatedEvent.tags.size)
-    assertTrue(eventSearch2VM.uiState.value.tags.toSet() == testUpdatedEvent.tags.toSet())
-    assertTrue(
-        eventSearch2VM.uiState.value.startsAtCalendarDate.time == testUpdatedEvent.startsAt().time)
-    assertTrue(
-        eventSearch2VM.uiState.value.endsAtCalendarDate.time == testUpdatedEvent.endsAt().time)
+    assertEqualEventVMWithEvent(eventSearch2VM, testUpdateEvent)
 
     eventSearch2VM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-
-     */
   }
+
+   @Test
+   fun TestAddRemoveGuestFromEvent(){
+       val eventCreationVM = EventViewModel(database = database)
+
+       replaceVMEventBy(eventCreationVM, testEvent)
+
+       eventCreationVM.createTheEvent(
+           onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+
+       // Wait for database to get the data
+       while (eventCreationVM.uiState.value.loading) {}
+
+       val eventID = eventCreationVM.uiState.value.id
+
+       val eventSearchVM =
+           EventViewModel(
+               eventID = eventID,
+               database = database,
+               onSuccess = { assertTrue(true) },
+               onFailure = { assertTrue(false) })
+
+       // Wait for database to get the data
+       while (eventSearchVM.uiState.value.loading) {}
+
+       assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
+
+       changeAccount(TEST_ACCOUNTS[0])
+       eventSearchVM.joinTheEvent(
+           onSuccess = { assertTrue(true) },
+           onFailure = { assertTrue(false) }
+       )
+       while (eventSearchVM.uiState.value.loading) {}
+
+       changeAccount(TEST_ACCOUNTS[1])
+       eventSearchVM.joinTheEvent(
+           onSuccess = { assertTrue(true) },
+           onFailure = { assertTrue(false) }
+       )
+       while (eventSearchVM.uiState.value.loading) {}
+
+       changeAccount(TEST_ACCOUNTS[2])
+       eventSearchVM.joinTheEvent(
+           onSuccess = { assertTrue(true) },
+           onFailure = { assertTrue(false) }
+       )
+       while (eventSearchVM.uiState.value.loading) {}
+
+       assertTrue(eventSearchVM.uiState.value.guests.size == 3)
+       assertTrue(eventSearchVM.uiState.value.guests.keys.toSet() ==
+               setOf(
+                   TEST_ACCOUNTS[0].firebaseAuthUID,
+                   TEST_ACCOUNTS[1].firebaseAuthUID,
+                   TEST_ACCOUNTS[2].firebaseAuthUID,
+                   )
+       )
+
+       eventSearchVM.leaveTheEvent(
+           onSuccess = { assertTrue(true) },
+           onFailure = { assertTrue(false) }
+       )
+       while (eventSearchVM.uiState.value.loading) {}
+
+       changeAccount(TEST_ACCOUNTS[1])
+       eventSearchVM.leaveTheEvent(
+           onSuccess = { assertTrue(true) },
+           onFailure = { assertTrue(false) }
+       )
+       while (eventSearchVM.uiState.value.loading) {}
+
+       changeAccount(TEST_ACCOUNTS[0])
+       eventSearchVM.leaveTheEvent(
+           onSuccess = { assertTrue(true) },
+           onFailure = { assertTrue(false) }
+       )
+       while (eventSearchVM.uiState.value.loading) {}
+
+       assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
+
+       eventSearchVM.deleteTheEvent(
+           onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+   }
 }
