@@ -1,5 +1,8 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,6 +44,7 @@ fun LocationSelector(
     modifier: Modifier = Modifier
 ) {
 
+  val context = LocalContext.current
   var locationQuery by remember { mutableStateOf(selectedLocation?.name ?: "") }
   var searching by remember { mutableStateOf(false) }
   var showSearchBar by remember { mutableStateOf(false) }
@@ -47,22 +52,34 @@ fun LocationSelector(
   var possibleLocations by remember { mutableStateOf(emptyList<Location>()) }
 
   val launchSearch = {
-    searching = true
-    showSearchBar = true
-    convertNameToLocations(
-        locationQuery,
-        {
-          possibleLocations = it
-          searching = false
-          searchCompleted = it.isNotEmpty()
-        },
-        10)
+    if (locationQuery.isNotEmpty()) {
+      searching = true
+      convertNameToLocations(
+          locationQuery,
+          {
+            possibleLocations = it
+            searching = false
+            showSearchBar = it.isNotEmpty()
+            searchCompleted = it.isNotEmpty()
+            Handler(Looper.getMainLooper()).post {
+              if (it.isEmpty()) {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.find_event_no_result),
+                        Toast.LENGTH_SHORT)
+                    .apply { show() }
+              }
+            }
+          },
+          10)
+    }
   }
 
   val clearLocationInput = {
     locationQuery = ""
     possibleLocations = emptyList()
     searchCompleted = false
+    showSearchBar = false
     updateSelectedLocation(Location())
   }
 
@@ -74,18 +91,26 @@ fun LocationSelector(
       },
       onSearch = { launchSearch() },
       active = showSearchBar,
-      onActiveChange = { showSearchBar = it },
+      onActiveChange = {
+        if (!it) {
+          if (locationQuery.isEmpty() && !searching) {
+            showSearchBar = false
+          }
+        } else {
+          showSearchBar = searching || searchCompleted || locationQuery.isNotEmpty()
+        }
+      },
       placeholder = { Text(stringResource(id = R.string.search_location)) },
       modifier = modifier.testTag("LocationComponent"),
       trailingIcon = {
         when {
           searching -> CircularProgressIndicator()
           locationQuery.isNotEmpty() && searchCompleted ->
-              IconButton(onClick = clearLocationInput) {
+              IconButton(onClick = clearLocationInput, modifier = Modifier.testTag("ClearIcon")) {
                 Icon(imageVector = Icons.Default.Clear, contentDescription = "Clear")
               }
           locationQuery.isNotEmpty() && !searchCompleted ->
-              IconButton(onClick = launchSearch) {
+              IconButton(onClick = launchSearch, modifier = Modifier.testTag("SearchIcon")) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
               }
         }
