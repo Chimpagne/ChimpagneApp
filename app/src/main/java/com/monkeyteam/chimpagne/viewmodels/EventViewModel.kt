@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
@@ -20,6 +22,7 @@ class EventViewModel(
 ) : ViewModel() {
 
   private val eventManager = database.eventManager
+  private val accountManager = database.accountManager
 
   // UI state exposed to the UI
   private val _uiState = MutableStateFlow(EventUIState())
@@ -54,8 +57,10 @@ class EventViewModel(
                       it.staffs,
                       it.startsAt(),
                       it.endsAt(),
+                      it.supplies,
                       it.parkingSpaces,
-                      it.beds)
+                      it.beds
+                  )
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
@@ -84,6 +89,7 @@ class EventViewModel(
         _uiState.value.startsAtCalendarDate,
         _uiState.value.endsAtCalendarDate,
         "", // This will be handled in the database
+        _uiState.value.supplies,
         _uiState.value.parkingSpaces,
         _uiState.value.beds)
   }
@@ -141,66 +147,6 @@ class EventViewModel(
     }
   }
 
-  fun joinTheEvent(
-      guestId: String,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.addGuest(
-          _uiState.value.id,
-          guestId,
-          {
-            fetchEvent(
-                id = _uiState.value.id,
-                onSuccess = {
-                  _uiState.value = _uiState.value.copy(loading = false)
-                  onSuccess()
-                },
-                onFailure = {
-                  _uiState.value = _uiState.value.copy(loading = false)
-                  onFailure(it)
-                })
-          },
-          {
-            Log.d("ADD GUEST TO EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
-    }
-  }
-
-  fun removeGuestFromTheEvent(
-      guestId: String,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.removeGuest(
-          _uiState.value.id,
-          guestId,
-          {
-            fetchEvent(
-                id = _uiState.value.id,
-                onSuccess = {
-                  _uiState.value = _uiState.value.copy(loading = false)
-                  onSuccess()
-                },
-                onFailure = {
-                  _uiState.value = _uiState.value.copy(loading = false)
-                  onFailure(it)
-                })
-          },
-          {
-            Log.d("REMOVE GUEST TO EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
-    }
-  }
-
   fun updateEventTitle(newTitle: String) {
     _uiState.value = _uiState.value.copy(title = newTitle)
   }
@@ -236,22 +182,36 @@ class EventViewModel(
   fun updateEventEndCalendarDate(newEndCalendarDate: Calendar) {
     _uiState.value = _uiState.value.copy(endsAtCalendarDate = newEndCalendarDate)
   }
+
+  fun updateEventSupplies(newSupplies: Map<ChimpagneSupplyId, ChimpagneSupply>) {
+    _uiState.value = _uiState.value.copy(supplies = newSupplies)
+  }
+
+  fun addSuply(supply: ChimpagneSupply) {
+    _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies + (supply.id to supply))
+  }
+
+  fun removeSupply(supplyId: ChimpagneSupplyId) {
+    _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies - supplyId)
+  }
+
 }
 
 data class EventUIState(
-    val id: String = "",
-    val title: String = "",
-    val description: String = "",
-    val location: Location = Location(),
-    val public: Boolean = false,
-    val tags: List<String> = emptyList(),
-    val guests: Map<String, Boolean> = emptyMap(),
-    val staffs: Map<String, Boolean> = emptyMap(),
-    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val parkingSpaces: Int = 0,
-    val beds: Int = 0,
-    val loading: Boolean = false,
+  val id: String = "",
+  val title: String = "",
+  val description: String = "",
+  val location: Location = Location(),
+  val public: Boolean = false,
+  val tags: List<String> = emptyList(),
+  val guests: Map<String, Boolean> = emptyMap(),
+  val staffs: Map<String, Boolean> = emptyMap(),
+  val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+  val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+  val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
+  val parkingSpaces: Int = 0,
+  val beds: Int = 0,
+  val loading: Boolean = false,
 )
 
 class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :

@@ -21,6 +21,7 @@ data class ChimpagneEvent(
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now(),
     val ownerId: ChimpagneAccountUID = "",
+    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf()
     val parkingSpaces: Int = 0,
     val beds: Int = 0
 ) {
@@ -53,6 +54,7 @@ data class ChimpagneEvent(
       startsAt: Calendar,
       endsAt: Calendar,
       ownerId: ChimpagneAccountUID,
+      supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       parkingSpaces: Int,
       beds: Int
   ) : this(
@@ -67,6 +69,8 @@ data class ChimpagneEvent(
       buildTimestamp(startsAt),
       buildTimestamp(endsAt),
       ownerId,
+      supplies,
       parkingSpaces,
-      beds)
+      beds
+  )
 }

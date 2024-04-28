@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.LocationOn
@@ -26,8 +28,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,6 +43,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -47,6 +53,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
+import com.monkeyteam.chimpagne.ui.components.SupplyPopup
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -147,7 +154,9 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.title,
         onValueChange = eventViewModel::updateEventTitle,
         label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
+        modifier = Modifier
+          .fillMaxWidth()
+          .testTag("add_a_title"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -162,7 +171,9 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         value = uiState.description,
         onValueChange = eventViewModel::updateEventDescription,
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
-        modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
+        modifier = Modifier
+          .fillMaxWidth()
+          .testTag("add_a_description"),
         maxLines = 3)
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -221,7 +232,9 @@ fun SecondPanel(eventViewModel: EventViewModel) {
         uiState.tags,
         eventViewModel::updateEventTags,
         { tagFieldActive = it },
-        Modifier.fillMaxWidth().testTag("tag_field"))
+      Modifier
+        .fillMaxWidth()
+        .testTag("tag_field"))
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -243,29 +256,67 @@ fun SecondPanel(eventViewModel: EventViewModel) {
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThirdPanel(eventViewModel: EventViewModel) {
-  val context = LocalContext.current
+  val uiState by eventViewModel.uiState.collectAsState()
+
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.event_creation_screen_groceries),
         style = MaterialTheme.typography.headlineSmall,
         modifier = Modifier.testTag("groceries_title"))
     Spacer(modifier = Modifier.height(16.dp))
+
+    val showAddDialog = remember { mutableStateOf(false) }
     Button(
-        onClick = {
-          Toast.makeText(
-                  context,
-                  context.getString(R.string.event_creation_screen_gorceries_toast),
-                  Toast.LENGTH_SHORT)
-              .show()
-        },
-        modifier = Modifier.testTag("add_groceries_button")) {
-          Text(stringResource(id = R.string.event_creation_screen_add_groceries))
-        }
+      onClick = { showAddDialog.value = true },
+      modifier = Modifier.testTag("add_groceries_button")) {
+      Text(stringResource(id = R.string.event_creation_screen_add_groceries))
+    }
+
+    if (showAddDialog.value) {
+
+      SupplyPopup(
+        onDismissRequest = { showAddDialog.value = false },
+        onSave = eventViewModel::addSuply)
+    }
+
     Spacer(modifier = Modifier.height(16.dp))
+
     LazyColumn {
-      // Populate with groceries items
+      items(uiState.supplies.values.toList()) { item ->
+        ListItem(
+          headlineContent = {
+            Text(
+              text = item.description,
+            )
+          },
+          supportingContent = {
+            Text(text = item.quantity.toString() + " " + item.unit, color = Color.Gray)
+          },
+          trailingContent = {
+            IconButton(
+              onClick = {
+                eventViewModel.removeSupply(item.id)
+              },
+              modifier = Modifier.testTag(item.description),
+              content = {
+                Icon(
+                  active = true,
+                  activeContent = {
+                    androidx.compose.material3.Icon(
+                      imageVector = Icons.Default.Cancel, contentDescription = "Delete"
+                    )
+                  },
+                  inactiveContent = {
+                    androidx.compose.material3.Icon(
+                      imageVector = Icons.Default.Cancel, contentDescription = "Delete"
+                    )
+                  })
+              })
+          })
+      }
     }
   }
 }
@@ -294,7 +345,9 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth().testTag("n_parking"))
+        modifier = Modifier
+          .fillMaxWidth()
+          .testTag("n_parking"))
 
     Spacer(modifier = Modifier.height(16.dp))
     Text(
@@ -309,6 +362,8 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth().testTag("n_beds"))
+        modifier = Modifier
+          .fillMaxWidth()
+          .testTag("n_beds"))
   }
 }
