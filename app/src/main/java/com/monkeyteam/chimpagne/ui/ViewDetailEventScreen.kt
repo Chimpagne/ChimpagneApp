@@ -157,7 +157,7 @@ fun ViewDetailEventScreen(
                                                       .event_details_screen_leave_toast_success),
                                               Toast.LENGTH_SHORT)
                                           .show()
-                                      navObject.navigateTo(Route.HOME_SCREEN)
+                                      navObject.navigateTo(Route.MY_EVENTS_SCREEN)
                                     })
                               })
                         }
