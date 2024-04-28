@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
@@ -38,7 +35,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
   val context = LocalContext.current
-    // Dummy user Data
+  // Dummy user Data
   val dummyUser = User("0", "Lora", null)
 
   Scaffold(
@@ -49,11 +46,11 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
               ProfileIcon(
                   user = dummyUser,
                   onClick = {
-                      if(!accountViewModel.isUserLoggedIn()){
-                          accountViewModel.promptLogin(context, navObject)
-                      } else {
-                          navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-                      }
+                    if (!accountViewModel.isUserLoggedIn()) {
+                      accountViewModel.promptLogin(context, navObject)
+                    } else {
+                      navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+                    }
                   })
             })
       }) { innerPadding ->
@@ -67,15 +64,15 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
               ChimpagneButton(
                   modifier = Modifier.testTag("open_events_button"),
                   onClick = {
-                      if(!accountViewModel.isUserLoggedIn()){
-                          accountViewModel.promptLogin(context, navObject)
-                      } else {
-                          Toast.makeText(
+                    if (!accountViewModel.isUserLoggedIn()) {
+                      accountViewModel.promptLogin(context, navObject)
+                    } else {
+                      Toast.makeText(
                               context,
                               context.getString(R.string.homescreen_open_my_events_toast),
                               Toast.LENGTH_SHORT)
-                              .show()
-                      }
+                          .show()
+                    }
                   },
                   text = stringResource(id = R.string.homescreen_my_events),
                   fontWeight = FontWeight.Bold,
@@ -90,13 +87,13 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("organize_event_button"),
-                  onClick =  {
-                      if(!accountViewModel.isUserLoggedIn()){
-                          accountViewModel.promptLogin(context, navObject)
-                      } else {
-                          navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
-                      }
-                             },
+                  onClick = {
+                    if (!accountViewModel.isUserLoggedIn()) {
+                      accountViewModel.promptLogin(context, navObject)
+                    } else {
+                      navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
+                    }
+                  },
                   text = stringResource(R.string.homescreen_organize_event),
                   fontWeight = FontWeight.Bold,
                   fontSize = 30.sp)

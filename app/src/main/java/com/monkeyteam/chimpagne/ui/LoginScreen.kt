@@ -35,17 +35,13 @@ import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit, onContinueAsGuest: () -> Unit) {
   val openAlertDialog = remember { mutableStateOf(false) }
   Column(
-      modifier = Modifier
-          .fillMaxSize()
-          .padding(15.dp),
+      modifier = Modifier.fillMaxSize().padding(15.dp),
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.SpaceEvenly) {
         Image(
             painter = painterResource(id = R.drawable.chimpagne_app_logo),
             contentDescription = "App Logo",
-            modifier = Modifier
-                .size(250.dp)
-                .clip(CircleShape),
+            modifier = Modifier.size(250.dp).clip(CircleShape),
             contentScale = ContentScale.Fit)
 
         Column {
@@ -61,13 +57,11 @@ fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit, onContinueAsGuest: () 
             Modifier.fillMaxWidth(),
         )
 
-      ChimpagneButton(
-          text = "Continue As Guest",
-          fontWeight = FontWeight.Medium,
-          fontSize = 18.sp,
-          onClick = onContinueAsGuest
-      )
-      
+        ChimpagneButton(
+            text = "Continue As Guest",
+            fontWeight = FontWeight.Medium,
+            fontSize = 18.sp,
+            onClick = onContinueAsGuest)
       }
   when {
     openAlertDialog.value -> {

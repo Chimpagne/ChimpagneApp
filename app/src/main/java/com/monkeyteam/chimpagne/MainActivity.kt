@@ -47,9 +47,7 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        val continueAsGuest: () -> Unit = {
-          navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-      }
+        val continueAsGuest: () -> Unit = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) }
 
         val loginToChimpagneAccount: (id: String) -> Unit = { id ->
           accountViewModel.loginToChimpagneAccount(
@@ -87,9 +85,8 @@ class MainActivity : ComponentActivity() {
           NavHost(navController = navController, startDestination = startDestination) {
             composable(Route.LOGIN_SCREEN) {
               LoginScreen(
-                onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid) },
-                onContinueAsGuest = continueAsGuest
-              )
+                  onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid) },
+                  onContinueAsGuest = continueAsGuest)
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)

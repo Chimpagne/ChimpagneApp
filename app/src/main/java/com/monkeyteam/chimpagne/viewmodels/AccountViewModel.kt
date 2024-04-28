@@ -15,7 +15,6 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okhttp3.Route
 
 class AccountViewModel(database: Database) : ViewModel() {
 
@@ -126,15 +125,14 @@ class AccountViewModel(database: Database) : ViewModel() {
     Log.d("AccountViewModel", "Updated Profile Picture to $uri")
   }
 
-    fun promptLogin(context: Context, navActions: NavigationActions) {
-        Toast.makeText(context, "Please login/create an account to continue", Toast.LENGTH_LONG).show()
-        navActions.navigateTo("Login")
-    }
+  fun promptLogin(context: Context, navActions: NavigationActions) {
+    Toast.makeText(context, "Please login/create an account to continue", Toast.LENGTH_LONG).show()
+    navActions.navigateTo("Login")
+  }
 
-    fun isUserLoggedIn(): Boolean {
-        return FirebaseAuth.getInstance().currentUser != null
-    }
-
+  fun isUserLoggedIn(): Boolean {
+    return FirebaseAuth.getInstance().currentUser != null
+  }
 }
 
 /**
