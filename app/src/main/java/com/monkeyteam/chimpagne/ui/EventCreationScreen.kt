@@ -329,13 +329,12 @@ fun FourthPanel(eventViewModel: EventViewModel) {
     OutlinedTextField(
         value = parkingText,
         onValueChange = {
-            parkingText = it
-            try {
-                eventViewModel.updateParkingSpaces(parkingText.toInt())
-            }
-            catch (_: Exception) {
-                eventViewModel.updateParkingSpaces(0)
-            }
+          parkingText = it
+          try {
+            eventViewModel.updateParkingSpaces(parkingText.toInt())
+          } catch (_: Exception) {
+            eventViewModel.updateParkingSpaces(0)
+          }
         },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -349,13 +348,12 @@ fun FourthPanel(eventViewModel: EventViewModel) {
     OutlinedTextField(
         value = bedsText,
         onValueChange = {
-            bedsText = it
-            try {
-                eventViewModel.updateBeds(bedsText.toInt())
-            }
-            catch (_: Exception) {
-                eventViewModel.updateBeds(0)
-            }
+          bedsText = it
+          try {
+            eventViewModel.updateBeds(bedsText.toInt())
+          } catch (_: Exception) {
+            eventViewModel.updateBeds(0)
+          }
         },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
