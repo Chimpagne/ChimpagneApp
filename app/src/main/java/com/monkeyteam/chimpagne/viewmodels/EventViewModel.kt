@@ -66,6 +66,7 @@ class EventViewModel(
             } else {
               Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
               _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(Exception("No such event exists"))
             }
           },
           {
