@@ -75,20 +75,30 @@ class MainActivity : ComponentActivity() {
           navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
         }
 
-        // Determine the start destination based on the isAuthenticated state
-        // Using null check to decide, assuming that null means the auth state is still being
-        // determined
-        val startDestination =
-            if (FirebaseAuth.getInstance().currentUser != null) {
-              loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
-              Route.LOADING
-            } else {
-              Route.LOGIN_SCREEN
-            }
+        AuthUI.getInstance().signOut(this).addOnCompleteListener {
+          if (it.isSuccessful) {
+            Log.d("MainActivity", "User signed out")
+            accountViewModel.logoutFromChimpagneAccount()
+            navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+          } else {
+            Log.e("MainActivity", "Failed to sign out user")
+          }
+        }
+
+        val login: () -> Unit = {
+          loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
+          navActions.clearAndNavigateTo(Route.LOADING, true)
+        }
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          NavHost(navController = navController, startDestination = startDestination) {
-            composable(Route.LOGIN_SCREEN) { LoginScreen { uid -> loginToChimpagneAccount(uid) } }
+          NavHost(navController = navController, startDestination = Route.LOGIN_SCREEN) {
+            composable(Route.LOGIN_SCREEN) {
+              if (FirebaseAuth.getInstance().currentUser != null) {
+                login()
+              } else {
+                LoginScreen { uid -> loginToChimpagneAccount(uid) }
+              }
+            }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }
@@ -127,18 +137,22 @@ class MainActivity : ComponentActivity() {
                                   backStackEntry.arguments?.getString("EventID"), database)),
                   canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
             }
-              composable(route = Route.ONLINE_EVENT_VIEW, // + "/{EventID}/{CanEdit}"
-                  deepLinks = listOf(
-                      navDeepLink {
+            composable(
+                route = Route.ONLINE_EVENT_VIEW, // + "/{EventID}/{CanEdit}"
+                deepLinks =
+                    listOf(
+                        navDeepLink {
                           uriPattern = "https://www.manigo.ch/events/?uid={EventID}"
                           action = Intent.ACTION_VIEW
-                      }),
-                  arguments = listOf(
-                      navArgument("EventID") { type = NavType.StringType },
-                  )){
+                        }),
+                arguments =
+                    listOf(
+                        navArgument("EventID") { type = NavType.StringType },
+                    )) {
                   val possibleEventID = it.arguments?.getString("EventID")
-                  navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${possibleEventID}/false")
-              }
+                  navActions.navigateTo(
+                      Route.VIEW_DETAIL_EVENT_SCREEN + "/${possibleEventID}/false")
+                }
           }
         }
       }
