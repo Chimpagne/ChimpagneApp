@@ -67,7 +67,7 @@
     <string name="date_tools_from">De</string>
     <string name="date_tools_until">Jusqu\'au</string>
     <string name="date_tools_at">à</string>
-    <string name="event_details_screen_number_of_guests">Singes ont rejoint</string>
+    <string name="event_details_screen_number_of_guests">personnes ont rejoint</string>
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
     <string name="event_details_screen_edit_button">Éditer l\'événement</string>

@@ -37,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.Legend
@@ -48,10 +47,7 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 
 @ExperimentalMaterial3Api
 @Composable
-fun MyEventsScreen(
-    navObject: NavigationActions,
-    myEventsViewModel: MyEventsViewModel = viewModel()
-) {
+fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsViewModel) {
   val uiState by myEventsViewModel.uiState.collectAsState()
   Scaffold(
       topBar = {
