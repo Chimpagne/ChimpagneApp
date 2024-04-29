@@ -54,13 +54,15 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        val loginToChimpagneAccount: (id: String) -> Unit = { id ->
+        val loginToChimpagneAccount: (id: String, isDeepLink: Boolean) -> Unit = { id, isDeepLink ->
           accountViewModel.loginToChimpagneAccount(
               id,
               { account ->
                 if (account != null) {
                   Log.d("MainActivity", "Account is in database")
-                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+                    if (!isDeepLink) {
+                        navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+                    }
                 } else {
                   Log.d("MainActivity", "Account is not in database")
                   navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
@@ -69,35 +71,25 @@ class MainActivity : ComponentActivity() {
               { Log.e("MainActivity", "Failed to check if account is in database: $it") })
         }
 
+          val login: (isDeepLink: Boolean) -> Unit = {bool ->
+              if (FirebaseAuth.getInstance().currentUser != null) {
+                  loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!, bool)
+                  Route.LOADING
+              } else{
+                  navActions.navigateTo(Route.LOGIN_SCREEN)
+              }
+          }
+
         val logout: () -> Unit = {
           AuthUI.getInstance().signOut(this)
           accountViewModel.logoutFromChimpagneAccount()
           navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
         }
 
-        AuthUI.getInstance().signOut(this).addOnCompleteListener {
-          if (it.isSuccessful) {
-            Log.d("MainActivity", "User signed out")
-            accountViewModel.logoutFromChimpagneAccount()
-            navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-          } else {
-            Log.e("MainActivity", "Failed to sign out user")
-          }
-        }
-
-        val login: () -> Unit = {
-          loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
-          navActions.clearAndNavigateTo(Route.LOADING, true)
-        }
-
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = Route.LOGIN_SCREEN) {
             composable(Route.LOGIN_SCREEN) {
-              if (FirebaseAuth.getInstance().currentUser != null) {
-                login()
-              } else {
-                LoginScreen { uid -> loginToChimpagneAccount(uid) }
-              }
+                login(false)
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
@@ -149,6 +141,7 @@ class MainActivity : ComponentActivity() {
                     listOf(
                         navArgument("EventID") { type = NavType.StringType },
                     )) {
+                login(true)
                   val possibleEventID = it.arguments?.getString("EventID")
                   navActions.navigateTo(
                       Route.VIEW_DETAIL_EVENT_SCREEN + "/${possibleEventID}/false")
