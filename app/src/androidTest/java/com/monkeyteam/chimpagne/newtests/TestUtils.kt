@@ -45,7 +45,7 @@ val TEST_EVENTS =
             location = Location("Renens"),
             public = true,
             tags = listOf("students", "degen"),
-            guests = emptyMap(),
+            guests = mapOf(Pair("PRINCE", true)),
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(4, 2, 2025, 0, 0),
             endsAtTimestamp = buildTimestamp(4, 3, 2025, 0, 0)),
@@ -59,7 +59,8 @@ val TEST_EVENTS =
             guests = emptyMap(),
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(1, 7, 2024, 0, 0),
-            endsAtTimestamp = buildTimestamp(2, 7, 2024, 0, 0)))
+            endsAtTimestamp = buildTimestamp(2, 7, 2024, 0, 0),
+            ownerId = "PRINCE"))
 
 val TEST_ACCOUNTS =
     listOf(
@@ -68,13 +69,13 @@ val TEST_ACCOUNTS =
             firstName = "Monkey",
             lastName = "Prince",
             location = Location("The jungle"),
-            joinedEvents = emptyMap()),
+            joinedEvents = mapOf(Pair("LOTR", true), Pair("THIRD_EVENT", true))),
         ChimpagneAccount(
             firebaseAuthUID = "JUAN",
             firstName = "Juan",
             lastName = "Litalien",
             location = Location("Italy"),
-            joinedEvents = emptyMap()),
+            joinedEvents = emptyMap()), /* THIS MUST BE EMPTY*/
         ChimpagneAccount(
             firebaseAuthUID = "THEREALKING",
             firstName = "Nat",

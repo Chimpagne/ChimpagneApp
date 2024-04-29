@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
@@ -140,6 +141,61 @@ class EventViewModel(
           },
           {
             Log.d("DELETE AN EVENT", "Error : ", it)
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
+          })
+    }
+  }
+
+  fun joinTheEvent(
+      role: ChimpagneRole,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    viewModelScope.launch {
+      accountManager.joinEvent(
+          _uiState.value.id,
+          role,
+          {
+            fetchEvent(
+                id = _uiState.value.id,
+                onSuccess = {
+                  _uiState.value = _uiState.value.copy(loading = false)
+                  onSuccess()
+                },
+                onFailure = {
+                  _uiState.value = _uiState.value.copy(loading = false)
+                  onFailure(it)
+                })
+          },
+          {
+            Log.d("ADD MONKEY TO EVENT", "Error : ", it)
+            _uiState.value = _uiState.value.copy(loading = false)
+            onFailure(it)
+          })
+    }
+  }
+
+  fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    viewModelScope.launch {
+      accountManager.leaveEvent(
+          _uiState.value.id,
+          {
+            fetchEvent(
+                id = _uiState.value.id,
+                onSuccess = {
+                  _uiState.value = _uiState.value.copy(loading = false)
+                  onSuccess()
+                },
+                onFailure = {
+                  _uiState.value = _uiState.value.copy(loading = false)
+                  onFailure(it)
+                })
+          },
+          {
+            Log.d("REMOVE MONKEY FROM EVENT", "Error : ", it)
             _uiState.value = _uiState.value.copy(loading = false)
             onFailure(it)
           })
