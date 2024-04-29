@@ -21,52 +21,58 @@ val TEST_EVENTS =
             id = "FIRST_EVENT",
             title = "First event",
             description = "a random description",
-            location = Location("Paris"),
+            location = Location("EPFL", 46.519124, 6.567593),
             public = true,
+            /* DO NOT DELETE OR MODIFY TAGS*/
             tags = listOf("vegan", "monkeys"),
             guests = emptyMap(),
             staffs = emptyMap(),
-            startsAtTimestamp = buildTimestamp(9, 5, 2024, 0, 0),
-            endsAtTimestamp = buildTimestamp(10, 5, 2024, 0, 0),
+            startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
+            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15),
             ownerId = "JUAN",
-            supplies = mapOf(
-                Pair("1", ChimpagneSupply("1", "d", 1, "g")),
-                Pair("2", ChimpagneSupply("2", "ff", 2, "d")),
-                Pair("3", ChimpagneSupply("3", "ee", 3, "e"))
-            ),
+            supplies =
+                mapOf(
+                    Pair("1", ChimpagneSupply("1", "d", 1, "g")),
+                    Pair("2", ChimpagneSupply("2", "ff", 2, "d")),
+                    Pair("3", ChimpagneSupply("3", "ee", 3, "e"))),
             parkingSpaces = 1,
-            beds = 2
-        ),
+            beds = 2),
         ChimpagneEvent(
             id = "SECOND_EVENT",
             title = "Second event",
             description = "I love bananas",
-            location = Location("EPFL"),
+            /*NOT THE SAME AS EVENT 1 BUT CLOSE*/
+            Location("EPFL", 46.519130, 6.567580),
             public = true,
+            /*MUST CONTAIN ONE TAG FROM EVENT 1*/
             tags = listOf("bananas", "monkeys"),
             guests = emptyMap(),
             staffs = emptyMap(),
-            startsAtTimestamp = buildTimestamp(1, 8, 2024, 0, 0),
-            endsAtTimestamp = buildTimestamp(3, 9, 2024, 10, 0),
+            /*MUST SHARE THE 10TH OF MAY WITH EVENT 1 BUT NOT THE 9TH*/
+            startsAtTimestamp = buildTimestamp(10, 5, 2024, 15, 15),
+            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15),
             ownerId = "JUAN",
-            supplies = mapOf(
-                Pair("1", ChimpagneSupply("1", "c", 1, "h")),
-                Pair("2", ChimpagneSupply("2", "kk", 2, "j")),
-                Pair("3", ChimpagneSupply("3", "gbn", 3, "h"))
-            ),
+            supplies =
+                mapOf(
+                    Pair("1", ChimpagneSupply("1", "c", 1, "h")),
+                    Pair("2", ChimpagneSupply("2", "kk", 2, "j")),
+                    Pair("3", ChimpagneSupply("3", "gbn", 3, "h"))),
             parkingSpaces = 10,
             beds = 5),
         ChimpagneEvent(
             id = "THIRD_EVENT",
             title = "Third event",
             description = "Coucou",
-            location = Location("Renens"),
+            /*MUST BE FAR FROM EVENT 1 AND 2*/
+            location = Location("Renens", 0.0, 0.0),
             public = true,
+            /* MUST BE DIFFERENT FROM EVENT 1 AND 2 */
             tags = listOf("students", "degen"),
             guests = mapOf(Pair("PRINCE", true)),
             staffs = emptyMap(),
-            startsAtTimestamp = buildTimestamp(4, 2, 2025, 0, 0),
-            endsAtTimestamp = buildTimestamp(4, 3, 2025, 0, 0)),
+            /* SAME AS EVENT 1 */
+            startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
+            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15)),
         ChimpagneEvent(
             id = "LOTR",
             title = "Watch LOTR",
@@ -143,4 +149,6 @@ fun initializeTestDatabase(
   for (entry in profilePictures.entries.iterator()) {
     Tasks.await(profilePicturesTable.child(entry.key).putFile(entry.value))
   }
+
+  // runBlocking { delay(5000) }
 }
