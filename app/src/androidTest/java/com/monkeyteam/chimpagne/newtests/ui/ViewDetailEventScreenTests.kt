@@ -111,14 +111,15 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("share").performClick()
 
     // Retrieve clipboard content
-    val clipboardManager = InstrumentationRegistry.getInstrumentation().context.getSystemService(
-      Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clipboardManager =
+        InstrumentationRegistry.getInstrumentation()
+            .context
+            .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clipboardText = clipboardManager.primaryClip?.getItemAt(0)?.text.toString()
     val expectedText = "https://www.manigo.ch/events/?uid=${event.id}"
 
     // Verify if clipboard has the expected text
     assertEquals(expectedText, clipboardText)
-
   }
 
   @Test
