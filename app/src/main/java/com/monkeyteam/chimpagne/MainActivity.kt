@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne
 
 import AccountSettings
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -12,9 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
@@ -123,6 +127,18 @@ class MainActivity : ComponentActivity() {
                                   backStackEntry.arguments?.getString("EventID"), database)),
                   canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
             }
+              composable(route = Route.ONLINE_EVENT_VIEW, // + "/{EventID}/{CanEdit}"
+                  deepLinks = listOf(
+                      navDeepLink {
+                          uriPattern = "https://www.manigo.ch/events/?uid={EventID}"
+                          action = Intent.ACTION_VIEW
+                      }),
+                  arguments = listOf(
+                      navArgument("EventID") { type = NavType.StringType },
+                  )){
+                  val possibleEventID = it.arguments?.getString("EventID")
+                  navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${possibleEventID}/false")
+              }
           }
         }
       }
