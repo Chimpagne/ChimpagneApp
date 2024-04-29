@@ -15,6 +15,7 @@ object Route {
   const val MY_EVENTS_SCREEN = "myEvents"
   const val VIEW_DETAIL_EVENT_SCREEN = "viewDetailEventScreen"
   const val ONLINE_EVENT_VIEW = "onlineEventView"
+  const val LOADING_LOGIN = "loadingLogin"
 }
 
 class NavigationActions(private val navController: NavHostController) {

@@ -74,7 +74,6 @@ class MainActivity : ComponentActivity() {
           val login: (isDeepLink: Boolean) -> Unit = {bool ->
               if (FirebaseAuth.getInstance().currentUser != null) {
                   loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!, bool)
-                  Route.LOADING
               } else{
                   navActions.navigateTo(Route.LOGIN_SCREEN)
               }
@@ -87,9 +86,15 @@ class MainActivity : ComponentActivity() {
         }
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          NavHost(navController = navController, startDestination = Route.LOGIN_SCREEN) {
+          NavHost(navController = navController, startDestination = Route.LOADING_LOGIN) {
+              composable(Route.LOADING_LOGIN) {
+                  SpinnerView()
+                  login(false)
+              }
             composable(Route.LOGIN_SCREEN) {
-                login(false)
+                LoginScreen {
+                    loginToChimpagneAccount(it, false)
+                }
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
