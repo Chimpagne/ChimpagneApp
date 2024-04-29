@@ -24,6 +24,8 @@ import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
+import com.monkeyteam.chimpagne.ui.MyEventsScreen
+import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
@@ -33,6 +35,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
@@ -110,6 +113,21 @@ class MainActivity : ComponentActivity() {
               EventCreationScreen(
                   navObject = navActions,
                   eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
+            }
+            composable(Route.MY_EVENTS_SCREEN) {
+              MyEventsScreen(
+                  navObject = navActions,
+                  myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
+            }
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
+              ViewDetailEventScreen(
+                  navObject = navActions,
+                  eventViewModel =
+                      viewModel(
+                          factory =
+                              EventViewModelFactory(
+                                  backStackEntry.arguments?.getString("EventID"), database)),
+                  canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
             }
           }
         }
