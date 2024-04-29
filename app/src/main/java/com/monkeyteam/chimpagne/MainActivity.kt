@@ -107,7 +107,7 @@ class MainActivity : ComponentActivity() {
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                   navObject = navActions,
-                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)))
+                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)), accountViewModel)
             }
             composable(Route.EVENT_CREATION_SCREEN) {
               EventCreationScreen(
