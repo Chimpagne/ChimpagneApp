@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
                   canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
             }
             composable(
-                //The deep link route
+                // The deep link route
                 route = Route.ONLINE_EVENT_VIEW,
                 deepLinks =
                     listOf(
@@ -146,7 +146,7 @@ class MainActivity : ComponentActivity() {
                     listOf(
                         navArgument("EventID") { type = NavType.StringType },
                     )) {
-                  //Check if user is logged in
+                  // Check if user is logged in
                   login(true)
                   val possibleEventID = it.arguments?.getString("EventID")
                   val context = LocalContext.current
