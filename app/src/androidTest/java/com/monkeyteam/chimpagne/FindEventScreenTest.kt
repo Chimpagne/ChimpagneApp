@@ -52,6 +52,36 @@ class FindEventScreenTest {
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
+  fun displayLocationIcon() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
+    }
+
+    composeTestRule.onNodeWithContentDescription("Location").assertIsDisplayed()
+  }
+
+  @Test
+  fun testEventTitle() {
+    val sampleEvent = ChimpagneEvent(title = "Banana", description = "MONKEY")
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventDetailSheet(
+        sampleEvent,
+        viewModel(factory = FindEventsViewModelFactory(database)),
+        accountViewModel,
+        navActions)
+    }
+
+    composeTestRule.onNodeWithText("Banana").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
   fun displayLocationInput() {
     composeTestRule.setContent {
       val navController = rememberNavController()
