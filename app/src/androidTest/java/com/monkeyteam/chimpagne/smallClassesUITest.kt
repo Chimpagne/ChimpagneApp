@@ -10,6 +10,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import java.util.Calendar
 import java.util.Locale
@@ -120,7 +121,23 @@ class LoginScreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
 
-  @Test fun checkUI() {}
+  @Test
+  fun checkUI() {
+    composeTestRule.setContent {
+      val mockSuccessfulLogin: (String) -> Unit = { _ -> }
+      val mockContinueAsGuest: () -> Unit = {}
+
+      LoginScreen(onSuccessfulLogin = mockSuccessfulLogin, onContinueAsGuest = mockContinueAsGuest)
+    }
+
+    composeTestRule.onNodeWithTag("welcome_screen_title").assertExists()
+
+    composeTestRule.onNodeWithTag("Chimpagne").assertExists()
+
+    composeTestRule.onNodeWithTag("Google_Authentication").assertExists()
+
+    composeTestRule.onNodeWithTag("Continue_As_Guest_Button").assertExists()
+  }
 
   @Test fun checkAlertDialog() {}
 }

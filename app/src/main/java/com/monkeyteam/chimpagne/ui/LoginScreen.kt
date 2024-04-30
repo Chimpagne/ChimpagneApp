@@ -54,14 +54,15 @@ fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit, onContinueAsGuest: () 
         GoogleAuthentication(
             onSuccessfulLogin,
             { openAlertDialog.value = true },
-            Modifier.fillMaxWidth(),
+            Modifier.fillMaxWidth().testTag("Google_Authentication"),
         )
 
         ChimpagneButton(
             text = "Continue As Guest",
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
-            onClick = onContinueAsGuest)
+            onClick = onContinueAsGuest,
+            modifier = Modifier.testTag("Continue_As_Guest_Button"))
       }
   when {
     openAlertDialog.value -> {
