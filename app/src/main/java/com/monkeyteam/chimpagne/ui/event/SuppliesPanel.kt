@@ -31,7 +31,7 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThirdPanel(eventViewModel: EventViewModel) {
+fun SuppliesPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   Column(modifier = Modifier.padding(16.dp)) {

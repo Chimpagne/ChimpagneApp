@@ -171,8 +171,6 @@ fun ViewDetailEventScreen(
                                       .fillMaxWidth()
                                       .testTag("edit"),
                               onClick = {
-                                  print("EVENT")
-                                  println(uiState.id)
                                   navObject.navigateTo(
                                       Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                               })

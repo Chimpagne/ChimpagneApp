@@ -28,7 +28,7 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @Composable
-fun SecondPanel(eventViewModel: EventViewModel) {
+fun TagsAndPubPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   var tagFieldActive by remember { mutableStateOf(true) }

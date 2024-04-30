@@ -52,9 +52,9 @@ fun EventCreationScreen(
     HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
       when (page) {
         0 -> FirstPanel(eventViewModel)
-        1 -> SecondPanel(eventViewModel)
-        2 -> ThirdPanel(eventViewModel)
-        3 -> FourthPanel(eventViewModel)
+        1 -> TagsAndPubPanel(eventViewModel)
+        2 -> SuppliesPanel(eventViewModel)
+        3 -> AdvancedLogisticsPanel(eventViewModel)
       }
     }
 

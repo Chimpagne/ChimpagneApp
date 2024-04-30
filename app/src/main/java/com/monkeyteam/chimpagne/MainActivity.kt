@@ -34,6 +34,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
@@ -115,8 +116,10 @@ class MainActivity : ComponentActivity() {
                   println("EVENT ID:")
                   println(eventID)
                   EditEventScreen(
+                      initialPage = 0,
                       navObject = navActions,
-                      eventViewModel = viewModel(factory = EventViewModelFactory(eventID, database)))
+                      eventViewModel = EventViewModel(eventID, database, {}, {})
+                  )
               }
             composable(Route.MY_EVENTS_SCREEN) {
               MyEventsScreen(

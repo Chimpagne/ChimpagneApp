@@ -78,4 +78,6 @@
     <string name="event_details_screen_supplies_button">Trucs à amener</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
+    <string name="edit_event">Editer l\'événement</string>
+    <string name="edit_event_toast_finish">The event has been edited !</string>
 </resources>

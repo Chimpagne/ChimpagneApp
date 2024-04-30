@@ -77,4 +77,7 @@
     <string name="supplies_unit">Unit</string>
     <string name="chimpagne_cancel">Cancel</string>
     <string name="chimpagne_add">Add</string>
+    <string name="edit_event">Edit event</string>
+    <string name="edit_event_toast_finish">The event has been edited !</string>
+
 </resources>
