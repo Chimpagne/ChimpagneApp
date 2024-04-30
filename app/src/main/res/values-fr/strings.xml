@@ -51,8 +51,31 @@
     <string name="search_location">Rechercher un lieu </string>
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantité</string>
+    <string name="supplies_unit">Unité</string>
+    <string name="chimpagne_cancel">Annuler</string>
+    <string name="chimpagne_add">Ajouter</string>
+
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
     <string name="event_changes_saved">Les changements de l\'événement ont été sauvegardé !</string>
+    <string name="my_events_screen_name">Mes Événements</string>
+    <string name="my_events_screen_created_event_list_name">Les Événements Créés</string>
+    <string name="my_events_screen_joined_event_list_name">Les Événements Rejoint</string>
+    <string name="my_events_screen_empty_create_event_list">Vous avez créé aucun événement</string>
+    <string name="my_events_screen_empty_join_event_list">Vous avez rejoint aucun événement</string>
+    <string name="date_tools_from">De</string>
+    <string name="date_tools_until">Jusqu\'au</string>
+    <string name="date_tools_at">à</string>
+    <string name="event_details_screen_number_of_guests">personnes ont rejoint</string>
+    <string name="event_details_screen_leave_button">Quitter l\'événement</string>
+    <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
+    <string name="event_details_screen_edit_button">Éditer l\'événement</string>
+    <string name="event_details_screen_chat_button">Discussion</string>
+    <string name="event_details_screen_location_button">Localisation</string>
+    <string name="event_details_screen_supplies_button">Trucs à amener</string>
+    <string name="event_details_screen_voting_button">Votes et sondages</string>
+    <string name="event_details_screen_car_pooling_button">Covoiturages</string>
 </resources>

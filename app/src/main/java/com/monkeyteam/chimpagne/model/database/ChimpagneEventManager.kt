@@ -93,8 +93,11 @@ class ChimpagneEventManager(
     updateEvent(
         event.copy(
             id = eventId, ownerId = database.accountManager.currentUserAccount?.firebaseAuthUID!!),
-        { onSuccess(eventId) },
-        onFailure)
+        {
+          database.accountManager.joinEvent(
+              eventId, ChimpagneRoles.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+        },
+        { onFailure(it) })
   }
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
@@ -162,6 +165,32 @@ class ChimpagneEventManager(
         .document(eventId)
         .update("staffs.${userUID}", FieldValue.delete())
         .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun getEvents(
+      listOfEventIDs: List<ChimpagneEventId>,
+      onSuccess: (List<ChimpagneEvent>) -> Unit,
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
+    for (eventID in listOfEventIDs) {
+      tasks.add(events.where(Filter.equalTo("id", eventID)).get())
+    }
+
+    // Collect all the query results together into a single list
+    Tasks.whenAllComplete(tasks)
+        .addOnCompleteListener {
+          val events: MutableList<ChimpagneEvent> = ArrayList()
+          for (task in tasks) {
+            val snap = task.result
+            for (doc in snap!!.documents) {
+              val event = doc.toObject<ChimpagneEvent>()!!
+              events.add(event)
+            }
+          }
+          onSuccess(events)
+        }
         .addOnFailureListener { onFailure(it) }
   }
 }

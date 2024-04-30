@@ -10,10 +10,12 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import androidx.test.rule.GrantPermissionRule
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.EventDetailSheet
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
+import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -26,6 +28,67 @@ class FindEventScreenTest {
   val database = Database()
 
   @get:Rule val composeTestRule = createComposeRule()
+
+  @get:Rule
+  val permissionRule: GrantPermissionRule =
+      GrantPermissionRule.grant(
+          android.Manifest.permission.ACCESS_FINE_LOCATION,
+          android.Manifest.permission.ACCESS_COARSE_LOCATION)
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayTitle() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayLocationInput() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("input_location").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displaySearchButton() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+    }
+    composeTestRule.onNodeWithTag("sel_location").performClick()
+
+    composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("button_search").performClick()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayMapScreen() {
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventMapScreen({}, FindEventsViewModel(database = database))
+    }
+
+    composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
+  }
 
   @Test
   fun testEventDetailSheetDisplay() {
