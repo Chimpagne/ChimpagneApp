@@ -71,10 +71,10 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
       EventDetailSheet(
-        sampleEvent,
-        viewModel(factory = FindEventsViewModelFactory(database)),
-        accountViewModel,
-        navActions)
+          sampleEvent,
+          viewModel(factory = FindEventsViewModelFactory(database)),
+          accountViewModel,
+          navActions)
     }
 
     composeTestRule.onNodeWithText("Banana").assertIsDisplayed()
