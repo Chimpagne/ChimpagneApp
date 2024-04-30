@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -13,20 +14,11 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
 
-// test class so that it compiles with my code, won't actually be here and probably will have
-// more attributes
-data class User(
-    val id: String,
-    val name: String,
-    // Nullable for users that didn't specify a profile picture
-    val profilePictureURL: String? = null
-)
-
 @Composable
-fun ProfileIcon(user: User?, onClick: () -> Unit = {}) {
+fun ProfileIcon(uri: Uri?, onClick: () -> Unit = {}) {
   val painter =
-      if (user?.profilePictureURL != null) {
-        rememberAsyncImagePainter(model = user.profilePictureURL)
+      if (uri != null) {
+        rememberAsyncImagePainter(model = uri)
       } else painterResource(id = R.drawable.default_user_profile_picture)
 
   IconButton(onClick = onClick) {

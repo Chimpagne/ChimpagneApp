@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,18 +25,16 @@ import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
-import com.monkeyteam.chimpagne.ui.components.User
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
   val context = LocalContext.current
-  // Dummy user Data
-  val dummyUser = User("0", "Lora", null)
 
   Scaffold(
       topBar = {
@@ -43,7 +42,7 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
             title = { Text("") },
             actions = {
               ProfileIcon(
-                  user = dummyUser,
+                  accountViewModel.uiState.value.currentUserProfilePicture,
                   onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
                       accountViewModel.promptLogin(context, navObject)
