@@ -18,6 +18,7 @@ import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import org.junit.Rule
@@ -26,6 +27,7 @@ import org.junit.Test
 class FindEventScreenTest {
 
   val database = Database()
+  private val accountViewModel = AccountViewModel(database = database)
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -42,7 +44,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
@@ -55,7 +57,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("input_location").assertIsDisplayed()
@@ -68,7 +70,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      MainFindEventScreen(navActions, FindEventsViewModel(database = database))
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
     composeTestRule.onNodeWithTag("sel_location").performClick()
 
@@ -84,7 +86,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, FindEventsViewModel(database = database))
+      FindEventMapScreen({}, FindEventsViewModel(database = database), accountViewModel, navActions)
     }
 
     composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
@@ -95,7 +97,13 @@ class FindEventScreenTest {
     val sampleEvent = ChimpagneEvent(title = "banana", description = "MONKEY")
 
     composeTestRule.setContent {
-      EventDetailSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventDetailSheet(
+          sampleEvent,
+          viewModel(factory = FindEventsViewModelFactory(database)),
+          accountViewModel,
+          navActions)
     }
 
     // Assert that event details are displayed correctly
@@ -150,7 +158,8 @@ class FindEventScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navigationActions = NavigationActions(navController)
-      MainFindEventScreen(navObject = navigationActions, findViewModel = findViewModel)
+      MainFindEventScreen(
+          navObject = navigationActions, findViewModel = findViewModel, accountViewModel)
     }
 
     // Assert that initially, the FindEventFormScreen is displayed
