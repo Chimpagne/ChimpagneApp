@@ -24,10 +24,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
-import com.monkeyteam.chimpagne.ui.event.FirstPanel
-import com.monkeyteam.chimpagne.ui.event.FourthPanel
-import com.monkeyteam.chimpagne.ui.event.SecondPanel
-import com.monkeyteam.chimpagne.ui.event.ThirdPanel
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch

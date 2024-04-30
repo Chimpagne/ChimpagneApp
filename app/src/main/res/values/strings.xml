@@ -27,8 +27,8 @@
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
     <string name="event_creation_screen_public_legend">Event Publicity</string>
-    <string name="event_creation_screen_groceries">Groceries</string>
-    <string name="event_creation_screen_add_groceries">Add groceries</string>
+    <string name="event_creation_screen_groceries">Supplies</string>
+    <string name="event_creation_screen_add_groceries">Add supplies</string>
     <string name="event_creation_screen_logistics">Logistics</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Number of parking places</string>
@@ -55,6 +55,26 @@
     <string name="welcome_screen_title">Welcome to</string>
     <string name="save_changes">Save changes</string>
     <string name="event_changes_saved">The event\'s changes have been saved</string>
-
-
+    <string name="date_tools_from">From</string>
+    <string name="date_tools_until">Until</string>
+    <string name="date_tools_at">at</string>
+    <string name="my_events_screen_name">My events</string>
+    <string name="my_events_screen_created_event_list_name">Created events</string>
+    <string name="my_events_screen_joined_event_list_name">Joined events</string>
+    <string name="my_events_screen_empty_create_event_list">You have not created any events yet</string>
+    <string name="my_events_screen_empty_join_event_list">You have not joined any events yet</string>
+    <string name="event_details_screen_number_of_guests">guests joined</string>
+    <string name="event_details_screen_leave_button">Leave this Event</string>
+    <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
+    <string name="event_details_screen_edit_button">Edit this event</string>
+    <string name="event_details_screen_chat_button">Chat</string>
+    <string name="event_details_screen_location_button">Location</string>
+    <string name="event_details_screen_supplies_button">Supplies</string>
+    <string name="event_details_screen_voting_button">Polls and voting</string>
+    <string name="event_details_screen_car_pooling_button">Car pooling</string>
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantity</string>
+    <string name="supplies_unit">Unit</string>
+    <string name="chimpagne_cancel">Cancel</string>
+    <string name="chimpagne_add">Add</string>
 </resources>

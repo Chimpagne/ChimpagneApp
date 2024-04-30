@@ -36,7 +36,7 @@ fun EditEventScreen(
 ) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
+  val pagerState = rememberPagerState(initialPage = initialPage) { 0 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
   Column {
@@ -47,7 +47,6 @@ fun EditEventScreen(
       when (page) {
         0 -> FirstPanel(eventViewModel)
         1 -> SecondPanel(eventViewModel)
-        2 -> ThirdPanel(eventViewModel)
         3 -> FourthPanel(eventViewModel)
       }
     }
@@ -66,7 +65,7 @@ fun EditEventScreen(
       } else {
         Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
       }
-      if (pagerState.currentPage < 3) {
+      if (pagerState.currentPage == 0 || pagerState.currentPage == 1) {
         Button(
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }

@@ -171,12 +171,10 @@ fun ViewDetailEventScreen(
                                       .fillMaxWidth()
                                       .testTag("edit"),
                               onClick = {
-                                /* TODO Implement this later */
-                                Toast.makeText(
-                                        context,
-                                        "This function will be implemented in a future version",
-                                        Toast.LENGTH_SHORT)
-                                    .show()
+                                  print("EVENT")
+                                  println(uiState.id)
+                                  navObject.navigateTo(
+                                      Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                               })
                         }
                         Spacer(Modifier.height(16.dp))
