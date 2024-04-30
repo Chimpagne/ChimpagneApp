@@ -66,7 +66,7 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
                     if (!accountViewModel.isUserLoggedIn()) {
                       accountViewModel.promptLogin(context, navObject)
                     } else {
-                        navObject.navigateTo(Route.MY_EVENTS_SCREEN)
+                      navObject.navigateTo(Route.MY_EVENTS_SCREEN)
                     }
                   },
                   text = stringResource(id = R.string.homescreen_my_events),
