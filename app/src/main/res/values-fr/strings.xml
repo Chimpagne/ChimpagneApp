@@ -76,4 +76,5 @@
     <string name="event_details_screen_supplies_button">Trucs à amener</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
+    <string name="share_event_button">Partager l\'événement</string>
 </resources>
