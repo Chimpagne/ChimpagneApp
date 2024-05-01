@@ -31,6 +31,7 @@ class MyEventsScreenTests {
   @Before
   fun initTests() {
     initializeTestDatabase()
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
