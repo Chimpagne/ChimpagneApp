@@ -20,7 +20,7 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 
 @Composable
 fun DetailScreenSheet(event: ChimpagneEvent?, onJoinClick: () -> Unit = {}) {
-  if (event != null) {
+  if (event != null && event.id.isNotBlank()) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {

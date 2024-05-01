@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
+import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
@@ -33,6 +34,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
@@ -122,6 +124,16 @@ class MainActivity : ComponentActivity() {
                               EventViewModelFactory(
                                   backStackEntry.arguments?.getString("EventID"), database)),
                   canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
+            }
+            composable(Route.JOIN_EVENT_SCREEN) {
+              val eventViewModel: EventViewModel =
+                  viewModel(factory = EventViewModelFactory(null, database))
+              val event = eventViewModel.buildChimpagneEvent()
+              DetailScreenSheet(
+                  event = event,
+                  onJoinClick = {
+                    navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
+                  })
             }
           }
         }
