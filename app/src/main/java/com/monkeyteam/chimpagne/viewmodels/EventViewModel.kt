@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
@@ -32,6 +33,9 @@ class EventViewModel(
   init {
     if (eventID != null) {
       fetchEvent(eventID, onSuccess, onFailure)
+    } else {
+      _uiState.value =
+          EventUIState(ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "")
     }
   }
 
@@ -60,7 +64,8 @@ class EventViewModel(
                       it.endsAt(),
                       it.supplies,
                       it.parkingSpaces,
-                      it.beds)
+                      it.beds,
+                      it.ownerId)
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
@@ -88,7 +93,7 @@ class EventViewModel(
         staffs = _uiState.value.staffs,
         startsAt = _uiState.value.startsAtCalendarDate,
         endsAt = _uiState.value.endsAtCalendarDate,
-        ownerId = accountManager.currentUserAccount?.firebaseAuthUID!!,
+        ownerId = _uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds)
@@ -265,6 +270,9 @@ data class EventUIState(
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
+
+    // unmodifiable the UI
+    val ownerId: ChimpagneAccountUID = "",
     val loading: Boolean = false,
 )
 
