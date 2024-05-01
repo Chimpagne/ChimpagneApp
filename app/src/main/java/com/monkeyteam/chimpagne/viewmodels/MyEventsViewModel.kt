@@ -27,7 +27,9 @@ class MyEventsViewModel(
   }
 
   private fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true, userUID = accountManager.currentUserAccount?.firebaseAuthUID!!)
+    _uiState.value =
+        _uiState.value.copy(
+            loading = true, userUID = accountManager.currentUserAccount?.firebaseAuthUID!!)
     viewModelScope.launch {
       accountManager.getAllOfMyEvents(
           { createdEvents, joinedEvents ->

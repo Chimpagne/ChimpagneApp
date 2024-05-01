@@ -7,7 +7,6 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotSame
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -33,16 +32,11 @@ class JoinEventTests {
   fun test() {
     var eventId = ""
     eventManager.createEvent(
-      ChimpagneEvent(
-        title = "Banana Land"
-      ), { eventId = it }, { assertTrue(false) }
-    )
-    while (eventId == "") {
-    }
-    var e: ChimpagneEvent? = null;
-    eventManager.getEventById(eventId, {e = it}, { assertTrue(false) })
-    while (e == null) {
-    }
+        ChimpagneEvent(title = "Banana Land"), { eventId = it }, { assertTrue(false) })
+    while (eventId == "") {}
+    var e: ChimpagneEvent? = null
+    eventManager.getEventById(eventId, { e = it }, { assertTrue(false) })
+    while (e == null) {}
     var event = e!!
 
     assertEquals(loggedAccount.firebaseAuthUID, event.ownerId)
@@ -50,12 +44,18 @@ class JoinEventTests {
     assertEquals(ChimpagneRole.NOT_IN_EVENT, event.getRole(anotherAccount.firebaseAuthUID))
 
     var loading = true
-    eventManager.addGuest(eventId, anotherAccount.firebaseAuthUID, {loading = false}, { loading = false; assertTrue(false) })
+    eventManager.addGuest(
+        eventId,
+        anotherAccount.firebaseAuthUID,
+        { loading = false },
+        {
+          loading = false
+          assertTrue(false)
+        })
     while (loading) {}
-    e = null;
-    eventManager.getEventById(eventId, {e = it}, { assertTrue(false) })
-    while (e == null) {
-    }
+    e = null
+    eventManager.getEventById(eventId, { e = it }, { assertTrue(false) })
+    while (e == null) {}
     event = e!!
 
     assertEquals(loggedAccount.firebaseAuthUID, event.ownerId)
@@ -64,12 +64,12 @@ class JoinEventTests {
 
     accountManager.signInTo(anotherAccount)
     loading = true
-    accountManager.joinEvent(eventId, ChimpagneRole.STAFF, {loading = false}, { assertTrue(false) })
+    accountManager.joinEvent(
+        eventId, ChimpagneRole.STAFF, { loading = false }, { assertTrue(false) })
     while (loading) {}
-    e = null;
-    eventManager.getEventById(eventId, {e = it}, { assertTrue(false) })
-    while (e == null) {
-    }
+    e = null
+    eventManager.getEventById(eventId, { e = it }, { assertTrue(false) })
+    while (e == null) {}
     event = e!!
 
     assertEquals(loggedAccount.firebaseAuthUID, event.ownerId)
@@ -77,5 +77,4 @@ class JoinEventTests {
     assertTrue(ChimpagneRole.GUEST != event.getRole(anotherAccount.firebaseAuthUID))
     assertEquals(ChimpagneRole.STAFF, event.getRole(anotherAccount.firebaseAuthUID))
   }
-
 }

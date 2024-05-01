@@ -161,7 +161,8 @@ fun ViewDetailEventScreen(
                                     })
                               })
                         }
-                        if (userRole == ChimpagneRole.OWNER) { // Only the owner can edit the event settings
+                        if (userRole ==
+                            ChimpagneRole.OWNER) { // Only the owner can edit the event settings
                           ChimpagneButton(
                               text = stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,

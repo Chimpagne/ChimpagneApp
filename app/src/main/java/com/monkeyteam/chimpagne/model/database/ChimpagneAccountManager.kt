@@ -170,7 +170,9 @@ class ChimpagneAccountManager(
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
       ChimpagneRole.OWNER -> updateCurrentAccount(updatedAccount, onSuccess, onFailure)
-      ChimpagneRole.NOT_IN_EVENT -> onFailure(Exception("Joining an event with ChimpagneRole.NOT_IN_EVENT ! Are you stupid ?"))
+      ChimpagneRole.NOT_IN_EVENT ->
+          onFailure(
+              Exception("Joining an event with ChimpagneRole.NOT_IN_EVENT ! Are you stupid ?"))
     }
   }
 
