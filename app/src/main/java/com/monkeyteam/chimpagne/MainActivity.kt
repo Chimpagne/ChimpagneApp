@@ -115,15 +115,14 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
             }
-            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
               ViewDetailEventScreen(
                   navObject = navActions,
                   eventViewModel =
                       viewModel(
                           factory =
                               EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)),
-                  canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
+                                  backStackEntry.arguments?.getString("EventID"), database)))
             }
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
