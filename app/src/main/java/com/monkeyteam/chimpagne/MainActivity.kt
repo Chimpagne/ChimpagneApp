@@ -17,7 +17,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
@@ -114,15 +113,14 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
             }
-            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{Role}") { backStackEntry ->
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
               ViewDetailEventScreen(
                   navObject = navActions,
                   eventViewModel =
                       viewModel(
                           factory =
                               EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)),
-                  userRole = ChimpagneRole.valueOf(backStackEntry.arguments?.getString("Role")!!))
+                                  backStackEntry.arguments?.getString("EventID"), database)))
             }
           }
         }

@@ -16,11 +16,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
+import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.components.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,6 +43,12 @@ class EventCreationScreenTest {
   val database = Database()
 
   @get:Rule val composeTestRule = createComposeRule()
+
+  @Before
+  fun init() {
+    initializeTestDatabase()
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
+  }
 
   @Test
   fun testPanels() {
