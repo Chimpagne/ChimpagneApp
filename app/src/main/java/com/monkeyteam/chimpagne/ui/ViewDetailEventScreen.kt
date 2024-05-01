@@ -63,6 +63,7 @@ fun ViewDetailEventScreen(
 ) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
+  eventViewModel.fetchEvent()
 
   Scaffold(
       topBar = {
