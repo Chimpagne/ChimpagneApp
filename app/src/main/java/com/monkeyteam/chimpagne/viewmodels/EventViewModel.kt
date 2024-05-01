@@ -254,6 +254,14 @@ class EventViewModel(
   fun removeSupply(supplyId: ChimpagneSupplyId) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies - supplyId)
   }
+
+  fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
+    return buildChimpagneEvent().getRole(userUID)
+  }
+
+  fun getCurrentUserRole(): ChimpagneRole {
+    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+  }
 }
 
 data class EventUIState(
