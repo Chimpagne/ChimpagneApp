@@ -35,7 +35,9 @@ class JoinEventTests {
 
     var eventId = ""
     eventManager.createEvent(
-        ChimpagneEvent(title = "Banana Land"), { eventId = it }, { assertTrue(false) })
+        ChimpagneEvent(title = "Banana Land", ownerId = anAccount.firebaseAuthUID),
+        { eventId = it },
+        { assertTrue(false) })
     while (eventId == "") {}
     var e: ChimpagneEvent? = null
     eventManager.getEventById(eventId, { e = it }, { assertTrue(false) })

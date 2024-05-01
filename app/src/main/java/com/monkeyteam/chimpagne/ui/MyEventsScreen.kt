@@ -93,11 +93,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
                         location = event.location.name,
                         modifier = Modifier.testTag("a created event")) {
-                          navObject.navigateTo(
-                              Route.VIEW_DETAIL_EVENT_SCREEN +
-                                  "/${event.id}" +
-                                  "/" +
-                                  event.getRole(uiState.userUID))
+                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
                         }
                   }
                 }
@@ -121,11 +117,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
                         location = event.location.name,
                         modifier = Modifier.testTag("a joined event")) {
-                          navObject.navigateTo(
-                              Route.VIEW_DETAIL_EVENT_SCREEN +
-                                  "/${event.id}" +
-                                  "/" +
-                                  event.getRole(uiState.userUID))
+                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
                         }
                   }
                 }

@@ -57,13 +57,11 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewDetailEventScreen(
-    navObject: NavigationActions,
-    eventViewModel: EventViewModel,
-    userRole: ChimpagneRole = ChimpagneRole.GUEST
-) {
+fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
+
+  val userRole = eventViewModel.getCurrentUserRole()
 
   Scaffold(
       topBar = {
