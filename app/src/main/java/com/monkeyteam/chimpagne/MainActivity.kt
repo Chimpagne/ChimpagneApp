@@ -174,8 +174,7 @@ class MainActivity : ComponentActivity() {
                       possibleEventID,
                       Database(PUBLIC_TABLES),
                       onSuccess = {
-                        navActions.navigateTo(
-                            Route.JOIN_EVENT_SCREEN + "/${possibleEventID}")
+                        navActions.navigateTo(Route.JOIN_EVENT_SCREEN + "/${possibleEventID}")
                       },
                       onFailure = {
                         Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
