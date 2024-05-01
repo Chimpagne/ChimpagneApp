@@ -77,8 +77,6 @@ class EventViewModel(
     }
   }
 
-
-
   fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
         _uiState.value.id,

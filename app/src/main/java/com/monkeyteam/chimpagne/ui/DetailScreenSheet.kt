@@ -20,47 +20,45 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 
 @Composable
 fun DetailScreenSheet(event: ChimpagneEvent?, onJoinClick: () -> Unit = {}) {
-    if (event != null) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text = event.title,
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(bottom = 8.dp))
+  if (event != null) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+          Text(
+              text = event.title,
+              style = MaterialTheme.typography.headlineMedium,
+              modifier = Modifier.padding(bottom = 8.dp))
 
-            Text(
-                text = event.startsAt().time.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 8.dp))
+          Text(
+              text = event.startsAt().time.toString(),
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(bottom = 8.dp))
 
-            Text(
-                text = event.endsAt().time.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 8.dp))
+          Text(
+              text = event.endsAt().time.toString(),
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(bottom = 8.dp))
 
-            Text(
-                text = event.description,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(bottom = 8.dp))
+          Text(
+              text = event.description,
+              style = MaterialTheme.typography.bodySmall,
+              modifier = Modifier.padding(bottom = 8.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly) {
+          Row(
+              modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+              horizontalArrangement = Arrangement.SpaceEvenly) {
                 event.tags.forEach { tag -> SimpleTagChip(tag) }
-            }
+              }
 
-            Button(
-                onClick = onJoinClick,
-                modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(stringResource(id = R.string.find_event_join_event_button_text))
-            }
+          Button(onClick = onJoinClick, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Text(stringResource(id = R.string.find_event_join_event_button_text))
+          }
         }
-    } else {
-        Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-            Text(
-                stringResource(id = R.string.find_event_no_event_available),
-                style = MaterialTheme.typography.bodyMedium)
-        }
+  } else {
+    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+      Text(
+          stringResource(id = R.string.find_event_no_event_available),
+          style = MaterialTheme.typography.bodyMedium)
     }
+  }
 }
