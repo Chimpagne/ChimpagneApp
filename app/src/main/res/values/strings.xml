@@ -75,6 +75,5 @@
     <string name="event_details_screen_supplies_button">Supplies</string>
     <string name="event_details_screen_voting_button">Polls and voting</string>
     <string name="event_details_screen_car_pooling_button">Car pooling</string>
-    <string name="share_event_button">Share Event</string>
 
 </resources>
