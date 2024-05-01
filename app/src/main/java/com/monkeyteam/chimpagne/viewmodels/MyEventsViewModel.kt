@@ -24,7 +24,7 @@ class MyEventsViewModel(
   init {
     fetchMyEvents(onSuccess, onFailure)
   }
-  /* THIS MUST BE CALLED ON EVERY SCREEN THAT USES THE VIEW MODEL */
+  /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
   fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {

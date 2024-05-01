@@ -34,7 +34,7 @@ class EventViewModel(
     fetchEvent(onSuccess, onFailure)
   }
 
-  /* THIS MUST BE CALLED ON EVERY SCREEN THAT USES THE VIEW MODEL */
+  /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
   fun fetchEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     if (eventID != null) {
       _uiState.value = _uiState.value.copy(loading = true)
@@ -59,6 +59,10 @@ class EventViewModel(
                         it.parkingSpaces,
                         it.beds,
                         it.ownerId)
+                _uiState.value =
+                    _uiState.value.copy(
+                        currentUserRole =
+                            getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
                 onSuccess()
                 _uiState.value = _uiState.value.copy(loading = false)
               } else {
@@ -74,7 +78,9 @@ class EventViewModel(
       }
     } else {
       _uiState.value =
-          EventUIState(ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+          EventUIState(
+              ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "",
+              currentUserRole = ChimpagneRole.OWNER)
     }
   }
 
@@ -254,10 +260,6 @@ class EventViewModel(
   fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
     return buildChimpagneEvent().getRole(userUID)
   }
-
-  fun getCurrentUserRole(): ChimpagneRole {
-    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
-  }
 }
 
 data class EventUIState(
@@ -274,9 +276,9 @@ data class EventUIState(
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
-
-    // unmodifiable the UI
+    // unmodifiable by the UI
     val ownerId: ChimpagneAccountUID = "",
+    val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
     val loading: Boolean = false,
 )
 

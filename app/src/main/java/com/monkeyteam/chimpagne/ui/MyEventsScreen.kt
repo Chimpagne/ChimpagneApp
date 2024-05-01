@@ -49,7 +49,6 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 @Composable
 fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsViewModel) {
   val uiState by myEventsViewModel.uiState.collectAsState()
-  myEventsViewModel.fetchMyEvents()
   Scaffold(
       topBar = {
         TopAppBar(
