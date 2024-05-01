@@ -146,6 +146,16 @@ fun FirstPanel(eventViewModel: EventViewModel) {
 
   Column(modifier = Modifier.padding(16.dp)) {
     Legend(
+        stringResource(id = R.string.event_creation_screen_location_legend),
+        Icons.Rounded.LocationOn,
+        "Location")
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    LocationSelector(uiState.location, eventViewModel::updateEventLocation)
+
+    Spacer(modifier = Modifier.height(16.dp))
+    Legend(
         stringResource(id = R.string.event_creation_screen_title_legend),
         Icons.Rounded.Title,
         "Title")
@@ -171,17 +181,6 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
         modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
         maxLines = 3)
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Legend(
-        stringResource(id = R.string.event_creation_screen_location_legend),
-        Icons.Rounded.LocationOn,
-        "Location")
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    LocationSelector(uiState.location, eventViewModel::updateEventLocation)
-
     Spacer(modifier = Modifier.height(16.dp))
 
     Legend(

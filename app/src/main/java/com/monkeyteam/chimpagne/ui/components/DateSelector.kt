@@ -77,7 +77,7 @@ fun DateSelector(
       text =
           DateFormat.getDateInstance(DateFormat.MEDIUM).format(selectedDate.time) +
               if (selectTimeOfDay) {
-                " at " + DateFormat.getTimeInstance(DateFormat.SHORT).format(selectedDate.time)
+                " @ " + DateFormat.getTimeInstance(DateFormat.SHORT).format(selectedDate.time)
               } else {
                 ""
               },
