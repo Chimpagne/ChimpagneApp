@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
@@ -36,7 +37,7 @@ class EventViewModel(
   }
 
   private fun fetchEvent(
-      id: String,
+      id: ChimpagneEventId,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
@@ -76,7 +77,9 @@ class EventViewModel(
     }
   }
 
-  private fun buildChimpagneEvent(): ChimpagneEvent {
+
+
+  fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
         _uiState.value.id,
         _uiState.value.title,
@@ -147,7 +150,7 @@ class EventViewModel(
     }
   }
 
-  fun joinTheEvent(
+  fun joinEvent(
       role: ChimpagneRole,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
