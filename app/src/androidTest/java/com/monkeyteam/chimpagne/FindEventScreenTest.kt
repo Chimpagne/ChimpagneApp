@@ -13,7 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.rule.GrantPermissionRule
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.ui.EventDetailSheet
+import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
@@ -95,7 +95,7 @@ class FindEventScreenTest {
     val sampleEvent = ChimpagneEvent(title = "banana", description = "MONKEY")
 
     composeTestRule.setContent {
-      EventDetailSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))
+      DetailScreenSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))
     }
 
     // Assert that event details are displayed correctly

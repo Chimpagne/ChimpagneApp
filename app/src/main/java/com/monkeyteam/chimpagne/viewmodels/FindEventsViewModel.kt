@@ -90,7 +90,9 @@ class FindEventsViewModel(database: Database) : ViewModel() {
   }
 
   fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-    accountManager.joinEvent(eventId, ChimpagneRoles.GUEST, onSuccess, onFailure)
+    viewModelScope.launch {
+      accountManager.joinEvent(eventId, ChimpagneRoles.GUEST, onSuccess, onFailure)
+    }
   }
 }
 
