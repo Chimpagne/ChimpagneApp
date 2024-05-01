@@ -126,6 +126,8 @@ class AccountViewModel(database: Database) : ViewModel() {
     Log.d("AccountViewModel", "Updated Profile Picture to $uri")
   }
 
+  // This function checks if the user is logged in or not and shows a Toast and redirects to the
+  // Login screen if the user is a guest
   fun promptLogin(context: Context, navActions: NavigationActions) {
     Toast.makeText(context, "Please login/create an account to continue", Toast.LENGTH_LONG).show()
     navActions.navigateTo(Route.LOGIN_SCREEN)
