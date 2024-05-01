@@ -95,7 +95,7 @@ class ChimpagneEventManager(
             id = eventId, ownerId = database.accountManager.currentUserAccount?.firebaseAuthUID!!),
         {
           database.accountManager.joinEvent(
-              eventId, ChimpagneRoles.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+              eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
         },
         { onFailure(it) })
   }
