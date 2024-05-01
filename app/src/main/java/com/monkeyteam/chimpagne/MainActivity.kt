@@ -128,6 +128,21 @@ class MainActivity : ComponentActivity() {
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
                   viewModel(factory = EventViewModelFactory(null, database))
+              /*
+
+              For you Gregory :) Use this not the one above
+
+                              val eventViewModel =
+                                  EventViewModel(
+                                      possibleEventID,
+                                      Database(PUBLIC_TABLES),
+                                      onFailure = {
+                                          Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
+                                              .show()
+                                          navActions.clearAndNavigateTo(Route.HOME_SCREEN)
+                                      })
+
+               */
               val event = eventViewModel.buildChimpagneEvent()
               DetailScreenSheet(
                   event = event,
