@@ -12,6 +12,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -127,7 +128,7 @@ class AccountViewModel(database: Database) : ViewModel() {
 
   fun promptLogin(context: Context, navActions: NavigationActions) {
     Toast.makeText(context, "Please login/create an account to continue", Toast.LENGTH_LONG).show()
-    navActions.navigateTo("Login")
+    navActions.navigateTo(Route.LOGIN_SCREEN)
   }
 
   fun isUserLoggedIn(): Boolean {

@@ -59,6 +59,7 @@
 
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
+    <string name="continue_as_guest">Continuer en Tant qu\'Invité</string>
     <string name="my_events_screen_name">Mes Événements</string>
     <string name="my_events_screen_created_event_list_name">Les Événements Créés</string>
     <string name="my_events_screen_joined_event_list_name">Les Événements Rejoint</string>
