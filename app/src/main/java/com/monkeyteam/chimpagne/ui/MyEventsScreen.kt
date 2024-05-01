@@ -38,6 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -94,7 +96,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         location = event.location.name,
                         modifier = Modifier.testTag("a created event")) {
                           navObject.navigateTo(
-                              Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/true")
+                            Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/" + event.getRole(uiState.userUID))
                         }
                   }
                 }
@@ -119,7 +121,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         location = event.location.name,
                         modifier = Modifier.testTag("a joined event")) {
                           navObject.navigateTo(
-                              Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/false")
+                              Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}" + "/" + event.getRole(uiState.userUID))
                         }
                   }
                 }

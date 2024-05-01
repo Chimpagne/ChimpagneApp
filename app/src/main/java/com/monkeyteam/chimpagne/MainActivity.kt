@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
@@ -113,7 +114,7 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
             }
-            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{Role}") { backStackEntry ->
               ViewDetailEventScreen(
                   navObject = navActions,
                   eventViewModel =
@@ -121,7 +122,7 @@ class MainActivity : ComponentActivity() {
                           factory =
                               EventViewModelFactory(
                                   backStackEntry.arguments?.getString("EventID"), database)),
-                  canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
+                  userRole = ChimpagneRole.valueOf(backStackEntry.arguments?.getString("Role")!!))
             }
           }
         }
