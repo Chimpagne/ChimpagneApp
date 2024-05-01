@@ -78,20 +78,20 @@ class EventViewModel(
 
   private fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
-        _uiState.value.id,
-        _uiState.value.title,
-        _uiState.value.description,
-        _uiState.value.location,
-        _uiState.value.public,
-        _uiState.value.tags,
-        _uiState.value.guests,
-        _uiState.value.staffs,
-        _uiState.value.startsAtCalendarDate,
-        _uiState.value.endsAtCalendarDate,
-        "", // This will be handled in the database
-        _uiState.value.supplies,
-        _uiState.value.parkingSpaces,
-        _uiState.value.beds)
+        id = _uiState.value.id,
+        title = _uiState.value.title,
+        description = _uiState.value.description,
+        location = _uiState.value.location,
+        public = _uiState.value.public,
+        tags = _uiState.value.tags,
+        guests = _uiState.value.guests,
+        staffs = _uiState.value.staffs,
+        startsAt = _uiState.value.startsAtCalendarDate,
+        endsAt = _uiState.value.endsAtCalendarDate,
+        ownerId = accountManager.currentUserAccount?.firebaseAuthUID!!,
+        supplies = _uiState.value.supplies,
+        parkingSpaces = _uiState.value.parkingSpaces,
+        beds = _uiState.value.beds)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
