@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
@@ -119,6 +120,10 @@ class AccountViewModel(database: Database) : ViewModel() {
   fun updateProfilePicture(uri: Uri) {
     _uiState.value = _uiState.value.copy(tempProfilePicture = uri)
     Log.d("AccountViewModel", "Updated Profile Picture to $uri")
+  }
+
+  fun isUserLoggedIn(): Boolean {
+    return FirebaseAuth.getInstance().currentUser != null
   }
 }
 
