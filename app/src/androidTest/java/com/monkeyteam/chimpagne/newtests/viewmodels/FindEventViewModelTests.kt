@@ -6,8 +6,11 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
+import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -52,6 +55,12 @@ class FindEventViewModelTests {
 
     findEventVM.updateSelectedDate(date)
     assert(findEventVM.uiState.value.selectedDate == date)
+
+    findEventVM.setLoading(true)
+    assert(findEventVM.uiState.value.loading)
+
+    findEventVM.setLoading(false)
+    assert(!findEventVM.uiState.value.loading)
   }
 
   @Test
@@ -171,5 +180,35 @@ class FindEventViewModelTests {
             assertTrue(false)
           }
         })
+  }
+
+  @Test
+  fun TestJoinAnEvent() {
+    val testAccount = TEST_ACCOUNTS[2]
+    val testEvent = TEST_EVENTS[0]
+
+    val accountViewModel = AccountViewModel(database = database)
+    accountViewModel.loginToChimpagneAccount(testAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    val findEventVM = FindEventsViewModel(database = database)
+    findEventVM.joinEvent(testEvent.id, { assertTrue(true) }, { assertTrue(false) })
+    while (findEventVM.uiState.value.loading) {}
+
+    val eventSearchVM =
+      EventViewModel(
+        eventID = testEvent.id,
+        database = database,
+        onSuccess = { assertTrue(true) },
+        onFailure = { assertTrue(false) })
+
+    // Wait for database to get the data
+    while (eventSearchVM.uiState.value.loading) {}
+
+    assertTrue(eventSearchVM.uiState.value.guests[testAccount.firebaseAuthUID] == true)
+
+    eventSearchVM.leaveTheEvent()
+    while (eventSearchVM.uiState.value.loading) {}
+
   }
 }

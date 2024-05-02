@@ -89,8 +89,14 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     _uiState.value = _uiState.value.copy(selectedDate = newQuery)
   }
 
-  fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-    accountManager.joinEvent(eventId, ChimpagneRoles.GUEST, onSuccess, onFailure)
+  fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+      _uiState.value = _uiState.value.copy(loading = true)
+      accountManager.joinEvent(eventId, ChimpagneRoles.GUEST,
+          {
+              _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess()
+          },
+          onFailure)
   }
 }
 
