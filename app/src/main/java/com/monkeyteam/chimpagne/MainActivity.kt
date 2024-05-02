@@ -53,6 +53,8 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
+        val continueAsGuest: () -> Unit = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) }
+
         val loginToChimpagneAccount: (id: String) -> Unit = { id ->
           accountViewModel.loginToChimpagneAccount(
               id,
@@ -87,7 +89,11 @@ class MainActivity : ComponentActivity() {
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = startDestination) {
-            composable(Route.LOGIN_SCREEN) { LoginScreen { uid -> loginToChimpagneAccount(uid) } }
+            composable(Route.LOGIN_SCREEN) {
+              LoginScreen(
+                  onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid) },
+                  onContinueAsGuest = continueAsGuest)
+            }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }
@@ -100,11 +106,12 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(Route.LOADING) { SpinnerView() }
-            composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
+            composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions, accountViewModel) }
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                   navObject = navActions,
-                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)))
+                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
+                  accountViewModel)
             }
             composable(Route.EVENT_CREATION_SCREEN) {
               EventCreationScreen(
