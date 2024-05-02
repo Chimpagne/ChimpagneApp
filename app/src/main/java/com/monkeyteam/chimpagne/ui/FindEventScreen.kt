@@ -196,20 +196,18 @@ fun FindEventFormScreen(
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
   }
 
-    val cameraPermissionRequest =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-            onResult = { granted ->
-                if (granted) {
-                    showToast("Camera permission granted")
-                } else {
-                    showToast("Camera permission denied")
-                }
-            })
+  val cameraPermissionRequest =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.RequestPermission(),
+          onResult = { granted ->
+            if (granted) {
+              showToast("Camera permission granted")
+            } else {
+              showToast("Camera permission denied")
+            }
+          })
 
-    val requestCameraPermission = {
-        cameraPermissionRequest.launch(Manifest.permission.CAMERA)
-    }
+  val requestCameraPermission = { cameraPermissionRequest.launch(Manifest.permission.CAMERA) }
 
   Scaffold(
       topBar = {
@@ -222,12 +220,12 @@ fun FindEventFormScreen(
               }
             },
             actions = {
-                IconButton(onClick = requestCameraPermission) {
-                    Icon(
-                        imageVector = Icons.Rounded.QrCodeScanner,
-                        contentDescription = "Scan QR",
-                        modifier = Modifier.testTag("scan QR"))
-                }
+              IconButton(onClick = requestCameraPermission) {
+                Icon(
+                    imageVector = Icons.Rounded.QrCodeScanner,
+                    contentDescription = "Scan QR",
+                    modifier = Modifier.testTag("scan QR"))
+              }
             })
       },
       bottomBar = {
