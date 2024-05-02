@@ -33,8 +33,10 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
@@ -116,18 +118,19 @@ class MainActivity : ComponentActivity() {
                   eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
             }
             composable(Route.MY_EVENTS_SCREEN) {
-              MyEventsScreen(
-                  navObject = navActions,
-                  myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
+              val myEventsViewModel: MyEventsViewModel =
+                  viewModel(factory = MyEventsViewModelFactory(database))
+              myEventsViewModel.fetchMyEvents()
+              MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
             }
             composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
-              ViewDetailEventScreen(
-                  navObject = navActions,
-                  eventViewModel =
-                      viewModel(
-                          factory =
-                              EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)))
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent()
+              ViewDetailEventScreen(navObject = navActions, eventViewModel = eventViewModel)
             }
           }
         }
