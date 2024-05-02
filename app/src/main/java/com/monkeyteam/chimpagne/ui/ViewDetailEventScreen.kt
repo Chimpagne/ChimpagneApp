@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
@@ -61,15 +62,15 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewDetailEventScreen(
-    navObject: NavigationActions,
-    eventViewModel: EventViewModel,
-    canEditEvent: Boolean = false
-) {
+fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
 
+
   var showDialog by remember { mutableStateOf(false) }
+
+  val userRole = eventViewModel.getCurrentUserRole()
+
 
   Scaffold(
       topBar = {
@@ -151,7 +152,7 @@ fun ViewDetailEventScreen(
                                     .absolutePadding(left = 16.dp, right = 16.dp)
                                     .testTag("description"))
                         Spacer(Modifier.height(16.dp))
-                        if (!canEditEvent) {
+                        if (userRole != ChimpagneRole.OWNER) {
                           ChimpagneButton(
                               text =
                                   stringResource(id = R.string.event_details_screen_leave_button),
@@ -178,7 +179,8 @@ fun ViewDetailEventScreen(
                                     })
                               })
                         }
-                        if (canEditEvent) {
+                        if (userRole ==
+                            ChimpagneRole.OWNER) { // Only the owner can edit the event settings
                           ChimpagneButton(
                               text = stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,
