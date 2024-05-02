@@ -26,7 +26,13 @@ class AccountManagerTests {
   fun getMultipleAccountsTest() {
     var loading = true
     var result: Map<ChimpagneAccountUID, ChimpagneAccount?> = hashMapOf()
-    database.accountManager.getAccounts(listOf("JUAN", "PRINCE", "fevoihegijogegjoiejgoi"), { result = it; loading = false }, { assertTrue(false) })
+    database.accountManager.getAccounts(
+        listOf("JUAN", "PRINCE", "fevoihegijogegjoiejgoi"),
+        {
+          result = it
+          loading = false
+        },
+        { assertTrue(false) })
     while (loading) {}
 
     assertEquals(TEST_ACCOUNTS[0], result["PRINCE"])
