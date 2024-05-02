@@ -1,8 +1,6 @@
 package com.monkeyteam.chimpagne
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
@@ -15,12 +13,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
-import com.monkeyteam.chimpagne.ui.components.SupplyPopup
+import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import org.junit.Assert.*
@@ -137,6 +133,7 @@ class EventCreationScreenTest {
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
   }
+
   @Test
   fun testPanel2() {
 

@@ -123,6 +123,7 @@ class EditEventScreenTestTest {
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
   }
+
   @Test
   fun testInputIntoTextFields() {
     composeTestRule.setContent {
