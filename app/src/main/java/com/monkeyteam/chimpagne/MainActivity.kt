@@ -1,10 +1,8 @@
 package com.monkeyteam.chimpagne
 
 import AccountSettings
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,14 +11,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
@@ -58,15 +52,13 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        val loginToChimpagneAccount: (id: String, isDeepLink: Boolean) -> Unit = { id, isDeepLink ->
+        val loginToChimpagneAccount: (id: String) -> Unit = { id ->
           accountViewModel.loginToChimpagneAccount(
               id,
               { account ->
                 if (account != null) {
                   Log.d("MainActivity", "Account is in database")
-                  if (!isDeepLink) {
-                    navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-                  }
+                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
                 } else {
                   Log.d("MainActivity", "Account is not in database")
                   navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
@@ -75,27 +67,26 @@ class MainActivity : ComponentActivity() {
               { Log.e("MainActivity", "Failed to check if account is in database: $it") })
         }
 
-        val login: (isDeepLink: Boolean) -> Unit = { bool ->
-          if (FirebaseAuth.getInstance().currentUser != null) {
-            loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!, bool)
-          } else {
-            navActions.navigateTo(Route.LOGIN_SCREEN)
-          }
-        }
-
         val logout: () -> Unit = {
           AuthUI.getInstance().signOut(this)
           accountViewModel.logoutFromChimpagneAccount()
           navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
         }
 
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          NavHost(navController = navController, startDestination = Route.LOADING_LOGIN) {
-            composable(Route.LOADING_LOGIN) {
-              SpinnerView()
-              login(false)
+        // Determine the start destination based on the isAuthenticated state
+        // Using null check to decide, assuming that null means the auth state is still being
+        // determined
+        val startDestination =
+            if (FirebaseAuth.getInstance().currentUser != null) {
+              loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
+              Route.LOADING
+            } else {
+              Route.LOGIN_SCREEN
             }
-            composable(Route.LOGIN_SCREEN) { LoginScreen { loginToChimpagneAccount(it, false) } }
+
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+          NavHost(navController = navController, startDestination = startDestination) {
+            composable(Route.LOGIN_SCREEN) { LoginScreen { uid -> loginToChimpagneAccount(uid) } }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }
@@ -124,15 +115,14 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
             }
-            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}/{CanEdit}") { backStackEntry ->
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
               ViewDetailEventScreen(
                   navObject = navActions,
                   eventViewModel =
                       viewModel(
                           factory =
                               EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)),
-                  canEditEvent = backStackEntry.arguments?.getString("CanEdit").toBoolean())
+                                  backStackEntry.arguments?.getString("EventID"), database)))
             }
             composable(Route.JOIN_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
               val context = LocalContext.current

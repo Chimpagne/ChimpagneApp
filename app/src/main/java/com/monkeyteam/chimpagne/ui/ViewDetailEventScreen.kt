@@ -23,7 +23,6 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,16 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.common.io.Files.append
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
@@ -60,14 +57,11 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewDetailEventScreen(
-    navObject: NavigationActions,
-    eventViewModel: EventViewModel,
-    canEditEvent: Boolean = false
-) {
+fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
-  val clipboardManager = LocalClipboardManager.current
+
+  val userRole = eventViewModel.getCurrentUserRole()
 
   Scaffold(
       topBar = {
@@ -138,7 +132,7 @@ fun ViewDetailEventScreen(
                                     .absolutePadding(left = 16.dp, right = 16.dp)
                                     .testTag("description"))
                         Spacer(Modifier.height(16.dp))
-                        if (!canEditEvent) {
+                        if (userRole != ChimpagneRole.OWNER) {
                           ChimpagneButton(
                               text =
                                   stringResource(id = R.string.event_details_screen_leave_button),
@@ -165,7 +159,8 @@ fun ViewDetailEventScreen(
                                     })
                               })
                         }
-                        if (canEditEvent) {
+                        if (userRole ==
+                            ChimpagneRole.OWNER) { // Only the owner can edit the event settings
                           ChimpagneButton(
                               text = stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,
@@ -184,22 +179,6 @@ fun ViewDetailEventScreen(
                                     .show()
                               })
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        ChimpagneButton(
-                            text = stringResource(id = R.string.share_event_button),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 30.sp,
-                            icon = Icons.Rounded.Share,
-                            modifier =
-                                Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("share"),
-                            onClick = {
-                              val annotatedString = buildAnnotatedString {
-                                append("https://www.manigo.ch/events/?uid=${uiState.id}")
-                              }
-                              clipboardManager.setText(annotatedString)
-                            })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = stringResource(id = R.string.event_details_screen_chat_button),
