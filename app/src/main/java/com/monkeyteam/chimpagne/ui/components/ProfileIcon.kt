@@ -15,7 +15,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
 
 @Composable
-fun ProfileIcon(uri: Uri?, onClick: () -> Unit = {}) {
+fun ProfileIcon(uri: Uri?, onClick: () -> Unit) {
   val painter =
       if (uri != null) {
         rememberAsyncImagePainter(model = uri)

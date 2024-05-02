@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +13,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -27,14 +31,16 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
   val context = LocalContext.current
+  val uiState by accountViewModel.uiState.collectAsState()
+  var showPromptLogin by remember { mutableStateOf(false) }
 
   Scaffold(
       topBar = {
@@ -42,16 +48,20 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
             title = { Text("") },
             actions = {
               ProfileIcon(
-                  accountViewModel.uiState.value.currentUserProfilePicture,
+                  uiState.currentUserProfilePicture,
                   onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
-                      accountViewModel.promptLogin(context, navObject)
+                      showPromptLogin = true
                     } else {
                       navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
                     }
                   })
             })
       }) { innerPadding ->
+        if (showPromptLogin) {
+          PromptLogin(context, navObject)
+          showPromptLogin = false
+        }
         Column(
             modifier =
                 Modifier.fillMaxSize()
@@ -63,7 +73,7 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
                   modifier = Modifier.testTag("open_events_button"),
                   onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
-                      accountViewModel.promptLogin(context, navObject)
+                      showPromptLogin = true
                     } else {
                       navObject.navigateTo(Route.MY_EVENTS_SCREEN)
                     }
@@ -83,7 +93,7 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
                   modifier = Modifier.testTag("organize_event_button"),
                   onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
-                      accountViewModel.promptLogin(context, navObject)
+                      showPromptLogin = true
                     } else {
                       navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
                     }

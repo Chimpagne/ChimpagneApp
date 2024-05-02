@@ -78,6 +78,7 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
+import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -380,6 +381,14 @@ fun EventDetailSheet(
     navObject: NavigationActions
 ) {
   val context = LocalContext.current
+
+  var showLoginPrompt by remember { mutableStateOf(false) }
+
+  if (showLoginPrompt) {
+    PromptLogin(context = context, navActions = navObject)
+    showLoginPrompt = false
+  }
+
   if (event != null) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -413,7 +422,7 @@ fun EventDetailSheet(
           Button(
               onClick = {
                 if (!accountViewModel.isUserLoggedIn()) {
-                  accountViewModel.promptLogin(context, navObject)
+                  showLoginPrompt = true
                 } else {
                   findViewModel.joinEvent(
                       event.id,
