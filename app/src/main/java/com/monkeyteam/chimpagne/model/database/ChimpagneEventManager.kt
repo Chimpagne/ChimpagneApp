@@ -94,7 +94,7 @@ class ChimpagneEventManager(
         event.copy(id = eventId),
         {
           database.accountManager.joinEvent(
-              eventId, ChimpagneRoles.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+              eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
         },
         { onFailure(it) })
   }

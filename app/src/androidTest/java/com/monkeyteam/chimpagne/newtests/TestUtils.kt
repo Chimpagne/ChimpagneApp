@@ -149,6 +149,4 @@ fun initializeTestDatabase(
   for (entry in profilePictures.entries.iterator()) {
     Tasks.await(profilePicturesTable.child(entry.key).putFile(entry.value))
   }
-
-  // runBlocking { delay(5000) }
 }

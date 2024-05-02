@@ -145,7 +145,7 @@ class ChimpagneAccountManager(
   /** @param role: ChimpagneRole (for instance ChimpagneRoles.GUEST) */
   fun joinEvent(
       id: ChimpagneEventId,
-      role: Int,
+      role: ChimpagneRole,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
@@ -157,19 +157,22 @@ class ChimpagneAccountManager(
     val updatedAccount =
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents + (id to true))
     when (role) {
-      ChimpagneRoles.GUEST ->
+      ChimpagneRole.GUEST ->
           eventManager.addGuest(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
-      ChimpagneRoles.STAFF ->
+      ChimpagneRole.STAFF ->
           eventManager.addStaff(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
-      else -> updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+      ChimpagneRole.OWNER -> updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+      ChimpagneRole.NOT_IN_EVENT ->
+          onFailure(
+              Exception("Joining an event with ChimpagneRole.NOT_IN_EVENT ! Are you stupid ?"))
     }
   }
 

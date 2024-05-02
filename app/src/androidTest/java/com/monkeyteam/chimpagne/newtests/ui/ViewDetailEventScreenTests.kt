@@ -9,6 +9,7 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
@@ -72,6 +73,7 @@ class ViewDetailEventScreenTests {
 
   @Test
   fun testLeaveButton() {
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -90,8 +92,8 @@ class ViewDetailEventScreenTests {
 
   @Test
   fun testEditButton() {
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
     val event = TEST_EVENTS[0]
-
     val eventVM = EventViewModel(event.id, database)
 
     while (eventVM.uiState.value.loading) {}
@@ -99,7 +101,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, true)
+      ViewDetailEventScreen(navActions, eventVM)
     }
 
     composeTestRule.onNodeWithTag("edit").assertHasClickAction()

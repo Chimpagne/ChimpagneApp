@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
-import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.happensOnThisDateFilter
@@ -91,7 +91,7 @@ class FindEventsViewModel(database: Database) : ViewModel() {
 
   fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
       _uiState.value = _uiState.value.copy(loading = true)
-      accountManager.joinEvent(eventId, ChimpagneRoles.GUEST,
+      accountManager.joinEvent(eventId, ChimpagneRole.GUEST,
           {
               _uiState.value = _uiState.value.copy(loading = false)
               onSuccess()
