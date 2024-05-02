@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.event
+package com.monkeyteam.chimpagne.newtests.ui.event
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
@@ -123,20 +123,6 @@ class EditEventScreenTestTest {
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
   }
-
-  @Test
-  fun testPanel2() {
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
-    }
-    // composeTestRule.onNodeWithTag("tag_field").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
-  }
-
   @Test
   fun testInputIntoTextFields() {
     composeTestRule.setContent {
