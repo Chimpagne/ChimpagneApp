@@ -58,6 +58,8 @@
     <string name="chimpagne_add">Add</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="welcome_screen_title">Welcome to</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+    <string name="login_to_continue">Please login/create an account to continue</string>
     <string name="my_events_screen_name">My events</string>
     <string name="my_events_screen_created_event_list_name">Created events</string>
     <string name="my_events_screen_joined_event_list_name">Joined events</string>

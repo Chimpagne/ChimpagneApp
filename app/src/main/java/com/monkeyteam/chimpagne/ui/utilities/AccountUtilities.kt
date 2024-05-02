@@ -38,6 +38,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 
 @Composable
@@ -171,4 +172,12 @@ fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
   } else {
     true
   }
+}
+
+// This function checks if the user is logged in or not and shows a Toast and redirects to the
+// Login screen if the user is a guest
+@Composable
+fun PromptLogin(context: Context, navActions: NavigationActions) {
+  Toast.makeText(context, stringResource(id = R.string.login_to_continue), Toast.LENGTH_LONG).show()
+  navActions.navigateTo(Route.LOGIN_SCREEN)
 }

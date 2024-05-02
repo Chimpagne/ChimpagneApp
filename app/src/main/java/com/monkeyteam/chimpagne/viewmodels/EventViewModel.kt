@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
@@ -18,7 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class EventViewModel(
-    eventID: String? = null,
+    private var eventID: String? = null,
     database: Database,
     onSuccess: () -> Unit = {},
     onFailure: (Exception) -> Unit = {},
@@ -32,53 +31,58 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
-    if (eventID != null) {
-      fetchEvent(eventID, onSuccess, onFailure)
-    } else {
-      _uiState.value =
-          EventUIState(ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "")
-    }
+
+    fetchEvent(onSuccess, onFailure)
   }
 
-  private fun fetchEvent(
-      id: ChimpagneEventId,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.getEventById(
-          id,
-          {
-            if (it != null) {
-              _uiState.value =
-                  EventUIState(
-                      it.id,
-                      it.title,
-                      it.description,
-                      it.location,
-                      it.public,
-                      it.tags,
-                      it.guests,
-                      it.staffs,
-                      it.startsAt(),
-                      it.endsAt(),
-                      it.supplies,
-                      it.parkingSpaces,
-                      it.beds,
-                      it.ownerId)
-              onSuccess()
+  /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
+  fun fetchEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    if (eventID != null) {
+      _uiState.value = _uiState.value.copy(loading = true)
+      viewModelScope.launch {
+        eventManager.getEventById(
+            eventID!!,
+            {
+              if (it != null) {
+                _uiState.value =
+                    EventUIState(
+                        it.id,
+                        it.title,
+                        it.description,
+                        it.location,
+                        it.public,
+                        it.tags,
+                        it.guests,
+                        it.staffs,
+                        it.startsAt(),
+                        it.endsAt(),
+                        it.supplies,
+                        it.parkingSpaces,
+                        it.beds,
+                        it.ownerId)
+                _uiState.value =
+                    _uiState.value.copy(
+                        currentUserRole =
+                            getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
+                onSuccess()
+                _uiState.value = _uiState.value.copy(loading = false)
+              } else {
+                Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
+                _uiState.value = _uiState.value.copy(loading = false)
+              }
+            },
+            {
+              Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
+
               _uiState.value = _uiState.value.copy(loading = false)
-            } else {
-              Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
-              _uiState.value = _uiState.value.copy(loading = false)
-            }
-          },
-          {
-            Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
+              onFailure(it)
+            })
+      }
+    } else {
+      _uiState.value =
+          EventUIState(
+              ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "",
+              currentUserRole = ChimpagneRole.OWNER)
     }
   }
 
@@ -107,6 +111,7 @@ class EventViewModel(
           buildChimpagneEvent(),
           {
             _uiState.value = _uiState.value.copy(id = it)
+            eventID = _uiState.value.id
             _uiState.value = _uiState.value.copy(loading = false)
             onSuccess(it)
           },
@@ -153,19 +158,15 @@ class EventViewModel(
     }
   }
 
-  fun joinEvent(
-      role: ChimpagneRole,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
+  fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
           _uiState.value.id,
-          role,
+          ChimpagneRole.GUEST,
           {
             fetchEvent(
-                id = _uiState.value.id,
                 onSuccess = {
                   _uiState.value = _uiState.value.copy(loading = false)
                   onSuccess()
@@ -190,7 +191,6 @@ class EventViewModel(
           _uiState.value.id,
           {
             fetchEvent(
-                id = _uiState.value.id,
                 onSuccess = {
                   _uiState.value = _uiState.value.copy(loading = false)
                   onSuccess()
@@ -248,7 +248,7 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(supplies = newSupplies)
   }
 
-  fun addSuply(supply: ChimpagneSupply) {
+  fun addSupply(supply: ChimpagneSupply) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies + (supply.id to supply))
   }
 
@@ -280,8 +280,9 @@ data class EventUIState(
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
 
-    // unmodifiable the UI
+    // unmodifiable by the UI
     val ownerId: ChimpagneAccountUID = "",
+    val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
     val loading: Boolean = false,
 )
 

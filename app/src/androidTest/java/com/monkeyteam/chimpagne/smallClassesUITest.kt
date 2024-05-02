@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne
 
 import DateSelector
+import android.net.Uri
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
@@ -10,6 +11,8 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.monkeyteam.chimpagne.ui.LoginScreen
+import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import java.util.Calendar
 import java.util.Locale
@@ -120,7 +123,23 @@ class LoginScreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
 
-  @Test fun checkUI() {}
+  @Test
+  fun checkUI() {
+    composeTestRule.setContent {
+      val mockSuccessfulLogin: (String) -> Unit = { _ -> }
+      val mockContinueAsGuest: () -> Unit = {}
+
+      LoginScreen(onSuccessfulLogin = mockSuccessfulLogin, onContinueAsGuest = mockContinueAsGuest)
+    }
+
+    composeTestRule.onNodeWithTag("welcome_screen_title").assertExists()
+
+    composeTestRule.onNodeWithTag("Chimpagne").assertExists()
+
+    composeTestRule.onNodeWithTag("Google_Authentication").assertExists()
+
+    composeTestRule.onNodeWithTag("Continue_As_Guest_Button").assertExists()
+  }
 
   @Test fun checkAlertDialog() {}
 }
@@ -144,5 +163,32 @@ private fun getSignInText(): String {
     "Se connecter avec Google"
   } else {
     "Sign in with Google"
+  }
+}
+
+class ProfileIconTest {
+
+  @get:Rule val composeTestRule = createComposeRule()
+
+  @Test
+  fun profileIcon_withUri_showsImage() {
+    val testUri = Uri.parse("https://example.com/profile.jpg")
+    composeTestRule.setContent { ProfileIcon(uri = testUri, onClick = {}) }
+    composeTestRule.onNodeWithContentDescription("Profile").assertExists()
+  }
+
+  @Test
+  fun profileIcon_withNullUri_showsDefaultImage() {
+    composeTestRule.setContent { ProfileIcon(uri = null, onClick = {}) }
+    composeTestRule.onNodeWithContentDescription("Profile").assertExists()
+  }
+
+  @Test
+  fun profileIcon_click_performsAction() {
+    var clicked = false
+    composeTestRule.setContent { ProfileIcon(uri = null) { clicked = true } }
+    composeTestRule.onNodeWithContentDescription("Profile").performClick()
+
+    assert(clicked)
   }
 }

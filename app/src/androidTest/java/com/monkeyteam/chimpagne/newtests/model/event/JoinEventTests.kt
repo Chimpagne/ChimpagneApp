@@ -21,7 +21,8 @@ class JoinEventTests {
   val accountManager = database.accountManager
   val eventManager = database.eventManager
 
-  val anAccount = TEST_ACCOUNTS[0]
+  val anAccount = TEST_ACCOUNTS[1]
+
   val anotherAccount = TEST_ACCOUNTS[2]
 
   @Before

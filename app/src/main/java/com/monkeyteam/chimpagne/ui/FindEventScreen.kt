@@ -76,6 +76,7 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
@@ -87,7 +88,11 @@ object FindEventScreens {
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
-fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsViewModel) {
+fun MainFindEventScreen(
+    navObject: NavigationActions,
+    findViewModel: FindEventsViewModel,
+    accountViewModel: AccountViewModel
+) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -127,7 +132,8 @@ fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsV
     ->
     when (page) {
       FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
-      FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel)
+      FindEventScreens.MAP ->
+          FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
     }
   }
 }
@@ -301,6 +307,8 @@ fun FindEventFormScreen(
 fun FindEventMapScreen(
     onBackIconClicked: () -> Unit,
     findViewModel: FindEventsViewModel,
+    accountViewModel: AccountViewModel,
+    navObject: NavigationActions
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
