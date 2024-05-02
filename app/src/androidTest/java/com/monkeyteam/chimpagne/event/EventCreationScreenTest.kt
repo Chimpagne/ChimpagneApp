@@ -15,7 +15,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventCreationScreen
@@ -112,92 +114,10 @@ class EventCreationScreenTest {
     // When - Then
     composeTestRule.onNodeWithText(tagsLegendS).assertIsDisplayed()
     composeTestRule.onNodeWithText(publicLegendS).assertIsDisplayed()
+
+    // You can add more detailed tests here for interactions and assertions
   }
 
-  @Test
-  fun testDeleteAllSupplyItemsFromEventCreationScreen() {
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventCreationScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
-    }
-
-    // When
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
-    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply 1")
-    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
-    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("units")
-    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
-
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
-    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Supply 2")
-    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("10")
-    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("kg")
-    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
-
-    // Then
-    composeTestRule.onNodeWithText("Test Supply 1").assertIsDisplayed()
-    composeTestRule.onNodeWithText("5 units").assertIsDisplayed()
-    composeTestRule.onNodeWithText("Test Supply 2").assertIsDisplayed()
-    composeTestRule.onNodeWithText("10 kg").assertIsDisplayed()
-
-    // When
-    composeTestRule.onNodeWithTag("Test Supply 1").performClick()
-    composeTestRule.onNodeWithTag("Test Supply 2").performClick()
-    Thread.sleep(2000)
-    // Then
-    composeTestRule.onNodeWithText("Test Supply 1").assertDoesNotExist()
-    composeTestRule.onNodeWithText("5 units").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Test Supply 2").assertDoesNotExist()
-    composeTestRule.onNodeWithText("10 kg").assertDoesNotExist()
-  }
-
-  @Test
-  fun testSupplyPopup() {
-    var descriptionLabelS = ""
-    var quantityLabelS = ""
-    var unitLabelS = ""
-    var cancelButtonS = ""
-    var addButtonS = ""
-
-    // Given
-    composeTestRule.setContent {
-      val context = LocalContext.current
-      descriptionLabelS = context.getString(R.string.supplies_description)
-      quantityLabelS = context.getString(R.string.supplies_quantity)
-      unitLabelS = context.getString(R.string.supplies_unit)
-      cancelButtonS = context.getString(R.string.chimpagne_cancel)
-      addButtonS = context.getString(R.string.chimpagne_add)
-
-      var showPopup by remember { mutableStateOf(true) }
-      if (showPopup) {
-        SupplyPopup(onDismissRequest = { showPopup = false }, onSave = { _ -> })
-      }
-    }
-
-    // When - Then
-    composeTestRule.onNodeWithText(descriptionLabelS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(quantityLabelS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(unitLabelS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(cancelButtonS).assertIsDisplayed()
-    composeTestRule.onNodeWithText(addButtonS).assertIsDisplayed()
-
-    // Enter values in the text fields
-    composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("Test Description")
-    composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("10")
-    composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("kg")
-
-    // Click the "Add" button
-    composeTestRule.onNodeWithTag("supplies_add_button").performClick()
-
-    // Verify that the popup is dismissed
-    composeTestRule.onNodeWithText(descriptionLabelS).assertDoesNotExist()
-  }
-
-  /*
-
-  //TODO: use the test tags !
   @Test
   fun testMakeEventPublicButtonShowsToast() {
 

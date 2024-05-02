@@ -190,6 +190,7 @@ class EventViewModel(
     viewModelScope.launch {
       accountManager.leaveEvent(
           _uiState.value.id,
+
           {
             fetchEvent(
                 onSuccess = {
