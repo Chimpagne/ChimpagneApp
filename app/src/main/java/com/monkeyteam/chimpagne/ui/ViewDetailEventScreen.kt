@@ -88,7 +88,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
             actions = {
               IconButton(onClick = { showDialog = true }) {
                 Icon(
-                    imageVector = Icons.Rounded.QrCodeScanner, // Make sure to have a QR code icon
+                    imageVector = Icons.Rounded.QrCodeScanner,
                     contentDescription = "Scan QR",
                     modifier = Modifier.testTag("scan QR"))
               }

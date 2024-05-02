@@ -30,6 +30,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.MyLocation
+import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material3.BottomSheetScaffold
@@ -178,7 +179,7 @@ fun FindEventFormScreen(
                     .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
                     .addOnSuccessListener { location ->
                       location?.let {
-                        showToast("Location set")
+                        showToast("Location OK")
                         findViewModel.updateSelectedLocation(
                             Location("mylocation", it.latitude, it.longitude))
                       }
@@ -195,6 +196,21 @@ fun FindEventFormScreen(
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
   }
 
+    val cameraPermissionRequest =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { granted ->
+                if (granted) {
+                    showToast("Camera permission granted")
+                } else {
+                    showToast("Camera permission denied")
+                }
+            })
+
+    val requestCameraPermission = {
+        cameraPermissionRequest.launch(Manifest.permission.CAMERA)
+    }
+
   Scaffold(
       topBar = {
         TopAppBar(
@@ -204,6 +220,14 @@ fun FindEventFormScreen(
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
               }
+            },
+            actions = {
+                IconButton(onClick = requestCameraPermission) {
+                    Icon(
+                        imageVector = Icons.Rounded.QrCodeScanner,
+                        contentDescription = "Scan QR",
+                        modifier = Modifier.testTag("scan QR"))
+                }
             })
       },
       bottomBar = {
