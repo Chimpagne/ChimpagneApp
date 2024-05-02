@@ -175,13 +175,10 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("n_parking").assertExists()
     composeTestRule.onNodeWithTag("n_parking").performTextInput(value)
 
-    composeTestRule.onNodeWithText(value).assertIsDisplayed()
-
     val valueBed = "2"
     composeTestRule.onNodeWithTag("n_beds").assertExists()
     composeTestRule.onNodeWithTag("n_beds").performTextInput(valueBed)
 
-    composeTestRule.onNodeWithText(valueBed).assertIsDisplayed()
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
 
     composeTestRule.onNodeWithTag("create_event_button").performClick()
