@@ -12,9 +12,10 @@ fun SuppliesScreen(
   eventViewModel: EventViewModel,
 ) {
   val uiState by eventViewModel.uiState.collectAsState()
-  
+
+
+
   Button(onClick = {  }) {
     
   }
-
 }
