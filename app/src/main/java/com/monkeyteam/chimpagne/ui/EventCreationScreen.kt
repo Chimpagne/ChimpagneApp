@@ -330,7 +330,11 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         value = parkingText,
         onValueChange = {
           parkingText = it
-          eventViewModel.updateParkingSpaces(parkingText.toInt())
+          try {
+            eventViewModel.updateParkingSpaces(parkingText.toInt())
+          } catch (_: Exception) {
+            eventViewModel.updateParkingSpaces(0)
+          }
         },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -345,7 +349,11 @@ fun FourthPanel(eventViewModel: EventViewModel) {
         value = bedsText,
         onValueChange = {
           bedsText = it
-          eventViewModel.updateBeds(bedsText.toInt())
+          try {
+            eventViewModel.updateBeds(bedsText.toInt())
+          } catch (_: Exception) {
+            eventViewModel.updateBeds(0)
+          }
         },
         label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -91,8 +91,7 @@ class ChimpagneEventManager(
 
     val eventId = events.document().id
     updateEvent(
-        event.copy(
-            id = eventId, ownerId = database.accountManager.currentUserAccount?.firebaseAuthUID!!),
+        event.copy(id = eventId),
         {
           database.accountManager.joinEvent(
               eventId, ChimpagneRoles.OWNER, { onSuccess(eventId) }, { onFailure(it) })
