@@ -124,24 +124,17 @@ class MainActivity : ComponentActivity() {
                               EventViewModelFactory(
                                   backStackEntry.arguments?.getString("EventID"), database)))
             }
-            composable(Route.JOIN_EVENT_SCREEN) {
-              val eventViewModel: EventViewModel =
-                  viewModel(factory = EventViewModelFactory(null, database))
-              /*
-
-              For you Gregory :) Use this not the one above
-
-                              val eventViewModel =
-                                  EventViewModel(
-                                      possibleEventID,
-                                      Database(PUBLIC_TABLES),
-                                      onFailure = {
-                                          Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
-                                              .show()
-                                          navActions.clearAndNavigateTo(Route.HOME_SCREEN)
-                                      })
-
-               */
+            composable(Route.JOIN_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
+              val context = LocalContext.current
+              val eventViewModel =
+                  EventViewModel(
+                      backStackEntry.arguments?.getString("EventID"),
+                      Database(PUBLIC_TABLES),
+                      onFailure = {
+                        Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
+                            .show()
+                        navActions.clearAndNavigateTo(Route.HOME_SCREEN)
+                      })
               val event = eventViewModel.buildChimpagneEvent()
               DetailScreenSheet(
                   event = event,
@@ -149,6 +142,36 @@ class MainActivity : ComponentActivity() {
                     navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
                   })
             }
+            composable(
+                // The deep link route
+                route = Route.ONLINE_EVENT_VIEW,
+                deepLinks =
+                    listOf(
+                        navDeepLink {
+                          uriPattern = "https://www.manigo.ch/events/?uid={EventID}"
+                          action = Intent.ACTION_VIEW
+                        }),
+                arguments =
+                    listOf(
+                        navArgument("EventID") { type = NavType.StringType },
+                    )) {
+                  // Check if user is logged in
+                  login(true)
+                  val possibleEventID = it.arguments?.getString("EventID")
+                  val context = LocalContext.current
+                  // Check if event exists, before forwarding it to the event detail screen
+                  EventViewModel(
+                      possibleEventID,
+                      Database(PUBLIC_TABLES),
+                      onSuccess = {
+                        navActions.navigateTo(Route.JOIN_EVENT_SCREEN + "/${possibleEventID}")
+                      },
+                      onFailure = {
+                        Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
+                            .show()
+                        navActions.clearAndNavigateTo(Route.HOME_SCREEN)
+                      })
+                }
           }
         }
       }
