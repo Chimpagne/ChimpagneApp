@@ -20,7 +20,6 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
-import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.components.SupplyPopup
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
@@ -138,8 +137,6 @@ class EventCreationScreenTest {
     // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
     composeTestRule.onNodeWithText("Make this event public").performClick()
   }
-  */
-
   @Test
   fun testPanel2() {
 
