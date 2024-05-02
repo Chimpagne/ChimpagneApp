@@ -73,7 +73,7 @@ class ViewDetailEventScreenTests {
 
   @Test
   fun testLeaveButton() {
-    database.accountManager.signInTo(TEST_ACCOUNTS[1])
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -92,7 +92,7 @@ class ViewDetailEventScreenTests {
 
   @Test
   fun testEditButton() {
-    database.accountManager.signInTo(TEST_ACCOUNTS[0])
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
     val event = TEST_EVENTS[0]
     val eventVM = EventViewModel(event.id, database)
 

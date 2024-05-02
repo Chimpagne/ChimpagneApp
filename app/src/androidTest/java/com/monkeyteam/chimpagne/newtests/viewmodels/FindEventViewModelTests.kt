@@ -196,11 +196,11 @@ class FindEventViewModelTests {
     while (findEventVM.uiState.value.loading) {}
 
     val eventSearchVM =
-      EventViewModel(
-        eventID = testEvent.id,
-        database = database,
-        onSuccess = { assertTrue(true) },
-        onFailure = { assertTrue(false) })
+        EventViewModel(
+            eventID = testEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
@@ -209,6 +209,5 @@ class FindEventViewModelTests {
 
     eventSearchVM.leaveTheEvent()
     while (eventSearchVM.uiState.value.loading) {}
-
   }
 }

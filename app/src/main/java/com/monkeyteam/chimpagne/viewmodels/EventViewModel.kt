@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
@@ -161,7 +161,7 @@ class EventViewModel(
     viewModelScope.launch {
       accountManager.joinEvent(
           _uiState.value.id,
-          ChimpagneRoles.GUEST,
+          ChimpagneRole.GUEST,
           {
             fetchEvent(
                 onSuccess = {
