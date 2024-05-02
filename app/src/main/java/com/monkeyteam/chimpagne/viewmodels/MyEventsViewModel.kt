@@ -24,8 +24,7 @@ class MyEventsViewModel(
   init {
     fetchMyEvents(onSuccess, onFailure)
   }
-
-  private fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.getAllOfMyEvents(

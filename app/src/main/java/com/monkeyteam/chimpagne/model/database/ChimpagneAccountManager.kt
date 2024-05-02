@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
+import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 
 /** Use this class to interact */
 class ChimpagneAccountManager(
@@ -193,7 +194,9 @@ class ChimpagneAccountManager(
           eventManager.removeStaff(
               id,
               updatedAccount.firebaseAuthUID,
-              { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
+              {
+                  updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+              },
               onFailure)
         },
         onFailure)

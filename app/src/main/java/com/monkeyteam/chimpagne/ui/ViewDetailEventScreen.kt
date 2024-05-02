@@ -145,8 +145,6 @@ fun ViewDetailEventScreen(
                                       .fillMaxWidth()
                                       .testTag("leave"),
                               onClick = {
-                                // TODO LEAVE DOES WORk BUT THE MY EVENTS ONLY UPDATES AFTER RE
-                                // ENTRY TO IT
                                 eventViewModel.leaveTheEvent(
                                     onSuccess = {
                                       Toast.makeText(
@@ -171,8 +169,7 @@ fun ViewDetailEventScreen(
                                       .fillMaxWidth()
                                       .testTag("edit"),
                               onClick = {
-                                  navObject.navigateTo(
-                                      Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                               })
                         }
                         Spacer(Modifier.height(16.dp))

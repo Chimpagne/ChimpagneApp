@@ -110,17 +110,15 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
             }
-              composable(Route.EDIT_EVENT_SCREEN+ "/{EventID}") {backStackEntry->
-
-                  val eventID = backStackEntry.arguments?.getString("EventID")
-                  println("EVENT ID:")
-                  println(eventID)
-                  EditEventScreen(
-                      initialPage = 0,
-                      navObject = navActions,
-                      eventViewModel = EventViewModel(eventID, database, {}, {})
-                  )
-              }
+            composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventID = backStackEntry.arguments?.getString("EventID")
+              println("EVENT ID:")
+              println(eventID)
+              EditEventScreen(
+                  initialPage = 0,
+                  navObject = navActions,
+                  eventViewModel = EventViewModel(eventID, database, {}, {}))
+            }
             composable(Route.MY_EVENTS_SCREEN) {
               MyEventsScreen(
                   navObject = navActions,

@@ -35,65 +35,65 @@ fun EditEventScreen(
     navObject: NavigationActions,
     eventViewModel: EventViewModel
 ) {
-    val uiState by eventViewModel.uiState.collectAsState()
+  val uiState by eventViewModel.uiState.collectAsState()
 
-    val pagerState = rememberPagerState(initialPage = initialPage) { 3 }
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    Column {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-            GoBackButton(navigationActions = navObject)
-            Text(text = stringResource(id = R.string.edit_event))
-        }
-        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
-            when (page) {
-                0 -> FirstPanel(eventViewModel)
-                1 -> TagsAndPubPanel(eventViewModel)
-                2 -> AdvancedLogisticsPanel(eventViewModel)
-            }
-        }
-
-        // The logic below is to make sure to display the proper panel navigation button
-        // throughout the panels
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            if (pagerState.currentPage > 0) {
-                Button(
-                    onClick = {
-                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
-                    },
-                    modifier = Modifier.testTag("previous_button")) {
-                    Text(stringResource(id = R.string.event_creation_screen_previous))
-                }
-            } else {
-                Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
-            }
-            if (pagerState.currentPage < 2) {
-                Button(
-                    onClick = {
-                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
-                    },
-                    modifier = Modifier.testTag("next_button")) {
-                    Text(stringResource(id = R.string.event_creation_screen_next))
-                }
-            } else {
-                Button(
-                    onClick = {
-                        if (!uiState.loading) {
-                            eventViewModel.updateTheEvent(
-                                onSuccess = {
-                                    Toast.makeText(
-                                        context,
-                                        context.getString(R.string.edit_event_toast_finish),
-                                        Toast.LENGTH_SHORT)
-                                        .show()
-                                    navObject.goBack()
-                                })
-                        }
-                    },
-                    modifier = Modifier.testTag("save_changes_button")) {
-                    Text(stringResource(id = R.string.save_changes))
-                }
-            }
-        }
+  val pagerState = rememberPagerState(initialPage = initialPage) { 3 }
+  val coroutineScope = rememberCoroutineScope()
+  val context = LocalContext.current
+  Column {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+      GoBackButton(navigationActions = navObject)
+      Text(text = stringResource(id = R.string.edit_event))
     }
+    HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
+      when (page) {
+        0 -> FirstPanel(eventViewModel)
+        1 -> TagsAndPubPanel(eventViewModel)
+        2 -> AdvancedLogisticsPanel(eventViewModel)
+      }
+    }
+
+    // The logic below is to make sure to display the proper panel navigation button
+    // throughout the panels
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+      if (pagerState.currentPage > 0) {
+        Button(
+            onClick = {
+              coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+            },
+            modifier = Modifier.testTag("previous_button")) {
+              Text(stringResource(id = R.string.event_creation_screen_previous))
+            }
+      } else {
+        Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
+      }
+      if (pagerState.currentPage < 2) {
+        Button(
+            onClick = {
+              coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+            },
+            modifier = Modifier.testTag("next_button")) {
+              Text(stringResource(id = R.string.event_creation_screen_next))
+            }
+      } else {
+        Button(
+            onClick = {
+              if (!uiState.loading) {
+                eventViewModel.updateTheEvent(
+                    onSuccess = {
+                      Toast.makeText(
+                              context,
+                              context.getString(R.string.edit_event_toast_finish),
+                              Toast.LENGTH_SHORT)
+                          .show()
+                      navObject.goBack()
+                    })
+              }
+            },
+            modifier = Modifier.testTag("save_changes_button")) {
+              Text(stringResource(id = R.string.save_changes))
+            }
+      }
+    }
+  }
 }
