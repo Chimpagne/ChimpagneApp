@@ -26,7 +26,8 @@ val TEST_EVENTS =
             guests = emptyMap(),
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(9, 5, 2024, 0, 0),
-            endsAtTimestamp = buildTimestamp(10, 5, 2024, 0, 0)),
+            endsAtTimestamp = buildTimestamp(10, 5, 2024, 0, 0),
+            ownerId = "PRINCE"),
         ChimpagneEvent(
             id = "SECOND_EVENT",
             title = "Second event",
