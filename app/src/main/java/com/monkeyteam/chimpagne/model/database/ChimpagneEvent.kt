@@ -42,13 +42,6 @@ data class ChimpagneEvent(
     return buildCalendar(endsAtTimestamp)
   }
 
-  fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
-    if (ownerId == userUID) return ChimpagneRole.OWNER
-    if (staffs[userUID] == true) return ChimpagneRole.STAFF
-    if (guests[userUID] == true) return ChimpagneRole.GUEST
-    return ChimpagneRole.NOT_IN_EVENT
-  }
-
   constructor(
       id: String,
       title: String,

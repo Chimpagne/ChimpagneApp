@@ -1,5 +1,7 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -8,13 +10,14 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -51,6 +54,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
     composeTestRule.onNodeWithContentDescription("event date").assertIsDisplayed()
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("share").assertIsDisplayed()
   }
 
   @Test
@@ -90,9 +94,9 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
-  fun testEditButton() {
-    database.accountManager.signInTo(TEST_ACCOUNTS[0])
+  fun testShareButton() {
     val event = TEST_EVENTS[0]
+
     val eventVM = EventViewModel(event.id, database)
 
     while (eventVM.uiState.value.loading) {}
@@ -101,6 +105,35 @@ class ViewDetailEventScreenTests {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
       ViewDetailEventScreen(navActions, eventVM)
+    }
+
+    composeTestRule.onNodeWithTag("share").assertHasClickAction()
+    composeTestRule.onNodeWithTag("share").performClick()
+
+    // Retrieve clipboard content
+    val clipboardManager =
+        InstrumentationRegistry.getInstrumentation()
+            .context
+            .getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clipboardText = clipboardManager.primaryClip?.getItemAt(0)?.text.toString()
+    val expectedText = "https://www.manigo.ch/events/?uid=${event.id}"
+
+    // Verify if clipboard has the expected text
+    assertEquals(expectedText, clipboardText)
+  }
+
+  @Test
+  fun testEditButton() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, true)
     }
 
     composeTestRule.onNodeWithTag("edit").assertHasClickAction()

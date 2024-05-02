@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
@@ -34,9 +33,6 @@ class EventViewModel(
   init {
     if (eventID != null) {
       fetchEvent(eventID, onSuccess, onFailure)
-    } else {
-      _uiState.value =
-          EventUIState(ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "")
     }
   }
 
@@ -65,13 +61,13 @@ class EventViewModel(
                       it.endsAt(),
                       it.supplies,
                       it.parkingSpaces,
-                      it.beds,
-                      it.ownerId)
+                      it.beds)
               onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
             } else {
               Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
               _uiState.value = _uiState.value.copy(loading = false)
+              onFailure(Exception("No such event exists"))
             }
           },
           {
@@ -84,20 +80,20 @@ class EventViewModel(
 
   fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
-        id = _uiState.value.id,
-        title = _uiState.value.title,
-        description = _uiState.value.description,
-        location = _uiState.value.location,
-        public = _uiState.value.public,
-        tags = _uiState.value.tags,
-        guests = _uiState.value.guests,
-        staffs = _uiState.value.staffs,
-        startsAt = _uiState.value.startsAtCalendarDate,
-        endsAt = _uiState.value.endsAtCalendarDate,
-        ownerId = _uiState.value.ownerId,
-        supplies = _uiState.value.supplies,
-        parkingSpaces = _uiState.value.parkingSpaces,
-        beds = _uiState.value.beds)
+        _uiState.value.id,
+        _uiState.value.title,
+        _uiState.value.description,
+        _uiState.value.location,
+        _uiState.value.public,
+        _uiState.value.tags,
+        _uiState.value.guests,
+        _uiState.value.staffs,
+        _uiState.value.startsAtCalendarDate,
+        _uiState.value.endsAtCalendarDate,
+        "", // This will be handled in the database
+        _uiState.value.supplies,
+        _uiState.value.parkingSpaces,
+        _uiState.value.beds)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -255,14 +251,6 @@ class EventViewModel(
   fun removeSupply(supplyId: ChimpagneSupplyId) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies - supplyId)
   }
-
-  fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
-    return buildChimpagneEvent().getRole(userUID)
-  }
-
-  fun getCurrentUserRole(): ChimpagneRole {
-    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
-  }
 }
 
 data class EventUIState(
@@ -279,9 +267,6 @@ data class EventUIState(
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
-
-    // unmodifiable the UI
-    val ownerId: ChimpagneAccountUID = "",
     val loading: Boolean = false,
 )
 
