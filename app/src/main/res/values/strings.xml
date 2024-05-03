@@ -81,4 +81,5 @@
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
+
 </resources>
