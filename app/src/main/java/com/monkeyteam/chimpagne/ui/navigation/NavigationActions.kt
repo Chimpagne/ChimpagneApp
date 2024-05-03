@@ -4,6 +4,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 
 object Route {
+  const val EDIT_EVENT_SCREEN = "EDIT_EVENT_SCREEN"
   const val LOGIN_SCREEN = "Login"
   const val ACCOUNT_CREATION_SCREEN = "AccountCreation"
   const val ACCOUNT_SETTINGS_SCREEN = "AccountSettings"

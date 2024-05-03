@@ -49,6 +49,7 @@ https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&
 - Scrum Master Sprint 4 : Arnaud
 - Scrum Master Sprint 5: Gregory
 - Scrum Master Sprint 6: Sacha
+- Scrum Master Sprint 7: Léa
 
 - Product owner Sprint 1 : The coaches
 - Product owner Sprint 2 : Arnaud
@@ -56,6 +57,7 @@ https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&
 - Product owner Sprint 4 : Sacha
 - Product owner Sprint 5: Clément
 - Product owner Sprint 6: Léa
+- Product owner Sprint 7: Juan
 
 
 ## How to setup the project on your device
