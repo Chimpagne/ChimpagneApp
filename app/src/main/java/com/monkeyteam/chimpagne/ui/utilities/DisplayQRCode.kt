@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -53,10 +54,11 @@ fun DisplayQRCode(eventId: String) {
       Image(
           bitmap = imageBitmap!!,
           contentDescription = "Event QR Code",
-          modifier = Modifier.fillMaxWidth(),
+          modifier = Modifier.fillMaxWidth().testTag("qr_code_image"),
           contentScale = ContentScale.FillWidth)
     } else {
-      CircularProgressIndicator(modifier = Modifier.size(50.dp)) // Adjust the size as needed
+      CircularProgressIndicator(
+          modifier = Modifier.size(50.dp).testTag("loading")) // Adjust the size as needed
     }
   }
 }
@@ -98,7 +100,8 @@ fun QRCodeDialog(eventId: String, onDismiss: () -> Unit) {
                 IconTextButton(
                     text = stringResource(id = R.string.close),
                     icon = Icons.Rounded.Close,
-                    onClick = onDismiss)
+                    onClick = onDismiss,
+                    modifier = Modifier.testTag("close_button"))
               }
         }
   }

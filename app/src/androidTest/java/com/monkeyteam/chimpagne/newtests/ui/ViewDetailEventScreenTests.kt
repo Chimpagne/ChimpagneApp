@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.newtests.ui
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -14,6 +15,8 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.utilities.DEEP_LINK_URI
+import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
 import org.junit.Rule
@@ -30,6 +33,24 @@ class ViewDetailEventScreenTests {
   @Before
   fun initTests() {
     initializeTestDatabase()
+  }
+
+  @Test
+  fun qrCodeGeneration_displaysQRCode() {
+    val testEventId = "12345"
+    composeTestRule.setContent { QRCodeDialog(eventId = DEEP_LINK_URI + testEventId) {} }
+
+    // Now check if the QR code image is displayed
+    composeTestRule.onNodeWithTag("loading").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("qr_code_image").assertIsNotDisplayed()
+
+    Thread.sleep(5000) // Qr code generation async, not ideal but works for now
+
+    composeTestRule.onNodeWithTag("qr_code_image").assertIsDisplayed()
+
+    // Finally, ensure the close button is present
+    composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("close_button").performClick()
   }
 
   @Test
