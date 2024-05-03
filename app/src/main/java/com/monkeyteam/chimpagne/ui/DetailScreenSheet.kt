@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
@@ -50,9 +51,11 @@ fun DetailScreenSheet(event: ChimpagneEvent?, onJoinClick: () -> Unit = {}) {
                 event.tags.forEach { tag -> SimpleTagChip(tag) }
               }
 
-          Button(onClick = onJoinClick, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Text(stringResource(id = R.string.find_event_join_event_button_text))
-          }
+          Button(
+              onClick = onJoinClick,
+              modifier = Modifier.align(Alignment.CenterHorizontally).testTag("join_button")) {
+                Text(stringResource(id = R.string.find_event_join_event_button_text))
+              }
         }
   } else {
     Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {

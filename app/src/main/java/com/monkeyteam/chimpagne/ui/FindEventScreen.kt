@@ -414,6 +414,7 @@ fun FindEventMapScreen(
           IconButton(
               modifier =
                   Modifier.padding(start = 12.dp, top = 12.dp)
+                      .testTag("go_back")
                       .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
                       .background(
                           color = MaterialTheme.colorScheme.surface,

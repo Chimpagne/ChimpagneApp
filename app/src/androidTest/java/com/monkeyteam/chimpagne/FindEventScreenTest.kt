@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.rule.GrantPermissionRule
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -20,6 +21,7 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
+import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -40,11 +42,55 @@ class FindEventScreenTest {
   @Test
   fun testQRCodeScanner() {
 
-    composeTestRule.setContent { QRCodeScanner(close = {}, onResult = {}) }
+    composeTestRule.setContent { QRCodeScanner({}, {}) }
 
     composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
     composeTestRule.onNodeWithTag("camera_preview").assertIsDisplayed()
     composeTestRule.onNodeWithTag("close_button").performClick()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testGoBackFunctionality() {
+    val database = Database()
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+
+    var navController: NavHostController? = null
+
+    composeTestRule.setContent {
+      navController = rememberNavController()
+      val navActions = NavigationActions(navController!!)
+
+      FindEventMapScreen(
+          { navController!!.popBackStack() }, findViewModel, accountViewModel, navActions)
+    }
+
+    // Simulate the goBack action by clicking the back icon
+    composeTestRule.onNodeWithTag("go_back").performClick()
+    assertTrue(navController!!.previousBackStackEntry == null)
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testJoinEventFunctionality() {
+    val database = Database()
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+    val sampleEvent =
+        ChimpagneEvent(id = "sample123", title = "Sample Event", description = "Sample Description")
+    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+    }
+
+    composeTestRule.onNodeWithTag("join_button").performClick()
+
+    assertTrue(findViewModel.uiState.value.loading)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
