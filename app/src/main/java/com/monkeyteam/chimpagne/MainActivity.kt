@@ -20,13 +20,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
-import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.event.EditEventScreen
+import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
@@ -117,6 +118,13 @@ class MainActivity : ComponentActivity() {
               EventCreationScreen(
                   navObject = navActions,
                   eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
+            }
+            composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventID = backStackEntry.arguments?.getString("EventID")
+              EditEventScreen(
+                  initialPage = 0,
+                  navObject = navActions,
+                  eventViewModel = EventViewModel(eventID, database, {}, {}))
             }
             composable(Route.MY_EVENTS_SCREEN) {
               val myEventsViewModel: MyEventsViewModel =
