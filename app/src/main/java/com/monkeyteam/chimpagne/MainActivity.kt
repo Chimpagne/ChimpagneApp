@@ -129,6 +129,7 @@ class MainActivity : ComponentActivity() {
             composable(Route.SUPPLIES + "/{EventID}") { backStackEntry ->
               val eventID = backStackEntry.arguments?.getString("EventID")
               SuppliesScreen(
+                navObject = navActions,
                 eventViewModel = EventViewModel(eventID, database, {}, {}),
                 accountViewModel = accountViewModel
               )

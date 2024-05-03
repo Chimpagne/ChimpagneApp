@@ -192,4 +192,6 @@ class ChimpagneEventManager(
         }
         .addOnFailureListener { onFailure(it) }
   }
+
+
 }
