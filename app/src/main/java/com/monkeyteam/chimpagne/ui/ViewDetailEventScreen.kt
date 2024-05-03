@@ -61,8 +61,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
 
-  val userRole = eventViewModel.getCurrentUserRole()
-
   Scaffold(
       topBar = {
         TopAppBar(
@@ -132,7 +130,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     .absolutePadding(left = 16.dp, right = 16.dp)
                                     .testTag("description"))
                         Spacer(Modifier.height(16.dp))
-                        if (userRole != ChimpagneRole.OWNER) {
+                        if (uiState.currentUserRole != ChimpagneRole.OWNER) {
                           ChimpagneButton(
                               text =
                                   stringResource(id = R.string.event_details_screen_leave_button),
@@ -144,8 +142,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                       .fillMaxWidth()
                                       .testTag("leave"),
                               onClick = {
-                                // TODO LEAVE DOES WORk BUT THE MY EVENTS ONLY UPDATES AFTER RE
-                                // ENTRY TO IT
                                 eventViewModel.leaveTheEvent(
                                     onSuccess = {
                                       Toast.makeText(
@@ -155,12 +151,12 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                       .event_details_screen_leave_toast_success),
                                               Toast.LENGTH_SHORT)
                                           .show()
-                                      navObject.navigateTo(Route.MY_EVENTS_SCREEN)
+                                      navObject.goBack()
                                     })
                               })
                         }
-                        if (userRole ==
-                            ChimpagneRole.OWNER) { // Only the owner can edit the event settings
+                        // Only the owner can edit the event settings
+                        if (uiState.currentUserRole == ChimpagneRole.OWNER) {
                           ChimpagneButton(
                               text = stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,
@@ -171,12 +167,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                       .fillMaxWidth()
                                       .testTag("edit"),
                               onClick = {
-                                /* TODO Implement this later */
-                                Toast.makeText(
-                                        context,
-                                        "This function will be implemented in a future version",
-                                        Toast.LENGTH_SHORT)
-                                    .show()
+                                navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                               })
                         }
                         Spacer(Modifier.height(16.dp))

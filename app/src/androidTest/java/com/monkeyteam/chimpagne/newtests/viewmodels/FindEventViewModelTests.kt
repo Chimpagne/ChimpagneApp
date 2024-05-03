@@ -3,12 +3,17 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
-import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
-import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
+import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
+import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,47 +26,9 @@ class FindEventViewModelTests {
 
   @get:Rule val composeTestRule = createComposeRule()
 
-  private val testEvent1 =
-      ChimpagneEvent(
-          "0",
-          "Party 1",
-          "",
-          Location("EPFL", 46.519124, 6.567593),
-          true,
-          listOf("vegan", "concert", "booze"),
-          emptyMap(),
-          emptyMap(),
-          buildTimestamp(9, 5, 2024, 5, 0),
-          buildTimestamp(10, 5, 2024, 5, 0))
-
-  private val testEvent2 =
-      ChimpagneEvent(
-          "1",
-          "Party 2",
-          "",
-          Location("EPFL", 46.519130, 6.567580),
-          true,
-          listOf("vegan", "concert", "family friendly"),
-          emptyMap(),
-          emptyMap(),
-          buildTimestamp(8, 5, 2024, 6, 0),
-          buildTimestamp(9, 5, 2024, 6, 0))
-
-  private val testEvent3 =
-      ChimpagneEvent(
-          "2",
-          "Party 3",
-          "",
-          Location("center of earth", 0.0, 0.0),
-          true,
-          listOf("vegan", "family friendly"),
-          emptyMap(),
-          emptyMap(),
-          buildTimestamp(7, 5, 2024, 6, 0),
-          buildTimestamp(10, 5, 2024, 6, 0))
-
   @Before
-  fun signIn() {
+  fun initTest() {
+    initializeTestDatabase()
     database.accountManager.signInTo(ChimpagneAccount())
   }
 
@@ -88,5 +55,159 @@ class FindEventViewModelTests {
 
     findEventVM.updateSelectedDate(date)
     assert(findEventVM.uiState.value.selectedDate == date)
+
+    findEventVM.setLoading(true)
+    assert(findEventVM.uiState.value.loading)
+
+    findEventVM.setLoading(false)
+    assert(!findEventVM.uiState.value.loading)
+  }
+
+  @Test
+  fun TestFindEventSystem() {
+    val testEvent1 = TEST_EVENTS[0]
+    val testEvent2 = TEST_EVENTS[1]
+    val testEvent3 = TEST_EVENTS[2]
+
+    val eventID1 = testEvent1.id
+    val eventID2 = testEvent2.id
+    val eventID3 = testEvent3.id
+
+    val eventFinderVM = FindEventsViewModel(database = database)
+
+    eventFinderVM.updateSelectedLocation(testEvent1.location)
+    eventFinderVM.updateLocationSearchRadius(1.0)
+    eventFinderVM.updateSelectedDate(testEvent1.endsAt())
+
+    eventFinderVM.fetchEvents(
+        {
+          eventFinderVM.setLoading(false)
+          assertTrue(true)
+        },
+        { assertTrue(false) })
+
+    while (eventFinderVM.uiState.value.loading) {}
+
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID1))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID2))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID3))
+
+    eventFinderVM.updateLocationSearchRadius(100.0)
+
+    eventFinderVM.fetchEvents(
+        {
+          eventFinderVM.setLoading(false)
+          assertTrue(true)
+        },
+        { assertTrue(false) })
+
+    while (eventFinderVM.uiState.value.loading) {}
+
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID1))
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID2))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID3))
+
+    eventFinderVM.updateTags(listOf("vegan"))
+
+    eventFinderVM.fetchEvents(
+        {
+          eventFinderVM.setLoading(false)
+          assertTrue(true)
+        },
+        { assertTrue(false) })
+
+    while (eventFinderVM.uiState.value.loading) {}
+
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID1))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID2))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID3))
+
+    eventFinderVM.updateTags(listOf("monkeys"))
+
+    eventFinderVM.fetchEvents(
+        {
+          eventFinderVM.setLoading(false)
+          assertTrue(true)
+        },
+        { assertTrue(false) })
+
+    while (eventFinderVM.uiState.value.loading) {}
+
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID1))
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID2))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID3))
+
+    eventFinderVM.updateSelectedDate(testEvent1.startsAt())
+
+    eventFinderVM.fetchEvents(
+        {
+          eventFinderVM.setLoading(false)
+          assertTrue(true)
+        },
+        { assertTrue(false) })
+
+    while (eventFinderVM.uiState.value.loading) {}
+
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID1))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID2))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID3))
+
+    eventFinderVM.updateSelectedLocation(testEvent3.location)
+    eventFinderVM.updateTags(emptyList())
+
+    eventFinderVM.fetchEvents(
+        {
+          eventFinderVM.setLoading(false)
+          assertTrue(true)
+        },
+        { assertTrue(false) })
+
+    while (eventFinderVM.uiState.value.loading) {}
+
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID1))
+    assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID2))
+    assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID3))
+
+    eventFinderVM.updateTags(listOf("juan"))
+
+    eventFinderVM.fetchEvents(
+        { assertTrue(false) },
+        {
+          if (it.message == "No events found") {
+            eventFinderVM.setLoading(false)
+            assertTrue(true)
+          } else {
+            assertTrue(false)
+          }
+        })
+  }
+
+  @Test
+  fun TestJoinAnEvent() {
+    val testAccount = TEST_ACCOUNTS[2]
+    val testEvent = TEST_EVENTS[0]
+
+    val accountViewModel = AccountViewModel(database = database)
+    accountViewModel.loginToChimpagneAccount(testAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    val findEventVM = FindEventsViewModel(database = database)
+    findEventVM.joinEvent(testEvent.id, { assertTrue(true) }, { assertTrue(false) })
+    while (findEventVM.uiState.value.loading) {}
+
+    val eventSearchVM =
+        EventViewModel(
+            eventID = testEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    // Wait for database to get the data
+    while (eventSearchVM.uiState.value.loading) {}
+
+    assertTrue(eventSearchVM.uiState.value.guests[testAccount.firebaseAuthUID] == true)
+
+    eventSearchVM.leaveTheEvent()
+    while (eventSearchVM.uiState.value.loading) {}
   }
 }

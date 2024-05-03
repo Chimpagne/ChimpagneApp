@@ -78,7 +78,9 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
+import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
@@ -90,7 +92,11 @@ object FindEventScreens {
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalMaterial3Api
 @Composable
-fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsViewModel) {
+fun MainFindEventScreen(
+    navObject: NavigationActions,
+    findViewModel: FindEventsViewModel,
+    accountViewModel: AccountViewModel
+) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -130,7 +136,8 @@ fun MainFindEventScreen(navObject: NavigationActions, findViewModel: FindEventsV
     ->
     when (page) {
       FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
-      FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel)
+      FindEventScreens.MAP ->
+          FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
     }
   }
 }
@@ -304,6 +311,8 @@ fun FindEventFormScreen(
 fun FindEventMapScreen(
     onBackIconClicked: () -> Unit,
     findViewModel: FindEventsViewModel,
+    accountViewModel: AccountViewModel,
+    navObject: NavigationActions
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
@@ -334,7 +343,9 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { EventDetailSheet(event = currentEvent, findViewModel) },
+      sheetContent = {
+        EventDetailSheet(event = currentEvent, findViewModel, accountViewModel, navObject)
+      },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
@@ -363,8 +374,21 @@ fun FindEventMapScreen(
 }
 
 @Composable
-fun EventDetailSheet(event: ChimpagneEvent?, findViewModel: FindEventsViewModel) {
+fun EventDetailSheet(
+    event: ChimpagneEvent?,
+    findViewModel: FindEventsViewModel,
+    accountViewModel: AccountViewModel,
+    navObject: NavigationActions
+) {
   val context = LocalContext.current
+
+  var showLoginPrompt by remember { mutableStateOf(false) }
+
+  if (showLoginPrompt) {
+    PromptLogin(context = context, navActions = navObject)
+    showLoginPrompt = false
+  }
+
   if (event != null) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -397,11 +421,20 @@ fun EventDetailSheet(event: ChimpagneEvent?, findViewModel: FindEventsViewModel)
 
           Button(
               onClick = {
-                Toast.makeText(context, "Joining ${event.title}", Toast.LENGTH_SHORT).show()
-                findViewModel.joinEvent(
-                    event.id,
-                    { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
-                    { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
+                if (!accountViewModel.isUserLoggedIn()) {
+                  showLoginPrompt = true
+                } else {
+                  findViewModel.joinEvent(
+                      event.id,
+                      onSuccess = {
+                        Toast.makeText(
+                                context, "Successfully joined ${event.title}", Toast.LENGTH_SHORT)
+                            .show()
+                      },
+                      onFailure = {
+                        Toast.makeText(context, "Failed to join event", Toast.LENGTH_SHORT).show()
+                      })
+                }
               },
               modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))

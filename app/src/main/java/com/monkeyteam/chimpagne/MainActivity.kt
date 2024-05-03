@@ -20,12 +20,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
-import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.event.EditEventScreen
+import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
@@ -33,8 +34,10 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
@@ -49,6 +52,8 @@ class MainActivity : ComponentActivity() {
       ChimpagneTheme {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
+
+        val continueAsGuest: () -> Unit = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) }
 
         val loginToChimpagneAccount: (id: String) -> Unit = { id ->
           accountViewModel.loginToChimpagneAccount(
@@ -84,7 +89,11 @@ class MainActivity : ComponentActivity() {
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = startDestination) {
-            composable(Route.LOGIN_SCREEN) { LoginScreen { uid -> loginToChimpagneAccount(uid) } }
+            composable(Route.LOGIN_SCREEN) {
+              LoginScreen(
+                  onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid) },
+                  onContinueAsGuest = continueAsGuest)
+            }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
             }
@@ -97,30 +106,39 @@ class MainActivity : ComponentActivity() {
             }
 
             composable(Route.LOADING) { SpinnerView() }
-            composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions) }
+            composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions, accountViewModel) }
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                   navObject = navActions,
-                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)))
+                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
+                  accountViewModel)
             }
             composable(Route.EVENT_CREATION_SCREEN) {
               EventCreationScreen(
                   navObject = navActions,
                   eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
             }
-            composable(Route.MY_EVENTS_SCREEN) {
-              MyEventsScreen(
+            composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventID = backStackEntry.arguments?.getString("EventID")
+              EditEventScreen(
+                  initialPage = 0,
                   navObject = navActions,
-                  myEventsViewModel = viewModel(factory = MyEventsViewModelFactory(database)))
+                  eventViewModel = EventViewModel(eventID, database, {}, {}))
+            }
+            composable(Route.MY_EVENTS_SCREEN) {
+              val myEventsViewModel: MyEventsViewModel =
+                  viewModel(factory = MyEventsViewModelFactory(database))
+              myEventsViewModel.fetchMyEvents()
+              MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
             }
             composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
-              ViewDetailEventScreen(
-                  navObject = navActions,
-                  eventViewModel =
-                      viewModel(
-                          factory =
-                              EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)))
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent()
+              ViewDetailEventScreen(navObject = navActions, eventViewModel = eventViewModel)
             }
           }
         }

@@ -51,13 +51,12 @@
     <string name="find_event_location_not_selected">No location selected</string>
     <string name="search_location">Search for a location</string>
     <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
-    <string name="supplies_description">Description</string>
-    <string name="supplies_quantity">Quantity</string>
-    <string name="supplies_unit">Unit</string>
-    <string name="chimpagne_cancel">Cancel</string>
-    <string name="chimpagne_add">Add</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="welcome_screen_title">Welcome to</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+    <string name="login_to_continue">Please login/create an account to continue</string>
+    <string name="save_changes">Save changes</string>
+    <string name="event_changes_saved">The event\'s changes have been saved</string>
     <string name="my_events_screen_name">My events</string>
     <string name="my_events_screen_created_event_list_name">Created events</string>
     <string name="my_events_screen_joined_event_list_name">Joined events</string>
@@ -75,5 +74,12 @@
     <string name="event_details_screen_supplies_button">Supplies</string>
     <string name="event_details_screen_voting_button">Polls and voting</string>
     <string name="event_details_screen_car_pooling_button">Car pooling</string>
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantity</string>
+    <string name="supplies_unit">Unit</string>
+    <string name="chimpagne_cancel">Cancel</string>
+    <string name="chimpagne_add">Add</string>
+    <string name="edit_event">Edit event</string>
+    <string name="edit_event_toast_finish">The event has been edited !</string>
 
 </resources>

@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,11 +24,9 @@ class MyEventsViewModel(
   init {
     fetchMyEvents(onSuccess, onFailure)
   }
-
-  private fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value =
-        _uiState.value.copy(
-            loading = true, userUID = accountManager.currentUserAccount?.firebaseAuthUID!!)
+  /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
+  fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.getAllOfMyEvents(
           { createdEvents, joinedEvents ->
@@ -52,7 +49,6 @@ class MyEventsViewModel(
 data class MyEventsUIState(
     val createdEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val joinedEvents: Map<String, ChimpagneEvent> = emptyMap(),
-    val userUID: ChimpagneAccountUID = "",
     val loading: Boolean = false
 )
 
