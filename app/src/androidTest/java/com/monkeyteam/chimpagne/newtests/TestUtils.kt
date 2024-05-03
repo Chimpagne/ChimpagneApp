@@ -10,10 +10,13 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import junit.framework.TestCase.assertTrue
 
 val TEST_EVENTS =
     listOf(
@@ -126,6 +129,14 @@ fun dropTable(table: CollectionReference) {
   }
 }
 
+fun dropTestDatabase() {
+    val eventsTable = Firebase.firestore.collection(TEST_TABLES.EVENTS)
+    val accountsTable = Firebase.firestore.collection(TEST_TABLES.ACCOUNTS)
+
+    dropTable(eventsTable)
+    dropTable(accountsTable)
+}
+
 fun initializeTestDatabase(
     events: List<ChimpagneEvent> = TEST_EVENTS,
     accounts: List<ChimpagneAccount> = TEST_ACCOUNTS,
@@ -149,4 +160,9 @@ fun initializeTestDatabase(
   for (entry in profilePictures.entries.iterator()) {
     Tasks.await(profilePicturesTable.child(entry.key).putFile(entry.value))
   }
+}
+
+fun updateEventAndWait(database: Database, chimpagneEvent: ChimpagneEvent) {
+    val eventsTable = Firebase.firestore.collection(TEST_TABLES.EVENTS)
+    Tasks.await(eventsTable.document(chimpagneEvent.id).set(chimpagneEvent))
 }
