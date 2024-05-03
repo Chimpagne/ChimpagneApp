@@ -15,6 +15,8 @@ class ChimpagneEventManager(
     private val database: Database,
     private val events: CollectionReference
 ) {
+  val atomic = AtomicChimpagneEventManager(database, events)
+
   fun getAllEventsByFilterAroundLocation(
       center: Location,
       radiusInM: Double,
@@ -117,58 +119,6 @@ class ChimpagneEventManager(
     events
         .document(id)
         .delete()
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun addGuest(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("guests.${userUID}", true)
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun removeGuest(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("guests.${userUID}", FieldValue.delete())
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun addStaff(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("staffs.${userUID}", true)
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun removeStaff(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("staffs.${userUID}", FieldValue.delete())
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
