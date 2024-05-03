@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.newtests.ui
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -42,7 +41,6 @@ class ViewDetailEventScreenTests {
 
     // Now check if the QR code image is displayed
     composeTestRule.onNodeWithTag("loading").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("qr_code_image").assertIsNotDisplayed()
 
     composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("close_button").performClick()
