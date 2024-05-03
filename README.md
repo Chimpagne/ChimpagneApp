@@ -22,7 +22,7 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 
 # Architecture diagram
 
-![alt text](arch for MS2.PNG)
+![alt text](MS2.PNG)
 
 # UI
 
