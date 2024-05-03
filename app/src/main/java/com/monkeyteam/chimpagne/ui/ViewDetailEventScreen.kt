@@ -218,14 +218,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                                     .fillMaxWidth()
                                     .testTag("supplies"),
-                            onClick = {
-                              /* TODO Implement this later */
-                              Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                  .show()
-                            })
+                          onClick = {
+                            navObject.navigateTo(Route.SUPPLIES + "/${uiState.id}")
+                          })
                         Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = stringResource(id = R.string.event_details_screen_voting_button),

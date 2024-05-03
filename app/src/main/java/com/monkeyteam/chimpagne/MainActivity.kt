@@ -27,6 +27,7 @@ import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
+import com.monkeyteam.chimpagne.ui.eventdetails.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
@@ -124,6 +125,13 @@ class MainActivity : ComponentActivity() {
                   initialPage = 0,
                   navObject = navActions,
                   eventViewModel = EventViewModel(eventID, database, {}, {}))
+            }
+            composable(Route.SUPPLIES + "/{EventID}") { backStackEntry ->
+              val eventID = backStackEntry.arguments?.getString("EventID")
+              SuppliesScreen(
+                eventViewModel = EventViewModel(eventID, database, {}, {}),
+                accountViewModel = accountViewModel
+              )
             }
             composable(Route.MY_EVENTS_SCREEN) {
               val myEventsViewModel: MyEventsViewModel =
