@@ -380,7 +380,7 @@ fun FindEventMapScreen(
   val goBack = {
     scope.launch {
       scaffoldState.bottomSheetState.partialExpand()
-        findViewModel.eraseResults()
+      findViewModel.eraseResults()
       onBackIconClicked()
     }
   }

@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.annotation.OptIn
 import androidx.camera.core.CameraSelector
@@ -14,7 +13,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -80,11 +78,7 @@ fun CameraPreview(modifier: Modifier, onResult: (String) -> Unit) {
 
               val imageAnalyzer =
                   ImageAnalysis.Builder().build().also { it ->
-                      it.setAnalyzer(
-                        cameraExecutor,
-                        QRCodeAnalyser {
-                            onResult(it)
-                        })
+                    it.setAnalyzer(cameraExecutor, QRCodeAnalyser { onResult(it) })
                   }
 
               val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -109,19 +103,14 @@ fun CameraPreview(modifier: Modifier, onResult: (String) -> Unit) {
 }
 
 @Composable
-fun QRCodeScanner(close: () -> Unit, onResult: (String) -> Unit){
-    Box(modifier = Modifier.fillMaxSize()) {
+fun QRCodeScanner(close: () -> Unit, onResult: (String) -> Unit) {
+  Box(modifier = Modifier.fillMaxSize()) {
+    CameraPreview(modifier = Modifier.matchParentSize(), onResult)
 
-        CameraPreview(modifier = Modifier.matchParentSize(), onResult)
-
-        IconTextButton(
-            onClick = { close() },
-            icon = Icons.Rounded.Close,
-            text = stringResource(id = R.string.close),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 16.dp)
-
-        )
-    }
+    IconTextButton(
+        onClick = { close() },
+        icon = Icons.Rounded.Close,
+        text = stringResource(id = R.string.close),
+        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+  }
 }
