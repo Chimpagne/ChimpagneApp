@@ -20,6 +20,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -99,18 +100,19 @@ fun CameraPreview(modifier: Modifier, onResult: (String) -> Unit) {
             ContextCompat.getMainExecutor(context))
         previewView
       },
-      modifier = modifier)
+      modifier = modifier.testTag("camera_preview"))
 }
 
 @Composable
 fun QRCodeScanner(close: () -> Unit, onResult: (String) -> Unit) {
-  Box(modifier = Modifier.fillMaxSize()) {
+  Box(modifier = Modifier.fillMaxSize().testTag("qr_code_scanner")) {
     CameraPreview(modifier = Modifier.matchParentSize(), onResult)
 
     IconTextButton(
         onClick = { close() },
         icon = Icons.Rounded.Close,
         text = stringResource(id = R.string.close),
-        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp))
+        modifier =
+            Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp).testTag("close_button"))
   }
 }

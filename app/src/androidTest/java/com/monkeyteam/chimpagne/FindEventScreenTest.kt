@@ -17,6 +17,7 @@ import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import org.junit.Rule
@@ -33,7 +34,18 @@ class FindEventScreenTest {
   val permissionRule: GrantPermissionRule =
       GrantPermissionRule.grant(
           android.Manifest.permission.ACCESS_FINE_LOCATION,
-          android.Manifest.permission.ACCESS_COARSE_LOCATION)
+          android.Manifest.permission.ACCESS_COARSE_LOCATION,
+          android.Manifest.permission.CAMERA)
+
+  @Test
+  fun testQRCodeScanner() {
+
+    composeTestRule.setContent { QRCodeScanner(close = {}, onResult = {}) }
+
+    composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("camera_preview").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("close_button").performClick()
+  }
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
