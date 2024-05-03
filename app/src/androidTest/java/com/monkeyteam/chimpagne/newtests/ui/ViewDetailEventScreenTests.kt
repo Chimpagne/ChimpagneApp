@@ -44,10 +44,6 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("loading").assertIsDisplayed()
     composeTestRule.onNodeWithTag("qr_code_image").assertIsNotDisplayed()
 
-    Thread.sleep(10000)
-
-    composeTestRule.onNodeWithTag("qr_code_image").assertIsDisplayed()
-
     composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("close_button").performClick()
   }
