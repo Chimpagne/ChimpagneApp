@@ -31,6 +31,26 @@ class InstrumentEditEventScreenTest {
 }
 
 @RunWith(AndroidJUnit4::class)
+class ButtonToastTest {
+  val database = Database()
+  @get:Rule val composeTestRule = createComposeRule()
+
+  @Test
+  fun saveButtonIsDisplayed() {
+    // Arrange
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+    }
+
+    composeTestRule.onNodeWithTag("save_changes_button").performClick()
+    //  toasts are not composable in nature, which makes them difficult to test within the Jetpack
+    // Compose framework.
+  }
+}
+
+@RunWith(AndroidJUnit4::class)
 class EditEventScreenTestTest {
 
   val database = Database()
