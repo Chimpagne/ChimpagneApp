@@ -107,7 +107,7 @@ class FindEventScreenTest {
 
   @Test
   fun testEventDetailSheetDisplay() {
-    val sampleEvent = ChimpagneEvent(id = "houhouhou",title = "banana", description = "MONKEY")
+    val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
 
     composeTestRule.setContent {
       DetailScreenSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))

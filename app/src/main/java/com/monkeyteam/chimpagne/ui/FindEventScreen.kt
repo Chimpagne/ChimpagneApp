@@ -76,6 +76,7 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
+import com.monkeyteam.chimpagne.ui.utilities.QRCodePreview
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -148,6 +149,8 @@ fun FindEventFormScreen(
     showToast: (String) -> Unit
 ) {
 
+  var showDialog by remember { mutableStateOf(false) }
+
   val uiState by findViewModel.uiState.collectAsState()
   val context = LocalContext.current
   val scrollState = rememberScrollState()
@@ -201,7 +204,7 @@ fun FindEventFormScreen(
           contract = ActivityResultContracts.RequestPermission(),
           onResult = { granted ->
             if (granted) {
-              showToast("Camera permission granted")
+              showDialog = true
             } else {
               showToast("Camera permission denied")
             }
@@ -248,6 +251,9 @@ fun FindEventFormScreen(
               }
             }
       }) { innerPadding ->
+        if (showDialog) {
+          QRCodePreview()
+        }
         Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
               modifier =
