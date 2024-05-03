@@ -18,7 +18,7 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Weather Info: Have a bar that indicates if and when it's going to rain (plus reminder)
 - Permission Handling: One admin (creates event), multiple possible organisers (added later on) and event goers (who don’t have access to the organisation part of the event). 
 - Car pooling : number of seats, departure time, destination, etc.. ,  “trust me I am not drunk”
-- Organizing who can sleep on site with reservation 
+- Organizing who can sleep on site with bed reservation 
 
 # Architecture diagram
 
