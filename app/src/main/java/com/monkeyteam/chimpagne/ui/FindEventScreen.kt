@@ -241,7 +241,7 @@ fun FindEventFormScreen(
                 Icon(
                     imageVector = Icons.Rounded.QrCodeScanner,
                     contentDescription = "Scan QR",
-                    modifier = Modifier.testTag("scan QR"))
+                    modifier = Modifier.testTag("qr_button"))
               }
             })
       },

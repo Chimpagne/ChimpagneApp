@@ -18,6 +18,7 @@ import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.utilities.QRCodeAnalyser
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -197,6 +198,31 @@ class FindEventScreenTest {
 
     // Simulate clicking the search button
     composeTestRule.onNodeWithTag("button_search").performClick()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun findEventFormScreen_DisplayQR() {
+
+    val fvm = FindEventsViewModel(database = database)
+
+    composeTestRule.setContent {
+      val analyser = QRCodeAnalyser {}
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventFormScreen(navActions, fvm, {}, {}, {})
+    }
+
+    composeTestRule.waitForIdle()
+
+    composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
+
+    composeTestRule.waitForIdle()
+
+    composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("close_button").performClick()
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

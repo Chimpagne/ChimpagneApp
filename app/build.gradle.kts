@@ -93,6 +93,7 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.barcode.scanning)
+    implementation(libs.androidx.junit.ktx)
 
 
     testImplementation(libs.junit)
