@@ -120,8 +120,6 @@ class MainActivity : ComponentActivity() {
             }
             composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
               val eventID = backStackEntry.arguments?.getString("EventID")
-              println("EVENT ID:")
-              println(eventID)
               EditEventScreen(
                   initialPage = 0,
                   navObject = navActions,
