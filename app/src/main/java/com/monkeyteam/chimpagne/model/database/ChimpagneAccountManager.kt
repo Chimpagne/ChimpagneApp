@@ -84,18 +84,18 @@ class ChimpagneAccountManager(
   }
 
   fun getAccounts(
-      uidList: List<ChimpagneAccountUID>,
-      onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
+      uids: Set<ChimpagneAccountUID>,
+      onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
-        uidList.map { (it to accounts.document(it).get()) }.toMap()
+        uids.associate { (it to accounts.document(it).get()) }
     Tasks.whenAllComplete(tasks.values)
         .addOnSuccessListener {
           val results =
               tasks
                   .map {
-                    val account = it.value.result.toObject<ChimpagneAccount>()
+                    val account = it.value.result.toObject<ChimpagneAccount>()!!
                     (it.key to account)
                   }
                   .toMap()

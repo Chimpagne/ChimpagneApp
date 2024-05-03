@@ -73,6 +73,7 @@
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
     <string name="event_details_screen_edit_button">Éditer l\'événement</string>
+    <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
     <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
     <string name="event_details_screen_supplies_button">Trucs à amener</string>

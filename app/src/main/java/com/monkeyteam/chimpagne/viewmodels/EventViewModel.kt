@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
@@ -81,6 +82,25 @@ class EventViewModel(
           EventUIState(
               ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "",
               currentUserRole = ChimpagneRole.OWNER)
+    }
+  }
+
+  fun fetchAccounts(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    if (eventID != null) {
+      _uiState.value = _uiState.value.copy(loading = true)
+      viewModelScope.launch {
+        accountManager.getAccounts(
+            setOf(_uiState.value.ownerId) + _uiState.value.guests.keys + _uiState.value.staffs.keys,
+            {
+              _uiState.value = _uiState.value.copy(accounts = it)
+              onSuccess()
+              _uiState.value = _uiState.value.copy(loading = false)
+            }) {
+              Log.d("FETCHING EVENT ACCOUNTS", "Error : ", it)
+              _uiState.value = _uiState.value.copy(loading = false)
+              onFailure(it)
+            }
+      }
     }
   }
 
@@ -256,6 +276,18 @@ class EventViewModel(
   fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
     return buildChimpagneEvent().getRole(userUID)
   }
+
+  fun promoteGuestToStaff(uid: ChimpagneAccountUID) {
+    _uiState.value =
+        _uiState.value.copy(
+            guests = _uiState.value.guests - uid, staffs = _uiState.value.staffs + (uid to true))
+  }
+
+  fun demoteStaffToGuest(uid: ChimpagneAccountUID) {
+    _uiState.value =
+        _uiState.value.copy(
+            guests = _uiState.value.guests + (uid to true), staffs = _uiState.value.staffs - uid)
+  }
 }
 
 data class EventUIState(
@@ -275,7 +307,9 @@ data class EventUIState(
     // unmodifiable by the UI
     val ownerId: ChimpagneAccountUID = "",
     val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-    val loading: Boolean = false,
+    // OPTIONAL PARAMETER, MUST BE FETCH SEPARATELY
+    val accounts: Map<String, ChimpagneAccount> = emptyMap(),
+    val loading: Boolean = false
 )
 
 class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :

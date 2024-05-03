@@ -24,6 +24,7 @@ import com.monkeyteam.chimpagne.ui.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
+import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -131,6 +132,15 @@ class MainActivity : ComponentActivity() {
                               backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent()
               ViewDetailEventScreen(navObject = navActions, eventViewModel = eventViewModel)
+            }
+            composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent({ eventViewModel.fetchAccounts() })
+              ManageStaffScreen(navObject = navActions, eventViewModel = eventViewModel)
             }
           }
         }

@@ -104,8 +104,8 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    // composeTestRule.onNodeWithTag("edit").assertHasClickAction()
-    // composeTestRule.onNodeWithTag("edit").performClick()
+    composeTestRule.onNodeWithTag("edit").assertHasClickAction()
+    composeTestRule.onNodeWithTag("edit").performClick()
   }
 
   @Test
@@ -194,7 +194,22 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM)
     }
 
-    composeTestRule.onNodeWithTag("car pooling").assertHasClickAction()
-    composeTestRule.onNodeWithTag("car pooling").performClick()
+    @Test
+    fun testManageStaffButton() {
+      database.accountManager.signInTo(TEST_ACCOUNTS[1])
+      val event = TEST_EVENTS[0]
+      val eventVM = EventViewModel(event.id, database)
+
+      while (eventVM.uiState.value.loading) {}
+
+      composeTestRule.setContent {
+        val navController = rememberNavController()
+        val navActions = NavigationActions(navController)
+        ViewDetailEventScreen(navActions, eventVM)
+      }
+
+      composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()
+      composeTestRule.onNodeWithTag("manage staff").performClick()
+    }
   }
 }

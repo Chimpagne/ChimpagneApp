@@ -21,6 +21,7 @@ import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +52,7 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
@@ -172,6 +174,21 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         "This function will be implemented in a future version",
                                         Toast.LENGTH_SHORT)
                                     .show()
+                              })
+                          Spacer(Modifier.height(16.dp))
+                          ChimpagneButton(
+                              text =
+                                  stringResource(
+                                      id = R.string.event_details_screen_manage_staff_button),
+                              icon = Icons.Rounded.PeopleAlt,
+                              fontWeight = FontWeight.Bold,
+                              fontSize = 30.sp,
+                              modifier =
+                                  Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                      .fillMaxWidth()
+                                      .testTag("manage staff"),
+                              onClick = {
+                                navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                               })
                         }
                         Spacer(Modifier.height(16.dp))

@@ -72,6 +72,7 @@
     <string name="event_details_screen_leave_button">Leave this Event</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit this event</string>
+    <string name="event_details_screen_manage_staff_button">Manage staff</string>
     <string name="event_details_screen_chat_button">Chat</string>
     <string name="event_details_screen_location_button">Location</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
