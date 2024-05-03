@@ -110,7 +110,7 @@ class FindEventScreenTest {
     val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
 
     composeTestRule.setContent {
-      DetailScreenSheet(sampleEvent, viewModel(factory = FindEventsViewModelFactory(database)))
+      DetailScreenSheet(sampleEvent){}
     }
 
     // Assert that event details are displayed correctly
