@@ -21,8 +21,8 @@
     <string name="event_creation_screen_description">Add a description</string>
     <string name="event_creation_screen_description_legend">Description</string>
     <string name="event_creation_screen_location_legend">Location</string>
-    <string name="event_creation_screen_start_date_legend">Event Start Date And Time</string>
-    <string name="event_creation_screen_end_date_legend">Event End Date And Time</string>
+    <string name="event_creation_screen_start_date_legend">Event Start Date and Time</string>
+    <string name="event_creation_screen_end_date_legend">Event End Date and Time</string>
     <string name="event_creation_screen_tags_legend">Add Event Tags</string>
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
@@ -50,7 +50,6 @@
     <string name="find_event_no_result">No result</string>
     <string name="find_event_location_not_selected">No location selected</string>
     <string name="search_location">Search for a location</string>
-    <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="welcome_screen_title">Welcome to</string>
     <string name="continue_as_guest">Continue as Guest</string>
@@ -81,5 +80,5 @@
     <string name="chimpagne_add">Add</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
-
+    <string name="edit_event_save_failure">Could not save the edited event !</string>
 </resources>
