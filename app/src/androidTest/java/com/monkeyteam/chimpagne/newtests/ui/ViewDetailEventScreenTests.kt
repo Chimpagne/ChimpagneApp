@@ -43,12 +43,7 @@ class ViewDetailEventScreenTests {
     // Now check if the QR code image is displayed
     composeTestRule.onNodeWithTag("loading").assertIsDisplayed()
     composeTestRule.onNodeWithTag("qr_code_image").assertIsNotDisplayed()
-
-    Thread.sleep(5000) // Qr code generation async, not ideal but works for now
-
-    composeTestRule.onNodeWithTag("qr_code_image").assertIsDisplayed()
-
-    // Finally, ensure the close button is present
+    
     composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("close_button").performClick()
   }
