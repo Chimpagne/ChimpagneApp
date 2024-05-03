@@ -2,7 +2,10 @@ package com.monkeyteam.chimpagne.model.database
 
 import android.net.Uri
 import android.util.Log
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
@@ -79,6 +82,27 @@ class ChimpagneAccountManager(
               }
         },
         onFailure)
+  }
+
+  fun getAccounts(
+      uidList: List<ChimpagneAccountUID>,
+      onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
+        uidList.map { (it to accounts.document(it).get()) }.toMap()
+    Tasks.whenAllComplete(tasks.values)
+        .addOnSuccessListener {
+          val results =
+              tasks
+                  .map {
+                    val account = it.value.result.toObject<ChimpagneAccount>()
+                    (it.key to account)
+                  }
+                  .toMap()
+          onSuccess(results)
+        }
+        .addOnFailureListener(onFailure)
   }
 
   /** Puts the given account to Firebase and updates [currentUserAccount] accordingly */

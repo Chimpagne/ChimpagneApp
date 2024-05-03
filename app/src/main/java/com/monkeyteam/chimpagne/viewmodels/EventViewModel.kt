@@ -156,16 +156,12 @@ class EventViewModel(
     }
   }
 
-  fun joinTheEvent(
-      role: ChimpagneRole,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
+  fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
           _uiState.value.id,
-          role,
+          ChimpagneRole.GUEST,
           {
             fetchEvent(
                 onSuccess = {
@@ -250,7 +246,7 @@ class EventViewModel(
     _uiState.value = _uiState.value.copy(supplies = newSupplies)
   }
 
-  fun addSuply(supply: ChimpagneSupply) {
+  fun addSupply(supply: ChimpagneSupply) {
     _uiState.value = _uiState.value.copy(supplies = _uiState.value.supplies + (supply.id to supply))
   }
 
