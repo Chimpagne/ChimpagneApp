@@ -101,10 +101,10 @@ class ChimpagneEventManager(
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
 
-      if(event.id == ""){
-          onFailure(Exception("null event id"))
-          return
-      }
+    if (event.id == "") {
+      onFailure(Exception("null event id"))
+      return
+    }
 
     events
         .document(event.id)

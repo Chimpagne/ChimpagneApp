@@ -148,16 +148,16 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("add_groceries_button").performClick()
-// Assert that the SupplyPopup is displayed after clicking the button
+    // Assert that the SupplyPopup is displayed after clicking the button
     composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
 
     composeTestRule.onNodeWithTag("add_groceries_button").performClick()
-// Fill in the necessary fields in the SupplyPopup
+    // Fill in the necessary fields in the SupplyPopup
     composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("New Item")
     composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
     composeTestRule.onNodeWithTag("supplies_unit_field").performTextInput("pcs")
     composeTestRule.onNodeWithTag("supplies_add_button").performClick()
-// Assert that the new item is added to the list
+    // Assert that the new item is added to the list
     composeTestRule.onNodeWithText("New Item").assertIsDisplayed()
     composeTestRule.onNodeWithText("5 pcs").assertIsDisplayed()
   }

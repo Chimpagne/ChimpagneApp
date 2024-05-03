@@ -33,8 +33,7 @@ class InstrumentEditEventScreenTest {
 @RunWith(AndroidJUnit4::class)
 class ButtonToastTest {
   val database = Database()
-  @get:Rule
-  val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
   @Test
   fun saveButtonIsDisplayed() {
@@ -46,7 +45,8 @@ class ButtonToastTest {
     }
 
     composeTestRule.onNodeWithTag("save_changes_button").performClick()
-    //  toasts are not composable in nature, which makes them difficult to test within the Jetpack Compose framework.
+    //  toasts are not composable in nature, which makes them difficult to test within the Jetpack
+    // Compose framework.
   }
 }
 
