@@ -51,7 +51,7 @@ fun SuppliesPanel(eventViewModel: EventViewModel) {
     if (showAddDialog.value) {
 
       SupplyPopup(
-          onDismissRequest = { showAddDialog.value = false }, onSave = eventViewModel::addSuply)
+          onDismissRequest = { showAddDialog.value = false }, onSave = eventViewModel::addSupply)
     }
 
     Spacer(modifier = Modifier.height(16.dp))
