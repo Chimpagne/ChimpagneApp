@@ -14,8 +14,6 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.utilities.DEEP_LINK_URI
-import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
 import org.junit.Rule
@@ -37,12 +35,15 @@ class ViewDetailEventScreenTests {
   @Test
   fun qrCodeGeneration_displaysQRCode() {
     val testEventId = "12345"
-    composeTestRule.setContent { QRCodeDialog(eventId = DEEP_LINK_URI + testEventId) {} }
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, EventViewModel(testEventId, database))
+    }
 
-    // Now check if the QR code image is displayed
-    composeTestRule.onNodeWithTag("loading").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
 
-    composeTestRule.onNodeWithTag("close_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("close_button").performClick()
   }
 
