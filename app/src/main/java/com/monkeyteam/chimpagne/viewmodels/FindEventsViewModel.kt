@@ -69,6 +69,38 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
+  fun fetchEvent(
+      id: ChimpagneEventId,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    if (_uiState.value.loading) return
+    setLoading(true)
+    viewModelScope.launch {
+      try {
+        eventManager.getEventById(
+            id,
+            {
+              if (it != null) {
+                _uiState.value = _uiState.value.copy(events = mapOf(it.id to it), loading = false)
+                onSuccess()
+              } else {
+                Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
+                setLoading(false)
+              }
+            },
+            onFailure)
+      } catch (e: Exception) {
+        setLoading(false)
+        onFailure(e)
+      }
+    }
+  }
+
+  fun eraseResults() {
+    _uiState.value = _uiState.value.copy(events = emptyMap())
+  }
+
   fun setLoading(loading: Boolean = true) {
     _uiState.value = _uiState.value.copy(loading = loading)
   }

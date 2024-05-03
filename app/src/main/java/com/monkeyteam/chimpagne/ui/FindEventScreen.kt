@@ -76,7 +76,7 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
-import com.monkeyteam.chimpagne.ui.utilities.QRCodePreview
+import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -133,7 +133,8 @@ fun MainFindEventScreen(
   HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 1) { page
     ->
     when (page) {
-      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
+      FindEventScreens.FORM ->
+          FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
     }
@@ -146,7 +147,8 @@ fun FindEventFormScreen(
     navObject: NavigationActions,
     findViewModel: FindEventsViewModel,
     onSearchClick: () -> Unit,
-    showToast: (String) -> Unit
+    showToast: (String) -> Unit,
+    showScannedEvent: () -> Unit
 ) {
 
   var showDialog by remember { mutableStateOf(false) }
@@ -211,6 +213,18 @@ fun FindEventFormScreen(
           })
 
   val requestCameraPermission = { cameraPermissionRequest.launch(Manifest.permission.CAMERA) }
+  if (showDialog) {
+    QRCodeScanner(
+        { showDialog = false },
+        {
+          showDialog = false
+
+          val uid = it.substringAfter("?uid=")
+
+          findViewModel.fetchEvent(
+              uid, onSuccess = showScannedEvent, onFailure = { showToast("Event not found") })
+        })
+  }
 
   Scaffold(
       topBar = {
@@ -251,9 +265,6 @@ fun FindEventFormScreen(
               }
             }
       }) { innerPadding ->
-        if (showDialog) {
-          QRCodePreview()
-        }
         Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
               modifier =
@@ -358,9 +369,18 @@ fun FindEventMapScreen(
       launch { scaffoldState.bottomSheetState.expand() }
     }
   }
+
+  LaunchedEffect(uiState.events.size) {
+    if (uiState.events.size == 1) {
+      currentEvent = uiState.events.values.first()
+      scaffoldState.bottomSheetState.expand()
+    }
+  }
+
   val goBack = {
     scope.launch {
       scaffoldState.bottomSheetState.partialExpand()
+        findViewModel.eraseResults()
       onBackIconClicked()
     }
   }
