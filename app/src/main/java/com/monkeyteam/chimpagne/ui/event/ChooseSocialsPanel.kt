@@ -35,7 +35,8 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
         iconResource = R.drawable.instagram,
         testTag = "instagram_input",
         updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platform = "https://instagram.com/")
+        platformName = "instagram",
+        platformUrl = "https://instagram.com/")
 
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -46,7 +47,8 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
         iconResource = R.drawable.discord,
         testTag = "discord_input",
         updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platform = "https://discord.gg/")
+        platformName = "discord",
+        platformUrl = "https://discord.gg/")
   }
 }
 
@@ -58,20 +60,24 @@ private fun SocialMediaTextField(
     iconResource: Int,
     testTag: String,
     updateSocialMediaLink: (Pair<String, String>) -> Unit,
-    platform: String
+    platformName: String,
+    platformUrl: String
 ) {
   val iconPainter: Painter = painterResource(id = iconResource)
 
   OutlinedTextField(
       value = url,
       onValueChange = {
-        val fullUrl = createFullUrl(platform, it)
-        onUrlChange(fullUrl)
-        updateSocialMediaLink(Pair(platform, fullUrl))
+        onUrlChange(it)
+        val fullUrl = createFullUrl(platformUrl, it)
+        updateSocialMediaLink(Pair(platformName, fullUrl))
       },
       label = { Text(stringResource(id = labelResource)) },
       leadingIcon = {
-        Image(painter = iconPainter, contentDescription = platform, modifier = Modifier.size(35.dp))
+        Image(
+            painter = iconPainter,
+            contentDescription = platformName,
+            modifier = Modifier.size(35.dp))
       },
       keyboardOptions = KeyboardOptions.Default,
       modifier = Modifier.fillMaxWidth().testTag(testTag))
