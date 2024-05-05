@@ -1,7 +1,12 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,10 +30,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
@@ -95,4 +102,62 @@ fun GoBackButton(navigationActions: NavigationActions) {
         contentDescription = "Go Back",
         tint = MaterialTheme.colorScheme.onSurface)
   }
+}
+
+/**
+ * SocialButton is a button that can be used to link to social media platforms.
+ *
+ * @param imageLogo The image resource of the social media platform.
+ * @param urlAsString The URL to the social media platform, make sure to use https://.
+ * @param context The context of the activity.
+ */
+@Composable
+fun SocialButton(imageLogo: Int, urlAsString: String, context: Context) {
+  Image(
+      painter = painterResource(id = imageLogo),
+      contentDescription = "Social Button",
+      modifier =
+          Modifier.size(55.dp).clickable {
+            val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(urlAsString))
+            context.startActivity(urlIntent)
+          })
+}
+
+/**
+ * SocialButtonRow is a row of social buttons that can be used to link to social media platforms.
+ *
+ * @param context The context of the activity.
+ * @param facebookUrl The URL to the Facebook page, make sure to use https://.
+ * @param instagramUrl The URL to the Instagram page, make sure to use https://.
+ * @param discordUrl The URL to the Discord page, make sure to use https://.
+ */
+@Composable
+fun SocialButtonRow(
+    context: Context,
+    facebookUrl: String = "",
+    instagramUrl: String = "",
+    discordUrl: String = ""
+) {
+  Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        if (facebookUrl.isNotEmpty()) {
+          SocialButton(
+              imageLogo = com.monkeyteam.chimpagne.R.drawable.facebook,
+              urlAsString = facebookUrl,
+              context = context)
+        }
+        if (instagramUrl.isNotEmpty()) {
+          SocialButton(
+              imageLogo = com.monkeyteam.chimpagne.R.drawable.instagram,
+              urlAsString = instagramUrl,
+              context = context)
+        }
+        if (discordUrl.isNotEmpty()) {
+          SocialButton(
+              imageLogo = com.monkeyteam.chimpagne.R.drawable.discord,
+              urlAsString = discordUrl,
+              context = context)
+        }
+      }
 }

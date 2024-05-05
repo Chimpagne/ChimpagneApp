@@ -50,6 +50,7 @@ import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
+import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -129,6 +130,12 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 Modifier.fillMaxWidth()
                                     .absolutePadding(left = 16.dp, right = 16.dp)
                                     .testTag("description"))
+                        Spacer(Modifier.height(16.dp))
+                        SocialButtonRow(
+                            context = context,
+                            facebookUrl = "https://www.facebook.com",
+                            instagramUrl = "https://www.instagram.com",
+                            discordUrl = "https://www.discord.com")
                         Spacer(Modifier.height(16.dp))
                         if (uiState.currentUserRole != ChimpagneRole.OWNER) {
                           ChimpagneButton(
