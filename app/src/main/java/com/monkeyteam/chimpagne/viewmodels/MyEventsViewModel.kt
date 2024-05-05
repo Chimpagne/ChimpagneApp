@@ -29,11 +29,12 @@ class MyEventsViewModel(
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.getAllOfMyEvents(
-          { createdEvents, joinedEvents ->
+          { createdEvents, joinedEvents, pastEvents ->
             _uiState.value =
                 _uiState.value.copy(
                     createdEvents = createdEvents.associateBy { event -> event.id },
-                    joinedEvents = joinedEvents.associateBy { event -> event.id })
+                    joinedEvents = joinedEvents.associateBy { event -> event.id },
+                    pastEvents = pastEvents.associateBy { event -> event.id })
             _uiState.value = _uiState.value.copy(loading = false)
             onSuccess()
           },
@@ -49,8 +50,9 @@ class MyEventsViewModel(
 data class MyEventsUIState(
     val createdEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val joinedEvents: Map<String, ChimpagneEvent> = emptyMap(),
+    val pastEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val loading: Boolean = false
-)
+) {}
 
 class MyEventsViewModelFactory(private val database: Database) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
