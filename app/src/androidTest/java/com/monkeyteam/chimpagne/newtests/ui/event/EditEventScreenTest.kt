@@ -182,4 +182,28 @@ class EditEventScreenTestTest {
     composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
   }
+
+  @Test
+  fun testSocialMediaPanelUI() {
+    // Now we do this to go the correct screen
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EditEventScreen(3, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+    }
+
+    composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
+
+    val testAccountString = "test Account"
+    composeTestRule.onNodeWithTag("instagram_input").assertExists()
+    composeTestRule.onNodeWithTag("instagram_input").performTextInput(testAccountString)
+
+    val testCodeString = "discord invite"
+    composeTestRule.onNodeWithTag("discord_input").assertExists()
+    composeTestRule.onNodeWithTag("discord_input").performTextInput(testCodeString)
+
+    composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
+
+    composeTestRule.onNodeWithTag("save").assertIsDisplayed()
+  }
 }
