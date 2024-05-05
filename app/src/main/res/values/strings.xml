@@ -83,6 +83,6 @@
     <string name="edit_event_save_failure">Could not save the edited event !</string>
     <string name="instagram_username">What\'s your instagram username?</string>
     <string name="discord_invite_code">What\'s your discord invite code?</string>
-    <string name="links_to_social_media">Links to social media</string>
+    <string name="links_to_social_media">Add your social media</string>
 
 </resources>

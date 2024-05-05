@@ -29,7 +29,7 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
-        url = instagramUrl,
+        url = instagramUrl.removePrefix("https://instagram.com/"),
         onUrlChange = { instagramUrl = it },
         labelResource = R.string.instagram_username,
         iconResource = R.drawable.instagram,
@@ -41,7 +41,7 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
-        url = discordUrl,
+        url = discordUrl.removePrefix("https://discord.gg/"),
         onUrlChange = { discordUrl = it },
         labelResource = R.string.discord_invite_code,
         iconResource = R.drawable.discord,

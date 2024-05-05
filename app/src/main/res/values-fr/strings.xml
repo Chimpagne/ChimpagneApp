@@ -84,5 +84,5 @@
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
     <string name="instagram_username">Quel est votre nom d\'utilisateur Instagram ?</string>
     <string name="discord_invite_code">Quel est votre code d\'invitation Discord ?</string>
-    <string name="links_to_social_media">Liens vers les réseaux sociaux</string>
+    <string name="links_to_social_media">Ajouter vos réseaux sociaux</string>
 </resources>
