@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -67,18 +69,31 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
             navigationIcon = {
               IconButton(
                   onClick = {
-                    navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${uiState.id}")
+                    navObject.goBack()
                   }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
                   }
             })
+      },
+      floatingActionButton = {
+          FloatingActionButton(
+              modifier = Modifier.size(70.dp),
+              onClick = {
+              if (isOnEdit) eventViewModel.updateTheEvent({ isOnEdit = false })
+              else isOnEdit = true
+          }){
+              Icon(
+                  if (isOnEdit) Icons.Rounded.Save
+                  else Icons.Rounded.Edit, "floating button"
+              )
+          }
       }) { innerPadding ->
-        Column(
+      Column(
             modifier =
                 Modifier.fillMaxSize()
                     .padding(innerPadding)
                     .background(MaterialTheme.colorScheme.background),
-            horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalAlignment = Alignment.Start) {
               Spacer(Modifier.height(16.dp))
               LazyColumn {
                 item {
@@ -95,16 +110,19 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
                         modifier = Modifier.padding(16.dp).testTag("empty staff list"))
                   }
                 } else {
-                  items(uiState.staffs.keys.toList()) { uid ->
-                    val account = uiState.accounts[uid]!!
-                    PersonCard(
-                        firstName = account.firstName,
-                        lastName = account.lastName,
-                        isOnEdit = isOnEdit,
-                        isStaff = true,
-                        modifier = Modifier.testTag("staff member")) {
-                          eventViewModel.demoteStaffToGuest(account.firebaseAuthUID)
-                        }
+                  items(uiState.staffs.keys.toList().sorted()) { uid ->
+                      if(uiState.accounts[uid] != null) {
+                          val account = uiState.accounts[uid]!!
+                          PersonCard(
+                              firstName = account.firstName,
+                              lastName = account.lastName,
+                              isOnEdit = isOnEdit,
+                              isStaff = true,
+                              modifier = Modifier.testTag("staff member")
+                          ) {
+                              eventViewModel.demoteStaffToGuest(account.firebaseAuthUID)
+                          }
+                      }
                   }
                 }
                 if (isOnEdit) {
@@ -121,34 +139,24 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
                           modifier = Modifier.padding(16.dp).testTag("empty guest list"))
                     }
                   } else {
-                    items(uiState.guests.keys.toList()) { uid ->
-                      val account = uiState.accounts[uid]!!
-                      PersonCard(
-                          firstName = account.firstName,
-                          lastName = account.lastName,
-                          isOnEdit = true,
-                          isStaff = false,
-                          modifier = Modifier.testTag("guest member")) {
-                            eventViewModel.promoteGuestToStaff(account.firebaseAuthUID)
-                          }
+                    items(uiState.guests.keys.toList().sorted()) { uid ->
+                        if(uiState.accounts[uid] != null){
+                            val account = uiState.accounts[uid]!!
+                            PersonCard(
+                                firstName = account.firstName,
+                                lastName = account.lastName,
+                                isOnEdit = true,
+                                isStaff = false,
+                                modifier = Modifier.testTag("guest member")
+                            ) {
+                                eventViewModel.promoteGuestToStaff(account.firebaseAuthUID)
+                            }
+                        }
+
                     }
                   }
                 }
               }
-              ExtendedFloatingActionButton(
-                  onClick = {
-                    if (isOnEdit) eventViewModel.updateTheEvent({ isOnEdit = false })
-                    else isOnEdit = true
-                  },
-                  icon = {
-                    Icon(
-                        if (isOnEdit) Icons.Rounded.Save else Icons.Rounded.Edit, "floating button")
-                  },
-                  text = {
-                    Text(
-                        if (isOnEdit) "Save Changes" else "Edit Staffs",
-                    )
-                  })
             }
       }
 }
@@ -163,7 +171,7 @@ fun PersonCard(
     onClickForToggle: () -> Unit = {}
 ) {
   Card(
-      modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
+      modifier = modifier.clickable { if(isOnEdit){onClickForToggle()} }.padding(horizontal = 16.dp, vertical = 8.dp).fillMaxWidth(),
       shape = RoundedCornerShape(16.dp),
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
         Row(
@@ -187,7 +195,7 @@ fun PersonCard(
           Spacer(Modifier.weight(1f))
           if (isOnEdit) {
             Icon(
-                modifier = Modifier.clickable { onClickForToggle() }.size(70.dp).padding(10.dp),
+                modifier = Modifier.size(55.dp).padding(10.dp),
                 imageVector =
                     if (isStaff) Icons.Rounded.RadioButtonChecked
                     else Icons.Rounded.RadioButtonUnchecked,
