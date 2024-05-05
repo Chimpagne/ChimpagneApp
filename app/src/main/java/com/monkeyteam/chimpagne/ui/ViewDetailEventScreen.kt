@@ -133,7 +133,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                         Spacer(Modifier.height(16.dp))
                         SocialButtonRow(
                             context = context,
-                            facebookUrl = uiState.socialMediaLinks.getValue("facebook"),
                             instagramUrl = uiState.socialMediaLinks.getValue("instagram"),
                             discordUrl = uiState.socialMediaLinks.getValue("discord"))
                         Spacer(Modifier.height(16.dp))

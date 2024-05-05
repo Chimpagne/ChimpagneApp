@@ -127,26 +127,14 @@ fun SocialButton(imageLogo: Int, urlAsString: String, context: Context) {
  * SocialButtonRow is a row of social buttons that can be used to link to social media platforms.
  *
  * @param context The context of the activity.
- * @param facebookUrl The URL to the Facebook page, make sure to use https://.
- * @param instagramUrl The URL to the Instagram page, make sure to use https://.
+ * @param instagramUrl The URL to the Instagram page
  * @param discordUrl The URL to the Discord page, make sure to use https://.
  */
 @Composable
-fun SocialButtonRow(
-    context: Context,
-    facebookUrl: String = "",
-    instagramUrl: String = "",
-    discordUrl: String = ""
-) {
+fun SocialButtonRow(context: Context, instagramUrl: String = "", discordUrl: String = "") {
   Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        if (facebookUrl.isNotEmpty()) {
-          SocialButton(
-              imageLogo = com.monkeyteam.chimpagne.R.drawable.facebook,
-              urlAsString = facebookUrl,
-              context = context)
-        }
         if (instagramUrl.isNotEmpty()) {
           SocialButton(
               imageLogo = com.monkeyteam.chimpagne.R.drawable.instagram,

@@ -86,25 +86,22 @@ class EventViewModel(
   }
 
   private fun buildChimpagneEvent(): ChimpagneEvent {
-    val chimpagneEvent =
-        ChimpagneEvent(
-            id = _uiState.value.id,
-            title = _uiState.value.title,
-            description = _uiState.value.description,
-            location = _uiState.value.location,
-            public = _uiState.value.public,
-            tags = _uiState.value.tags,
-            guests = _uiState.value.guests,
-            staffs = _uiState.value.staffs,
-            startsAt = _uiState.value.startsAtCalendarDate,
-            endsAt = _uiState.value.endsAtCalendarDate,
-            ownerId = _uiState.value.ownerId,
-            supplies = _uiState.value.supplies,
-            parkingSpaces = _uiState.value.parkingSpaces,
-            beds = _uiState.value.beds,
-            socialMediaLinks = _uiState.value.socialMediaLinks)
-    Log.d("BUILDING AN EVENT", "Event : $chimpagneEvent")
-    return chimpagneEvent
+    return ChimpagneEvent(
+        id = _uiState.value.id,
+        title = _uiState.value.title,
+        description = _uiState.value.description,
+        location = _uiState.value.location,
+        public = _uiState.value.public,
+        tags = _uiState.value.tags,
+        guests = _uiState.value.guests,
+        staffs = _uiState.value.staffs,
+        startsAt = _uiState.value.startsAtCalendarDate,
+        endsAt = _uiState.value.endsAtCalendarDate,
+        ownerId = _uiState.value.ownerId,
+        supplies = _uiState.value.supplies,
+        parkingSpaces = _uiState.value.parkingSpaces,
+        beds = _uiState.value.beds,
+        socialMediaLinks = _uiState.value.socialMediaLinks)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -286,8 +283,7 @@ data class EventUIState(
     val ownerId: ChimpagneAccountUID = "",
     val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
     val loading: Boolean = false,
-    val socialMediaLinks: Map<String, String> =
-        mapOf("facebook" to "", "instagram" to "", "discord" to "")
+    val socialMediaLinks: Map<String, String> = mapOf("instagram" to "", "discord" to "")
 )
 
 class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :

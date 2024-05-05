@@ -18,7 +18,6 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  var facebookUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("facebook")) }
   var instagramUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("instagram")) }
   var discordUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("discord")) }
 
@@ -30,35 +29,24 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
-        url = facebookUrl,
-        onUrlChange = { facebookUrl = it },
-        labelResource = R.string.link_to_facebook_page,
-        iconResource = R.drawable.facebook,
-        testTag = "facebook_input",
-        updateSocialMediaLink = { updateIfValid(eventViewModel, Pair("facebook", facebookUrl)) },
-        platform = "facebook")
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SocialMediaTextField(
         url = instagramUrl,
         onUrlChange = { instagramUrl = it },
-        labelResource = R.string.link_to_instagram_page,
+        labelResource = R.string.instagram_username,
         iconResource = R.drawable.instagram,
         testTag = "instagram_input",
-        updateSocialMediaLink = { updateIfValid(eventViewModel, Pair("instagram", instagramUrl)) },
-        platform = "instagram")
+        updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
+        platform = "https://instagram.com/")
 
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
         url = discordUrl,
         onUrlChange = { discordUrl = it },
-        labelResource = R.string.link_to_discord_page,
+        labelResource = R.string.discord_invite_code,
         iconResource = R.drawable.discord,
         testTag = "discord_input",
-        updateSocialMediaLink = { updateIfValid(eventViewModel, Pair("discord", discordUrl)) },
-        platform = "discord")
+        updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
+        platform = "https://discord.gg/")
   }
 }
 
@@ -73,42 +61,22 @@ private fun SocialMediaTextField(
     platform: String
 ) {
   val iconPainter: Painter = painterResource(id = iconResource)
-  val errorMessage =
-      remember(url) {
-        if (url.isNotValid())
-            "Invalid URL. Please make sure it starts with https:// or http://, or leave the field empty."
-        else ""
-      }
 
   OutlinedTextField(
       value = url,
       onValueChange = {
-        onUrlChange(it)
-        updateSocialMediaLink(Pair(platform, it))
+        val fullUrl = createFullUrl(platform, it)
+        onUrlChange(fullUrl)
+        updateSocialMediaLink(Pair(platform, fullUrl))
       },
       label = { Text(stringResource(id = labelResource)) },
       leadingIcon = {
         Image(painter = iconPainter, contentDescription = platform, modifier = Modifier.size(35.dp))
       },
       keyboardOptions = KeyboardOptions.Default,
-      modifier = Modifier.fillMaxWidth().testTag(testTag),
-      isError = url.isNotValid())
-
-  if (url.isNotValid()) {
-    Text(
-        text = errorMessage,
-        color = MaterialTheme.colorScheme.error,
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.padding(start = 16.dp, top = 2.dp))
-  }
+      modifier = Modifier.fillMaxWidth().testTag(testTag))
 }
 
-private fun String.isNotValid(): Boolean {
-  return this.isNotEmpty() && !this.startsWith("https://") && !this.startsWith("http://")
-}
-
-private fun updateIfValid(eventViewModel: EventViewModel, pair: Pair<String, String>) {
-  if (!pair.second.isNotValid()) {
-    eventViewModel.updateSocialMediaLink(pair)
-  }
+private fun createFullUrl(platform: String, url: String): String {
+  return if (url.isEmpty()) "" else "$platform$url"
 }
