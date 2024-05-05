@@ -183,7 +183,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(3, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     val value = "4"
@@ -194,9 +194,8 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("n_beds").assertExists()
     composeTestRule.onNodeWithTag("n_beds").performTextInput(valueBed)
 
-    composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
-
-    composeTestRule.onNodeWithTag("create_event_button").performClick()
+    composeTestRule.onNodeWithTag("create_event_button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("next_button").performClick()
   }
 
   @Test
@@ -217,7 +216,7 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(3, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()

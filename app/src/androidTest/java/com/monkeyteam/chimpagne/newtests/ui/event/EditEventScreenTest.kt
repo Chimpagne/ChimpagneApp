@@ -41,7 +41,7 @@ class ButtonToastTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(3, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
     composeTestRule.onNodeWithTag("save_changes_button").performClick()
@@ -176,7 +176,7 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
