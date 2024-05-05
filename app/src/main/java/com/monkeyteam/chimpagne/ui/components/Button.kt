@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -112,15 +113,17 @@ fun GoBackButton(navigationActions: NavigationActions) {
  * @param context The context of the activity.
  */
 @Composable
-fun SocialButton(imageLogo: Int, urlAsString: String, context: Context) {
+fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag: String) {
   Image(
       painter = painterResource(id = imageLogo),
       contentDescription = "Social Button",
       modifier =
-          Modifier.size(55.dp).clickable {
-            val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(urlAsString))
-            context.startActivity(urlIntent)
-          })
+          Modifier.size(55.dp)
+              .clickable {
+                val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(urlAsString))
+                context.startActivity(urlIntent)
+              }
+              .testTag(testTag))
 }
 
 /**
@@ -139,13 +142,15 @@ fun SocialButtonRow(context: Context, instagramUrl: String = "", discordUrl: Str
           SocialButton(
               imageLogo = com.monkeyteam.chimpagne.R.drawable.instagram,
               urlAsString = instagramUrl,
-              context = context)
+              context = context,
+              testTag = "Instagram_Button")
         }
         if (discordUrl.isNotEmpty()) {
           SocialButton(
               imageLogo = com.monkeyteam.chimpagne.R.drawable.discord,
               urlAsString = discordUrl,
-              context = context)
+              context = context,
+              testTag = "Discord_Button")
         }
       }
 }

@@ -1,18 +1,23 @@
 package com.monkeyteam.chimpagne
 
 import DateSelector
+import android.content.Context
 import android.net.Uri
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
+import com.monkeyteam.chimpagne.ui.components.SocialButton
+import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import java.util.Calendar
 import java.util.Locale
@@ -190,5 +195,54 @@ class ProfileIconTest {
     composeTestRule.onNodeWithContentDescription("Profile").performClick()
 
     assert(clicked)
+  }
+}
+
+class TestSocialButtonConstructs {
+
+  @get:Rule val composeTestRule = createComposeRule()
+
+  private val context: Context = ApplicationProvider.getApplicationContext()
+
+  @Test
+  fun testSocialButton() {
+    composeTestRule.setContent {
+      SocialButton(
+          imageLogo = R.drawable.instagram,
+          urlAsString = "https://www.instagram.com/",
+          context = context,
+          testTag = "Instagram_Button")
+    }
+
+    composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
+  }
+
+  @Test
+  fun BothDisplayedRow() {
+    composeTestRule.setContent {
+      SocialButtonRow(
+          context = context,
+          instagramUrl = "https://www.instagram.com/",
+          discordUrl = "https://www.discord.com/")
+    }
+
+    composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
+  }
+
+  @Test
+  fun OnlyInstagramDisplayedRow() {
+    composeTestRule.setContent {
+      SocialButtonRow(context = context, instagramUrl = "https://www.instagram.com/")
+    }
+    composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
+  }
+
+  @Test
+  fun NoneDisplayed() {
+    composeTestRule.setContent { SocialButtonRow(context = context) }
+    composeTestRule.onNodeWithTag("Instagram_Button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
   }
 }
