@@ -23,7 +23,9 @@ data class ChimpagneEvent(
     val ownerId: ChimpagneAccountUID = "",
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
-    val beds: Int = 0
+    val beds: Int = 0,
+    val socialMediaLinks: Map<String, String> =
+        mapOf("facebook" to "", "instagram" to "", "discord" to "")
 ) {
 
   fun guestList(): Set<String> {
@@ -63,7 +65,8 @@ data class ChimpagneEvent(
       ownerId: ChimpagneAccountUID,
       supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       parkingSpaces: Int,
-      beds: Int
+      beds: Int,
+      socialMediaLinks: Map<String, String>
   ) : this(
       id,
       title,
@@ -78,5 +81,6 @@ data class ChimpagneEvent(
       ownerId,
       supplies,
       parkingSpaces,
-      beds)
+      beds,
+      socialMediaLinks)
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.social.ChooseSocialsPanel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
 
@@ -41,7 +42,7 @@ fun EventCreationScreen(
 
   val uiState by eventViewModel.uiState.collectAsState()
 
-  val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
+  val pagerState = rememberPagerState(initialPage = initialPage) { 5 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
   Column {
@@ -55,6 +56,7 @@ fun EventCreationScreen(
         1 -> TagsAndPubPanel(eventViewModel)
         2 -> SuppliesPanel(eventViewModel)
         3 -> AdvancedLogisticsPanel(eventViewModel)
+        4 -> ChooseSocialsPanel(eventViewModel)
       }
     }
 
@@ -72,7 +74,7 @@ fun EventCreationScreen(
       } else {
         Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
       }
-      if (pagerState.currentPage < 3) {
+      if (pagerState.currentPage < 4) {
         Button(
             onClick = {
               coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }

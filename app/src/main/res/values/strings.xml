@@ -81,5 +81,9 @@
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
+    <string name="link_to_facebook_page">Link to Facebook page</string>
+    <string name="link_to_instagram_page">Link to Instagram page</string>
+    <string name="link_to_discord_page">Link to Discord page</string>
+    <string name="links_to_social_media">Links to social media</string>
 
 </resources>

@@ -133,9 +133,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                         Spacer(Modifier.height(16.dp))
                         SocialButtonRow(
                             context = context,
-                            facebookUrl = "https://www.facebook.com",
-                            instagramUrl = "https://www.instagram.com",
-                            discordUrl = "https://www.discord.com")
+                            facebookUrl = uiState.socialMediaLinks.getValue("facebook"),
+                            instagramUrl = uiState.socialMediaLinks.getValue("instagram"),
+                            discordUrl = uiState.socialMediaLinks.getValue("discord"))
                         Spacer(Modifier.height(16.dp))
                         if (uiState.currentUserRole != ChimpagneRole.OWNER) {
                           ChimpagneButton(
