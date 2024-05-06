@@ -34,6 +34,7 @@
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
     <string name="event_creation_screen_beds">Lits</string>
+    <string name="close">Fermer</string>
     <string name="find_event_page_title">Trouver une soirée</string>
     <string name="find_event_search_button_text">Chercher</string>
     <string name="find_event_event_location_legend">Lieu</string>

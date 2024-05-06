@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
@@ -12,8 +13,11 @@ import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
+import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.fail
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -180,6 +184,36 @@ class FindEventViewModelTests {
             assertTrue(false)
           }
         })
+  }
+
+  @Test
+  fun testFetchEvent() {
+    val eventId = "houhou"
+    val mockEvent = ChimpagneEvent(id = eventId)
+
+    val findEventVM = FindEventsViewModel(database = database)
+
+    findEventVM.fetchEvent(
+        id = eventId,
+        onSuccess = {
+          assertTrue(
+              "Event should be loaded and not null",
+              findEventVM.uiState.value.events[eventId] != null)
+          assertEquals(
+              "Check event details", mockEvent.id, findEventVM.uiState.value.events[eventId]?.id)
+        },
+        onFailure = { fail("Expected success but got failure") })
+
+    // Test the scenario where the event does not exist
+    val nonExistentEventId = "nonexistent"
+    findEventVM.fetchEvent(
+        id = nonExistentEventId,
+        onSuccess = { fail("Expected failure but got success for nonexistent event") },
+        onFailure = { assertTrue("Should handle the failure due to nonexistent event", true) })
+
+    assertNull(
+        "Nonexistent event should not be added",
+        findEventVM.uiState.value.events[nonExistentEventId])
   }
 
   @Test

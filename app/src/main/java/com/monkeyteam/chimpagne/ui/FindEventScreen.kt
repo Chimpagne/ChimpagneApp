@@ -8,10 +8,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -32,6 +30,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.MyLocation
+import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Tag
 import androidx.compose.material3.BottomSheetScaffold
@@ -73,12 +72,11 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
-import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
-import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
+import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -135,7 +133,8 @@ fun MainFindEventScreen(
   HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 1) { page
     ->
     when (page) {
-      FindEventScreens.FORM -> FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast)
+      FindEventScreens.FORM ->
+          FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
     }
@@ -148,8 +147,11 @@ fun FindEventFormScreen(
     navObject: NavigationActions,
     findViewModel: FindEventsViewModel,
     onSearchClick: () -> Unit,
-    showToast: (String) -> Unit
+    showToast: (String) -> Unit,
+    showScannedEvent: () -> Unit
 ) {
+
+  var showDialog by remember { mutableStateOf(false) }
 
   val uiState by findViewModel.uiState.collectAsState()
   val context = LocalContext.current
@@ -182,7 +184,7 @@ fun FindEventFormScreen(
                     .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
                     .addOnSuccessListener { location ->
                       location?.let {
-                        showToast("Location set")
+                        showToast("Location OK")
                         findViewModel.updateSelectedLocation(
                             Location("mylocation", it.latitude, it.longitude))
                       }
@@ -199,6 +201,31 @@ fun FindEventFormScreen(
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
   }
 
+  val cameraPermissionRequest =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.RequestPermission(),
+          onResult = { granted ->
+            if (granted) {
+              showDialog = true
+            } else {
+              showToast("Camera permission denied")
+            }
+          })
+
+  val requestCameraPermission = { cameraPermissionRequest.launch(Manifest.permission.CAMERA) }
+  if (showDialog) {
+    QRCodeScanner(
+        { showDialog = false },
+        {
+          showDialog = false
+
+          val uid = it.substringAfter("?uid=")
+
+          findViewModel.fetchEvent(
+              uid, onSuccess = showScannedEvent, onFailure = { showToast("Event not found") })
+        })
+  }
+
   Scaffold(
       topBar = {
         TopAppBar(
@@ -207,6 +234,14 @@ fun FindEventFormScreen(
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+              }
+            },
+            actions = {
+              IconButton(onClick = requestCameraPermission) {
+                Icon(
+                    imageVector = Icons.Rounded.QrCodeScanner,
+                    contentDescription = "Scan QR",
+                    modifier = Modifier.testTag("qr_button"))
               }
             })
       },
@@ -317,6 +352,7 @@ fun FindEventMapScreen(
 
   val uiState by findViewModel.uiState.collectAsState()
 
+  val context = LocalContext.current
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
@@ -333,19 +369,36 @@ fun FindEventMapScreen(
       launch { scaffoldState.bottomSheetState.expand() }
     }
   }
+
+  LaunchedEffect(uiState.events.size) {
+    if (uiState.events.size == 1) {
+      currentEvent = uiState.events.values.first()
+      scaffoldState.bottomSheetState.expand()
+    }
+  }
+
   val goBack = {
     scope.launch {
       scaffoldState.bottomSheetState.partialExpand()
+      findViewModel.eraseResults()
       onBackIconClicked()
+    }
+  }
+
+  val onJoinClick: () -> Unit = {
+    if (currentEvent != null) {
+      Toast.makeText(context, "Joining ${currentEvent?.title}", Toast.LENGTH_SHORT).show()
+      findViewModel.joinEvent(
+          currentEvent!!.id,
+          { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
+          { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
     }
   }
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = {
-        EventDetailSheet(event = currentEvent, findViewModel, accountViewModel, navObject)
-      },
+      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
@@ -361,6 +414,7 @@ fun FindEventMapScreen(
           IconButton(
               modifier =
                   Modifier.padding(start = 12.dp, top = 12.dp)
+                      .testTag("go_back")
                       .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
                       .background(
                           color = MaterialTheme.colorScheme.surface,
@@ -371,80 +425,4 @@ fun FindEventMapScreen(
               }
         }
       }
-}
-
-@Composable
-fun EventDetailSheet(
-    event: ChimpagneEvent?,
-    findViewModel: FindEventsViewModel,
-    accountViewModel: AccountViewModel,
-    navObject: NavigationActions
-) {
-  val context = LocalContext.current
-
-  var showLoginPrompt by remember { mutableStateOf(false) }
-
-  if (showLoginPrompt) {
-    PromptLogin(context = context, navActions = navObject)
-    showLoginPrompt = false
-  }
-
-  if (event != null) {
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-          Text(
-              text = event.title,
-              style = MaterialTheme.typography.headlineMedium,
-              modifier = Modifier.padding(bottom = 8.dp))
-
-          Text(
-              text = event.startsAt().time.toString(),
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.padding(bottom = 8.dp))
-
-          Text(
-              text = event.endsAt().time.toString(),
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.padding(bottom = 8.dp))
-
-          Text(
-              text = event.description,
-              style = MaterialTheme.typography.bodySmall,
-              modifier = Modifier.padding(bottom = 8.dp))
-
-          Row(
-              modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-              horizontalArrangement = Arrangement.SpaceEvenly) {
-                event.tags.forEach { tag -> SimpleTagChip(tag) }
-              }
-
-          Button(
-              onClick = {
-                if (!accountViewModel.isUserLoggedIn()) {
-                  showLoginPrompt = true
-                } else {
-                  findViewModel.joinEvent(
-                      event.id,
-                      onSuccess = {
-                        Toast.makeText(
-                                context, "Successfully joined ${event.title}", Toast.LENGTH_SHORT)
-                            .show()
-                      },
-                      onFailure = {
-                        Toast.makeText(context, "Failed to join event", Toast.LENGTH_SHORT).show()
-                      })
-                }
-              },
-              modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                Text(stringResource(id = R.string.find_event_join_event_button_text))
-              }
-        }
-  } else {
-    Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
-      Text(
-          stringResource(id = R.string.find_event_no_event_available),
-          style = MaterialTheme.typography.bodyMedium)
-    }
-  }
 }

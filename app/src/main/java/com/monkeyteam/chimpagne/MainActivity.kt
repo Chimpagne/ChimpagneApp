@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
+import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
@@ -132,13 +133,38 @@ class MainActivity : ComponentActivity() {
               MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
             }
             composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
+              ViewDetailEventScreen(
+                  navObject = navActions,
+                  eventViewModel =
+                      viewModel(
+                          factory =
+                              EventViewModelFactory(
+                                  backStackEntry.arguments?.getString("EventID"), database)))
+            }
+            composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
-                  viewModel(
-                      factory =
-                          EventViewModelFactory(
-                              backStackEntry.arguments?.getString("EventID"), database))
-              eventViewModel.fetchEvent()
-              ViewDetailEventScreen(navObject = navActions, eventViewModel = eventViewModel)
+                  viewModel(factory = EventViewModelFactory(null, database))
+              /*
+
+              For you Gregory :) Use this not the one above
+
+                              val eventViewModel =
+                                  EventViewModel(
+                                      possibleEventID,
+                                      Database(PUBLIC_TABLES),
+                                      onFailure = {
+                                          Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
+                                              .show()
+                                          navActions.clearAndNavigateTo(Route.HOME_SCREEN)
+                                      })
+
+               */
+              val event = eventViewModel.buildChimpagneEvent()
+              DetailScreenSheet(
+                  event = event,
+                  onJoinClick = {
+                    navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
+                  })
             }
           }
         }
