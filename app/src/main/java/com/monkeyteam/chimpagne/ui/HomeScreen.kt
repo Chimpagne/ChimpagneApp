@@ -38,74 +38,69 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @Composable
 fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel) {
 
-    val context = LocalContext.current
-    val uiState by accountViewModel.uiState.collectAsState()
-    var showPromptLogin by remember { mutableStateOf(false) }
+  val context = LocalContext.current
+  val uiState by accountViewModel.uiState.collectAsState()
+  var showPromptLogin by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("") },
-                actions = {
-                    ProfileIcon(
-                        uiState.currentUserProfilePicture,
-                        onClick = {
-                            if (!accountViewModel.isUserLoggedIn()) {
-                                showPromptLogin = true
-                            } else {
-                                navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-                            }
-                        })
-                })
-        }) { innerPadding ->
+  Scaffold(
+      topBar = {
+        TopAppBar(
+            title = { Text("") },
+            actions = {
+              ProfileIcon(
+                  uiState.currentUserProfilePicture,
+                  onClick = {
+                    if (!accountViewModel.isUserLoggedIn()) {
+                      showPromptLogin = true
+                    } else {
+                      navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
+                    }
+                  })
+            })
+      }) { innerPadding ->
         if (showPromptLogin) {
-            PromptLogin(context, navObject)
-            showPromptLogin = false
+          PromptLogin(context, navObject)
+          showPromptLogin = false
         }
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(innerPadding),
+                Modifier.fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            ChimpagneButton(
-                modifier = Modifier.testTag("open_events_button"),
-                onClick = {
+            verticalArrangement = Arrangement.Center) {
+              ChimpagneButton(
+                  modifier = Modifier.testTag("open_events_button"),
+                  onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
-                        showPromptLogin = true
+                      showPromptLogin = true
                     } else {
-                        navObject.navigateTo(Route.MY_EVENTS_SCREEN)
+                      navObject.navigateTo(Route.MY_EVENTS_SCREEN)
                     }
-                },
-                text = stringResource(id = R.string.homescreen_my_events),
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            ChimpagneButton(
-                modifier = Modifier.testTag("discover_events_button"),
-                onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
-                text = stringResource(R.string.homescreen_join_event),
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            ChimpagneButton(
-                modifier = Modifier.testTag("organize_event_button"),
-                onClick = {
+                  },
+                  text = stringResource(id = R.string.homescreen_my_events),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
+              Spacer(modifier = Modifier.height(16.dp))
+              ChimpagneButton(
+                  modifier = Modifier.testTag("discover_events_button"),
+                  onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
+                  text = stringResource(R.string.homescreen_join_event),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
+              Spacer(modifier = Modifier.height(16.dp))
+              ChimpagneButton(
+                  modifier = Modifier.testTag("organize_event_button"),
+                  onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
-                        showPromptLogin = true
+                      showPromptLogin = true
                     } else {
-                        navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
+                      navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
                     }
-                },
-                text = stringResource(R.string.homescreen_organize_event),
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp
-            )
-        }
-    }
+                  },
+                  text = stringResource(R.string.homescreen_organize_event),
+                  fontWeight = FontWeight.Bold,
+                  fontSize = 30.sp)
+            }
+      }
 }
