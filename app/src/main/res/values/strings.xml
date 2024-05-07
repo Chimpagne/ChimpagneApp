@@ -64,6 +64,7 @@
     <string name="date_tools_from">From</string>
     <string name="date_tools_until">Until</string>
     <string name="date_tools_at">at</string>
+    <string name="close">Close</string>
     <string name="event_details_screen_number_of_guests">guests joined</string>
     <string name="event_details_screen_leave_button">Leave this Event</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>

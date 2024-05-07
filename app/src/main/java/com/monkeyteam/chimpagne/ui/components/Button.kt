@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import java.util.Locale
 
 @Composable
 fun ChimpagneButton(
@@ -83,7 +84,7 @@ fun IconTextButton(
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
-        Text(text)
+        Text(text.uppercase(Locale.ROOT))
       }
 }
 

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,8 +52,9 @@ data class MyEventsUIState(
     val createdEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val joinedEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val pastEvents: Map<String, ChimpagneEvent> = emptyMap(),
+    val userUID: ChimpagneAccountUID = "",
     val loading: Boolean = false
-) {}
+)
 
 class MyEventsViewModelFactory(private val database: Database) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
