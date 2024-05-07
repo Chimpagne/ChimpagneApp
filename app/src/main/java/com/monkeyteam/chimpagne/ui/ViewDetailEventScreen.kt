@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
@@ -45,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
@@ -74,11 +76,18 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
       topBar = {
         TopAppBar(
             title = {
-              Text(
-                  text = uiState.title,
-                  fontSize = 30.sp,
-                  fontFamily = ChimpagneFontFamily,
-                  modifier = Modifier.testTag("event title"))
+              Column(
+                  modifier = Modifier.fillMaxWidth(),
+                  horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = uiState.title,
+                        fontSize = 30.sp,
+                        fontFamily = ChimpagneFontFamily,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.testTag("event title"))
+                    Spacer(modifier = Modifier.weight(1f))
+                  }
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
@@ -91,7 +100,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                 Icon(
                     imageVector = Icons.Rounded.QrCodeScanner,
                     contentDescription = "Scan QR",
-                    modifier = Modifier.testTag("scan QR"))
+                    modifier = Modifier.size(36.dp).testTag("scan QR"))
               }
             })
       }) { innerPadding ->
@@ -116,16 +125,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                               uiState.tags.forEach { tag -> SimpleTagChip(tag) }
                             }
                         Spacer(Modifier.height(16.dp))
-                        Text(
-                            text =
-                                uiState.guests.count().toString() +
-                                    " " +
-                                    stringResource(
-                                        id = R.string.event_details_screen_number_of_guests),
-                            fontSize = 24.sp,
-                            fontFamily = ChimpagneFontFamily,
-                            modifier = Modifier.testTag("number of guests"))
-                        Spacer(Modifier.height(16.dp))
                         Legend(
                             text =
                                 stringResource(id = R.string.date_tools_from) +
@@ -139,6 +138,16 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         buildTimestamp(uiState.endsAtCalendarDate)),
                             imageVector = Icons.Rounded.CalendarToday,
                             contentDescription = "event date")
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text =
+                                uiState.guests.count().toString() +
+                                    " " +
+                                    stringResource(
+                                        id = R.string.event_details_screen_number_of_guests),
+                            fontSize = 24.sp,
+                            fontFamily = ChimpagneFontFamily,
+                            modifier = Modifier.testTag("number of guests"))
                         Spacer(Modifier.height(16.dp))
                         Text(
                             text = uiState.description,
