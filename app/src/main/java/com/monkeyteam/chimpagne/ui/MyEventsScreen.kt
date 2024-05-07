@@ -135,7 +135,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                     Text(
                         text =
                             stringResource(id = R.string.my_events_screen_empty_past_events_list),
-                        modifier = Modifier.padding(16.dp).testTag("past_events_list"))
+                        modifier = Modifier.padding(16.dp).testTag("empty_past_events_list"))
                   }
                 } else {
                   items(uiState.pastEvents.values.toList()) { event ->
@@ -143,7 +143,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         title = event.title,
                         date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
                         location = event.location.name,
-                        modifier = Modifier.testTag("a joined event")) {
+                        modifier = Modifier.testTag("past_event_card")) {
                           navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
                         }
                   }
