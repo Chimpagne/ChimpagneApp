@@ -32,7 +32,7 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
-    onSuccess()
+    fetchEvent(onSuccess, onFailure)
   }
 
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */

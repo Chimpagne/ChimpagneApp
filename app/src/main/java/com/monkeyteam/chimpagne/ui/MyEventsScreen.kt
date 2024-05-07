@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Create
+import androidx.compose.material.icons.rounded.HourglassBottom
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -117,6 +118,32 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
                         location = event.location.name,
                         modifier = Modifier.testTag("a joined event")) {
+                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                        }
+                  }
+                }
+
+                item {
+                  Spacer(Modifier.height(16.dp))
+                  Legend(
+                      text = stringResource(id = R.string.my_events_screen_past_events_list_name),
+                      imageVector = Icons.Rounded.HourglassBottom,
+                      "")
+                }
+                if (uiState.pastEvents.isEmpty()) {
+                  item {
+                    Text(
+                        text =
+                            stringResource(id = R.string.my_events_screen_empty_past_events_list),
+                        modifier = Modifier.padding(16.dp).testTag("empty_past_events_list"))
+                  }
+                } else {
+                  items(uiState.pastEvents.values.toList()) { event ->
+                    ShortEventCard(
+                        title = event.title,
+                        date = timestampToStringWithDateAndTime(event.startsAtTimestamp),
+                        location = event.location.name,
+                        modifier = Modifier.testTag("past_event_card")) {
                           navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
                         }
                   }

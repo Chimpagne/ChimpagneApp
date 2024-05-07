@@ -117,5 +117,6 @@ class MyEventsScreenTests {
 
     composeTestRule.onNodeWithTag("empty join event list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty create event list").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("empty_past_events_list").assertIsDisplayed()
   }
 }
