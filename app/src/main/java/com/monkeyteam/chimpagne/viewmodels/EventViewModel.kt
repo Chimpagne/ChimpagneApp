@@ -261,8 +261,9 @@ class EventViewModel(
   }
 
   fun getCurrentUserRole(): ChimpagneRole {
-    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+      return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
   }
+
 }
 
 data class EventUIState(
