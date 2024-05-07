@@ -82,5 +82,7 @@
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
+    <string name="my_events_screen_past_events_list_name">Past events</string>
+    <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
 
 </resources>
