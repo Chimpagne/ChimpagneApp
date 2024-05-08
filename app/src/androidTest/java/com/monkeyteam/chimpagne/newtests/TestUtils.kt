@@ -161,8 +161,3 @@ fun initializeTestDatabase(
     Tasks.await(profilePicturesTable.child(entry.key).putFile(entry.value))
   }
 }
-
-fun updateEventAndWait(database: Database, chimpagneEvent: ChimpagneEvent) {
-    val eventsTable = Firebase.firestore.collection(TEST_TABLES.EVENTS)
-    Tasks.await(eventsTable.document(chimpagneEvent.id).set(chimpagneEvent))
-}
