@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
