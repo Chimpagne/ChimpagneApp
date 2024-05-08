@@ -7,7 +7,7 @@ class AtomicChimpagneEventManager(
     private val database: Database,
     private val events: CollectionReference
 ) {
-  internal fun addGuest(
+  fun addGuest(
       eventId: ChimpagneEventId,
       userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
@@ -20,7 +20,7 @@ class AtomicChimpagneEventManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  internal fun removeGuest(
+  fun removeGuest(
       eventId: ChimpagneEventId,
       userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
@@ -33,7 +33,7 @@ class AtomicChimpagneEventManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  internal fun addStaff(
+  fun addStaff(
       eventId: ChimpagneEventId,
       userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
@@ -46,7 +46,7 @@ class AtomicChimpagneEventManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  internal fun removeStaff(
+  fun removeStaff(
       eventId: ChimpagneEventId,
       userUID: ChimpagneAccountUID,
       onSuccess: () -> Unit,
