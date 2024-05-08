@@ -21,7 +21,7 @@ class EventTest {
   val accountManager = database.accountManager
   val eventManager = database.eventManager
 
-//  val ownerOfEvent0 = TEST_ACCOUNTS[1]
+  //  val ownerOfEvent0 = TEST_ACCOUNTS[1]
   val event = TEST_EVENTS[0]
   val account0 = TEST_ACCOUNTS[0]
   val account1 = TEST_ACCOUNTS[1]
@@ -44,52 +44,80 @@ class EventTest {
 
   @Test
   fun supplyTest() {
-    val supply = ChimpagneSupply(
-      description = "bananas from la Migros",
-      quantity = 4,
-      unit = "bananas",
-      assignedTo = hashMapOf(account0.firebaseAuthUID to true, account1.firebaseAuthUID to true)
-    )
+    val supply =
+        ChimpagneSupply(
+            description = "bananas from la Migros",
+            quantity = 4,
+            unit = "bananas",
+            assignedTo =
+                hashMapOf(account0.firebaseAuthUID to true, account1.firebaseAuthUID to true))
 
     var loading = true
     eventManager.atomic.updateSupply(event.id, supply, { loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    while (loading) {}
     var updatedEvent = ChimpagneEvent()
     loading = true
-    eventManager.getEventById(event.id, { updatedEvent = it!!; loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    eventManager.getEventById(
+        event.id,
+        {
+          updatedEvent = it!!
+          loading = false
+        },
+        { assertTrue(false) })
+    while (loading) {}
 
     assertEquals(supply, updatedEvent.supplies[supply.id])
 
     loading = true
-    eventManager.atomic.removeSupply(event.id, supply.id, { loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    eventManager.atomic.removeSupply(
+        event.id, supply.id, { loading = false }, { assertTrue(false) })
+    while (loading) {}
     updatedEvent = ChimpagneEvent()
     loading = true
-    eventManager.getEventById(event.id, { updatedEvent = it!!; loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    eventManager.getEventById(
+        event.id,
+        {
+          updatedEvent = it!!
+          loading = false
+        },
+        { assertTrue(false) })
+    while (loading) {}
 
     assertEquals(null, updatedEvent.supplies[supply.id])
 
     loading = true
     eventManager.atomic.updateSupply(event.id, supply, { loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    while (loading) {}
     updatedEvent = ChimpagneEvent()
     loading = true
-    eventManager.atomic.assignSupply(event.id, supply.id, account2.firebaseAuthUID,  { loading = false }, { assertTrue(false) })
+    eventManager.atomic.assignSupply(
+        event.id, supply.id, account2.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
     loading = true
-    eventManager.getEventById(event.id, { updatedEvent = it!!; loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    eventManager.getEventById(
+        event.id,
+        {
+          updatedEvent = it!!
+          loading = false
+        },
+        { assertTrue(false) })
+    while (loading) {}
 
     assertTrue(updatedEvent.supplies[supply.id]!!.assignedTo[account2.firebaseAuthUID] == true)
 
     loading = true
-    eventManager.atomic.unassignSupply(event.id, supply.id, account2.firebaseAuthUID,  { loading = false }, { assertTrue(false) })
+    eventManager.atomic.unassignSupply(
+        event.id, supply.id, account2.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
     loading = true
-    eventManager.getEventById(event.id, { updatedEvent = it!!; loading = false }, { assertTrue(false) })
-    while (loading)  {}
+    eventManager.getEventById(
+        event.id,
+        {
+          updatedEvent = it!!
+          loading = false
+        },
+        { assertTrue(false) })
+    while (loading) {}
 
     assertNull(updatedEvent.supplies[supply.id]!!.assignedTo[account2.firebaseAuthUID])
   }
