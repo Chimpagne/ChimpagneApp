@@ -53,7 +53,7 @@ class EventViewModel(
                         public = it.public,
                         tags = it.tags,
                         guests = it.guests,
-                        staffs  = it.staffs,
+                        staffs = it.staffs,
                         startsAtCalendarDate = it.startsAt(),
                         endsAtCalendarDate = it.endsAt(),
                         supplies = it.supplies,
@@ -104,7 +104,7 @@ class EventViewModel(
     }
   }
 
-  private fun buildChimpagneEvent(): ChimpagneEvent {
+  fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
         id = _uiState.value.id,
         title = _uiState.value.title,
@@ -308,7 +308,7 @@ data class EventUIState(
     val ownerId: ChimpagneAccountUID = "",
     val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
     // OPTIONAL PARAMETER, MUST BE FETCH SEPARATELY
-    val accounts: Map<String, ChimpagneAccount> = emptyMap(),
+    val accounts: Map<String, ChimpagneAccount?> = emptyMap(),
     val loading: Boolean = false
 )
 

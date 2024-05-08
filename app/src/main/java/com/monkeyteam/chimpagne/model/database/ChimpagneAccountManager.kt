@@ -86,7 +86,7 @@ class ChimpagneAccountManager(
 
   fun getAccounts(
       uids: Set<ChimpagneAccountUID>,
-      onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount>) -> Unit,
+      onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
@@ -96,7 +96,7 @@ class ChimpagneAccountManager(
           val results =
               tasks
                   .map {
-                    val account = it.value.result.toObject<ChimpagneAccount>()!!
+                    val account = it.value.result.toObject<ChimpagneAccount>()
                     (it.key to account)
                   }
                   .toMap()
