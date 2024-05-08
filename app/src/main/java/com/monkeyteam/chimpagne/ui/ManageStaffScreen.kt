@@ -43,10 +43,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -61,7 +63,11 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
   Scaffold(
       topBar = {
         TopAppBar(
-            title = { Text("Manage Staff", Modifier.testTag("screen title")) },
+            title = {
+              Text(
+                  stringResource(id = R.string.manage_staff_screen_title),
+                  Modifier.testTag("screen title"))
+            },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
               IconButton(
@@ -95,7 +101,7 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
               LazyColumn {
                 item {
                   Legend(
-                      text = "Staff List:",
+                      text = stringResource(id = R.string.manage_staff_screen_staff_list_name),
                       imageVector =
                           if (isOnEdit) Icons.Rounded.GroupRemove else Icons.Rounded.Group,
                       contentDescription = "Staff List")
@@ -103,7 +109,7 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
                 if (uiState.staffs.isEmpty()) {
                   item {
                     Text(
-                        text = "There are no staff for this event",
+                        text = stringResource(id = R.string.manage_staff_screen_empty_staff_list),
                         modifier = Modifier.padding(16.dp).testTag("empty staff list"))
                   }
                 } else {
@@ -124,14 +130,14 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
                 if (isOnEdit) {
                   item {
                     Legend(
-                        text = "Guest List:",
+                        text = stringResource(id = R.string.manage_staff_screen_guest_list_name),
                         imageVector = Icons.Rounded.GroupAdd,
                         contentDescription = "Guest List")
                   }
                   if (uiState.guests.isEmpty()) {
                     item {
                       Text(
-                          text = "There are no guests for this event",
+                          text = stringResource(id = R.string.manage_staff_screen_empty_guest_list),
                           modifier = Modifier.padding(16.dp).testTag("empty guest list"))
                     }
                   } else {

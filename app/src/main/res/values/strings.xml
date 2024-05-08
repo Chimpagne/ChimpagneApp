@@ -85,5 +85,9 @@
     <string name="edit_event_save_failure">Could not save the edited event !</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
-
+    <string name="manage_staff_screen_title">Manage Staff</string>
+    <string name="manage_staff_screen_staff_list_name">Staff List:</string>
+    <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>
+    <string name="manage_staff_screen_guest_list_name">Guest List:</string>
+    <string name="manage_staff_screen_empty_guest_list">There are no guests in this event:</string>
 </resources>

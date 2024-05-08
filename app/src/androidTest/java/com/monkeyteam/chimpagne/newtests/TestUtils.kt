@@ -72,7 +72,8 @@ val TEST_EVENTS =
             staffs = emptyMap(),
             /* SAME AS EVENT 1 */
             startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
-            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15)),
+            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15),
+            ownerId = "JUAN"),
         ChimpagneEvent(
             id = "LOTR",
             title = "Watch LOTR",
