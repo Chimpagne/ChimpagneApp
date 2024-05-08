@@ -4,10 +4,10 @@ import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 
 data class Location(
-    val name: String,
-    val latitude: Double,
-    val longitude: Double,
-    val geohash: String
+        val name: String,
+        var latitude: Double,
+        var longitude: Double,
+        val geohash: String
 ) {
   constructor() : this(name = "", latitude = 0.0, longitude = 0.0, geohash = "")
 
