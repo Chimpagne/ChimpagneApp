@@ -55,6 +55,7 @@ class EventTest {
     var loading = true
     eventManager.atomic.updateSupply(event.id, supply, { loading = false }, { assertTrue(false) })
     while (loading) {}
+    Thread.sleep(100)
     var updatedEvent = ChimpagneEvent()
     loading = true
     eventManager.getEventById(
@@ -72,6 +73,7 @@ class EventTest {
     eventManager.atomic.removeSupply(
         event.id, supply.id, { loading = false }, { assertTrue(false) })
     while (loading) {}
+    Thread.sleep(100)
     updatedEvent = ChimpagneEvent()
     loading = true
     eventManager.getEventById(
@@ -82,7 +84,7 @@ class EventTest {
         },
         { assertTrue(false) })
     while (loading) {}
-
+    Thread.sleep(100)
     assertEquals(null, updatedEvent.supplies[supply.id])
 
     loading = true
@@ -93,6 +95,7 @@ class EventTest {
     eventManager.atomic.assignSupply(
         event.id, supply.id, account2.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
+    Thread.sleep(100)
     loading = true
     eventManager.getEventById(
         event.id,
@@ -109,6 +112,7 @@ class EventTest {
     eventManager.atomic.unassignSupply(
         event.id, supply.id, account2.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
+    Thread.sleep(100)
     loading = true
     eventManager.getEventById(
         event.id,
