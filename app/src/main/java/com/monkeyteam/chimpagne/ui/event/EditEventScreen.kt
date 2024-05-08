@@ -87,6 +87,14 @@ fun EditEventScreen(
                               Toast.LENGTH_SHORT)
                           .show()
                       navObject.goBack()
+                    },
+                    onFailure = {
+                      Toast.makeText(
+                              context,
+                              context.getString(R.string.edit_event_save_failure),
+                              Toast.LENGTH_SHORT)
+                          .show()
+                      navObject.goBack()
                     })
               }
             },

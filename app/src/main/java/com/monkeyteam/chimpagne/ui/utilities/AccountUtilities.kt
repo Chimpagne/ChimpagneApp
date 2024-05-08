@@ -1,13 +1,17 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
 import android.content.Context
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,7 +31,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -71,16 +77,19 @@ fun SaveChangesButton(
 }
 
 @Composable
-fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}) {
-  IconButton(
-      onClick = { onClick() },
-      modifier = Modifier.size(100.dp).border(1.dp, Color.Black, CircleShape)) {
+fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}, isEnabled: Boolean = true) {
+  Box(
+      modifier =
+          Modifier.size(100.dp)
+              .border(1.dp, Color.Black, CircleShape)
+              .clickable(enabled = isEnabled) { onClick() }
+              .clip(CircleShape)) {
         AsyncImage(
             model = imageUri ?: R.drawable.ic_placeholder_profile,
             contentDescription = "Profile Picture",
-        )
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize())
       }
-  Spacer(modifier = Modifier.height(16.dp))
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)

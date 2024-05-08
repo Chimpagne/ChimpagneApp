@@ -10,7 +10,7 @@
     <string name="account_creation_screen_city">Choisissez votre ville</string>
     <string name="account_creation_screen_language">Langue</string>
     <string name="account_creation_screen_button">Créer un compte</string>
-    <string name="event_creation_screen_name">Créer Un Événement</string>
+    <string name="event_creation_screen_name">Créer Un événement</string>
     <string name="event_creation_screen_previous">Précédent</string>
     <string name="event_creation_screen_next">Prochain</string>
     <string name="event_creation_screen_create_event">Créer l\'événement</string>
@@ -23,10 +23,10 @@
     <string name="event_creation_screen_location_legend">Localisation</string>
     <string name="event_creation_screen_start_date_legend">Date et heure de début</string>
     <string name="event_creation_screen_end_date_legend">Date et heure de fin</string>
-    <string name="event_creation_screen_tags_legend">Ajouter Des étiquettes</string>
+    <string name="event_creation_screen_tags_legend">Ajouter des étiquettes</string>
     <string name="event_creation_screen_event_made_public">Cet événement a été rendu publique !</string>
     <string name="event_creation_screen_make_event_public">Rendre cet événement publique</string>
-    <string name="event_creation_screen_public_legend">Visibilité De L\'Événement</string>
+    <string name="event_creation_screen_public_legend">Visibilité De l\'événement</string>
     <string name="event_creation_screen_groceries">Courses</string>
     <string name="event_creation_screen_add_groceries">Ajouter des courses</string>
     <string name="event_creation_screen_logistics">Logistique</string>
@@ -48,9 +48,8 @@
     <string name="find_event_near_me_toast">Localisation…</string>
     <string name="find_event_no_result">Pas de résultat</string>
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
-    <string name="search_location">Rechercher un lieu </string>
+    <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
-    <string name="event_creation_screen_gorceries_toast">Coming soon to chimpagne: groceries functionnality !</string>
     <string name="supplies_description">Description</string>
     <string name="supplies_quantity">Quantité</string>
     <string name="supplies_unit">Unité</string>
@@ -61,13 +60,13 @@
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
     <string name="event_changes_saved">Les changements de l\'événement ont été sauvegardé !</string>
-    <string name="continue_as_guest">Continuer en Tant qu\'Invité</string>
+    <string name="continue_as_guest">Continuer en tant qu\'invité</string>
     <string name="login_to_continue">"Veuillez vous connecter/créer un compte pour continuer."</string>
-    <string name="my_events_screen_name">Mes Événements</string>
-    <string name="my_events_screen_created_event_list_name">Les Événements Créés</string>
-    <string name="my_events_screen_joined_event_list_name">Les Événements Rejoint</string>
-    <string name="my_events_screen_empty_create_event_list">Vous avez créé aucun événement</string>
-    <string name="my_events_screen_empty_join_event_list">Vous avez rejoint aucun événement</string>
+    <string name="my_events_screen_name">Mes événements</string>
+    <string name="my_events_screen_created_event_list_name">Événements créés</string>
+    <string name="my_events_screen_joined_event_list_name">Événements rejoints</string>
+    <string name="my_events_screen_empty_create_event_list">Vous n\'avez créé aucun événement</string>
+    <string name="my_events_screen_empty_join_event_list">Vous n\'avez rejoint aucun événement</string>
     <string name="date_tools_from">De</string>
     <string name="date_tools_until">Jusqu\'au</string>
     <string name="date_tools_at">à</string>
@@ -81,5 +80,6 @@
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
     <string name="edit_event">Editer l\'événement</string>
-    <string name="edit_event_toast_finish">The event has been edited !</string>
+    <string name="edit_event_toast_finish">L\'événement a été édité</string>
+    <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
 </resources>
