@@ -1,14 +1,12 @@
 package com.monkeyteam.chimpagne.newtests.viewmodels
 
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.newtests.DELAY_AMOUNT_MILLIS
+import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
@@ -33,7 +31,7 @@ class MyEventsViewModelTests {
     val eventVM = MyEventsViewModel(database, { assertTrue(true) }, { assertTrue(false) })
 
     while (eventVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventVM.uiState.value.createdEvents.size == 1)
     assertTrue(
@@ -52,7 +50,7 @@ class MyEventsViewModelTests {
     val eventVM = MyEventsViewModel(database, { assertTrue(true) }, { assertTrue(false) })
 
     while (eventVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventVM.uiState.value.createdEvents.isEmpty())
     assertTrue(eventVM.uiState.value.joinedEvents.isEmpty())

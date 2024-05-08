@@ -15,7 +15,7 @@ import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 
-val DELAY_AMOUNT_MILLIS: Long = 300
+val SLEEP_AMOUNT_MILLIS: Long = 300
 
 val TEST_EVENTS =
     listOf(

@@ -2,17 +2,13 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.newtests.DELAY_AMOUNT_MILLIS
+import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
-import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,19 +21,13 @@ class EventViewModelTests {
 
   @Before
   fun signIn() {
-    changeAccount(TEST_ACCOUNTS[1])
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
   }
 
   @get:Rule val composeTestRule = createComposeRule()
 
   private val testEvent = TEST_EVENTS[0]
   private val testUpdateEvent = TEST_EVENTS[1]
-
-  private fun changeAccount(account: ChimpagneAccount) {
-    val accountViewModel = AccountViewModel(database = database)
-    accountViewModel.loginToChimpagneAccount(account.firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {}
-  }
 
   private fun replaceVMEventBy(eventVM: EventViewModel, event: ChimpagneEvent) {
     eventVM.updateEventTitle(event.title)
@@ -98,7 +88,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     val eventID = eventCreationVM.uiState.value.id
 
@@ -111,7 +101,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertEqualEventVMWithEvent(eventSearchVM, testEvent)
 
@@ -120,7 +110,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.id == "")
   }
@@ -136,7 +126,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     val eventID = eventCreationVM.uiState.value.id
 
@@ -149,7 +139,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.id == eventID)
 
@@ -161,7 +151,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     val eventSearch2VM =
         EventViewModel(
@@ -172,14 +162,14 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearch2VM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertEqualEventVMWithEvent(eventSearch2VM, testUpdateEvent)
 
     eventSearch2VM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearch2VM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
   }
 
   @Test
@@ -193,7 +183,7 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     val eventID = eventCreationVM.uiState.value.id
 
@@ -206,24 +196,24 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
 
-    changeAccount(TEST_ACCOUNTS[0])
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
     eventSearchVM.joinTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
-    changeAccount(TEST_ACCOUNTS[1])
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
     eventSearchVM.joinTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
-    changeAccount(TEST_ACCOUNTS[2])
+    database.accountManager.signInTo(TEST_ACCOUNTS[2])
     eventSearchVM.joinTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.guests.size == 3)
     assertTrue(
@@ -236,23 +226,23 @@ class EventViewModelTests {
 
     eventSearchVM.leaveTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
-    changeAccount(TEST_ACCOUNTS[1])
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
     eventSearchVM.leaveTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
-    changeAccount(TEST_ACCOUNTS[0])
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
     eventSearchVM.leaveTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
 
     eventSearchVM.deleteTheEvent(
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
-    runBlocking { delay(DELAY_AMOUNT_MILLIS) }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
   }
 }
