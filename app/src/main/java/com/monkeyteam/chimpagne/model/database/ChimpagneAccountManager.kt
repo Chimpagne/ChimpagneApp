@@ -183,13 +183,13 @@ class ChimpagneAccountManager(
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents + (id to true))
     when (role) {
       ChimpagneRole.GUEST ->
-          eventManager.addGuest(
+          eventManager.atomic.addGuest(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
       ChimpagneRole.STAFF ->
-          eventManager.addStaff(
+          eventManager.atomic.addStaff(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
@@ -214,11 +214,11 @@ class ChimpagneAccountManager(
     val updatedAccount =
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents - id)
 
-    eventManager.removeGuest(
+    eventManager.atomic.removeGuest(
         id,
         updatedAccount.firebaseAuthUID,
         {
-          eventManager.removeStaff(
+          eventManager.atomic.removeStaff(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
