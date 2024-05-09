@@ -156,7 +156,7 @@ fun SuppliesScreen(
                 item {
                   Text(
                       stringResource(id = R.string.supplies_not_assigned_to_anyone),
-                      modifier = Modifier.padding(12.dp, 8.dp))
+                      modifier = Modifier.padding(12.dp, 8.dp).testTag("supply_not_assigned"))
                 }
                 items(nonAssignedSupplies.values.toList()) {
                   SupplyCard(
@@ -164,7 +164,8 @@ fun SuppliesScreen(
                       onClick = {
                         displayAssignPopup = true
                         displayedSupply = it
-                      })
+                      },
+                    modifier = Modifier.testTag("supply_card"))
                 }
               }
 

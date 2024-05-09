@@ -58,7 +58,7 @@ fun StaffSupplyDialog(
       title = "${tempSupply.quantity} ${tempSupply.unit}",
       description = tempSupply.description,
       onDismissRequest = onDismissRequest,
-      modifier = Modifier.testTag("edit_supply_dialog"),
+      modifier = Modifier.testTag("staff_supply_dialog"),
       buttonDataList =
           listOf(
               ButtonData(

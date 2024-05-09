@@ -29,7 +29,7 @@ fun GuestSupplyDialog(
       title = "${supply.quantity} ${supply.unit}",
       description = supply.description,
       onDismissRequest = onDismissRequest,
-      modifier = Modifier.testTag("edit_supply_dialog"),
+      modifier = Modifier.testTag("guest_supply_dialog"),
       buttonDataList =
           listOf(
               ButtonData(
