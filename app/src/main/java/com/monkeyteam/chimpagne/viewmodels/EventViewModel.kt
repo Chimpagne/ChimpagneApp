@@ -264,36 +264,37 @@ class EventViewModel(
 
   fun updateSocialMediaLink(link: Pair<String, String>) {
     _uiState.value = _uiState.value.copy(socialMediaLinks = _uiState.value.socialMediaLinks + link)
-  fun getCurrentUserRole(): ChimpagneRole {
-    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+    fun getCurrentUserRole(): ChimpagneRole {
+      return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+    }
   }
-}
 
-data class EventUIState(
-    val id: String = "",
-    val title: String = "",
-    val description: String = "",
-    val location: Location = Location(),
-    val public: Boolean = false,
-    val tags: List<String> = emptyList(),
-    val guests: Map<String, Boolean> = emptyMap(),
-    val staffs: Map<String, Boolean> = emptyMap(),
-    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
-    val parkingSpaces: Int = 0,
-    val beds: Int = 0,
+  data class EventUIState(
+      val id: String = "",
+      val title: String = "",
+      val description: String = "",
+      val location: Location = Location(),
+      val public: Boolean = false,
+      val tags: List<String> = emptyList(),
+      val guests: Map<String, Boolean> = emptyMap(),
+      val staffs: Map<String, Boolean> = emptyMap(),
+      val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
+      val parkingSpaces: Int = 0,
+      val beds: Int = 0,
 
-    // unmodifiable by the UI
-    val ownerId: ChimpagneAccountUID = "",
-    val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-    val loading: Boolean = false,
-    val socialMediaLinks: Map<String, String> = mapOf("instagram" to "", "whatsapp" to "")
-)
+      // unmodifiable by the UI
+      val ownerId: ChimpagneAccountUID = "",
+      val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
+      val loading: Boolean = false,
+      val socialMediaLinks: Map<String, String> = mapOf("instagram" to "", "whatsapp" to "")
+  )
 
-class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
-    ViewModelProvider.Factory {
-  override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return EventViewModel(eventID, database) as T
+  class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
+      ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+      return EventViewModel(eventID, database) as T
+    }
   }
 }

@@ -69,8 +69,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
 
   var showDialog by remember { mutableStateOf(false) }
 
-  val userRole = eventViewModel.getCurrentUserRole()
-
   Scaffold(
       topBar = {
         TopAppBar(
