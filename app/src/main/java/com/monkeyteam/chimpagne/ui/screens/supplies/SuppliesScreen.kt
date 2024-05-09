@@ -70,9 +70,16 @@ fun SuppliesScreen(
         }
       )
     } else {
-
+      StaffSupplyDialog(supply = displayedSupply,
+        updateSupply = {
+          eventViewModel.updateSupplyAtomically(it)
+          displayAssignPopup = false
+        }, userUID = account.currentUserUID!!, accounts =  hashMapOf(), onDismissRequest = {
+          displayAssignPopup = false
+          displayedSupply = ChimpagneSupply()
+        }
+      )
     }
-
   }
 
   Scaffold(floatingActionButton = {
