@@ -129,11 +129,10 @@ class AccountViewModel(database: Database) : ViewModel() {
 
   fun fetchAccounts(accountUIDs: List<ChimpagneAccountUID>) {
     _uiState.value = _uiState.value.copy(loading = true)
-    accountManager.getAccounts(accountUIDs, {
-      _uiState.value = _uiState.value.copy(fetchedAccounts = it, loading = false)
-    }, {
-      _uiState.value = _uiState.value.copy(loading = false)
-    })
+    accountManager.getAccounts(
+        accountUIDs,
+        { _uiState.value = _uiState.value.copy(fetchedAccounts = it, loading = false) },
+        { _uiState.value = _uiState.value.copy(loading = false) })
   }
 }
 
