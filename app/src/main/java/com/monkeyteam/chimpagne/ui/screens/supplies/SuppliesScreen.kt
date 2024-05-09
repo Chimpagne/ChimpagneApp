@@ -105,8 +105,7 @@ fun SuppliesScreen(
 
   Scaffold(
       floatingActionButton = {
-        if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
-            .contains(uiState.currentUserRole)) {
+        if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF).contains(uiState.currentUserRole)) {
           FloatingActionButton(
               onClick = { displayAddPopup = true }, modifier = Modifier.testTag("supply_add")) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
