@@ -81,8 +81,7 @@ fun IconTextButton(
       modifier =
           modifier
               .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-              .background(
-                  shape = RoundedCornerShape(100), color = color)
+              .background(shape = RoundedCornerShape(100), color = color)
               .clickable(onClick = onClick)
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)

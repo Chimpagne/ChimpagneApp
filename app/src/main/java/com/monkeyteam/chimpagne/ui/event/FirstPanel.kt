@@ -33,7 +33,7 @@ fun FirstPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   Column(modifier = Modifier.padding(16.dp)) {
-    Legend( //Placing it first, makes it easier for the user to click on a suggestion
+    Legend( // Placing it first, makes it easier for the user to click on a suggestion
         stringResource(id = R.string.event_creation_screen_location_legend),
         Icons.Rounded.LocationOn,
         "Location")
