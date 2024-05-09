@@ -69,7 +69,7 @@ fun SuppliesScreen(
   var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
   var displayAssignPopup by remember { mutableStateOf(false) }
   if (displayAssignPopup) {
-    if (eventViewModel.getRole(accountViewModelState.currentUserUID!!) == ChimpagneRole.GUEST) {
+    if (uiState.currentUserRole == ChimpagneRole.GUEST) {
       GuestSupplyDialog(
           supply = displayedSupply,
           assignMyself = {
@@ -106,7 +106,7 @@ fun SuppliesScreen(
   Scaffold(
       floatingActionButton = {
         if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
-            .contains(eventViewModel.getRole(accountViewModelState.currentUserUID!!))) {
+            .contains(uiState.currentUserRole)) {
           FloatingActionButton(
               onClick = { displayAddPopup = true }, modifier = Modifier.testTag("supply_add")) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
