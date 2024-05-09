@@ -57,7 +57,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -462,12 +461,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         .fillMaxWidth()
                                         .testTag("supplies"),
                                 onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
+                                  navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
                                 })
                             Spacer(Modifier.height(16.dp))
                             ChimpagneButton(

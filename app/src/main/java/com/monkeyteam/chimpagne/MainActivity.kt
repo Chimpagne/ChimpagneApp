@@ -28,9 +28,9 @@ import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
-import com.monkeyteam.chimpagne.ui.screens.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.screens.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
@@ -127,13 +127,21 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   eventViewModel = EventViewModel(eventID, database, {}, {}))
             }
-            composable(Route.SUPPLIES + "/{EventID}") { backStackEntry ->
+            composable(Route.SUPPLIES_SCREEN + "/{EventID}") { backStackEntry ->
               val eventID = backStackEntry.arguments?.getString("EventID")
+              val eventViewModel: EventViewModel =
+                  viewModel(factory = EventViewModelFactory(eventID, database))
+              eventViewModel.fetchEvent(
+                  onSuccess = {
+                    accountViewModel.fetchAccounts(
+                        listOf(eventViewModel.uiState.value.ownerId) +
+                            eventViewModel.uiState.value.staffs.keys.toList() +
+                            eventViewModel.uiState.value.guests.keys.toList())
+                  })
               SuppliesScreen(
-                navObject = navActions,
-                eventViewModel = EventViewModel(eventID, database, {}, {}),
-                accountViewModel = accountViewModel
-              )
+                  navObject = navActions,
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel)
             }
             composable(Route.MY_EVENTS_SCREEN) {
               val myEventsViewModel: MyEventsViewModel =
@@ -152,8 +160,7 @@ class MainActivity : ComponentActivity() {
             }
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
-                  viewModel(factory = EventViewModelFactory(null, database))
-              /*
+                  viewModel(factory = EventViewModelFactory(null, database)) /*
 
               For you Gregory :) Use this not the one above
 

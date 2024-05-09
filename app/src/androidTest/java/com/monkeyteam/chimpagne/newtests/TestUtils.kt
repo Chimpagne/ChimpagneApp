@@ -10,13 +10,10 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
-import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
-import junit.framework.TestCase.assertTrue
 
 val SLEEP_AMOUNT_MILLIS: Long = 300
 
@@ -132,11 +129,11 @@ fun dropTable(table: CollectionReference) {
 }
 
 fun dropTestDatabase() {
-    val eventsTable = Firebase.firestore.collection(TEST_TABLES.EVENTS)
-    val accountsTable = Firebase.firestore.collection(TEST_TABLES.ACCOUNTS)
+  val eventsTable = Firebase.firestore.collection(TEST_TABLES.EVENTS)
+  val accountsTable = Firebase.firestore.collection(TEST_TABLES.ACCOUNTS)
 
-    dropTable(eventsTable)
-    dropTable(accountsTable)
+  dropTable(eventsTable)
+  dropTable(accountsTable)
 }
 
 fun initializeTestDatabase(

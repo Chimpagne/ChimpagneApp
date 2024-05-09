@@ -16,26 +16,22 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 
 @Composable
-fun SupplyCard(
-  supply: ChimpagneSupply,
-  modifier: Modifier = Modifier,
-  onClick: () -> Unit
-) {
+fun SupplyCard(supply: ChimpagneSupply, modifier: Modifier = Modifier, onClick: () -> Unit) {
   Card(
-    modifier =
-    modifier
-      .clickable { onClick() }
-      .padding(horizontal = 16.dp, vertical = 8.dp)
-      .fillMaxWidth(),
-    shape = RoundedCornerShape(16.dp),
-    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
-    Row(
-      modifier = Modifier.fillMaxWidth().padding(16.dp),
-    ) {
-      Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-        Text(text = "${supply.quantity} ${supply.quantity}")
-        Text(text = "${supply.assignedTo.keys.size} assigned")
+      modifier =
+          modifier
+              .clickable { onClick() }
+              .padding(horizontal = 16.dp, vertical = 8.dp)
+              .fillMaxWidth(),
+      shape = RoundedCornerShape(16.dp),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+        ) {
+          Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            Text(text = "${supply.quantity} ${supply.unit}")
+            Text(text = "${supply.assignedTo.keys.size} assigned")
+          }
+        }
       }
-    }
-  }
 }

@@ -51,11 +51,9 @@
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
     <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
-    <string name="supplies_description">Description</string>
-    <string name="supplies_quantity">Quantité</string>
-    <string name="supplies_unit">Unité</string>
     <string name="chimpagne_cancel">Annuler</string>
-    <string name="chimpagne_add">Ajouter</string>
+    <string name="chimpagne_edit">Edit</string>
+    <string name="chimpagne_save">Sauvegarder</string>
 
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
@@ -86,4 +84,28 @@
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="you">Vous</string>
+
+    <!--    Supplies    -->
+    <string name="supplies_screen_title">Supplies to bring</string>
+    <string name="supplies_dialog_description">Enter the supply details</string>
+    <string name="supplies_edit_dialog_title">Edit the supply</string>
+    <string name="supplies_add_dialog_title">Add a supply</string>
+    <string name="supplies_add_dialog_submit">Add</string>
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantity</string>
+    <string name="supplies_unit">Unit</string>
+    <string name="supplies_assign_myself">Assign myself</string>
+    <string name="supplies_unassign_myself">Unassign myself</string>
+    <string name="supplies_supply_not_assigned">Supply not assigned !</string>
+    <string name="supplies_supply_assigned_to">Supply already assigned to</string>
+    <string name="supplies_not_assigned_to">Supply not assigned to</string>
+    <string name="supplies_supply_assigned_to_you">Supplies assigned to you</string>
+    <string name="supplies_not_assigned_to_anyone">Supplies not assigned to anyone</string>
+    <string name="supplies_already_assigned">Supplies already assigned</string>
+    <string name="supplies_empty">No created supply</string>
+    <string name="chimpagne_delete">Delete</string>
+    <string name="supplies_delete">Delete this supply ?</string>
+    <string name="supplies_delete_description">This action is irreversible !</string>
+    <string name="chimpagne_confirm">Confirm</string>
 </resources>
