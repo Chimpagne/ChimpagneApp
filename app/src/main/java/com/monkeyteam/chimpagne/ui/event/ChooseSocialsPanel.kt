@@ -87,7 +87,7 @@ private fun SocialMediaTextField(
 
   if (hasError) {
     Text(
-        "Invalid URL. Must start with: $platformUrl",
+        "Invalid URL. Must start with: $platformUrl or be empty",
         color = MaterialTheme.colorScheme.error,
         style = MaterialTheme.typography.bodySmall,
         modifier = Modifier.padding(start = 16.dp, top = 4.dp))
