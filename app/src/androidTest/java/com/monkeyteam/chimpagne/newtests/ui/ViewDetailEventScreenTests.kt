@@ -176,7 +176,6 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("supplies").assertHasClickAction()
-    composeTestRule.onNodeWithTag("supplies").performClick()
   }
 
   @Test

@@ -59,10 +59,13 @@ fun StaffSupplyDialog(
       onDismissRequest = onDismissRequest,
       buttonDataList =
           listOf(
-              ButtonData(stringResource(id = R.string.chimpagne_cancel), onDismissRequest),
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest),
               ButtonData(
                   stringResource(id = R.string.chimpagne_delete),
-                  { displayDeleteSupplyDialog = true }),
+              ) {
+                displayDeleteSupplyDialog = true
+              },
               ButtonData(stringResource(id = R.string.chimpagne_edit)) {
                 displayEditSupplyDialog = true
               },

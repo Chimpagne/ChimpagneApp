@@ -30,7 +30,8 @@ fun GuestSupplyDialog(
       onDismissRequest = onDismissRequest,
       buttonDataList =
           listOf(
-              ButtonData(stringResource(id = R.string.chimpagne_cancel), onDismissRequest),
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest),
               if (supply.assignedTo.containsKey(loggedUserUID))
                   ButtonData(stringResource(id = R.string.supplies_unassign_myself)) {
                     assignMyself(false)

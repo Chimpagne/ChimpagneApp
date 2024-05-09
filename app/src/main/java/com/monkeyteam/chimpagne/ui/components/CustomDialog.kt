@@ -58,11 +58,13 @@ fun CustomDialog(
                     ))
             content()
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-              buttonDataList.forEach { TextButton(onClick = it.onClick) { Text(it.text) } }
+              buttonDataList.forEach {
+                TextButton(onClick = it.onClick, modifier = it.modifier) { Text(it.text) }
+              }
             }
           }
     }
   }
 }
 
-data class ButtonData(val text: String, val onClick: () -> Unit)
+data class ButtonData(val text: String, val modifier: Modifier = Modifier, val onClick: () -> Unit)

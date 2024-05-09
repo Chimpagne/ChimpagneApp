@@ -42,8 +42,9 @@ fun EditSupplyDialog(
       onDismissRequest = onDismissRequest,
       buttonDataList =
           listOf(
-              ButtonData(stringResource(id = R.string.chimpagne_cancel), onDismissRequest),
-              ButtonData(saveButton) {
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest),
+              ButtonData(saveButton, modifier = Modifier.testTag("supplies_add_button")) {
                 onSave(
                     supply.copy(
                         description = description,
@@ -58,7 +59,9 @@ fun EditSupplyDialog(
               value = quantity,
               onValueChange = {
                 if ((it.toIntOrNull() ?: -1) > 0) {
-                  quantity = it
+                  if (quantity == "0") {
+                    if (it.first() == '0') quantity = it.drop(1) else quantity = it.dropLast(1)
+                  } else quantity = it
                 }
                 if (it == "") quantity = "0"
               },
