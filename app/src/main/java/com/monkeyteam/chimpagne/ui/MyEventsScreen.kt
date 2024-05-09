@@ -184,16 +184,7 @@ fun EventCard(
                     .fillMaxWidth()
                     .weight(1f)
             ) {
-                if (event.image.isEmpty()) {
-                    ImageWithBlackFilterOverlay()
-                } else {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = event.image),
-                        contentDescription = "Event Image",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                ImageWithBlackFilterOverlay(event.image)
             }
             Column(
                 modifier = Modifier
@@ -239,18 +230,27 @@ fun EventCard(
 }
 
 @Composable
-fun ImageWithBlackFilterOverlay() {
+fun ImageWithBlackFilterOverlay(imageString: String = "") {
     Box(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.chimpagne_app_logo),
-            contentDescription = "Default Logo",
-            contentScale = ContentScale.FillWidth,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
+        if (imageString.isEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.chimpagne_app_logo),
+                contentDescription = "Default Logo",
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        } else {
+            Image(
+                painter = rememberAsyncImagePainter(model = imageString),
+                contentDescription = "Event Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
         Box(
             modifier = Modifier
                 .matchParentSize()
