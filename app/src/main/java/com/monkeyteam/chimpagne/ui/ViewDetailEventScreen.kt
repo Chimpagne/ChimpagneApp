@@ -45,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
@@ -77,6 +78,8 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
               Text(
                   text = uiState.title,
                   fontSize = 30.sp,
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis,
                   fontFamily = ChimpagneFontFamily,
                   modifier = Modifier.testTag("event title"))
             },

@@ -23,7 +23,8 @@ data class ChimpagneEvent(
     val ownerId: ChimpagneAccountUID = "",
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
-    val beds: Int = 0
+    val beds: Int = 0,
+    val image: String = "" // TODO: Add image
 ) {
 
   fun guestList(): Set<String> {
