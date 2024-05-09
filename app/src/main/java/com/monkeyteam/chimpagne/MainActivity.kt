@@ -21,6 +21,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
@@ -62,8 +63,17 @@ class MainActivity : ComponentActivity() {
           navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
         }
 
-        val loginToChimpagneAccount: (id: String) -> Unit = { id ->
-          accountViewModel.loginToChimpagneAccount(
+        val loginToAccount:
+            (
+                id: String,
+                onSuccess: (ChimpagneAccount?) -> Unit,
+                onFailure: (Exception) -> Unit) -> Unit =
+            { id, onSuccess, onFailure ->
+              accountViewModel.loginToChimpagneAccount(id, onSuccess, onFailure)
+            }
+
+        val loginAccountNormal: (id: String) -> Unit = { id ->
+          loginToAccount(
               id,
               { account ->
                 if (account == null) {
@@ -77,25 +87,26 @@ class MainActivity : ComponentActivity() {
               { Log.e("MainActivity", "Failed to check if account is in database: $it") })
         }
 
-        val login: () -> Unit = {
-          if (FirebaseAuth.getInstance().currentUser != null) {
-            loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
-          } else {
-            navActions.navigateTo(Route.LOGIN_SCREEN)
-          }
+        val loginAccountStart: (id: String) -> Unit = { id ->
+          loginToAccount(
+              id,
+              { account ->
+                if (account == null) {
+                  Log.d("MainActivity", "Account is not in database")
+                  navActions.clearAndNavigateTo(Route.LOGIN_SCREEN)
+                } else {
+                  Log.d("MainActivity", "Account is in database")
+                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+                }
+              },
+              { Log.e("MainActivity", "Failed to check if account is in database: $it") })
         }
 
-        val loginDeepLink: () -> Unit = {
+        val login: () -> Unit = {
           if (FirebaseAuth.getInstance().currentUser != null) {
-            accountViewModel.loginToChimpagneAccount(
-                FirebaseAuth.getInstance().currentUser?.uid!!,
-                { account ->
-                  if (account == null) {
-                    AuthUI.getInstance().signOut(this)
-                    accountViewModel.logoutFromChimpagneAccount()
-                  }
-                },
-                { Log.e("MainActivity", "Failed to check if account is in database: $it") })
+            loginAccountStart(FirebaseAuth.getInstance().currentUser?.uid!!)
+          } else {
+            navActions.navigateTo(Route.LOGIN_SCREEN)
           }
         }
 
@@ -113,11 +124,17 @@ class MainActivity : ComponentActivity() {
             }
             composable(Route.LOGIN_SCREEN) {
               LoginScreen(
-                  onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid) },
+                  onSuccessfulLogin = { uid -> loginAccountNormal(uid) },
                   onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
-              AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
+              val onSuccessACS = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) }
+              val onFailureACS = { navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true) }
+              AccountCreation(
+                  navObject = navActions,
+                  accountViewModel = accountViewModel,
+                  onSuccess = onSuccessACS,
+                  onFailure = onFailureACS)
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
               AccountSettings(
@@ -185,7 +202,13 @@ class MainActivity : ComponentActivity() {
                     listOf(
                         navArgument("EventID") { type = NavType.StringType },
                     )) {
-                  loginDeepLink()
+                  if (FirebaseAuth.getInstance().currentUser != null) {
+                    loginToAccount(
+                        FirebaseAuth.getInstance().currentUser?.uid!!,
+                        { Log.d("MainActivity", "Account is in database") },
+                        { Log.e("MainActivity", "Failed to check if account is in database: $it") })
+                  }
+
                   val EventID = it.arguments?.getString("EventID")
                   navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${EventID}")
                 }

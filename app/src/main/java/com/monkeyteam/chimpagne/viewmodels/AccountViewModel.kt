@@ -23,7 +23,7 @@ class AccountViewModel(database: Database) : ViewModel() {
   fun loginToChimpagneAccount(
       uid: String,
       onSuccess: (ChimpagneAccount?) -> Unit,
-      onFailure: (Exception) -> Unit
+      onFailure: (Exception) -> Unit,
   ) {
     _uiState.value = _uiState.value.copy(currentUserUID = uid, loading = true)
     viewModelScope.launch {

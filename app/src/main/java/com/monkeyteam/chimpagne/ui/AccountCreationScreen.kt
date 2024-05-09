@@ -18,7 +18,12 @@ import com.monkeyteam.chimpagne.ui.utilities.checkNotEmpty
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
-fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
+fun AccountCreation(
+    navObject: NavigationActions,
+    accountViewModel: AccountViewModel,
+    onSuccess: () -> Unit = {},
+    onFailure: () -> Unit = {}
+) {
 
   val accountViewModelState by accountViewModel.uiState.collectAsState()
   val context = LocalContext.current
@@ -56,16 +61,16 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
           navObject.navigateTo(Route.LOADING)
           accountViewModel.submitUpdatedAccount(
               onSuccess = {
-                navObject.navigateTo(Route.HOME_SCREEN)
                 Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
+                onSuccess()
               },
               onFailure = {
-                navObject.navigateTo(Route.LOGIN_SCREEN)
                 Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
+                onFailure()
               })
         } else {
           Log.d("AccountCreation", "Account creation failed")
-          navObject.popBackStack()
+          onFailure()
         }
       },
       navObject = navObject)
