@@ -17,6 +17,8 @@ class ChimpagneAccountManager(
     private val profilePictures: StorageReference
 ) {
 
+  val atomic = AtomicChimpagneAccountManager(database, accounts, profilePictures)
+
   /**
    * This field stores the current logged user's account, you can retrieve it from any class using
    *
