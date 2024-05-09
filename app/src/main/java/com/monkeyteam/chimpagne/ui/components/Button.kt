@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -66,10 +67,12 @@ fun ChimpagneButton(
       }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
 fun IconTextButton(
     text: String,
     icon: ImageVector,
+    color: Color = MaterialTheme.colorScheme.surfaceVariant,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -79,7 +82,7 @@ fun IconTextButton(
           modifier
               .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
               .background(
-                  shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant)
+                  shape = RoundedCornerShape(100), color = color)
               .clickable(onClick = onClick)
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)

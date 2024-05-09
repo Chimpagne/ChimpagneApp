@@ -33,6 +33,17 @@ fun FirstPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   Column(modifier = Modifier.padding(16.dp)) {
+    Legend( //Placing it first, makes it easier for the user to click on a suggestion
+        stringResource(id = R.string.event_creation_screen_location_legend),
+        Icons.Rounded.LocationOn,
+        "Location")
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    LocationSelector(uiState.location, eventViewModel::updateEventLocation)
+
+    Spacer(Modifier.height(16.dp))
+
     Legend(
         stringResource(id = R.string.event_creation_screen_title_legend),
         Icons.Rounded.Title,
@@ -59,16 +70,6 @@ fun FirstPanel(eventViewModel: EventViewModel) {
         label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
         modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
         maxLines = 3)
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Legend(
-        stringResource(id = R.string.event_creation_screen_location_legend),
-        Icons.Rounded.LocationOn,
-        "Location")
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    LocationSelector(uiState.location, eventViewModel::updateEventLocation)
 
     Spacer(modifier = Modifier.height(16.dp))
 

@@ -84,5 +84,9 @@
     <string name="edit_event_save_failure">Could not save the edited event !</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="find_event_location_set">Location set</string>
+    <string name="find_event_location_not_found">Location not found</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="find_event_event_locate_searching">Searching</string>
 
 </resources>
