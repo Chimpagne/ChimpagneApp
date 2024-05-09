@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -68,22 +67,30 @@ import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
+fun ViewDetailEventScreen(
+    navObject: NavigationActions,
+    eventViewModel: EventViewModel,
+    accountViewModel: AccountViewModel
+) {
   val uiState by eventViewModel.uiState.collectAsState()
+  val accountsState by accountViewModel.uiState.collectAsState()
   val context = LocalContext.current
 
   var showDialog by remember { mutableStateOf(false) }
 
-  val userRole = eventViewModel.getCurrentUserRole()
+  val ownerID = uiState.ownerId
+  val ownerAccount = accountsState.fetchedAccounts[ownerID]
 
   Scaffold(
       topBar = {
@@ -304,34 +311,24 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                                  Image(
-                                      // in a future version, we should dynamically show the owner's
-                                      // profile pic
-                                      painter =
-                                          painterResource(
-                                              id = R.drawable.default_user_profile_picture),
-                                      contentDescription = "Organizer Avatar",
-                                      modifier =
-                                          Modifier.size(60.dp).clip(CircleShape).clickable {
-                                            Toast.makeText(
-                                                    context,
-                                                    "This function will be implemented in a future version",
-                                                    Toast.LENGTH_SHORT)
-                                                .show()
-                                          })
-
-                                  // This is static code for now but will become dynamic in a future
-                                  // version
+                                  ProfileIcon(
+                                      uri = accountsState.currentUserProfilePicture,
+                                      onClick = {
+                                        Toast.makeText(
+                                                context,
+                                                "This function will be implemented in a future version",
+                                                Toast.LENGTH_SHORT)
+                                            .show()
+                                      })
                                   Text(
-                                      text = " Organized by \n Alice123",
+                                      text =
+                                          "${stringResource(
+                                            id = R.string.event_details_screen_organized_by)}\n ${ownerAccount?.firstName} ${ownerAccount?.lastName}",
                                       fontSize = 14.sp,
                                       fontFamily = ChimpagneFontFamily,
                                       color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                                  Spacer(
-                                      modifier =
-                                          Modifier.weight(
-                                              1f)) // This maintains spacing between text and button
+                                  Spacer(modifier = Modifier.weight(1f))
 
                                   Button(
                                       onClick = {
@@ -370,9 +367,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                           id = R.string.event_details_screen_leave_button),
                                   icon = Icons.Rounded.RemoveCircleOutline,
                                   fontWeight = FontWeight.Bold,
-                                  fontSize = 30.sp,
+                                  fontSize = 24.sp,
                                   modifier =
-                                      Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
                                           .testTag("leave"),
                                   onClick = {

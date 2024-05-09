@@ -139,7 +139,8 @@ class MainActivity : ComponentActivity() {
                       viewModel(
                           factory =
                               EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)))
+                                  backStackEntry.arguments?.getString("EventID"), database)),
+                  accountViewModel)
             }
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =

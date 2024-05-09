@@ -72,6 +72,7 @@
     <string name="date_tools_until">Jusqu\'au</string>
     <string name="date_tools_at">à</string>
     <string name="event_details_screen_number_of_guests">personnes ont rejoint</string>
+    <string name="event_details_screen_organized_by">Organisé par</string>
     <string name="event_details_screen_report_problem">Signaler un Problème</string>
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
