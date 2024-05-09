@@ -70,7 +70,7 @@ private fun SocialMediaTextField(
       value = url,
       onValueChange = { newUrl ->
         onUrlChange(newUrl)
-        hasError = !newUrl.startsWith(platformUrl)
+        hasError = (!newUrl.startsWith(platformUrl) and newUrl.isNotEmpty())
         if (!hasError) {
           updateSocialMediaLink(Pair(platformName, newUrl))
         }
