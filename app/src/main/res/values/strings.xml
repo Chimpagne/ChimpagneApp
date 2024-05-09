@@ -85,5 +85,6 @@
     <string name="edit_event_save_failure">Could not save the edited event !</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="share_event_button">Share event</string>
 
 </resources>

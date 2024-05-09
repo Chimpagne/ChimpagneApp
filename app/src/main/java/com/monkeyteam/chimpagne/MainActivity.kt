@@ -4,7 +4,6 @@ import AccountSettings
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -13,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -60,30 +58,44 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        val continueAsGuest: () -> Unit = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) }
+        val continueAsGuest: (Boolean) -> Unit = {
+          navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+        }
 
-        val loginToChimpagneAccount: (id: String, isDeepLink: Boolean) -> Unit = { id, isDeepLink ->
+        val loginToChimpagneAccount: (id: String) -> Unit = { id ->
           accountViewModel.loginToChimpagneAccount(
               id,
               { account ->
-                if (account != null) {
-                  Log.d("MainActivity", "Account is in database")
-                  if (!isDeepLink) {
-                    navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-                  }
-                } else {
+                if (account == null) {
                   Log.d("MainActivity", "Account is not in database")
                   navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
+                } else {
+                  Log.d("MainActivity", "Account is in database")
+                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
                 }
               },
               { Log.e("MainActivity", "Failed to check if account is in database: $it") })
         }
 
-        val login: (isDeepLink: Boolean) -> Unit = { bool ->
+        val login: () -> Unit = {
           if (FirebaseAuth.getInstance().currentUser != null) {
-            loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!, bool)
+            loginToChimpagneAccount(FirebaseAuth.getInstance().currentUser?.uid!!)
           } else {
             navActions.navigateTo(Route.LOGIN_SCREEN)
+          }
+        }
+
+        val loginDeepLink: () -> Unit = {
+          if (FirebaseAuth.getInstance().currentUser != null) {
+            accountViewModel.loginToChimpagneAccount(
+                FirebaseAuth.getInstance().currentUser?.uid!!,
+                { account ->
+                  if (account == null) {
+                    AuthUI.getInstance().signOut(this)
+                    accountViewModel.logoutFromChimpagneAccount()
+                  }
+                },
+                { Log.e("MainActivity", "Failed to check if account is in database: $it") })
           }
         }
 
@@ -95,14 +107,14 @@ class MainActivity : ComponentActivity() {
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
           NavHost(navController = navController, startDestination = Route.LOADING_LOGIN) {
-              composable(Route.LOADING_LOGIN){
-                  SpinnerView()
-                  login(false)
-              }
+            composable(Route.LOADING_LOGIN) {
+              SpinnerView()
+              login()
+            }
             composable(Route.LOGIN_SCREEN) {
               LoginScreen(
-                  onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid, false) },
-                  onContinueAsGuest = continueAsGuest)
+                  onSuccessfulLogin = { uid -> loginToChimpagneAccount(uid) },
+                  onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
               AccountCreation(navObject = navActions, accountViewModel = accountViewModel)
@@ -148,26 +160,12 @@ class MainActivity : ComponentActivity() {
                       viewModel(
                           factory =
                               EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)))
+                                  backStackEntry.arguments?.getString("EventID"), database)),
+                  accountViewModel = accountViewModel)
             }
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
                   viewModel(factory = EventViewModelFactory(null, database))
-              /*
-
-              For you Gregory :) Use this not the one above
-
-                              val eventViewModel =
-                                  EventViewModel(
-                                      possibleEventID,
-                                      Database(PUBLIC_TABLES),
-                                      onFailure = {
-                                          Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
-                                              .show()
-                                          navActions.clearAndNavigateTo(Route.HOME_SCREEN)
-                                      })
-
-               */
               val event = eventViewModel.buildChimpagneEvent()
               DetailScreenSheet(
                   event = event,
@@ -176,7 +174,6 @@ class MainActivity : ComponentActivity() {
                   })
             }
             composable(
-                // The deep link route
                 route = Route.ONLINE_EVENT_VIEW,
                 deepLinks =
                     listOf(
@@ -188,23 +185,9 @@ class MainActivity : ComponentActivity() {
                     listOf(
                         navArgument("EventID") { type = NavType.StringType },
                     )) {
-                  // Check if user is logged in
-                  login(true)
-                  val possibleEventID = it.arguments?.getString("EventID")
-                  val context = LocalContext.current
-                  // Check if event exists, before forwarding it to the event detail screen
-                  EventViewModel(
-                      possibleEventID,
-                      Database(PUBLIC_TABLES),
-                      onSuccess = {
-                        navActions.navigateTo(
-                            Route.VIEW_DETAIL_EVENT_SCREEN + "/${possibleEventID}/false")
-                      },
-                      onFailure = {
-                        Toast.makeText(context, "Event no longer available", Toast.LENGTH_SHORT)
-                            .show()
-                        navActions.clearAndNavigateTo(Route.HOME_SCREEN)
-                      })
+                  loginDeepLink()
+                  val EventID = it.arguments?.getString("EventID")
+                  navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${EventID}")
                 }
           }
         }

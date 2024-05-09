@@ -32,6 +32,7 @@ import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -53,11 +54,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -72,18 +75,24 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
+fun ViewDetailEventScreen(
+    navObject: NavigationActions,
+    eventViewModel: EventViewModel,
+    accountViewModel: AccountViewModel
+) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
 
   var showDialog by remember { mutableStateOf(false) }
-
-  val userRole = eventViewModel.getCurrentUserRole()
+  var showPromptLogin by remember { mutableStateOf(false) }
+  val clipboardManager = LocalClipboardManager.current
 
   Scaffold(
       topBar = {
@@ -104,9 +113,17 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
-              IconButton(onClick = { navObject.goBack() }, modifier = Modifier.testTag("go back")) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-              }
+              IconButton(
+                  onClick = {
+                    if (!accountViewModel.isUserLoggedIn()) {
+                      showPromptLogin = true
+                    } else {
+                      navObject.goBack()
+                    }
+                  },
+                  modifier = Modifier.testTag("go back")) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+                  }
             },
             actions = {
               IconButton(onClick = { showDialog = true }) {
@@ -119,6 +136,10 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
       }) { innerPadding ->
         if (showDialog) {
           QRCodeDialog(eventId = uiState.id, onDismiss = { showDialog = false })
+        }
+        if (showPromptLogin) {
+          PromptLogin(context, navObject)
+          showPromptLogin = false
         }
         Column(
             modifier =
@@ -376,17 +397,21 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                           .fillMaxWidth()
                                           .testTag("leave"),
                                   onClick = {
-                                    eventViewModel.leaveTheEvent(
-                                        onSuccess = {
-                                          Toast.makeText(
-                                                  context,
-                                                  context.getString(
-                                                      R.string
-                                                          .event_details_screen_leave_toast_success),
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                          navObject.goBack()
-                                        })
+                                    if (!accountViewModel.isUserLoggedIn()) {
+                                      showPromptLogin = true
+                                    } else {
+                                      eventViewModel.leaveTheEvent(
+                                          onSuccess = {
+                                            Toast.makeText(
+                                                    context,
+                                                    context.getString(
+                                                        R.string
+                                                            .event_details_screen_leave_toast_success),
+                                                    Toast.LENGTH_SHORT)
+                                                .show()
+                                            navObject.goBack()
+                                          })
+                                    }
                                   })
                             }
 
@@ -407,9 +432,30 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                           .fillMaxWidth()
                                           .testTag("edit"),
                                   onClick = {
-                                    navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                    if (!accountViewModel.isUserLoggedIn()) {
+                                      showPromptLogin = true
+                                    } else {
+                                      navObject.navigateTo(
+                                          Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                    }
                                   })
                             }
+                            Spacer(Modifier.height(16.dp))
+                            ChimpagneButton(
+                                text = stringResource(id = R.string.share_event_button),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 24.sp,
+                                icon = Icons.Rounded.Share,
+                                modifier =
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                        .fillMaxWidth()
+                                        .testTag("share"),
+                                onClick = {
+                                  val annotatedString = buildAnnotatedString {
+                                    append("https://www.manigo.ch/events/?uid=${uiState.id}")
+                                  }
+                                  clipboardManager.setText(annotatedString)
+                                })
                             Spacer(Modifier.height(16.dp))
                             ChimpagneButton(
                                 text =
