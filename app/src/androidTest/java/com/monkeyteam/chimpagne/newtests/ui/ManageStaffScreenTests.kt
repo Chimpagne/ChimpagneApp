@@ -97,6 +97,7 @@ class ManageStaffScreenTests {
 
     composeTestRule.onNodeWithContentDescription("floating button").assertHasClickAction()
     composeTestRule.onNodeWithContentDescription("floating button").performClick()
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty staff list").assertIsDisplayed()
@@ -105,7 +106,7 @@ class ManageStaffScreenTests {
 
     composeTestRule.onNodeWithTag("guest member").assertHasClickAction()
     composeTestRule.onNodeWithTag("guest member").performClick()
-    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(3 * SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()
     composeTestRule.onNodeWithTag("staff member").assertIsDisplayed()
@@ -114,7 +115,7 @@ class ManageStaffScreenTests {
 
     composeTestRule.onNodeWithTag("staff member").assertHasClickAction()
     composeTestRule.onNodeWithTag("staff member").performClick()
-    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(3 * SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty staff list").assertIsDisplayed()
@@ -123,6 +124,7 @@ class ManageStaffScreenTests {
 
     composeTestRule.onNodeWithContentDescription("floating button").assertHasClickAction()
     composeTestRule.onNodeWithContentDescription("floating button").performClick()
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty staff list").assertIsDisplayed()
