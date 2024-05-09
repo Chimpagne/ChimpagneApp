@@ -128,7 +128,6 @@ class AccountViewModel(database: Database) : ViewModel() {
   }
 
   fun fetchAccounts(accountUIDs: List<ChimpagneAccountUID>) {
-    println("FETCHING ACCOUNTS")
     _uiState.value = _uiState.value.copy(loading = true)
     accountManager.getAccounts(
         accountUIDs,

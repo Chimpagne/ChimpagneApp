@@ -8,7 +8,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.ui.screens.supplies.GuestSupplyDialog
-import com.monkeyteam.chimpagne.ui.screens.supplies.SupplyCard
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -17,19 +16,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GuestSupplyDialogUITest {
 
-  @get:Rule
-  val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
   @Test
   fun supplyGuestAssignTest() {
-    val assignedSupply = ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
-    val unassignedSupply = ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
+    val assignedSupply =
+        ChimpagneSupply(
+            id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
+    val unassignedSupply =
+        ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
     var supply = unassignedSupply
     composeTestRule.setContent {
-      GuestSupplyDialog(supply, {
-        if (it) supply = assignedSupply
-        else supply = unassignedSupply
-      }, "hector", hashMapOf("hector" to ChimpagneAccount("hector")), onDismissRequest = {})
+      GuestSupplyDialog(
+          supply,
+          { if (it) supply = assignedSupply else supply = unassignedSupply },
+          "hector",
+          hashMapOf("hector" to ChimpagneAccount("hector")),
+          onDismissRequest = {})
     }
 
     composeTestRule.onNodeWithTag("guest_supply_dialog").isDisplayed()
@@ -40,14 +43,19 @@ class GuestSupplyDialogUITest {
 
   @Test
   fun supplyGuestUnassignTest() {
-    val assignedSupply = ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
-    val unassignedSupply = ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
+    val assignedSupply =
+        ChimpagneSupply(
+            id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
+    val unassignedSupply =
+        ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
     var supply = assignedSupply
     composeTestRule.setContent {
-      GuestSupplyDialog(supply, {
-        if (it) supply = assignedSupply
-        else supply = unassignedSupply
-      }, "hector", hashMapOf("hector" to ChimpagneAccount("hector")), onDismissRequest = {})
+      GuestSupplyDialog(
+          supply,
+          { if (it) supply = assignedSupply else supply = unassignedSupply },
+          "hector",
+          hashMapOf("hector" to ChimpagneAccount("hector")),
+          onDismissRequest = {})
     }
 
     composeTestRule.onNodeWithTag("guest_supply_dialog").isDisplayed()

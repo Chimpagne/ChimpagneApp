@@ -165,7 +165,7 @@ fun SuppliesScreen(
                         displayAssignPopup = true
                         displayedSupply = it
                       },
-                    modifier = Modifier.testTag("supply_card"))
+                      modifier = Modifier.testTag("supply_card"))
                 }
               }
 

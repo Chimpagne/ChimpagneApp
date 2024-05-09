@@ -54,10 +54,10 @@ class SuppliesScreenUITest {
     composeTestRule.onNodeWithTag("supply_add").performClick()
     composeTestRule.onNodeWithTag("edit_supply_dialog").assertIsDisplayed()
     composeTestRule.onNodeWithTag("supplies_add_button").performClick()
-    composeTestRule.waitUntil(4*SLEEP_AMOUNT_MILLIS) {
+    composeTestRule.waitUntil(4 * SLEEP_AMOUNT_MILLIS) {
       !eventViewModel.uiState.value.loading && !accountViewModel.uiState.value.loading
     }
-    composeTestRule.onNodeWithTag ("supply_nothing", useUnmergedTree = true).assertDoesNotExist()
+    composeTestRule.onNodeWithTag("supply_nothing", useUnmergedTree = true).assertDoesNotExist()
     composeTestRule.onNodeWithTag("supply_not_assigned", useUnmergedTree = true).assertIsDisplayed()
     composeTestRule.onNodeWithTag("supply_card", useUnmergedTree = true).performClick()
     composeTestRule.onNodeWithTag("staff_supply_dialog").isDisplayed()

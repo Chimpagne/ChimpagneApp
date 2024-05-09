@@ -33,20 +33,28 @@ fun GuestSupplyDialog(
       buttonDataList =
           listOf(
               ButtonData(
-                  stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest, modifier = Modifier.testTag("guest_supply_cancel")),
+                  stringResource(id = R.string.chimpagne_cancel),
+                  onClick = onDismissRequest,
+                  modifier = Modifier.testTag("guest_supply_cancel")),
               if (supply.assignedTo.containsKey(loggedUserUID))
-                  ButtonData(stringResource(id = R.string.supplies_unassign_myself), modifier = Modifier.testTag("guest_supply_unassign")) {
-                    assignMyself(false)
-                    onDismissRequest()
-                  }
+                  ButtonData(
+                      stringResource(id = R.string.supplies_unassign_myself),
+                      modifier = Modifier.testTag("guest_supply_unassign")) {
+                        assignMyself(false)
+                        onDismissRequest()
+                      }
               else
-                  ButtonData(stringResource(id = R.string.supplies_assign_myself),  modifier = Modifier.testTag("guest_supply_assign")) {
-                    assignMyself(true)
-                    onDismissRequest()
-                  })) {
+                  ButtonData(
+                      stringResource(id = R.string.supplies_assign_myself),
+                      modifier = Modifier.testTag("guest_supply_assign")) {
+                        assignMyself(true)
+                        onDismissRequest()
+                      })) {
         Column(modifier = Modifier.fillMaxWidth()) {
           if (supply.assignedTo.keys.isEmpty()) {
-            Text(stringResource(id = R.string.supplies_supply_not_assigned), modifier = Modifier.testTag("nobody_assigned"))
+            Text(
+                stringResource(id = R.string.supplies_supply_not_assigned),
+                modifier = Modifier.testTag("nobody_assigned"))
           } else {
             Text(stringResource(id = R.string.supplies_supply_assigned_to))
             LazyColumn {
