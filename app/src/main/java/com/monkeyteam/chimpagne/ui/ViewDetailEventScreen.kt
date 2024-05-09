@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -114,9 +113,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                 Icon(
                     imageVector = Icons.Rounded.QrCodeScanner,
                     contentDescription = "Scan QR",
-                    modifier = Modifier
-                        .size(36.dp)
-                        .testTag("scan QR"))
+                    modifier = Modifier.size(36.dp).testTag("scan QR"))
               }
             })
       }) { innerPadding ->
@@ -125,22 +122,20 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
         }
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background)) {
+                Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background)) {
               LazyColumn(
                   modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
                     item {
                       Box(
                           modifier =
-                          Modifier
-                              .height(250.dp)
-                              .fillMaxWidth()
-                              .padding(horizontal = 16.dp, vertical = 16.dp)
-                              .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
-                              .clip(RoundedCornerShape(16.dp))
-                              .background(MaterialTheme.colorScheme.primaryContainer),
+                              Modifier.height(250.dp)
+                                  .fillMaxWidth()
+                                  .padding(horizontal = 16.dp, vertical = 16.dp)
+                                  .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
+                                  .clip(RoundedCornerShape(16.dp))
+                                  .background(MaterialTheme.colorScheme.primaryContainer),
                           contentAlignment = Alignment.Center) {
                             // For now, image is static -> needs to be added in the UI State for
                             // event view model
@@ -148,10 +143,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 painter = painterResource(id = R.drawable.default_party_image),
                                 contentDescription = "Event Banner",
                                 modifier =
-                                Modifier
-                                    .matchParentSize()
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(16.dp)),
+                                    Modifier.matchParentSize()
+                                        .padding(16.dp)
+                                        .clip(RoundedCornerShape(16.dp)),
                                 contentScale = ContentScale.Crop)
                           }
                     }
@@ -161,23 +155,19 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                           horizontalAlignment = Alignment.CenterHorizontally) {
                             Row(
                                 modifier =
-                                Modifier
-                                    .horizontalScroll(rememberScrollState())
-                                    .testTag("tag list")) {
+                                    Modifier.horizontalScroll(rememberScrollState())
+                                        .testTag("tag list")) {
                                   uiState.tags.forEach { tag ->
                                     Box(
                                         modifier =
-                                        Modifier
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                                            .shadow(
-                                                elevation = 10.dp,
-                                                shape = RoundedCornerShape(16.dp)
-                                            )
-                                            .clip(RoundedCornerShape(50))
-                                            .background(
-                                                MaterialTheme.colorScheme.primaryContainer
-                                            )
-                                            .padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                            Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                                .shadow(
+                                                    elevation = 10.dp,
+                                                    shape = RoundedCornerShape(16.dp))
+                                                .clip(RoundedCornerShape(50))
+                                                .background(
+                                                    MaterialTheme.colorScheme.primaryContainer)
+                                                .padding(horizontal = 16.dp, vertical = 8.dp)) {
                                           SimpleTagChip(tag)
                                         }
                                   }
@@ -187,9 +177,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 thickness = 1.dp,
                                 color = Color.LightGray)
                             Column(
-                                modifier = Modifier
-                                    .padding(horizontal = 40.dp)
-                                    .fillMaxWidth(),
+                                modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally) {
                                   Row(
                                       modifier = Modifier.fillMaxWidth(),
@@ -209,7 +197,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                                 uiState.startsAtCalendarDate)),
                                                     fontFamily = ChimpagneFontFamily,
                                                     fontSize = 16.sp,
-                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    color =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
                                                     fontWeight = FontWeight.Bold)
                                                 Text(
                                                     text =
@@ -218,7 +208,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                                 uiState.startsAtCalendarDate)),
                                                     fontFamily = ChimpagneFontFamily,
                                                     fontSize = 16.sp,
-                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    color =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
                                                     fontWeight = FontWeight.Bold)
                                               }
                                         }
@@ -237,7 +229,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                                 uiState.endsAtCalendarDate)),
                                                     fontFamily = ChimpagneFontFamily,
                                                     fontSize = 16.sp,
-                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    color =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
                                                     fontWeight = FontWeight.Bold)
                                                 Text(
                                                     text =
@@ -246,23 +240,22 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                                 uiState.endsAtCalendarDate)),
                                                     fontFamily = ChimpagneFontFamily,
                                                     fontSize = 16.sp,
-                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    color =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
                                                     fontWeight = FontWeight.Bold)
                                               }
                                         }
                                       }
                                   Box(
                                       modifier =
-                                      Modifier
-                                          .shadow(
-                                              elevation = 10.dp,
-                                              shape = RoundedCornerShape(16.dp)
-                                          )
-                                          .clip(RoundedCornerShape(50))
-                                          .background(
-                                              MaterialTheme.colorScheme.primaryContainer
-                                          )
-                                          .padding(horizontal = 24.dp, vertical = 8.dp)) {
+                                          Modifier.shadow(
+                                                  elevation = 10.dp,
+                                                  shape = RoundedCornerShape(16.dp))
+                                              .clip(RoundedCornerShape(50))
+                                              .background(
+                                                  MaterialTheme.colorScheme.primaryContainer)
+                                              .padding(horizontal = 24.dp, vertical = 8.dp)) {
                                         Text(
                                             text =
                                                 "${uiState.guests.count()} ${stringResource(
@@ -273,92 +266,94 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                             modifier = Modifier.testTag("number of guests"))
                                       }
                                 }
-                          Spacer(Modifier.height(8.dp))
-                          HorizontalDivider(
-                              modifier = Modifier.padding(vertical = 16.dp),
-                              thickness = 1.dp,
-                              color = Color.LightGray)
+                            Spacer(Modifier.height(8.dp))
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                thickness = 1.dp,
+                                color = Color.LightGray)
 
-                          var expandedDescription by remember { mutableStateOf(false) }
-                          val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
-                          Row(modifier = Modifier
-                              .fillMaxWidth()
-                              .clickable { expandedDescription = !expandedDescription }
-                              .padding(horizontal = 16.dp)) {
-                              Text(
-                                  text = uiState.description,
-                                  fontSize = 16.sp,
-                                  fontFamily = ChimpagneFontFamily,
-                                  color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                  maxLines = maxLines,
-                                  modifier = Modifier.weight(1f)
-                              )
-                              Icon(
-                                  imageVector = if (expandedDescription) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
-                                  contentDescription = if (expandedDescription) "Collapse" else "Expand",
-                                  tint = MaterialTheme.colorScheme.primary
-                              )
-                          }
-
-                          HorizontalDivider(
-                              modifier = Modifier.padding(vertical = 16.dp),
-                              thickness = 1.dp,
-                              color = Color.LightGray)
-
-                          Row(
-                              verticalAlignment = Alignment.CenterVertically,
-                              modifier = Modifier
-                                  .fillMaxWidth()
-                                  .padding(horizontal = 16.dp)
-                          ) {
-                              Image(
-                                  // in a future version, we should dynamically show the owner's profile pic
-                                  painter = painterResource(id = R.drawable.default_user_profile_picture),
-                                  contentDescription = "Organizer Avatar",
-                                  modifier = Modifier
-                                      .size(60.dp)
-                                      .clip(CircleShape)
-                                      .clickable {
-                                          Toast.makeText(
-                                              context,
-                                              "This function will be implemented in a future version",
-                                              Toast.LENGTH_SHORT
-                                          )
-                                              .show()
-                                      }
-                              )
-                              Spacer(modifier = Modifier.width(12.dp))
-
-                              Text(
-                                  text = " Organized by \n Alice",
-                                  fontSize = 14.sp,
-                                  fontFamily = ChimpagneFontFamily,
-                                  color = MaterialTheme.colorScheme.onPrimaryContainer
-                              )
-
-                              Spacer(modifier = Modifier.weight(1f))
-
-                              Button(
-                                  onClick = {Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                      .show()},
-                                  modifier = Modifier.testTag("reportProblem")
-                              ) {
-                                  Text(text = stringResource(
-                                      id = R.string.event_details_screen_report_problem), color = Color.White)
-                                  Spacer(modifier = Modifier.size(6.dp))
+                            var expandedDescription by remember { mutableStateOf(false) }
+                            val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
+                            Row(
+                                modifier =
+                                    Modifier.fillMaxWidth()
+                                        .clickable { expandedDescription = !expandedDescription }
+                                        .padding(horizontal = 16.dp)) {
+                                  Text(
+                                      text = uiState.description,
+                                      fontSize = 16.sp,
+                                      fontFamily = ChimpagneFontFamily,
+                                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                      maxLines = maxLines,
+                                      modifier = Modifier.weight(1f))
                                   Icon(
-                                      imageVector = Icons.Default.Warning,
-                                      contentDescription = "Report a Problem",
-                                      tint = Color.White,
-                                      modifier = Modifier.size(16.dp)
-                                  )
-                              }
-                          }
+                                      imageVector =
+                                          if (expandedDescription) Icons.Filled.ArrowDropUp
+                                          else Icons.Filled.ArrowDropDown,
+                                      contentDescription =
+                                          if (expandedDescription) "Collapse" else "Expand",
+                                      tint = MaterialTheme.colorScheme.primary)
+                                }
 
-                          if (uiState.currentUserRole != ChimpagneRole.OWNER) {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                thickness = 1.dp,
+                                color = Color.LightGray)
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+                                  Image(
+                                      // in a future version, we should dynamically show the owner's
+                                      // profile pic
+                                      painter =
+                                          painterResource(
+                                              id = R.drawable.default_user_profile_picture),
+                                      contentDescription = "Organizer Avatar",
+                                      modifier =
+                                          Modifier.size(60.dp).clip(CircleShape).clickable {
+                                            Toast.makeText(
+                                                    context,
+                                                    "This function will be implemented in a future version",
+                                                    Toast.LENGTH_SHORT)
+                                                .show()
+                                          })
+                                  Spacer(modifier = Modifier.width(12.dp))
+
+                                  Text(
+                                      text = " Organized by \n Alice123",
+                                      fontSize = 14.sp,
+                                      fontFamily = ChimpagneFontFamily,
+                                      color = MaterialTheme.colorScheme.onPrimaryContainer)
+
+                                  Spacer(modifier = Modifier.weight(1f))
+
+                                  Button(
+                                      onClick = {
+                                        Toast.makeText(
+                                                context,
+                                                "This function will be implemented in a future version",
+                                                Toast.LENGTH_SHORT)
+                                            .show()
+                                      },
+                                      modifier = Modifier.testTag("reportProblem")) {
+                                        Text(
+                                            text =
+                                                stringResource(
+                                                    id =
+                                                        R.string
+                                                            .event_details_screen_report_problem),
+                                            color = Color.White)
+                                        Spacer(modifier = Modifier.size(6.dp))
+                                        Icon(
+                                            imageVector = Icons.Default.Warning,
+                                            contentDescription = "Report a Problem",
+                                            tint = Color.White,
+                                            modifier = Modifier.size(16.dp))
+                                      }
+                                }
+
+                            if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 
                               ChimpagneButton(
                                   text =
@@ -368,10 +363,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                   fontWeight = FontWeight.Bold,
                                   fontSize = 30.sp,
                                   modifier =
-                                  Modifier
-                                      .padding(horizontal = 16.dp, vertical = 8.dp)
-                                      .fillMaxWidth()
-                                      .testTag("leave"),
+                                      Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                          .fillMaxWidth()
+                                          .testTag("leave"),
                                   onClick = {
                                     eventViewModel.leaveTheEvent(
                                         onSuccess = {
@@ -398,10 +392,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                   fontWeight = FontWeight.Bold,
                                   fontSize = 30.sp,
                                   modifier =
-                                  Modifier
-                                      .padding(horizontal = 16.dp, vertical = 8.dp)
-                                      .fillMaxWidth()
-                                      .testTag("edit"),
+                                      Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                          .fillMaxWidth()
+                                          .testTag("edit"),
                                   onClick = {
                                     navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                                   })
@@ -414,10 +407,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("chat"),
+                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        .fillMaxWidth()
+                                        .testTag("chat"),
                                 onClick = {
                                   /* TODO Implement this later */
                                   Toast.makeText(
@@ -435,10 +427,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("location"),
+                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        .fillMaxWidth()
+                                        .testTag("location"),
                                 onClick = {
                                   /* TODO Implement this later */
                                   Toast.makeText(
@@ -456,10 +447,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("supplies"),
+                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        .fillMaxWidth()
+                                        .testTag("supplies"),
                                 onClick = {
                                   /* TODO Implement this later */
                                   Toast.makeText(
@@ -477,10 +467,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("polls"),
+                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        .fillMaxWidth()
+                                        .testTag("polls"),
                                 onClick = {
                                   /* TODO Implement this later */
                                   Toast.makeText(
@@ -498,10 +487,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 30.sp,
                                 modifier =
-                                Modifier
-                                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("car pooling"),
+                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        .fillMaxWidth()
+                                        .testTag("car pooling"),
                                 onClick = {
                                   /* TODO Implement this later */
                                   Toast.makeText(
