@@ -28,10 +28,12 @@ fun SupplyCard(supply: ChimpagneSupply, modifier: Modifier = Modifier, onClick: 
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
-          Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Text(text = "${supply.quantity} ${supply.unit}")
-            Text(text = "${supply.assignedTo.keys.size} assigned")
-          }
+          Row(
+              horizontalArrangement = Arrangement.SpaceBetween,
+              modifier = Modifier.fillMaxWidth()) {
+                Text(text = "${supply.quantity} ${supply.unit}")
+                Text(text = "${supply.assignedTo.keys.size} assigned")
+              }
         }
       }
 }

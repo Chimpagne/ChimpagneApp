@@ -14,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -52,7 +51,11 @@ fun SuppliesScreen(
         it.value.assignedTo.containsKey(accountViewModelState.currentUserUID)
       }
   val nonAssignedSupplies = uiState.supplies.filter { it.value.assignedTo.isEmpty() }
-  val otherSupplies = uiState.supplies.filter { it.value.assignedTo.isNotEmpty() && !it.value.assignedTo.containsKey(accountViewModelState.currentUserUID) }
+  val otherSupplies =
+      uiState.supplies.filter {
+        it.value.assignedTo.isNotEmpty() &&
+            !it.value.assignedTo.containsKey(accountViewModelState.currentUserUID)
+      }
 
   var displayAddPopup by remember { mutableStateOf(false) }
   if (displayAddPopup) {
@@ -118,53 +121,67 @@ fun SuppliesScreen(
               }
             })
       }) { innerPadding ->
-    if (uiState.supplies.isEmpty()) {
-      Text(
-        text = stringResource(id = R.string.supplies_empty),
-        modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(innerPadding).wrapContentHeight(align = Alignment.CenterVertically),
-        textAlign = TextAlign.Center
-      )
-    } else {
-        Column(Modifier.padding(innerPadding)) {
-          LazyColumn {
-            if (suppliesAssignedToMe.isNotEmpty()) {
-              item { Text(stringResource(id = R.string.supplies_supply_assigned_to_you), modifier = Modifier.padding(12.dp, 8.dp)) }
-              items(suppliesAssignedToMe.values.toList()) {
-                SupplyCard(
-                  supply = it,
-                  onClick = {
-                    displayAssignPopup = true
-                    displayedSupply = it
-                  })
+        if (uiState.supplies.isEmpty()) {
+          Text(
+              text = stringResource(id = R.string.supplies_empty),
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .fillMaxHeight()
+                      .padding(innerPadding)
+                      .wrapContentHeight(align = Alignment.CenterVertically),
+              textAlign = TextAlign.Center)
+        } else {
+          Column(Modifier.padding(innerPadding)) {
+            LazyColumn {
+              if (suppliesAssignedToMe.isNotEmpty()) {
+                item {
+                  Text(
+                      stringResource(id = R.string.supplies_supply_assigned_to_you),
+                      modifier = Modifier.padding(12.dp, 8.dp))
+                }
+                items(suppliesAssignedToMe.values.toList()) {
+                  SupplyCard(
+                      supply = it,
+                      onClick = {
+                        displayAssignPopup = true
+                        displayedSupply = it
+                      })
+                }
               }
-            }
 
-            if (nonAssignedSupplies.isNotEmpty()) {
-              item { Text(stringResource(id = R.string.supplies_not_assigned_to_anyone), modifier = Modifier.padding(12.dp, 8.dp)) }
-              items(nonAssignedSupplies.values.toList()) {
-                SupplyCard(
-                  supply = it,
-                  onClick = {
-                    displayAssignPopup = true
-                    displayedSupply = it
-                  })
+              if (nonAssignedSupplies.isNotEmpty()) {
+                item {
+                  Text(
+                      stringResource(id = R.string.supplies_not_assigned_to_anyone),
+                      modifier = Modifier.padding(12.dp, 8.dp))
+                }
+                items(nonAssignedSupplies.values.toList()) {
+                  SupplyCard(
+                      supply = it,
+                      onClick = {
+                        displayAssignPopup = true
+                        displayedSupply = it
+                      })
+                }
               }
-            }
 
-            if (otherSupplies.isNotEmpty()) {
-              item { Text(stringResource(id = R.string.supplies_already_assigned), modifier = Modifier.padding(12.dp, 8.dp)) }
-              items(otherSupplies.values.toList()) {
-                SupplyCard(
-                  supply = it,
-                  onClick = {
-                    displayAssignPopup = true
-                    displayedSupply = it
-                  })
+              if (otherSupplies.isNotEmpty()) {
+                item {
+                  Text(
+                      stringResource(id = R.string.supplies_already_assigned),
+                      modifier = Modifier.padding(12.dp, 8.dp))
+                }
+                items(otherSupplies.values.toList()) {
+                  SupplyCard(
+                      supply = it,
+                      onClick = {
+                        displayAssignPopup = true
+                        displayedSupply = it
+                      })
+                }
               }
             }
           }
-
         }
-    }
-  }
+      }
 }
