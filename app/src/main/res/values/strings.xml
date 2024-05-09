@@ -79,6 +79,9 @@
     <string name="chimpagne_cancel">Cancel</string>
     <string name="chimpagne_edit">Edit</string>
     <string name="chimpagne_save">Save</string>
+    <string name="chimpagne_confirm">Confirm</string>
+    <string name="chimpagne_add">Add</string>
+    <string name="chimpagne_delete">Delete</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
@@ -91,7 +94,6 @@
     <string name="supplies_dialog_description">Enter the supply details</string>
     <string name="supplies_edit_dialog_title">Edit the supply</string>
     <string name="supplies_add_dialog_title">Add a supply</string>
-    <string name="supplies_add_dialog_submit">Add</string>
     <string name="supplies_description">Description</string>
     <string name="supplies_quantity">Quantity</string>
     <string name="supplies_unit">Unit</string>
@@ -104,8 +106,6 @@
     <string name="supplies_not_assigned_to_anyone">Supplies not assigned to anyone</string>
     <string name="supplies_already_assigned">Supplies already assigned</string>
     <string name="supplies_empty">No created supply</string>
-    <string name="chimpagne_delete">Delete</string>
     <string name="supplies_delete">Delete this supply ?</string>
     <string name="supplies_delete_description">This action is irreversible !</string>
-    <string name="chimpagne_confirm">Confirm</string>
 </resources>

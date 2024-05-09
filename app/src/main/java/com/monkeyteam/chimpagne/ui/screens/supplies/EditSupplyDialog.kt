@@ -30,7 +30,7 @@ fun EditSupplyDialog(
     onDismissRequest: () -> Unit,
     onSave: (ChimpagneSupply) -> Unit,
     title: String = stringResource(id = R.string.supplies_add_dialog_title),
-    saveButton: String = stringResource(id = R.string.supplies_add_dialog_submit)
+    saveButton: String = stringResource(id = R.string.chimpagne_add)
 ) {
   var description by remember { mutableStateOf(supply.description) }
   var quantity by remember { mutableStateOf(supply.quantity.toString()) }
