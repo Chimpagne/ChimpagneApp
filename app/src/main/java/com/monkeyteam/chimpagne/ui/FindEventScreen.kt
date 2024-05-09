@@ -2,11 +2,12 @@ package com.monkeyteam.chimpagne.ui
 
 import DateSelector
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.IntentSender
-import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -65,7 +66,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationRequest
@@ -155,6 +155,7 @@ fun MainFindEventScreen(
   }
 }
 
+@SuppressLint("MissingPermission")
 @ExperimentalMaterial3Api
 @Composable
 fun FindEventFormScreen(
@@ -178,90 +179,80 @@ fun FindEventFormScreen(
     LocationServices.getFusedLocationProviderClient(context)
   }
 
-  val locationPermissionRequest =
-      rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            when {
-              permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                  permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
-                if (ActivityCompat.checkSelfPermission(
-                    context, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-                  showToast(context.getString(R.string.permission_denied))
-                  locationState = LocationState.Error("Location permission denied")
-                  return@rememberLauncherForActivityResult
-                }
+  val getLocation = {
+    showToast("Getting location")
+    locationState = LocationState.Searching
+    fusedLocationProviderClient
+        .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
+        .addOnSuccessListener { location ->
+          location?.let {
+              Thread.sleep(3000)
+            showToast(context.getString(R.string.find_event_location_set))
+            findViewModel.updateSelectedLocation(Location("mylocation", it.latitude, it.longitude))
+            locationState = LocationState.Set(it)
+          } ?: showToast(context.getString(R.string.find_event_location_not_found))
+        }
+        .addOnFailureListener {
+          showToast(context.getString(R.string.find_event_location_not_found) + " : ${it.message}")
+          locationState = LocationState.Error("Unable to get location: ${it.message}")
+        }
+  }
 
-                showToast("Getting location")
-                locationState = LocationState.Searching
-                fusedLocationProviderClient
-                    .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
-                    .addOnSuccessListener { location ->
-                      Thread.sleep(3000)
-                      location?.let {
-                        showToast(context.getString(R.string.find_event_location_set))
-                        findViewModel.updateSelectedLocation(
-                            Location("mylocation", it.latitude, it.longitude))
-                        locationState = LocationState.Set(it)
-                      } ?: showToast(context.getString(R.string.find_event_location_not_found))
-                    }
-                    .addOnFailureListener {
-                      showToast(
-                          context.getString(R.string.find_event_location_not_found) +
-                              " : ${it.message}")
-                      locationState = LocationState.Error("Unable to get location: ${it.message}")
-                    }
-              }
-              else -> {
-                showToast(context.getString(R.string.permission_denied))
-                locationState = LocationState.Error("Location permission denied")
-              }
-            }
-          }
-
-  val requestLocationPermission = {
+  val checkAndRequestGPS = {
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+      Log.d("FindEventFormScreen", "GPS asked to be turned on")
+      // GPS is not enabled, proceed to ask user to enable it
       val locationRequest =
           LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
       val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-      builder.setAlwaysShow(true) // this is the key ingredient that shows dialog
+      builder.setAlwaysShow(true)
 
       val client: SettingsClient = LocationServices.getSettingsClient(context)
       val task = client.checkLocationSettings(builder.build())
 
       task.addOnSuccessListener {
-        // All location settings are satisfied. The client can initialize location requests here.
-        locationPermissionRequest.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION))
+        // GPS is now enabled, get the location
+        Log.d("FindEventFormScreen", "GPS enabled")
+        getLocation()
       }
 
       task.addOnFailureListener { exception ->
+        Log.d("FindEventFormScreen", "entered in ecxception")
         if (exception is ResolvableApiException) {
-          // Location settings are not satisfied, but this can be fixed by showing the user a
-          // dialog.
+          // Prompt the user to enable GPS
           try {
-            // Show the dialog by calling startResolutionForResult(),
-            // and check the result in onActivityResult().
-            exception.startResolutionForResult(
-                (context as Activity), // You need to use an Activity context here
-                0x1) // The request code is arbitrary and should be unique within your app
+            exception.startResolutionForResult((context as Activity), 0x1)
           } catch (sendEx: IntentSender.SendIntentException) {
-            // Ignore the error.
+            // Handle the error appropriately
           }
         }
       }
     } else {
-      locationPermissionRequest.launch(
-          arrayOf(
-              Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+      Log.d("FindEventFormScreen", "GPS already tunred on")
+      // GPS is already enabled, get the location
+      getLocation()
     }
+  }
+
+  val locationPermissionRequest =
+      rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+          permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+          // Permissions granted, now check if GPS is enabled and request enabling if necessary.
+          checkAndRequestGPS()
+        } else {
+          showToast(context.getString(R.string.permission_denied))
+          locationState = LocationState.Error("Location permission denied")
+        }
+      }
+
+  val requestLocationPermission = {
+    locationPermissionRequest.launch(
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
   }
 
   val cameraPermissionRequest =
