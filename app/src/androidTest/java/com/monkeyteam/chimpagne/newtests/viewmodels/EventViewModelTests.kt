@@ -262,11 +262,13 @@ class EventViewModelTests {
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.id == testStaffedEvent.id)
 
     eventSearchVM.fetchAccounts(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.accounts.keys.size == 2)
     assertTrue(eventSearchVM.uiState.value.accounts[TEST_ACCOUNTS[0].firebaseAuthUID] != null)
@@ -277,6 +279,7 @@ class EventViewModelTests {
 
     eventSearchVM.promoteGuestToStaff(TEST_ACCOUNTS[0].firebaseAuthUID)
     while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.staffs.size == 1)
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
@@ -289,12 +292,14 @@ class EventViewModelTests {
             onFailure = { assertTrue(false) })
 
     while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM2.uiState.value.staffs.size == 1)
     assertTrue(eventSearchVM2.uiState.value.guests.isEmpty())
 
     eventSearchVM2.demoteStaffToGuest(TEST_ACCOUNTS[0].firebaseAuthUID)
     while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM2.uiState.value.guests.size == 1)
     assertTrue(eventSearchVM2.uiState.value.staffs.isEmpty())
@@ -307,6 +312,7 @@ class EventViewModelTests {
             onFailure = { assertTrue(false) })
 
     while (eventSearchVM3.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM3.uiState.value.guests.size == 1)
     assertTrue(eventSearchVM3.uiState.value.staffs.isEmpty())
