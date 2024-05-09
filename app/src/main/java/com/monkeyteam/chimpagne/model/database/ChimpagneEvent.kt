@@ -24,7 +24,8 @@ data class ChimpagneEvent(
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
-    val socialMediaLinks: Map<String, String> = mapOf("instagram" to "", "whatsapp" to "")
+    val socialMediaLinks: Map<String, String> =
+        mapOf("discord" to "", "whatsapp" to "", "telegram" to "")
 ) {
 
   fun guestList(): Set<String> {

@@ -82,8 +82,9 @@
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
-    <string name="instagram_group_invite_link">Instagram group invite link?</string>
+    <string name="telegram_group_invite_link">Telegram group invite link?</string>
     <string name="whatsapp_group_invite_link">Whatsapp group invite link?</string>
+    <string name="discord_group_invite_link">Discord group invite link?</string>
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>

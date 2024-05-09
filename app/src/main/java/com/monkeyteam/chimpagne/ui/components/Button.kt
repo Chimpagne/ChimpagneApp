@@ -131,25 +131,38 @@ fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag:
  * SocialButtonRow is a row of social buttons that can be used to link to social media platforms.
  *
  * @param context The context of the activity.
- * @param instagramUrl The URL to the Instagram page
- * @param whatsappUrl The URL to the Whatsapp group
+ * @param discordURL The URL to the discord platform, make sure to use https://.
+ * @param telegramURL The URL to the telegram platform, make sure to use https://.
+ * @param whatsappURL The URL to the whatsapp platform, make sure to use https://.
  */
 @Composable
-fun SocialButtonRow(context: Context, instagramUrl: String = "", whatsappUrl: String = "") {
+fun SocialButtonRow(
+    context: Context,
+    discordURL: String = "",
+    telegramURL: String = "",
+    whatsappURL: String = "",
+) {
   Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        if (instagramUrl.isNotEmpty()) {
+        if (discordURL.isNotEmpty()) {
           SocialButton(
-              imageLogo = com.monkeyteam.chimpagne.R.drawable.instagram,
-              urlAsString = instagramUrl,
+              imageLogo = com.monkeyteam.chimpagne.R.drawable.discord,
+              urlAsString = discordURL,
               context = context,
-              testTag = "Instagram_Button")
+              testTag = "Discord_Button")
         }
-        if (whatsappUrl.isNotEmpty()) {
+        if (telegramURL.isNotEmpty()) {
+          SocialButton(
+              imageLogo = com.monkeyteam.chimpagne.R.drawable.telegram,
+              urlAsString = telegramURL,
+              context = context,
+              testTag = "Telegram_Button")
+        }
+        if (whatsappURL.isNotEmpty()) {
           SocialButton(
               imageLogo = com.monkeyteam.chimpagne.R.drawable.whatsapp,
-              urlAsString = whatsappUrl,
+              urlAsString = whatsappURL,
               context = context,
               testTag = "Whatsapp_Button")
         }

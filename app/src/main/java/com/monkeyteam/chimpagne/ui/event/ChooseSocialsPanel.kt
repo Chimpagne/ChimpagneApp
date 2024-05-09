@@ -18,7 +18,8 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  var instagramUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("instagram")) }
+  var discordUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("discord")) }
+  var telegramUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("telegram")) }
   var whatsappURL by remember { mutableStateOf(uiState.socialMediaLinks.getValue("whatsapp")) }
 
   Column(modifier = Modifier.padding(16.dp)) {
@@ -29,14 +30,26 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
-        url = instagramUrl,
-        onUrlChange = { instagramUrl = it },
-        labelResource = R.string.instagram_group_invite_link,
-        iconResource = R.drawable.instagram,
-        testTag = "instagram_input",
+        url = discordUrl,
+        onUrlChange = { discordUrl = it },
+        labelResource = R.string.discord_group_invite_link,
+        iconResource = R.drawable.discord,
+        testTag = "discord_input",
         updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platformName = "instagram",
-        platformUrl = "https://instagram.com/")
+        platformName = "discord",
+        platformUrl = "https://discord.gg/")
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    SocialMediaTextField(
+        url = telegramUrl,
+        onUrlChange = { telegramUrl = it },
+        labelResource = R.string.telegram_group_invite_link,
+        iconResource = R.drawable.telegram,
+        testTag = "telegram_input",
+        updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
+        platformName = "telegram",
+        platformUrl = "https://t.me/")
 
     Spacer(modifier = Modifier.height(16.dp))
 

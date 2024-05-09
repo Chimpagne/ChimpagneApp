@@ -288,7 +288,8 @@ class EventViewModel(
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
       val loading: Boolean = false,
-      val socialMediaLinks: Map<String, String> = mapOf("instagram" to "", "whatsapp" to "")
+      val socialMediaLinks: Map<String, String> =
+          mapOf("discord" to "", "telegram" to "", "whatsapp" to "")
   )
 
   class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :

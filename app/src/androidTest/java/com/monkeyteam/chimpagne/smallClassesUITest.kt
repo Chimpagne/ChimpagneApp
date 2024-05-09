@@ -208,41 +208,43 @@ class TestSocialButtonConstructs {
   fun testSocialButton() {
     composeTestRule.setContent {
       SocialButton(
-          imageLogo = R.drawable.instagram,
-          urlAsString = "https://www.instagram.com/",
+          imageLogo = R.drawable.discord,
+          urlAsString = "https://discord.gg/",
           context = context,
-          testTag = "Instagram_Button")
+          testTag = "Discord_Button")
     }
 
-    composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
   }
 
   @Test
-  fun BothDisplayedRow() {
+  fun AllThreeDisplayed() {
     composeTestRule.setContent {
       SocialButtonRow(
           context = context,
-          instagramUrl = "https://www.instagram.com/",
-          whatsappUrl = "https://chat.whatsapp.com/")
+          discordURL = "https://discord.gg/",
+          telegramURL = "https://t.me/",
+          whatsappURL = "https://chat.whatsapp.com/")
     }
 
-    composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("Telegram_Button").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
     composeTestRule.onNodeWithTag("Whatsapp_Button").assertExists().isDisplayed()
   }
 
   @Test
-  fun OnlyInstagramDisplayedRow() {
-    composeTestRule.setContent {
-      SocialButtonRow(context = context, instagramUrl = "https://www.instagram.com/")
-    }
-    composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
+  fun OnlyTelegramDisplayed() {
+    composeTestRule.setContent { SocialButtonRow(context = context, telegramURL = "https://t.me/") }
+    composeTestRule.onNodeWithTag("Telegram_Button").assertExists().isDisplayed()
     composeTestRule.onNodeWithTag("Whatsapp_Button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
   }
 
   @Test
   fun NoneDisplayed() {
     composeTestRule.setContent { SocialButtonRow(context = context) }
-    composeTestRule.onNodeWithTag("Instagram_Button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
     composeTestRule.onNodeWithTag("Whatsapp_Button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("Telegram_Button").assertDoesNotExist()
   }
 }

@@ -151,8 +151,10 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                         Spacer(Modifier.height(16.dp))
                         SocialButtonRow(
                             context = context,
-                            instagramUrl = uiState.socialMediaLinks.getValue("instagram"),
-                            whatsappUrl = uiState.socialMediaLinks.getValue("whatsapp"))
+                            discordURL = uiState.socialMediaLinks["discord"]!!,
+                            telegramURL = uiState.socialMediaLinks["telegram"]!!,
+                            whatsappURL = uiState.socialMediaLinks["whatsapp"]!!,
+                        )
                         Spacer(Modifier.height(16.dp))
                         if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 
