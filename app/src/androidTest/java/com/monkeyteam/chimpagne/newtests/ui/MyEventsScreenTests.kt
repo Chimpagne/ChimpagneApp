@@ -31,6 +31,7 @@ class MyEventsScreenTests {
   @Before
   fun initTests() {
     initializeTestDatabase()
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
@@ -116,5 +117,6 @@ class MyEventsScreenTests {
 
     composeTestRule.onNodeWithTag("empty join event list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty create event list").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("empty_past_events_list").assertIsDisplayed()
   }
 }

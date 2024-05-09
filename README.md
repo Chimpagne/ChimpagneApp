@@ -18,11 +18,11 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Weather Info: Have a bar that indicates if and when it's going to rain (plus reminder)
 - Permission Handling: One admin (creates event), multiple possible organisers (added later on) and event goers (who don’t have access to the organisation part of the event). 
 - Car pooling : number of seats, departure time, destination, etc.. ,  “trust me I am not drunk”
-- Organizing who can sleep on site with reservation 
+- Organizing who can sleep on site with bed reservation 
 
 # Architecture diagram
 
-![alt text](arch.png)
+![alt text](MS2.PNG)
 
 # UI
 
@@ -49,6 +49,7 @@ https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&
 - Scrum Master Sprint 4 : Arnaud
 - Scrum Master Sprint 5: Gregory
 - Scrum Master Sprint 6: Sacha
+- Scrum Master Sprint 7: Léa
 
 - Product owner Sprint 1 : The coaches
 - Product owner Sprint 2 : Arnaud
@@ -56,6 +57,7 @@ https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&
 - Product owner Sprint 4 : Sacha
 - Product owner Sprint 5: Clément
 - Product owner Sprint 6: Léa
+- Product owner Sprint 7: Juan
 
 
 ## How to setup the project on your device

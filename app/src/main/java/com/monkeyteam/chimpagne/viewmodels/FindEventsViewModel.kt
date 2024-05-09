@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
-import com.monkeyteam.chimpagne.model.database.ChimpagneRoles
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.happensOnThisDateFilter
@@ -69,6 +69,42 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
+  fun fetchEvent(
+      id: ChimpagneEventId,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    if (_uiState.value.loading) return
+    setLoading(true)
+    viewModelScope.launch {
+      try {
+        eventManager.getEventById(
+            id,
+            {
+              if (it != null) {
+                _uiState.value = _uiState.value.copy(events = mapOf(it.id to it), loading = false)
+                onSuccess()
+              } else {
+                Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")
+                setLoading(false)
+              }
+            },
+            onFailure)
+      } catch (e: Exception) {
+        setLoading(false)
+        onFailure(e)
+      }
+    }
+  }
+
+  fun setResultEvents(events: Map<ChimpagneEventId, ChimpagneEvent>) {
+    _uiState.value = _uiState.value.copy(events = events)
+  }
+
+  fun eraseResults() {
+    _uiState.value = _uiState.value.copy(events = emptyMap())
+  }
+
   fun setLoading(loading: Boolean = true) {
     _uiState.value = _uiState.value.copy(loading = loading)
   }
@@ -89,8 +125,20 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     _uiState.value = _uiState.value.copy(selectedDate = newQuery)
   }
 
-  fun joinEvent(eventId: ChimpagneEventId, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
-    accountManager.joinEvent(eventId, ChimpagneRoles.GUEST, onSuccess, onFailure)
+  fun joinEvent(
+      eventId: ChimpagneEventId,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    accountManager.joinEvent(
+        eventId,
+        ChimpagneRole.GUEST,
+        {
+          _uiState.value = _uiState.value.copy(loading = false)
+          onSuccess()
+        },
+        onFailure)
   }
 }
 

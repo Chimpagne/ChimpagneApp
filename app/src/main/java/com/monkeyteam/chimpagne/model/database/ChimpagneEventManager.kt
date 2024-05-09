@@ -5,7 +5,6 @@ import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
@@ -15,6 +14,8 @@ class ChimpagneEventManager(
     private val database: Database,
     private val events: CollectionReference
 ) {
+  val atomic = AtomicChimpagneEventManager(database, events)
+
   fun getAllEventsByFilterAroundLocation(
       center: Location,
       radiusInM: Double,
@@ -91,16 +92,21 @@ class ChimpagneEventManager(
 
     val eventId = events.document().id
     updateEvent(
-        event.copy(
-            id = eventId, ownerId = database.accountManager.currentUserAccount?.firebaseAuthUID!!),
+        event.copy(id = eventId),
         {
           database.accountManager.joinEvent(
-              eventId, ChimpagneRoles.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+              eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
         },
         { onFailure(it) })
   }
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+
+    if (event.id == "") {
+      onFailure(Exception("null event id"))
+      return
+    }
+
     events
         .document(event.id)
         .set(event)
@@ -112,58 +118,6 @@ class ChimpagneEventManager(
     events
         .document(id)
         .delete()
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun addGuest(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("guests.${userUID}", true)
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun removeGuest(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("guests.${userUID}", FieldValue.delete())
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun addStaff(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("staffs.${userUID}", true)
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
-  }
-
-  internal fun removeStaff(
-      eventId: ChimpagneEventId,
-      userUID: ChimpagneAccountUID,
-      onSuccess: () -> Unit,
-      onFailure: (Exception) -> Unit
-  ) {
-    events
-        .document(eventId)
-        .update("staffs.${userUID}", FieldValue.delete())
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }

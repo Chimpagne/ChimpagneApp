@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    implementation(libs.zxing.core)
+
     implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.okhttp)
@@ -86,6 +88,12 @@ dependencies {
     implementation(libs.maps.compose.widgets)
 
     implementation(libs.firebase.storage.ktx)
+
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.barcode.scanning)
+    implementation(libs.androidx.junit.ktx)
 
 
     testImplementation(libs.junit)

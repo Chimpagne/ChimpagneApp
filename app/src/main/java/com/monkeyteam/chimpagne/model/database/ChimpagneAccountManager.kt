@@ -2,7 +2,11 @@ package com.monkeyteam.chimpagne.model.database
 
 import android.net.Uri
 import android.util.Log
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 
@@ -80,6 +84,27 @@ class ChimpagneAccountManager(
         onFailure)
   }
 
+  fun getAccounts(
+      uidList: List<ChimpagneAccountUID>,
+      onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
+        uidList.map { (it to accounts.document(it).get()) }.toMap()
+    Tasks.whenAllComplete(tasks.values)
+        .addOnSuccessListener {
+          val results =
+              tasks
+                  .map {
+                    val account = it.value.result.toObject<ChimpagneAccount>()
+                    (it.key to account)
+                  }
+                  .toMap()
+          onSuccess(results)
+        }
+        .addOnFailureListener(onFailure)
+  }
+
   /** Puts the given account to Firebase and updates [currentUserAccount] accordingly */
   fun updateCurrentAccount(
       account: ChimpagneAccount,
@@ -145,7 +170,7 @@ class ChimpagneAccountManager(
   /** @param role: ChimpagneRole (for instance ChimpagneRoles.GUEST) */
   fun joinEvent(
       id: ChimpagneEventId,
-      role: Int,
+      role: ChimpagneRole,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
@@ -157,19 +182,22 @@ class ChimpagneAccountManager(
     val updatedAccount =
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents + (id to true))
     when (role) {
-      ChimpagneRoles.GUEST ->
-          eventManager.addGuest(
+      ChimpagneRole.GUEST ->
+          eventManager.atomic.addGuest(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
-      ChimpagneRoles.STAFF ->
-          eventManager.addStaff(
+      ChimpagneRole.STAFF ->
+          eventManager.atomic.addStaff(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
-      else -> updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+      ChimpagneRole.OWNER -> updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+      ChimpagneRole.NOT_IN_EVENT ->
+          onFailure(
+              Exception("Joining an event with ChimpagneRole.NOT_IN_EVENT ! Are you stupid ?"))
     }
   }
 
@@ -186,11 +214,11 @@ class ChimpagneAccountManager(
     val updatedAccount =
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents - id)
 
-    eventManager.removeGuest(
+    eventManager.atomic.removeGuest(
         id,
         updatedAccount.firebaseAuthUID,
         {
-          eventManager.removeStaff(
+          eventManager.atomic.removeStaff(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
@@ -200,7 +228,11 @@ class ChimpagneAccountManager(
   }
 
   fun getAllOfMyEvents(
-      onSuccess: (createdEvents: List<ChimpagneEvent>, joinedEvents: List<ChimpagneEvent>) -> Unit,
+      onSuccess:
+          (
+              createdEvents: List<ChimpagneEvent>,
+              joinedEvents: List<ChimpagneEvent>,
+              pastEvents: List<ChimpagneEvent>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     if (database.accountManager.currentUserAccount == null) {
@@ -209,7 +241,7 @@ class ChimpagneAccountManager(
 
     val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
     if (eventIDs!!.keys.isEmpty()) {
-      return onSuccess(emptyList(), emptyList())
+      return onSuccess(emptyList(), emptyList(), emptyList())
     }
 
     database.eventManager.getEvents(
@@ -217,14 +249,22 @@ class ChimpagneAccountManager(
         {
           val joinedEvents: MutableList<ChimpagneEvent> = ArrayList()
           val createdEvents: MutableList<ChimpagneEvent> = ArrayList()
+          val pastEvents: MutableList<ChimpagneEvent> = ArrayList()
 
           for (event in it) {
-            if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID)
+
+            if (event.endsAtTimestamp < Timestamp.now()) {
+              pastEvents.add(event)
+            } else {
+              if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID) {
                 createdEvents.add(event)
-            else joinedEvents.add(event)
+              } else {
+                joinedEvents.add(event)
+              }
+            }
           }
 
-          onSuccess(createdEvents, joinedEvents)
+          onSuccess(createdEvents, joinedEvents, pastEvents)
         },
         { onFailure(it) })
   }

@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,7 +32,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 
 @Composable
-fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit) {
+fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit, onContinueAsGuest: () -> Unit) {
   val openAlertDialog = remember { mutableStateOf(false) }
   Column(
       modifier = Modifier.fillMaxSize().padding(15.dp),
@@ -52,8 +54,22 @@ fun LoginScreen(onSuccessfulLogin: (uid: String) -> Unit) {
         GoogleAuthentication(
             onSuccessfulLogin,
             { openAlertDialog.value = true },
-            Modifier.fillMaxWidth(),
+            Modifier.fillMaxWidth().testTag("Google_Authentication"),
         )
+
+        OutlinedButton(
+            onClick = onContinueAsGuest,
+            modifier = Modifier.fillMaxWidth().testTag("Continue_As_Guest_Button")) {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.default_user_profile_picture),
+                    contentDescription = "Button Guest Logo",
+                    modifier = Modifier.size(40.dp).padding(end = 10.dp))
+                Text(
+                    text = stringResource(id = R.string.continue_as_guest),
+                    modifier = Modifier.align(Alignment.CenterVertically).padding(start = 25.dp))
+              }
+            }
       }
   when {
     openAlertDialog.value -> {
