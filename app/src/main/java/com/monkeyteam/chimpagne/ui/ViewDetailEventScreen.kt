@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -58,6 +57,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -180,7 +180,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally) {
                                   Row(
-                                      modifier = Modifier.fillMaxWidth(),
+                                      modifier = Modifier.fillMaxWidth().testTag("event date"),
                                       horizontalArrangement = Arrangement.SpaceBetween) {
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                           Text(
@@ -277,6 +277,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                             Row(
                                 modifier =
                                     Modifier.fillMaxWidth()
+                                        .testTag("description")
                                         .clickable { expandedDescription = !expandedDescription }
                                         .padding(horizontal = 16.dp)) {
                                   Text(
@@ -318,15 +319,19 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                     Toast.LENGTH_SHORT)
                                                 .show()
                                           })
-                                  Spacer(modifier = Modifier.width(12.dp))
 
+                                  // This is static code for now but will become dynamic in a future
+                                  // version
                                   Text(
                                       text = " Organized by \n Alice123",
                                       fontSize = 14.sp,
                                       fontFamily = ChimpagneFontFamily,
                                       color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                                  Spacer(modifier = Modifier.weight(1f))
+                                  Spacer(
+                                      modifier =
+                                          Modifier.weight(
+                                              1f)) // This maintains spacing between text and button
 
                                   Button(
                                       onClick = {
@@ -352,6 +357,10 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                             modifier = Modifier.size(16.dp))
                                       }
                                 }
+
+                            // MAP WILL BE ADDED HERE
+
+                            // SOCIAL LINKS WILL BE ADDED HERE
 
                             if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 
@@ -381,6 +390,8 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                   })
                             }
 
+                            Spacer(Modifier.height(24.dp))
+
                             // Only the owner can edit the event settings
                             if (uiState.currentUserRole == ChimpagneRole.OWNER) {
 
@@ -390,9 +401,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                           id = R.string.event_details_screen_edit_button),
                                   icon = Icons.Rounded.Edit,
                                   fontWeight = FontWeight.Bold,
-                                  fontSize = 30.sp,
+                                  fontSize = 24.sp,
                                   modifier =
-                                      Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
                                           .testTag("edit"),
                                   onClick = {
@@ -405,9 +416,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     stringResource(id = R.string.event_details_screen_chat_button),
                                 icon = Icons.Rounded.ChatBubbleOutline,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 30.sp,
+                                fontSize = 24.sp,
                                 modifier =
-                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
                                         .testTag("chat"),
                                 onClick = {
@@ -425,9 +436,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         id = R.string.event_details_screen_location_button),
                                 icon = Icons.Rounded.LocationOn,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 30.sp,
+                                fontSize = 24.sp,
                                 modifier =
-                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
                                         .testTag("location"),
                                 onClick = {
@@ -445,9 +456,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         id = R.string.event_details_screen_supplies_button),
                                 icon = Icons.Rounded.Backpack,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 30.sp,
+                                fontSize = 24.sp,
                                 modifier =
-                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
                                         .testTag("supplies"),
                                 onClick = {
@@ -465,9 +476,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         id = R.string.event_details_screen_voting_button),
                                 icon = Icons.Rounded.Poll,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 30.sp,
+                                fontSize = 24.sp,
                                 modifier =
-                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
                                         .testTag("polls"),
                                 onClick = {
@@ -485,9 +496,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         id = R.string.event_details_screen_car_pooling_button),
                                 icon = Icons.Rounded.DirectionsCar,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 30.sp,
+                                fontSize = 24.sp,
                                 modifier =
-                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
                                         .testTag("car pooling"),
                                 onClick = {
