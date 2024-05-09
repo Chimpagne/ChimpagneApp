@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -106,9 +107,10 @@ fun SuppliesScreen(
       floatingActionButton = {
         if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
             .contains(eventViewModel.getRole(accountViewModelState.currentUserUID!!))) {
-          FloatingActionButton(onClick = { displayAddPopup = true }) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
-          }
+          FloatingActionButton(
+              onClick = { displayAddPopup = true }, modifier = Modifier.testTag("supply_add")) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+              }
         }
       },
       topBar = {
@@ -128,7 +130,8 @@ fun SuppliesScreen(
                   Modifier.fillMaxWidth()
                       .fillMaxHeight()
                       .padding(innerPadding)
-                      .wrapContentHeight(align = Alignment.CenterVertically),
+                      .wrapContentHeight(align = Alignment.CenterVertically)
+                      .testTag("supply_nothing"),
               textAlign = TextAlign.Center)
         } else {
           Column(Modifier.padding(innerPadding)) {

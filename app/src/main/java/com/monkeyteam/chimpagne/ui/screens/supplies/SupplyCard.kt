@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 
@@ -26,14 +27,14 @@ fun SupplyCard(supply: ChimpagneSupply, modifier: Modifier = Modifier, onClick: 
       shape = RoundedCornerShape(16.dp),
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-        ) {
-          Row(
-              horizontalArrangement = Arrangement.SpaceBetween,
-              modifier = Modifier.fillMaxWidth()) {
-                Text(text = "${supply.quantity} ${supply.unit}")
-                Text(text = "${supply.assignedTo.keys.size} assigned")
-              }
-        }
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+              Text(
+                  text = "${supply.quantity} ${supply.unit}",
+                  modifier = Modifier.testTag("supply_quantity_and_unit"))
+              Text(
+                  text = "${supply.assignedTo.keys.size} assigned",
+                  modifier = Modifier.testTag("supply_nb_assigned"))
+            }
       }
 }

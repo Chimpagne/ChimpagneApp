@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
@@ -33,8 +34,11 @@ fun SupplyDialogAccountEntry(
       colors = ListItemDefaults.colors(containerColor = Color.Transparent),
       trailingContent = {
         if (showCheckBox) {
-          Checkbox(checked = checked, onCheckedChange = onCheck)
+          Checkbox(
+              checked = checked,
+              onCheckedChange = onCheck,
+              modifier = Modifier.testTag("supply_account_checkbox"))
         }
       },
-      modifier = Modifier.clickable { onCheck(!checked) })
+      modifier = Modifier.clickable { onCheck(!checked) }.testTag("supply_account_entry"))
 }

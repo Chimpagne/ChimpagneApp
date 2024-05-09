@@ -24,11 +24,12 @@ fun CustomDialog(
     description: String,
     onDismissRequest: () -> Unit,
     buttonDataList: List<ButtonData>,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit = {}
 ) {
   Dialog(onDismissRequest = onDismissRequest) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        modifier = modifier.fillMaxWidth().padding(16.dp),
         shape = AlertDialogDefaults.shape,
     ) {
       Column(

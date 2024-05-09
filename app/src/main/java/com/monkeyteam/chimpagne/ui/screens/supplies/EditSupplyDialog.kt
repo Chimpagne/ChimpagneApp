@@ -40,6 +40,7 @@ fun EditSupplyDialog(
       title = title,
       description = stringResource(id = R.string.supplies_dialog_description),
       onDismissRequest = onDismissRequest,
+      modifier = Modifier.testTag("edit_supply_dialog"),
       buttonDataList =
           listOf(
               ButtonData(

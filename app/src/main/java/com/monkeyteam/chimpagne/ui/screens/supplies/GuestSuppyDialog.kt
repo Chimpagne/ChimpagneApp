@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
@@ -28,6 +29,7 @@ fun GuestSupplyDialog(
       title = "${supply.quantity} ${supply.unit}",
       description = supply.description,
       onDismissRequest = onDismissRequest,
+      modifier = Modifier.testTag("edit_supply_dialog"),
       buttonDataList =
           listOf(
               ButtonData(
