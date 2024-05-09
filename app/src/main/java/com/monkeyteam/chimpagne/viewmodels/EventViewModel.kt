@@ -92,8 +92,8 @@ class EventViewModel(
         accountManager.getAccounts(
             (setOf(_uiState.value.ownerId) +
                     _uiState.value.guests.keys +
-                    _uiState.value.staffs.keys
-                    ).toList(),
+                    _uiState.value.staffs.keys)
+                .toList(),
             {
               _uiState.value = _uiState.value.copy(accounts = it)
               _uiState.value = _uiState.value.copy(loading = false)
