@@ -18,6 +18,8 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import junit.framework.TestCase.assertTrue
 
+val SLEEP_AMOUNT_MILLIS: Long = 300
+
 val TEST_EVENTS =
     listOf(
         ChimpagneEvent(

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Poll
+import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,6 +34,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -53,6 +57,7 @@ import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +65,10 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
+
+  var showDialog by remember { mutableStateOf(false) }
+
+  val userRole = eventViewModel.getCurrentUserRole()
 
   Scaffold(
       topBar = {
@@ -76,8 +85,19 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
               IconButton(onClick = { navObject.goBack() }, modifier = Modifier.testTag("go back")) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
               }
+            },
+            actions = {
+              IconButton(onClick = { showDialog = true }) {
+                Icon(
+                    imageVector = Icons.Rounded.QrCodeScanner,
+                    contentDescription = "Scan QR",
+                    modifier = Modifier.testTag("scan QR"))
+              }
             })
       }) { innerPadding ->
+        if (showDialog) {
+          QRCodeDialog(eventId = uiState.id, onDismiss = { showDialog = false })
+        }
         Column(
             modifier =
                 Modifier.fillMaxSize()
@@ -130,7 +150,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     .absolutePadding(left = 16.dp, right = 16.dp)
                                     .testTag("description"))
                         Spacer(Modifier.height(16.dp))
+
                         if (uiState.currentUserRole != ChimpagneRole.OWNER) {
+
                           ChimpagneButton(
                               text =
                                   stringResource(id = R.string.event_details_screen_leave_button),
@@ -155,8 +177,10 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     })
                               })
                         }
+
                         // Only the owner can edit the event settings
                         if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+
                           ChimpagneButton(
                               text = stringResource(id = R.string.event_details_screen_edit_button),
                               icon = Icons.Rounded.Edit,

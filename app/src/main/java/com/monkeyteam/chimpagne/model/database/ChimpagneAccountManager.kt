@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
@@ -227,7 +228,11 @@ class ChimpagneAccountManager(
   }
 
   fun getAllOfMyEvents(
-      onSuccess: (createdEvents: List<ChimpagneEvent>, joinedEvents: List<ChimpagneEvent>) -> Unit,
+      onSuccess:
+          (
+              createdEvents: List<ChimpagneEvent>,
+              joinedEvents: List<ChimpagneEvent>,
+              pastEvents: List<ChimpagneEvent>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     if (database.accountManager.currentUserAccount == null) {
@@ -236,7 +241,7 @@ class ChimpagneAccountManager(
 
     val eventIDs = database.accountManager.currentUserAccount?.joinedEvents
     if (eventIDs!!.keys.isEmpty()) {
-      return onSuccess(emptyList(), emptyList())
+      return onSuccess(emptyList(), emptyList(), emptyList())
     }
 
     database.eventManager.getEvents(
@@ -244,14 +249,22 @@ class ChimpagneAccountManager(
         {
           val joinedEvents: MutableList<ChimpagneEvent> = ArrayList()
           val createdEvents: MutableList<ChimpagneEvent> = ArrayList()
+          val pastEvents: MutableList<ChimpagneEvent> = ArrayList()
 
           for (event in it) {
-            if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID)
+
+            if (event.endsAtTimestamp < Timestamp.now()) {
+              pastEvents.add(event)
+            } else {
+              if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID) {
                 createdEvents.add(event)
-            else joinedEvents.add(event)
+              } else {
+                joinedEvents.add(event)
+              }
+            }
           }
 
-          onSuccess(createdEvents, joinedEvents)
+          onSuccess(createdEvents, joinedEvents, pastEvents)
         },
         { onFailure(it) })
   }

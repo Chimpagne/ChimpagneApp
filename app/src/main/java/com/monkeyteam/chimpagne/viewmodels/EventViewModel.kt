@@ -31,6 +31,7 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
+
     fetchEvent(onSuccess, onFailure)
   }
 
@@ -72,6 +73,7 @@ class EventViewModel(
             },
             {
               Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
+
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             })
@@ -84,7 +86,7 @@ class EventViewModel(
     }
   }
 
-  private fun buildChimpagneEvent(): ChimpagneEvent {
+  fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
         id = _uiState.value.id,
         title = _uiState.value.title,
@@ -157,6 +159,7 @@ class EventViewModel(
   }
 
   fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
@@ -270,6 +273,10 @@ class EventViewModel(
   fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
     return buildChimpagneEvent().getRole(userUID)
   }
+
+  fun getCurrentUserRole(): ChimpagneRole {
+    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+  }
 }
 
 data class EventUIState(
@@ -286,6 +293,7 @@ data class EventUIState(
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
+
     // unmodifiable by the UI
     val ownerId: ChimpagneAccountUID = "",
     val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
