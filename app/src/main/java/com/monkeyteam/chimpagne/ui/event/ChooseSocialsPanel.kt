@@ -19,7 +19,7 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   var instagramUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("instagram")) }
-  var discordUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("discord")) }
+  var whatsappURL by remember { mutableStateOf(uiState.socialMediaLinks.getValue("whatsapp")) }
 
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
@@ -29,9 +29,9 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
-        url = instagramUrl.removePrefix("https://instagram.com/"),
+        url = instagramUrl,
         onUrlChange = { instagramUrl = it },
-        labelResource = R.string.instagram_username,
+        labelResource = R.string.instagram_group_invite_link,
         iconResource = R.drawable.instagram,
         testTag = "instagram_input",
         updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
@@ -41,14 +41,14 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
     Spacer(modifier = Modifier.height(16.dp))
 
     SocialMediaTextField(
-        url = discordUrl.removePrefix("https://discord.gg/"),
-        onUrlChange = { discordUrl = it },
-        labelResource = R.string.discord_invite_code,
-        iconResource = R.drawable.discord,
-        testTag = "discord_input",
+        url = whatsappURL,
+        onUrlChange = { whatsappURL = it },
+        labelResource = R.string.whatsapp_group_invite_link,
+        iconResource = R.drawable.whatsapp,
+        testTag = "whatsapp_input",
         updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platformName = "discord",
-        platformUrl = "https://discord.gg/")
+        platformName = "whatsapp",
+        platformUrl = "https://chat.whatsapp.com/")
   }
 }
 
@@ -64,13 +64,16 @@ private fun SocialMediaTextField(
     platformUrl: String
 ) {
   val iconPainter: Painter = painterResource(id = iconResource)
+  var hasError by remember { mutableStateOf(false) }
 
   OutlinedTextField(
       value = url,
-      onValueChange = {
-        onUrlChange(it)
-        val fullUrl = createFullUrl(platformUrl, it)
-        updateSocialMediaLink(Pair(platformName, fullUrl))
+      onValueChange = { newUrl ->
+        onUrlChange(newUrl)
+        hasError = !newUrl.startsWith(platformUrl)
+        if (!hasError) {
+          updateSocialMediaLink(Pair(platformName, newUrl))
+        }
       },
       label = { Text(stringResource(id = labelResource)) },
       leadingIcon = {
@@ -81,6 +84,14 @@ private fun SocialMediaTextField(
       },
       keyboardOptions = KeyboardOptions.Default,
       modifier = Modifier.fillMaxWidth().testTag(testTag))
+
+  if (hasError) {
+    Text(
+        "Invalid URL. Must start with: $platformUrl",
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodySmall,
+        modifier = Modifier.padding(start = 16.dp, top = 4.dp))
+  }
 }
 
 private fun createFullUrl(platform: String, url: String): String {

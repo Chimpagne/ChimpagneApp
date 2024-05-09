@@ -238,9 +238,9 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("instagram_input").assertExists()
     composeTestRule.onNodeWithTag("instagram_input").performTextInput(testAccountString)
 
-    val testCodeString = "discord invite"
-    composeTestRule.onNodeWithTag("discord_input").assertExists()
-    composeTestRule.onNodeWithTag("discord_input").performTextInput(testCodeString)
+    val testCodeString = "whatsapp invite"
+    composeTestRule.onNodeWithTag("whatsapp_input").assertExists()
+    composeTestRule.onNodeWithTag("whatsapp_input").performTextInput(testCodeString)
 
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
   }

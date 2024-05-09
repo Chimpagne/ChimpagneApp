@@ -131,10 +131,10 @@ fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag:
  *
  * @param context The context of the activity.
  * @param instagramUrl The URL to the Instagram page
- * @param discordUrl The URL to the Discord page, make sure to use https://.
+ * @param whatsappUrl The URL to the Whatsapp group
  */
 @Composable
-fun SocialButtonRow(context: Context, instagramUrl: String = "", discordUrl: String = "") {
+fun SocialButtonRow(context: Context, instagramUrl: String = "", whatsappUrl: String = "") {
   Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(20.dp)) {
@@ -145,12 +145,12 @@ fun SocialButtonRow(context: Context, instagramUrl: String = "", discordUrl: Str
               context = context,
               testTag = "Instagram_Button")
         }
-        if (discordUrl.isNotEmpty()) {
+        if (whatsappUrl.isNotEmpty()) {
           SocialButton(
-              imageLogo = com.monkeyteam.chimpagne.R.drawable.discord,
-              urlAsString = discordUrl,
+              imageLogo = com.monkeyteam.chimpagne.R.drawable.whatsapp,
+              urlAsString = whatsappUrl,
               context = context,
-              testTag = "Discord_Button")
+              testTag = "Whatsapp_Button")
         }
       }
 }

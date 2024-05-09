@@ -223,11 +223,11 @@ class TestSocialButtonConstructs {
       SocialButtonRow(
           context = context,
           instagramUrl = "https://www.instagram.com/",
-          discordUrl = "https://www.discord.com/")
+          whatsappUrl = "https://chat.whatsapp.com/")
     }
 
     composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("Whatsapp_Button").assertExists().isDisplayed()
   }
 
   @Test
@@ -236,13 +236,13 @@ class TestSocialButtonConstructs {
       SocialButtonRow(context = context, instagramUrl = "https://www.instagram.com/")
     }
     composeTestRule.onNodeWithTag("Instagram_Button").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("Whatsapp_Button").assertDoesNotExist()
   }
 
   @Test
   fun NoneDisplayed() {
     composeTestRule.setContent { SocialButtonRow(context = context) }
     composeTestRule.onNodeWithTag("Instagram_Button").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("Whatsapp_Button").assertDoesNotExist()
   }
 }
