@@ -44,21 +44,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.components.Legend
-import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SmallSimpleTagChip
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 
 @ExperimentalMaterial3Api
@@ -104,11 +99,9 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                   }
                 } else {
                   items(uiState.createdEvents.values.toList()) { event ->
-                    EventCard(
-                        event = event,
-                        modifier = Modifier.testTag("a created event")) {
-                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                        }
+                    EventCard(event = event, modifier = Modifier.testTag("a created event")) {
+                      navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                    }
                   }
                 }
                 item {
@@ -126,11 +119,9 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                   }
                 } else {
                   items(uiState.joinedEvents.values.toList()) { event ->
-                    EventCard(
-                        event = event,
-                        modifier = Modifier.testTag("a joined event")) {
-                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                        }
+                    EventCard(event = event, modifier = Modifier.testTag("a joined event")) {
+                      navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                    }
                   }
                 }
 
@@ -150,11 +141,9 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                   }
                 } else {
                   items(uiState.pastEvents.values.toList()) { event ->
-                    EventCard(
-                        event = event,
-                        modifier = Modifier.testTag("past_event_card")) {
-                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                        }
+                    EventCard(event = event, modifier = Modifier.testTag("past_event_card")) {
+                      navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                    }
                   }
                 }
               }
@@ -162,109 +151,76 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
       }
 }
 
-
 @Composable
-fun EventCard(
-    event: ChimpagneEvent,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Card(
-        modifier = modifier
-            .padding(horizontal = 12.dp, vertical = 8.dp)
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .aspectRatio(1.6f),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
+fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () -> Unit) {
+  Card(
+      modifier =
+          modifier
+              .padding(horizontal = 12.dp, vertical = 8.dp)
+              .fillMaxWidth()
+              .clickable { onClick() }
+              .aspectRatio(1.6f),
+      shape = RoundedCornerShape(12.dp),
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                ImageWithBlackFilterOverlay(event.image)
-            }
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = event.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = timestampToStringWithDateAndTime(event.startsAtTimestamp),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = event.location.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-                Spacer(Modifier.height(4.dp))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    TagList(tags = event.tags, Modifier.weight(1f).padding(end = 8.dp))
-                    Icon(
-                        imageVector = if (event.public) Icons.Filled.Public else Icons.Filled.Lock,
-                        contentDescription = if (event.public) "Public Event" else "Private Event",
-                        modifier = Modifier
-                    )
+          Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
+            ImageWithBlackFilterOverlay(event.image)
+          }
+          Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+            Text(
+                text = event.title,
+                style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.align(Alignment.CenterHorizontally))
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = timestampToStringWithDateAndTime(event.startsAtTimestamp),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.align(Alignment.CenterHorizontally))
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = event.location.name,
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.align(Alignment.CenterHorizontally))
+            Spacer(Modifier.height(4.dp))
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()) {
+                  TagList(tags = event.tags, Modifier.weight(1f).padding(end = 8.dp))
+                  Icon(
+                      imageVector = if (event.public) Icons.Filled.Public else Icons.Filled.Lock,
+                      contentDescription = if (event.public) "Public Event" else "Private Event",
+                      modifier = Modifier)
                 }
-            }
+          }
         }
-    }
+      }
 }
 
 @Composable
 fun ImageWithBlackFilterOverlay(imageString: String = "") {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        if (imageString.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.chimpagne_app_logo),
-                contentDescription = "Default Logo",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        } else {
-            Image(
-                painter = rememberAsyncImagePainter(model = imageString),
-                contentDescription = "Event Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(Color.Black.copy(alpha = 0.5f))
-        )
+  Box(modifier = Modifier.fillMaxWidth()) {
+    if (imageString.isEmpty()) {
+      Image(
+          painter = painterResource(id = R.drawable.chimpagne_app_logo),
+          contentDescription = "Default Logo",
+          contentScale = ContentScale.FillWidth,
+          modifier = Modifier.fillMaxWidth())
+    } else {
+      Image(
+          painter = rememberAsyncImagePainter(model = imageString),
+          contentDescription = "Event Image",
+          contentScale = ContentScale.Crop,
+          modifier = Modifier.fillMaxSize())
     }
+    Box(modifier = Modifier.matchParentSize().background(Color.Black.copy(alpha = 0.5f)))
+  }
 }
-
 
 @Composable
 fun TagList(tags: List<String>, modifier: Modifier = Modifier) {
-    LazyRow(modifier = modifier) {
-        items(tags) { tag ->
-            SmallSimpleTagChip(tag = tag)
-        }
-    }
+  LazyRow(modifier = modifier) { items(tags) { tag -> SmallSimpleTagChip(tag = tag) } }
 }

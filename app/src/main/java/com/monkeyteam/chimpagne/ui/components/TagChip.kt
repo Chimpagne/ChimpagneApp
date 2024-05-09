@@ -45,9 +45,9 @@ fun SimpleTagChip(tag: String) {
 
 @Composable
 fun SmallSimpleTagChip(tag: String) {
-    Text(
-        text = "#$tag",
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(end = 8.dp))
+  Text(
+      text = "#$tag",
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.primary,
+      modifier = Modifier.padding(end = 8.dp))
 }
