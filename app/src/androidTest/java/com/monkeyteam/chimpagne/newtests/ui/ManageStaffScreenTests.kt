@@ -11,6 +11,7 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
@@ -104,6 +105,7 @@ class ManageStaffScreenTests {
 
     composeTestRule.onNodeWithTag("guest member").assertHasClickAction()
     composeTestRule.onNodeWithTag("guest member").performClick()
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()
     composeTestRule.onNodeWithTag("staff member").assertIsDisplayed()
@@ -112,6 +114,7 @@ class ManageStaffScreenTests {
 
     composeTestRule.onNodeWithTag("staff member").assertHasClickAction()
     composeTestRule.onNodeWithTag("staff member").performClick()
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty staff list").assertIsDisplayed()

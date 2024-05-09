@@ -90,7 +90,10 @@ class EventViewModel(
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         accountManager.getAccounts(
-            setOf(_uiState.value.ownerId) + _uiState.value.guests.keys + _uiState.value.staffs.keys,
+            (setOf(_uiState.value.ownerId) +
+                    _uiState.value.guests.keys +
+                    _uiState.value.staffs.keys
+                    ).toList(),
             {
               _uiState.value = _uiState.value.copy(accounts = it)
               _uiState.value = _uiState.value.copy(loading = false)
@@ -284,11 +287,11 @@ class EventViewModel(
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
 
-    eventManager.removeGuest(
+    eventManager.atomic.removeGuest(
         _uiState.value.id,
         uid,
         {
-          eventManager.addStaff(
+          eventManager.atomic.addStaff(
               _uiState.value.id,
               uid,
               {
@@ -319,11 +322,11 @@ class EventViewModel(
   ) {
     _uiState.value = _uiState.value.copy(loading = true)
 
-    eventManager.removeStaff(
+    eventManager.atomic.removeStaff(
         _uiState.value.id,
         uid,
         {
-          eventManager.addGuest(
+          eventManager.atomic.addGuest(
               _uiState.value.id,
               uid,
               {

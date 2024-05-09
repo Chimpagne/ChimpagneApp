@@ -415,11 +415,11 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         id = R.string.event_details_screen_manage_staff_button),
                                     icon = Icons.Rounded.PeopleAlt,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 30.sp,
+                                    fontSize = 24.sp,
                                     modifier =
-                                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                        .fillMaxWidth()
-                                        .testTag("manage staff"),
+                                        Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                            .fillMaxWidth()
+                                            .testTag("manage staff"),
                                     onClick = {
                                         navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                                     })

@@ -27,7 +27,7 @@ class AccountManagerTests {
     var loading = true
     var result: Map<ChimpagneAccountUID, ChimpagneAccount?> = hashMapOf()
     database.accountManager.getAccounts(
-        setOf("JUAN", "PRINCE", "fevoihegijogegjoiejgoi"),
+        listOf("JUAN", "PRINCE", "fevoihegijogegjoiejgoi"),
         {
           result = it
           loading = false

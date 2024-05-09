@@ -85,7 +85,7 @@ class ChimpagneAccountManager(
   }
 
   fun getAccounts(
-      uids: Set<ChimpagneAccountUID>,
+      uids: List<ChimpagneAccountUID>,
       onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
