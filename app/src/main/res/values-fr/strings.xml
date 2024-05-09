@@ -34,6 +34,7 @@
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
     <string name="event_creation_screen_beds">Lits</string>
+    <string name="close">Fermer</string>
     <string name="find_event_page_title">Trouver une soirée</string>
     <string name="find_event_search_button_text">Chercher</string>
     <string name="find_event_event_location_legend">Lieu</string>
@@ -55,7 +56,6 @@
     <string name="supplies_unit">Unité</string>
     <string name="chimpagne_cancel">Annuler</string>
     <string name="chimpagne_add">Ajouter</string>
-
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
@@ -85,4 +85,6 @@
     <string name="instagram_group_invite_link">Quel est votre lien d\'invitation de groupe Instagram ?</string>
     <string name="whatsapp_group_invite_link">Quel est votre lien d\'invitation de groupe WhatsApp ?</string>
     <string name="links_to_social_media">Ajouter vos groupes de médias sociaux</string>
+    <string name="my_events_screen_past_events_list_name">Evénement passés</string>
+    <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
 </resources>

@@ -33,6 +33,21 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
+  fun qrCodeGeneration_displaysQRCode() {
+    val testEventId = "12345"
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, EventViewModel(testEventId, database))
+    }
+
+    composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
+
+    composeTestRule.onNodeWithTag("close_button").performClick()
+  }
+
+  @Test
   fun generalTextTest() {
     val event = TEST_EVENTS[0]
 
@@ -92,7 +107,9 @@ class ViewDetailEventScreenTests {
 
   @Test
   fun testEditButton() {
+
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
+
     val event = TEST_EVENTS[0]
     val eventVM = EventViewModel(event.id, database)
 

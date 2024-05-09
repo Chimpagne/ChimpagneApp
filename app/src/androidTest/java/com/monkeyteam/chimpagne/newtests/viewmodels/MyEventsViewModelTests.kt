@@ -1,10 +1,10 @@
 package com.monkeyteam.chimpagne.newtests.viewmodels
 
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
-import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
@@ -13,11 +13,11 @@ import org.junit.Test
 class MyEventsViewModelTests {
   val database = Database()
 
-  val testAccount1 = TEST_ACCOUNTS[0] /*account with create and join event*/
-  val testAccount2 = TEST_ACCOUNTS[1] /*account with no create and no join event*/
+  private val testAccount1 = TEST_ACCOUNTS[0] /*account with create and join event*/
+  private val testAccount2 = TEST_ACCOUNTS[1] /*account with no create and no join event*/
 
-  val joinedEventForAccount1 = TEST_EVENTS[2]
-  val createdEventForAccount1 = TEST_EVENTS[3]
+  private val joinedEventForAccount1 = TEST_EVENTS[2]
+  private val createdEventForAccount1 = TEST_EVENTS[3]
 
   @Before
   fun initTests() {
@@ -26,15 +26,12 @@ class MyEventsViewModelTests {
 
   @Test
   fun fetchingGuestEventsWithCreatedAndJoinedEvents() {
-    val accountViewModel = AccountViewModel(database = database)
-
-    accountViewModel.loginToChimpagneAccount(testAccount1.firebaseAuthUID, {}, {})
-
-    while (accountViewModel.uiState.value.loading) {}
+    database.accountManager.signInTo(testAccount1)
 
     val eventVM = MyEventsViewModel(database, { assertTrue(true) }, { assertTrue(false) })
 
     while (eventVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventVM.uiState.value.createdEvents.size == 1)
     assertTrue(
@@ -48,15 +45,12 @@ class MyEventsViewModelTests {
 
   @Test
   fun fetchingGuestEventsWithNoEvents() {
-    val accountViewModel = AccountViewModel(database = database)
-
-    accountViewModel.loginToChimpagneAccount(testAccount2.firebaseAuthUID, {}, {})
-
-    while (accountViewModel.uiState.value.loading) {}
+    database.accountManager.signInTo(testAccount2)
 
     val eventVM = MyEventsViewModel(database, { assertTrue(true) }, { assertTrue(false) })
 
     while (eventVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventVM.uiState.value.createdEvents.isEmpty())
     assertTrue(eventVM.uiState.value.joinedEvents.isEmpty())

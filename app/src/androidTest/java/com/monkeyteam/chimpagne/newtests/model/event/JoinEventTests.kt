@@ -22,6 +22,7 @@ class JoinEventTests {
   val eventManager = database.eventManager
 
   val anAccount = TEST_ACCOUNTS[1]
+
   val anotherAccount = TEST_ACCOUNTS[2]
 
   @Before
@@ -49,7 +50,7 @@ class JoinEventTests {
     assertEquals(ChimpagneRole.NOT_IN_EVENT, event.getRole(anotherAccount.firebaseAuthUID))
 
     var loading = true
-    eventManager.addGuest(
+    eventManager.atomic.addGuest(
         eventId,
         anotherAccount.firebaseAuthUID,
         { loading = false },
