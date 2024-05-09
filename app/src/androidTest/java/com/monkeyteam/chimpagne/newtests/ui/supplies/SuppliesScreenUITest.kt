@@ -46,14 +46,14 @@ class SuppliesScreenUITest {
       val navActions = NavigationActions(navController)
       SuppliesScreen(navObject = navActions, eventViewModel, accountViewModel = accountViewModel)
     }
-    while (!eventViewModel.uiState.value.loading && !accountViewModel.uiState.value.loading){}
+    while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading){}
 
     composeTestRule.onNodeWithTag("supply_nothing", useUnmergedTree = true).assertIsDisplayed()
     composeTestRule.onNodeWithTag("supply_add").performClick()
     composeTestRule.onNodeWithTag("edit_supply_dialog").assertIsDisplayed()
     composeTestRule.onNodeWithTag("supplies_add_button").performClick()
 
-    while (!eventViewModel.uiState.value.loading && !accountViewModel.uiState.value.loading){}
+    while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading){}
     composeTestRule.onNodeWithTag("supply_nothing", useUnmergedTree = true).assertDoesNotExist()
     composeTestRule.onNodeWithTag("supply_not_assigned", useUnmergedTree = true).assertIsDisplayed()
     composeTestRule.onNodeWithTag("supply_card", useUnmergedTree = true).performClick()
