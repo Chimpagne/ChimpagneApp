@@ -94,4 +94,15 @@ class AccountViewModelTests {
     val accountViewModel = AccountViewModel(database = database)
     assertFalse(accountViewModel.isUserLoggedIn())
   }
+
+  @Test
+  fun fetchAccountsTest() {
+    val accounts = TEST_ACCOUNTS.associate { (it.firebaseAuthUID to it) }
+
+    val accountViewModel = AccountViewModel(database = database)
+    accountViewModel.fetchAccounts(accounts.keys.toList())
+    while (accountViewModel.uiState.value.loading) {}
+
+    assertEquals(accounts, accountViewModel.uiState.value.fetchedAccounts)
+  }
 }
