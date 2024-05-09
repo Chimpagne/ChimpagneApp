@@ -15,7 +15,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -41,7 +41,8 @@ class ButtonToastTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(3, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     composeTestRule.onNodeWithTag("save_changes_button").performClick()
@@ -63,7 +64,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     // Move to the Second Panel
@@ -84,7 +86,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
@@ -96,7 +99,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
   }
 
@@ -109,7 +113,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
 
       val context = LocalContext.current
       tagsLegendS = context.getString(R.string.event_creation_screen_tags_legend)
@@ -130,7 +135,8 @@ class EditEventScreenTestTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      EditEventScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     // Tags (comma-separated)
@@ -149,7 +155,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     val title = "Sample Event Title"
@@ -164,7 +171,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(19, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          19, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
@@ -176,7 +184,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          2, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
@@ -189,7 +198,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(3, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
