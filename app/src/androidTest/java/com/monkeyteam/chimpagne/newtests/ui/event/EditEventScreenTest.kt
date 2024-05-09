@@ -204,13 +204,17 @@ class EditEventScreenTestTest {
 
     composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
 
-    val testAccountString = "test Account"
-    composeTestRule.onNodeWithTag("instagram_input").assertExists()
-    composeTestRule.onNodeWithTag("instagram_input").performTextInput(testAccountString)
+    val testDiscord = "test discord"
+    composeTestRule.onNodeWithTag("discord_input").assertExists()
+    composeTestRule.onNodeWithTag("discord_input").performTextInput(testDiscord)
 
-    val testCodeString = "whatsapp invite"
+    val testTelegram = "test telegram"
+    composeTestRule.onNodeWithTag("telegram_input").assertExists()
+    composeTestRule.onNodeWithTag("telegram_input").performTextInput(testTelegram)
+
+    val testWhatsapp = "test whatsapp"
     composeTestRule.onNodeWithTag("whatsapp_input").assertExists()
-    composeTestRule.onNodeWithTag("whatsapp_input").performTextInput(testCodeString)
+    composeTestRule.onNodeWithTag("whatsapp_input").performTextInput(testWhatsapp)
 
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
 
