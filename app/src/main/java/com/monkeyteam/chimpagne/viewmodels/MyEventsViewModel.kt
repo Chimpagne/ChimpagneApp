@@ -25,18 +25,17 @@ class MyEventsViewModel(
   init {
     fetchMyEvents(onSuccess, onFailure)
   }
-
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
   fun fetchMyEvents(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
-
     viewModelScope.launch {
       accountManager.getAllOfMyEvents(
-          { createdEvents, joinedEvents ->
+          { createdEvents, joinedEvents, pastEvents ->
             _uiState.value =
                 _uiState.value.copy(
                     createdEvents = createdEvents.associateBy { event -> event.id },
-                    joinedEvents = joinedEvents.associateBy { event -> event.id })
+                    joinedEvents = joinedEvents.associateBy { event -> event.id },
+                    pastEvents = pastEvents.associateBy { event -> event.id })
             _uiState.value = _uiState.value.copy(loading = false)
             onSuccess()
           },
@@ -52,6 +51,7 @@ class MyEventsViewModel(
 data class MyEventsUIState(
     val createdEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val joinedEvents: Map<String, ChimpagneEvent> = emptyMap(),
+    val pastEvents: Map<String, ChimpagneEvent> = emptyMap(),
     val userUID: ChimpagneAccountUID = "",
     val loading: Boolean = false
 )
