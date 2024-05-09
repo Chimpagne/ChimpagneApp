@@ -64,7 +64,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("tag list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
-    composeTestRule.onNodeWithContentDescription("event date").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
   }
 
