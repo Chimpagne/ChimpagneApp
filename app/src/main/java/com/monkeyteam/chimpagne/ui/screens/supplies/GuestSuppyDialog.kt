@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui.eventdetails.supplies
+package com.monkeyteam.chimpagne.ui.screens.supplies
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +20,7 @@ import com.monkeyteam.chimpagne.ui.components.ButtonData
 import com.monkeyteam.chimpagne.ui.components.CustomDialog
 
 @Composable
-fun GuestSupplyDialog(supply: ChimpagneSupply, updateSupply: (ChimpagneSupply) -> Unit, userUID: ChimpagneAccountUID, onDismissRequest: () -> Unit) {
+fun GuestSupplyDialog(supply: ChimpagneSupply, updateSupply: (ChimpagneSupply) -> Unit, userUID: ChimpagneAccountUID, accounts: Map<ChimpagneAccountUID, String>, onDismissRequest: () -> Unit) {
   CustomDialog(title = "${supply.quantity} ${supply.unit}", description = supply.description, onDismissRequest = onDismissRequest, buttonDataList = listOf(
     ButtonData("Cancel", onDismissRequest),
     if (supply.assignedTo.containsKey(userUID)) ButtonData("Unassign myself") {
@@ -49,15 +49,4 @@ fun GuestSupplyDialog(supply: ChimpagneSupply, updateSupply: (ChimpagneSupply) -
       }
     }
   }
-}
-
-@Preview
-@Composable
-fun monkey() {
-  var showSupplyDialog by remember { mutableStateOf( true) }
-  if (showSupplyDialog) GuestSupplyDialog(ChimpagneSupply("banana", "At migros", 5, "bananas", hashMapOf("Monkey" to true, "Juan" to true, "Jean" to false)), {
-    showSupplyDialog = false
-  }, "Monkey", {
-    showSupplyDialog = false
-  })
 }

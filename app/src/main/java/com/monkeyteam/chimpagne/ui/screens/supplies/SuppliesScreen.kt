@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui.eventdetails.supplies
+package com.monkeyteam.chimpagne.ui.screens.supplies
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -50,12 +50,29 @@ fun SuppliesScreen(
   val otherSupplies = uiState.supplies - suppliesAssignedToMe - nonAssignedSupplies
 
   var displayAddPopup by remember { mutableStateOf(false)  }
-
   if (displayAddPopup) {
     SupplyPopup(onDismissRequest = { displayAddPopup = false }) {
-      eventViewModel.addSupply(it)
+      eventViewModel.updateSupplyAtomically(it)
+    }
+  }
+
+  var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
+  var displayAssignPopup by remember { mutableStateOf(false)  }
+  if (displayAssignPopup) {
+    if (eventViewModel.getRole(account.currentUserUID!!) == ChimpagneRole.GUEST) {
+      GuestSupplyDialog(supply = displayedSupply,
+        updateSupply = {
+          eventViewModel.updateSupplyAtomically(it)
+          displayAssignPopup = false
+      }, userUID = account.currentUserUID!!, accounts =  hashMapOf(), onDismissRequest = {
+          displayAssignPopup = false
+          displayedSupply = ChimpagneSupply()
+        }
+      )
+    } else {
 
     }
+
   }
 
   Scaffold(floatingActionButton = {
@@ -88,8 +105,12 @@ fun SuppliesScreen(
           if (suppliesAssignedToMe.isNotEmpty()) {
             item { Text("Supplies assigned to me") }
             items(suppliesAssignedToMe.values.toList()) {
-              SupplyListElement(
-                supply = it, eventViewModel = eventViewModel, accountViewModel = accountViewModel
+              SupplyCard(
+                supply = it,
+                onClick = {
+                  displayAssignPopup = true
+                  displayedSupply = it
+                }
               )
             }
           }
@@ -97,8 +118,12 @@ fun SuppliesScreen(
           if (nonAssignedSupplies.isNotEmpty()) {
             item { Text("Non assigned supplies") }
             items(nonAssignedSupplies.values.toList()) {
-              SupplyListElement(
-                supply = it, eventViewModel = eventViewModel, accountViewModel = accountViewModel
+              SupplyCard(
+                supply = it,
+                onClick = {
+                  displayAssignPopup = true
+                  displayedSupply = it
+                }
               )
             }
           }
@@ -106,22 +131,17 @@ fun SuppliesScreen(
           if (otherSupplies.isNotEmpty()) {
             item { Text("Other supplies") }
             items(otherSupplies.values.toList()) {
-              SupplyListElement(
-                supply = it, eventViewModel = eventViewModel, accountViewModel = accountViewModel
+              SupplyCard(
+                supply = it,
+                onClick = {
+                  displayAssignPopup = true
+                  displayedSupply = it
+                }
               )
             }
           }
         }
       }
     }
-  }
-}
-
-@Composable
-fun SupplyListElement(
-  supply: ChimpagneSupply, eventViewModel: EventViewModel, accountViewModel: AccountViewModel
-) {
-  TextButton(onClick = {}) {
-    Text(text = "${supply.quantity} ${supply.unit}")
   }
 }
