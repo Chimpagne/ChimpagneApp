@@ -246,7 +246,6 @@ class EventViewModelTests {
     assertTrue(eventSearchVM.uiState.value.id == testStaffedEvent.id)
 
     eventSearchVM.fetchAccounts(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-
     while (eventSearchVM.uiState.value.loading) {}
 
     assertTrue(eventSearchVM.uiState.value.accounts.keys.size == 2)
@@ -257,14 +256,10 @@ class EventViewModelTests {
     assertTrue(eventSearchVM.uiState.value.staffs.isEmpty())
 
     eventSearchVM.promoteGuestToStaff(TEST_ACCOUNTS[0].firebaseAuthUID)
+    while (eventSearchVM.uiState.value.loading) {}
 
     assertTrue(eventSearchVM.uiState.value.staffs.size == 1)
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
-
-    eventSearchVM.updateTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-
-    while (eventSearchVM.uiState.value.loading) {}
 
     val eventSearchVM2 =
         EventViewModel(
@@ -279,14 +274,10 @@ class EventViewModelTests {
     assertTrue(eventSearchVM2.uiState.value.guests.isEmpty())
 
     eventSearchVM2.demoteStaffToGuest(TEST_ACCOUNTS[0].firebaseAuthUID)
+    while (eventSearchVM2.uiState.value.loading) {}
 
     assertTrue(eventSearchVM2.uiState.value.guests.size == 1)
     assertTrue(eventSearchVM2.uiState.value.staffs.isEmpty())
-
-    eventSearchVM2.updateTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
-
-    while (eventSearchVM2.uiState.value.loading) {}
 
     val eventSearchVM3 =
         EventViewModel(

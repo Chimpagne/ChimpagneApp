@@ -93,8 +93,8 @@ class EventViewModel(
             setOf(_uiState.value.ownerId) + _uiState.value.guests.keys + _uiState.value.staffs.keys,
             {
               _uiState.value = _uiState.value.copy(accounts = it)
-              onSuccess()
               _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess()
             }) {
               Log.d("FETCHING EVENT ACCOUNTS", "Error : ", it)
               _uiState.value = _uiState.value.copy(loading = false)
@@ -277,16 +277,74 @@ class EventViewModel(
     return buildChimpagneEvent().getRole(userUID)
   }
 
-  fun promoteGuestToStaff(uid: ChimpagneAccountUID) {
-    _uiState.value =
-        _uiState.value.copy(
-            guests = _uiState.value.guests - uid, staffs = _uiState.value.staffs + (uid to true))
+  fun promoteGuestToStaff(
+      uid: ChimpagneAccountUID,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+
+    eventManager.removeGuest(
+        _uiState.value.id,
+        uid,
+        {
+          eventManager.addStaff(
+              _uiState.value.id,
+              uid,
+              {
+                _uiState.value =
+                    _uiState.value.copy(
+                        guests = _uiState.value.guests - uid,
+                        staffs = _uiState.value.staffs + (uid to true),
+                        loading = false)
+                onSuccess()
+              },
+              {
+                Log.d("ADDED STAFF TO STAFF LIST", "Error : ", it)
+                _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(it)
+              })
+        },
+        {
+          Log.d("REMOVE GUEST FROM GUEST LIST", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+        })
   }
 
-  fun demoteStaffToGuest(uid: ChimpagneAccountUID) {
-    _uiState.value =
-        _uiState.value.copy(
-            guests = _uiState.value.guests + (uid to true), staffs = _uiState.value.staffs - uid)
+  fun demoteStaffToGuest(
+      uid: ChimpagneAccountUID,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+
+    eventManager.removeStaff(
+        _uiState.value.id,
+        uid,
+        {
+          eventManager.addGuest(
+              _uiState.value.id,
+              uid,
+              {
+                _uiState.value =
+                    _uiState.value.copy(
+                        guests = _uiState.value.guests + (uid to true),
+                        staffs = _uiState.value.staffs - uid,
+                        loading = false)
+                onSuccess()
+              },
+              {
+                Log.d("ADDED GUEST TO GUEST LIST", "Error : ", it)
+                _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(it)
+              })
+        },
+        {
+          Log.d("REMOVE STAFF FROM STAFF LIST", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+        })
   }
 }
 

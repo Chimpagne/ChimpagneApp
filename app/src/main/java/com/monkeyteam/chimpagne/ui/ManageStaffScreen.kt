@@ -22,7 +22,7 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.GroupAdd
 import androidx.compose.material.icons.rounded.GroupRemove
-import androidx.compose.material.icons.rounded.Save
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -83,13 +83,9 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
             })
       },
       floatingActionButton = {
-        FloatingActionButton(
-            modifier = Modifier.size(70.dp),
-            onClick = {
-              if (isOnEdit) eventViewModel.updateTheEvent({ isOnEdit = false }) else isOnEdit = true
-            }) {
-              Icon(if (isOnEdit) Icons.Rounded.Save else Icons.Rounded.Edit, "floating button")
-            }
+        FloatingActionButton(modifier = Modifier.size(70.dp), onClick = { isOnEdit = !isOnEdit }) {
+          Icon(if (isOnEdit) Icons.Rounded.PlayArrow else Icons.Rounded.Edit, "floating button")
+        }
       }) { innerPadding ->
         Column(
             modifier =
