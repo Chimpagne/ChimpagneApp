@@ -89,8 +89,8 @@ fun ViewDetailEventScreen(
 
   var showDialog by remember { mutableStateOf(false) }
 
-  val ownerID = uiState.ownerId
-  val ownerAccount = accountsState.fetchedAccounts[ownerID]
+  // val ownerID = uiState.ownerId
+  // val ownerAccount = accountsState.fetchedAccounts[ownerID]
 
   Scaffold(
       topBar = {
@@ -323,7 +323,7 @@ fun ViewDetailEventScreen(
                                   Text(
                                       text =
                                           "${stringResource(
-                                            id = R.string.event_details_screen_organized_by)}\n ${ownerAccount?.firstName} ${ownerAccount?.lastName}",
+                                            id = R.string.event_details_screen_organized_by)}\n Alice123",
                                       fontSize = 14.sp,
                                       fontFamily = ChimpagneFontFamily,
                                       color = MaterialTheme.colorScheme.onPrimaryContainer)
@@ -358,6 +358,7 @@ fun ViewDetailEventScreen(
                             // MAP WILL BE ADDED HERE
 
                             // SOCIAL LINKS WILL BE ADDED HERE
+                            Spacer(Modifier.height(24.dp))
 
                             if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 
@@ -386,8 +387,6 @@ fun ViewDetailEventScreen(
                                         })
                                   })
                             }
-
-                            Spacer(Modifier.height(24.dp))
 
                             // Only the owner can edit the event settings
                             if (uiState.currentUserRole == ChimpagneRole.OWNER) {
