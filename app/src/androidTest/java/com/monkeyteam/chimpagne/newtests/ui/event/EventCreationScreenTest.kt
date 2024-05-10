@@ -5,6 +5,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -143,15 +144,15 @@ class EventCreationScreenTest {
       EventCreationScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
     // composeTestRule.onNodeWithTag("tag_field").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("supplies_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_supplies_button").assertIsDisplayed()
 
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("add_supplies_button").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_supplies_button").performClick()
     // Assert that the SupplyPopup is displayed after clicking the button
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("supplies_title").assertIsDisplayed()
 
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("add_supplies_button").performClick()
     // Fill in the necessary fields in the SupplyPopup
     composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("New Item")
     composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
@@ -219,8 +220,8 @@ class EventCreationScreenTest {
       val navActions = NavigationActions(navController)
       EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
-    composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("logistics_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("parking_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("beds_title").assertIsDisplayed()
   }
 }

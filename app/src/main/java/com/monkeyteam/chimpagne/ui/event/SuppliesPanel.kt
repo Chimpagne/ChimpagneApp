@@ -8,11 +8,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.rounded.Inventory2
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.SupplyPopup
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
@@ -35,17 +36,17 @@ fun SuppliesPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
   Column(modifier = Modifier.padding(16.dp)) {
-    Text(
-        stringResource(id = R.string.event_creation_screen_groceries),
-        style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.testTag("groceries_title"))
+    Legend(
+        stringResource(id = R.string.event_creation_screen_supplies),
+        Icons.Rounded.Inventory2,
+        "supplies_title")
     Spacer(modifier = Modifier.height(16.dp))
 
     val showAddDialog = remember { mutableStateOf(false) }
     Button(
         onClick = { showAddDialog.value = true },
-        modifier = Modifier.testTag("add_groceries_button")) {
-          Text(stringResource(id = R.string.event_creation_screen_add_groceries))
+        modifier = Modifier.testTag("add_supplies_button")) {
+          Text(stringResource(id = R.string.event_creation_screen_add_supplies))
         }
 
     if (showAddDialog.value) {
