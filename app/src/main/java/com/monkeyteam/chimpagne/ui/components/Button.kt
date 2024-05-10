@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -22,6 +23,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -106,22 +111,49 @@ fun GoBackButton(navigationActions: NavigationActions) {
 
 @Composable
 fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
-  IconButton(
-      modifier = Modifier.testTag("calendarButton"),
-      onClick = {
-        val intent = CalendarIntents().addToCalendar(event)
-        if (intent != null) {
-          contextMainActivity.startActivity(intent)
-        } else {
-          Toast.makeText(
-                  contextMainActivity, "Event can't be added to calendar", Toast.LENGTH_SHORT)
-              .show()
-        }
-      }) {
-        Icon(
-            imageVector = Icons.Default.CalendarMonth,
-            contentDescription = "Add to Calendar",
-            tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.testTag("calendarButtonIcon"))
-      }
+  var showDialog by remember { mutableStateOf(false) }
+  IconButton(modifier = Modifier.testTag("calendarButton"), onClick = { showDialog = true }) {
+    Icon(
+        imageVector = Icons.Default.CalendarMonth,
+        contentDescription = "Add to Calendar",
+        tint = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.testTag("calendarButtonIcon"))
+  }
+  if (showDialog) {
+    popUpCalendar(
+        onAccept = {
+          val intent = CalendarIntents().addToCalendar(event)
+          if (intent != null) {
+            contextMainActivity.startActivity(intent)
+          } else {
+            Toast.makeText(
+                    contextMainActivity, "Event can't be added to calendar", Toast.LENGTH_SHORT)
+                .show()
+          }
+          showDialog = false // Close the dialog after handling
+        },
+        onReject = {
+          showDialog = false // Close the dialog when rejected
+        },
+        context = contextMainActivity)
+  }
+}
+
+@Composable
+fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, context: Context) {
+  val builder =
+      AlertDialog(
+          onDismissRequest = { onReject() },
+          title = { Text("Add to Calendar") },
+          text = { Text("Do you want to add this event to your calendar?") },
+          confirmButton = {
+            Button(onClick = { onAccept() }, modifier = Modifier.testTag("acceptButton")) {
+              Text("Yes")
+            }
+          },
+          dismissButton = {
+            Button(onClick = { onReject() }, modifier = Modifier.testTag("rejectButton")) {
+              Text("No")
+            }
+          })
 }
