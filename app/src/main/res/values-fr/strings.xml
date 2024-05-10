@@ -52,11 +52,11 @@
     <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="chimpagne_cancel">Annuler</string>
-    <string name="chimpagne_edit">Edit</string>
+    <string name="chimpagne_edit">Éditer</string>
     <string name="chimpagne_save">Sauvegarder</string>
     <string name="chimpagne_confirm">Confirmer</string>
     <string name="chimpagne_add">Ajouter</string>
-    <string name="chimpagne_delete">Delete</string>
+    <string name="chimpagne_delete">Supprimer</string>
 
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
