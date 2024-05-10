@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -23,16 +24,21 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
+import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.intents.CalendarIntents
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.LoginScreen
+import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import java.util.Calendar
 import java.util.Locale
 import kotlinx.coroutines.runBlocking
@@ -213,7 +219,7 @@ class ProfileIconTest {
   }
 }
 
-class TestCalendarButton() {
+class TestCalendar() {
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -281,5 +287,17 @@ class TestCalendarButton() {
         intentToLaunch?.getIntExtra(CalendarContract.Reminders.METHOD, -1))
   }
 
-  fun testCalendarButton() {}
+  @Test
+  fun testCalendarButton() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      val database = Database()
+      val eventViewModel = EventViewModel(database = database)
+      ViewDetailEventScreen(navObject = navActions, eventViewModel = eventViewModel)
+    }
+
+    composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()
+    composeTestRule.onNodeWithTag("calendarButton").performClick()
+  }
 }

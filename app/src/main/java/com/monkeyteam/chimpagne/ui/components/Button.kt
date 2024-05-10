@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -106,6 +107,7 @@ fun GoBackButton(navigationActions: NavigationActions) {
 @Composable
 fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
   IconButton(
+      modifier = Modifier.testTag("calendarButton"),
       onClick = {
         val intent = CalendarIntents().addToCalendar(event)
         if (intent != null) {
@@ -119,6 +121,7 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
         Icon(
             imageVector = Icons.Default.CalendarMonth,
             contentDescription = "Add to Calendar",
-            tint = MaterialTheme.colorScheme.onSurface)
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.testTag("calendarButtonIcon"))
       }
 }
