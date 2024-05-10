@@ -34,6 +34,10 @@ fun DetailScreenSheet(
     context: Context? = null
 ) {
   var showDialog by remember { mutableStateOf(false) }
+  val enhancedOnJoinClick = {
+    onJoinClick()
+    showDialog = true
+  }
   if (event != null && event.id.isNotBlank()) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -65,7 +69,7 @@ fun DetailScreenSheet(
               }
 
           Button(
-              onClick = onJoinClick,
+              onClick = enhancedOnJoinClick,
               modifier = Modifier.align(Alignment.CenterHorizontally).testTag("join_button")) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))
               }
