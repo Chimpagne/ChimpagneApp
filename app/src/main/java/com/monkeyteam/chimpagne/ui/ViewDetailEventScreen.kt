@@ -215,6 +215,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                     fontWeight = FontWeight.Bold)
                                               }
                                         }
+                                        CalendarButton(
+                                            event = eventViewModel.buildChimpagneEvent(),
+                                            contextMainActivity = context)
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                           Text(
                                               text = stringResource(id = R.string.date_tools_until),
@@ -248,9 +251,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                               }
                                         }
                                       }
-                                  CalendarButton(
-                                      event = eventViewModel.buildChimpagneEvent(),
-                                      contextMainActivity = context)
                                   Box(
                                       modifier =
                                           Modifier.shadow(
