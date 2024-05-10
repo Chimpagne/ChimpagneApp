@@ -1,5 +1,7 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -29,6 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.intents.CalendarIntents
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import java.util.Locale
@@ -96,4 +101,24 @@ fun GoBackButton(navigationActions: NavigationActions) {
         contentDescription = "Go Back",
         tint = MaterialTheme.colorScheme.onSurface)
   }
+}
+
+@Composable
+fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
+  IconButton(
+      onClick = {
+        val intent = CalendarIntents().addToCalendar(event)
+        if (intent != null) {
+          contextMainActivity.startActivity(intent)
+        } else {
+          Toast.makeText(
+                  contextMainActivity, "Event can't be added to calendar", Toast.LENGTH_SHORT)
+              .show()
+        }
+      }) {
+        Icon(
+            imageVector = Icons.Default.CalendarMonth,
+            contentDescription = "Add to Calendar",
+            tint = MaterialTheme.colorScheme.onSurface)
+      }
 }
