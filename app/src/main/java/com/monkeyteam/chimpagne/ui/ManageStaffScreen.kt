@@ -52,12 +52,18 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @ExperimentalMaterial3Api
 @Composable
-fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
-  val uiState by eventViewModel.uiState.collectAsState()
+fun ManageStaffScreen(
+    navObject: NavigationActions,
+    eventViewModel: EventViewModel,
+    accountViewModel: AccountViewModel
+) {
+  val eventUIState by eventViewModel.uiState.collectAsState()
+  val accountUIState by accountViewModel.uiState.collectAsState()
   var isOnEdit by remember { mutableStateOf(false) }
 
   Scaffold(
@@ -102,16 +108,16 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
                           if (isOnEdit) Icons.Rounded.GroupRemove else Icons.Rounded.Group,
                       contentDescription = "Staff List")
                 }
-                if (uiState.staffs.isEmpty()) {
+                if (eventUIState.staffs.isEmpty()) {
                   item {
                     Text(
                         text = stringResource(id = R.string.manage_staff_screen_empty_staff_list),
                         modifier = Modifier.padding(16.dp).testTag("empty staff list"))
                   }
                 } else {
-                  items(uiState.staffs.keys.toList().sorted()) { uid ->
-                    if (uiState.accounts[uid] != null) {
-                      val account = uiState.accounts[uid]!!
+                  items(eventUIState.staffs.keys.toList().sorted()) { uid ->
+                    if (accountUIState.fetchedAccounts[uid] != null) {
+                      val account = accountUIState.fetchedAccounts[uid]!!
                       PersonCard(
                           firstName = account.firstName,
                           lastName = account.lastName,
@@ -130,16 +136,16 @@ fun ManageStaffScreen(navObject: NavigationActions, eventViewModel: EventViewMod
                         imageVector = Icons.Rounded.GroupAdd,
                         contentDescription = "Guest List")
                   }
-                  if (uiState.guests.isEmpty()) {
+                  if (eventUIState.guests.isEmpty()) {
                     item {
                       Text(
                           text = stringResource(id = R.string.manage_staff_screen_empty_guest_list),
                           modifier = Modifier.padding(16.dp).testTag("empty guest list"))
                     }
                   } else {
-                    items(uiState.guests.keys.toList().sorted()) { uid ->
-                      if (uiState.accounts[uid] != null) {
-                        val account = uiState.accounts[uid]!!
+                    items(eventUIState.guests.keys.toList().sorted()) { uid ->
+                      if (accountUIState.fetchedAccounts[uid] != null) {
+                        val account = accountUIState.fetchedAccounts[uid]!!
                         PersonCard(
                             firstName = account.firstName,
                             lastName = account.lastName,

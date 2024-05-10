@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
@@ -82,28 +81,6 @@ class EventViewModel(
           EventUIState(
               ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "",
               currentUserRole = ChimpagneRole.OWNER)
-    }
-  }
-
-  fun fetchAccounts(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    if (eventID != null) {
-      _uiState.value = _uiState.value.copy(loading = true)
-      viewModelScope.launch {
-        accountManager.getAccounts(
-            (setOf(_uiState.value.ownerId) +
-                    _uiState.value.guests.keys +
-                    _uiState.value.staffs.keys)
-                .toList(),
-            {
-              _uiState.value = _uiState.value.copy(accounts = it)
-              _uiState.value = _uiState.value.copy(loading = false)
-              onSuccess()
-            }) {
-              Log.d("FETCHING EVENT ACCOUNTS", "Error : ", it)
-              _uiState.value = _uiState.value.copy(loading = false)
-              onFailure(it)
-            }
-      }
     }
   }
 
@@ -368,8 +345,6 @@ data class EventUIState(
     // unmodifiable by the UI
     val ownerId: ChimpagneAccountUID = "",
     val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-    // OPTIONAL PARAMETER, MUST BE FETCH SEPARATELY
-    val accounts: Map<String, ChimpagneAccount?> = emptyMap(),
     val loading: Boolean = false
 )
 

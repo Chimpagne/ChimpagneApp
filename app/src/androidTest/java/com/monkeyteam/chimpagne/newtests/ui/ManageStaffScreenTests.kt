@@ -17,6 +17,7 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
 import org.junit.Rule
@@ -41,13 +42,14 @@ class ManageStaffScreenTests {
   fun generalTextTest() {
 
     val eventVM = EventViewModel(TEST_EVENTS[0].id, database)
+    val accountVM = AccountViewModel(database)
 
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ManageStaffScreen(navActions, eventVM)
+      ManageStaffScreen(navActions, eventVM, accountVM)
     }
 
     composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
@@ -61,13 +63,14 @@ class ManageStaffScreenTests {
   fun testNavigationBackFunctionality() {
 
     val eventVM = EventViewModel(TEST_EVENTS[0].id, database)
+    val accountVM = AccountViewModel(database)
 
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ManageStaffScreen(navActions, eventVM)
+      ManageStaffScreen(navActions, eventVM, accountVM)
     }
 
     composeTestRule.onNodeWithContentDescription("back").assertHasClickAction()
@@ -79,17 +82,21 @@ class ManageStaffScreenTests {
   fun fullFunctionalityTest() {
 
     val eventVM = EventViewModel(TEST_EVENTS[2].id, database)
+    val accountVM = AccountViewModel(database)
 
     while (eventVM.uiState.value.loading) {}
 
-    eventVM.fetchAccounts()
+    accountVM.fetchAccounts(
+        listOf(eventVM.uiState.value.ownerId) +
+            eventVM.uiState.value.staffs.keys.toList() +
+            eventVM.uiState.value.guests.keys.toList())
 
-    while (eventVM.uiState.value.loading) {}
+    while (accountVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ManageStaffScreen(navActions, eventVM)
+      ManageStaffScreen(navActions, eventVM, accountVM)
     }
 
     composeTestRule.onNodeWithContentDescription("Staff List").assertIsDisplayed()

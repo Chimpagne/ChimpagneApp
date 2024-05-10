@@ -173,8 +173,16 @@ class MainActivity : ComponentActivity() {
                       factory =
                           EventViewModelFactory(
                               backStackEntry.arguments?.getString("EventID"), database))
-              eventViewModel.fetchEvent({ eventViewModel.fetchAccounts() })
-              ManageStaffScreen(navObject = navActions, eventViewModel = eventViewModel)
+              eventViewModel.fetchEvent({
+                accountViewModel.fetchAccounts(
+                    listOf(eventViewModel.uiState.value.ownerId) +
+                        eventViewModel.uiState.value.staffs.keys.toList() +
+                        eventViewModel.uiState.value.guests.keys.toList())
+              })
+              ManageStaffScreen(
+                  navObject = navActions,
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel)
             }
           }
         }
