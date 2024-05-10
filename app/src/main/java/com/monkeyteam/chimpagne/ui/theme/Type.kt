@@ -14,6 +14,14 @@ val ChimpagneTypography =
                 fontWeight = FontWeight.Bold,
                 fontSize = 34.sp,
                 lineHeight = 40.sp),
+        displayMedium =
+            TextStyle(
+                fontFamily = ChimpagneFontFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 30.sp,
+                lineHeight = 36.sp),
+        displaySmall =
+            TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 24.sp, lineHeight = 32.sp),
         headlineMedium =
             TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 24.sp, lineHeight = 28.sp),
         bodyLarge =

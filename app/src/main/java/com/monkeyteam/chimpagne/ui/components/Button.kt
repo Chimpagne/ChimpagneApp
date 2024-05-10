@@ -25,21 +25,20 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import java.util.Locale
 
 @Composable
 fun ChimpagneButton(
     modifier: Modifier = Modifier,
-    text: String,
+    text: String = "Click Me",
     icon: ImageVector? = null,
-    fontWeight: FontWeight,
-    fontSize: TextUnit,
+    textStyle: TextStyle = ChimpagneTypography.displayMedium,
     onClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = RoundedCornerShape(12.dp),
@@ -59,9 +58,7 @@ fun ChimpagneButton(
             text = text,
             modifier = Modifier.weight(1f),
             fontFamily = ChimpagneFontFamily,
-            fontWeight = fontWeight,
-            fontSize = fontSize,
-            lineHeight = fontSize,
+            style = textStyle,
             textAlign = TextAlign.Center)
       }
 }
