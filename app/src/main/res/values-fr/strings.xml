@@ -76,6 +76,7 @@
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
     <string name="event_details_screen_edit_button">Éditer l\'événement</string>
+    <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
     <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
     <string name="event_details_screen_supplies_button">Trucs à amener</string>
@@ -86,4 +87,9 @@
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="manage_staff_screen_title">Gérer le personnel</string>
+    <string name="manage_staff_screen_staff_list_name">Liste du personnel:</string>
+    <string name="manage_staff_screen_empty_staff_list">Il n\'y a pas de personnel dans l\'événement</string>
+    <string name="manage_staff_screen_guest_list_name">Liste des invités:</string>
+    <string name="manage_staff_screen_empty_guest_list">Il n\'y a pas d\'invités à cette événement</string>
 </resources>

@@ -7,6 +7,7 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
+import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
@@ -28,6 +29,7 @@ class EventViewModelTests {
 
   private val testEvent = TEST_EVENTS[0]
   private val testUpdateEvent = TEST_EVENTS[1]
+  private val testStaffedEvent = TEST_EVENTS[2]
 
   private fun replaceVMEventBy(eventVM: EventViewModel, event: ChimpagneEvent) {
     eventVM.updateEventTitle(event.title)
@@ -244,5 +246,67 @@ class EventViewModelTests {
         onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
+  }
+
+  @Test
+  fun TestStaffFunctionnality() {
+    initializeTestDatabase()
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    val eventSearchVM =
+        EventViewModel(
+            eventID = testStaffedEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    // Wait for database to get the data
+    while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM.uiState.value.id == testStaffedEvent.id)
+
+    assertTrue(eventSearchVM.uiState.value.guests.size == 1)
+    assertTrue(eventSearchVM.uiState.value.staffs.isEmpty())
+
+    eventSearchVM.promoteGuestToStaff(TEST_ACCOUNTS[0].firebaseAuthUID)
+    while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM.uiState.value.staffs.size == 1)
+    assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
+
+    val eventSearchVM2 =
+        EventViewModel(
+            eventID = testStaffedEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM2.uiState.value.staffs.size == 1)
+    assertTrue(eventSearchVM2.uiState.value.guests.isEmpty())
+
+    eventSearchVM2.demoteStaffToGuest(TEST_ACCOUNTS[0].firebaseAuthUID)
+    while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM2.uiState.value.guests.size == 1)
+    assertTrue(eventSearchVM2.uiState.value.staffs.isEmpty())
+
+    val eventSearchVM3 =
+        EventViewModel(
+            eventID = testStaffedEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    while (eventSearchVM3.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM3.uiState.value.guests.size == 1)
+    assertTrue(eventSearchVM3.uiState.value.staffs.isEmpty())
   }
 }
