@@ -60,13 +60,8 @@ class EventCreationScreenTest {
     // Move to the Second Panel
 
     composeTestRule.onNodeWithTag("next_button").performClick()
-    // composeTestRule.onNodeWithTag("next_button")
-    // composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
-
     // Return to the First Panel
     composeTestRule.onNodeWithTag("previous_button").performClick()
-
-    // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
 
   @Test
@@ -197,7 +192,7 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
 
-    composeTestRule.onNodeWithTag("create_event_button").performClick()
+    composeTestRule.onNodeWithTag("last_button").performClick()
   }
 
   @Test

@@ -45,7 +45,7 @@ class ButtonToastTest {
       EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
-    composeTestRule.onNodeWithTag("save_changes_button").performClick()
+    composeTestRule.onNodeWithTag("last_button").performClick()
     //  toasts are not composable in nature, which makes them difficult to test within the Jetpack
     // Compose framework.
   }
