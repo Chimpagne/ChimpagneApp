@@ -71,6 +71,7 @@
     <string name="event_details_screen_report_problem">Report a Problem</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit this event</string>
+    <string name="event_details_screen_manage_staff_button">Manage staff</string>
     <string name="event_details_screen_chat_button">Chat</string>
     <string name="event_details_screen_location_button">Location</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
@@ -91,5 +92,9 @@
     <string name="join_event_staff">You are already a Staff Member for this Event</string>
     <string name="join_event_guest">You are already a Guest at this Event</string>
     <string name="join_event_owner">You are the Owner of this Event</string>
-
+    <string name="manage_staff_screen_title">Manage Staff</string>
+    <string name="manage_staff_screen_staff_list_name">Staff List:</string>
+    <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>
+    <string name="manage_staff_screen_guest_list_name">Guest List:</string>
+    <string name="manage_staff_screen_empty_guest_list">There are no guests in this event:</string>
 </resources>
