@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
@@ -34,6 +35,7 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
@@ -356,5 +358,26 @@ class TestCalendar() {
 
     composeTestRule.onNode(hasText("No")).performClick()
     assert(rejected)
+  }
+
+  @Test
+  fun testCalendarButtonIntentNo() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val event = ChimpagneEvent
+    composeTestRule.setContent { CalendarButton(event = event, contextMainActivity = context) }
+
+    composeTestRule.onNodeWithTag("calendarButton").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("rejectButton").assertIsNotDisplayed()
+    composeTestRule.onNodeWithTag("acceptButton").assertIsNotDisplayed()
+
+    composeTestRule.onNodeWithTag("calendarButton").performClick()
+
+    composeTestRule.onNodeWithTag("acceptButton").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("rejectButton").assertIsDisplayed()
+
+    composeTestRule.onNodeWithTag("rejectButton").performClick()
+
+    composeTestRule.onNodeWithTag("acceptButton").assertIsNotDisplayed()
+    composeTestRule.onNodeWithTag("rejectButton").assertIsNotDisplayed()
   }
 }

@@ -130,11 +130,9 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
                     contextMainActivity, "Event can't be added to calendar", Toast.LENGTH_SHORT)
                 .show()
           }
-          showDialog = false // Close the dialog after handling
+          showDialog = false
         },
-        onReject = {
-          showDialog = false // Close the dialog when rejected
-        },
+        onReject = { showDialog = false },
         event = event)
   }
 }
