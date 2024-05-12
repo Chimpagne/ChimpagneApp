@@ -216,6 +216,6 @@ class EditEventScreenTestTest {
 
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
 
-    composeTestRule.onNodeWithTag("save_changes_button").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("last_button").assertIsDisplayed()
   }
 }
