@@ -52,9 +52,7 @@ fun SuppliesPanel(eventViewModel: EventViewModel) {
 
     if (showAddDialog.value) {
 
-      EditSupplyDialog(
-        ChimpagneSupply(),
-          onDismissRequest = { showAddDialog.value = false }, onSave = eventViewModel::addSupply)
+      EditSupplyDialog(onDismissRequest = { showAddDialog.value = false }, onSave = eventViewModel::addSupply)
     }
 
     Spacer(modifier = Modifier.height(16.dp))

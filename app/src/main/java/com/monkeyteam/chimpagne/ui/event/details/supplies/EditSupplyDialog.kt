@@ -26,7 +26,7 @@ import com.monkeyteam.chimpagne.ui.components.CustomDialog
 
 @Composable
 fun EditSupplyDialog(
-  supply: ChimpagneSupply,
+  supply: ChimpagneSupply = ChimpagneSupply(),
   onDismissRequest: () -> Unit,
   onSave: (ChimpagneSupply) -> Unit,
   title: String = stringResource(id = R.string.supplies_add_dialog_title),
