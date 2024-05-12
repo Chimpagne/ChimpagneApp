@@ -83,9 +83,10 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
+
   var showDialog by remember { mutableStateOf(false) }
 
-  // Otherwise delayed loading of edit event changes
+  // Otherwise event doesn't directly load
   LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   Scaffold(
@@ -262,7 +263,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         Text(
                                             text =
                                                 "${uiState.guests.count()} ${stringResource(
-                                  id = R.string.event_details_screen_number_of_guests)}",
+                                        id = R.string.event_details_screen_number_of_guests)}",
                                             fontFamily = ChimpagneFontFamily,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -298,9 +299,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                           if (expandedDescription) "Collapse" else "Expand",
                                       tint = MaterialTheme.colorScheme.primary)
                                 }
-                            SocialButtonRow(
-                            context = context, socialMediaLinks = uiState.socialMediaLinks)
-                        Spacer(Modifier.height(16.dp))
+
                             HorizontalDivider(
                                 modifier = Modifier.padding(vertical = 16.dp),
                                 thickness = 1.dp,
@@ -365,7 +364,8 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
 
                             // MAP WILL BE ADDED HERE
 
-                            // SOCIAL LINKS WILL BE ADDED HERE
+                            SocialButtonRow(
+                                context = context, socialMediaLinks = uiState.socialMediaLinks)
 
                             if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 

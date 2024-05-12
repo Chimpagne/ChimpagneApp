@@ -271,6 +271,7 @@ class EventViewModel(
 
   fun getCurrentUserRole(): ChimpagneRole {
     return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+  }
 
   fun promoteGuestToStaff(
       uid: ChimpagneAccountUID,
@@ -369,4 +370,6 @@ class EventViewModel(
       ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       return EventViewModel(eventID, database) as T
+    }
+  }
 }

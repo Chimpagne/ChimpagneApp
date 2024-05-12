@@ -156,7 +156,7 @@ class MainActivity : ComponentActivity() {
               val eventViewModel: EventViewModel =
                   viewModel(
                       factory =
-                          EventViewModelFactory(
+                          EventViewModel.EventViewModelFactory(
                               backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent({
                 accountViewModel.fetchAccounts(
