@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.intents.CalendarIntents
+import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import java.util.Locale
@@ -122,7 +122,7 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
   if (showDialog) {
     popUpCalendar(
         onAccept = {
-          val intent = CalendarIntents().addToCalendar(event)
+          val intent = createCalendarIntent(event)
           if (intent != null) {
             contextMainActivity.startActivity(intent)
           } else {

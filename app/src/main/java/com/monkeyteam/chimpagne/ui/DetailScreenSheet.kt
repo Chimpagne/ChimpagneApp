@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.intents.CalendarIntents
+import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 
@@ -77,7 +77,7 @@ fun DetailScreenSheet(
     if (showDialog && context != null) {
       popUpCalendar(
           onAccept = {
-            val intent = CalendarIntents().addToCalendar(event)
+            val intent = createCalendarIntent(event)
             if (intent != null) {
               context.startActivity(intent)
             } else {

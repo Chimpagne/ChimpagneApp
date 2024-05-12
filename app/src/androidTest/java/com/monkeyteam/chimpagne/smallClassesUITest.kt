@@ -11,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -31,8 +30,8 @@ import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.intents.CalendarIntents
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
@@ -259,7 +258,7 @@ class TestCalendar() {
           icon = Icons.Default.CalendarMonth,
           fontWeight = FontWeight.Bold,
           fontSize = 16.sp,
-          onClick = { intentToLaunch = CalendarIntents().addToCalendar(ChimpagneEvent) },
+          onClick = { intentToLaunch = createCalendarIntent(ChimpagneEvent) },
           backgroundColor = MaterialTheme.colorScheme.primary,
           shape = RoundedCornerShape(12.dp),
           padding = PaddingValues(horizontal = 18.dp, vertical = 10.dp),
