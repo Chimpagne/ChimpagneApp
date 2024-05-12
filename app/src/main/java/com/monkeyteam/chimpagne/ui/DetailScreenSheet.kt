@@ -77,17 +77,12 @@ fun DetailScreenSheet(
     if (showDialog && context != null) {
       popUpCalendar(
           onAccept = {
-            val intent = createCalendarIntent(event)
-            if (intent != null) {
-              context.startActivity(intent)
-            } else {
-              Toast.makeText(context, "Event can't be added to calendar", Toast.LENGTH_SHORT).show()
-            }
-            showDialog = false // Close the dialog after handling
+            createCalendarIntent(event)?.let { context.startActivity(it) }
+                ?: Toast.makeText(context, "Event can't be added to calendar", Toast.LENGTH_SHORT)
+                    .show()
+            showDialog = false
           },
-          onReject = {
-            showDialog = false // Close the dialog when rejected
-          },
+          onReject = { showDialog = false },
           event = event)
     }
   } else {
