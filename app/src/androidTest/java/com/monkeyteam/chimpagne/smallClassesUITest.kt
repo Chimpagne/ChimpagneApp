@@ -15,10 +15,12 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,7 @@ import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
+import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -307,5 +310,77 @@ class TestCalendar() {
 
     composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()
     composeTestRule.onNodeWithTag("calendarButton").performClick()
+  }
+
+  @Test
+  fun testCalendarPopUpYes() {
+    var accepted = false
+    var rejected = false
+    val event =
+        ChimpagneEvent(
+            id = "1",
+            title = "Test Event",
+            description = "Test Description",
+            location = Location("Test Location", 42.3, 6.8),
+            public = true,
+            tags = listOf("Test Tag"),
+            guests = hashMapOf("1" to true),
+            staffs = hashMapOf("1" to true),
+            startsAtTimestamp = Timestamp(0, 0),
+            endsAtTimestamp = Timestamp(0, 0),
+            ownerId = "1",
+            supplies = mapOf("1" to ChimpagneSupply()),
+            parkingSpaces = 1,
+            beds = 1)
+
+    composeTestRule.setContent {
+      popUpCalendar(onAccept = { accepted = true }, onReject = { rejected = true }, event = event)
+    }
+
+    composeTestRule.onNodeWithText("Add to Calendar").assertIsDisplayed()
+    composeTestRule
+        .onNodeWithText("Do you want to add the event \"${event.title}\" to your calendar?")
+        .assertIsDisplayed()
+    composeTestRule.onNodeWithText("Yes").assertIsDisplayed()
+    composeTestRule.onNodeWithText("No").assertIsDisplayed()
+
+    composeTestRule.onNode(hasText("Yes")).performClick()
+    assert(accepted)
+  }
+
+  @Test
+  fun testCalendarPopUpNo() {
+    var accepted = false
+    var rejected = false
+    val event =
+        ChimpagneEvent(
+            id = "1",
+            title = "Test Event",
+            description = "Test Description",
+            location = Location("Test Location", 42.3, 6.8),
+            public = true,
+            tags = listOf("Test Tag"),
+            guests = hashMapOf("1" to true),
+            staffs = hashMapOf("1" to true),
+            startsAtTimestamp = Timestamp(0, 0),
+            endsAtTimestamp = Timestamp(0, 0),
+            ownerId = "1",
+            supplies = mapOf("1" to ChimpagneSupply()),
+            parkingSpaces = 1,
+            beds = 1)
+
+    composeTestRule.setContent {
+      popUpCalendar(onAccept = { accepted = true }, onReject = { rejected = true }, event = event)
+    }
+
+    composeTestRule.onNodeWithText("Add to Calendar").assertIsDisplayed()
+    composeTestRule
+        .onNodeWithText("Do you want to add the event \"${event.title}\" to your calendar?")
+        .assertIsDisplayed()
+    composeTestRule.onNodeWithText("Yes").assertIsDisplayed()
+    composeTestRule.onNodeWithText("No").assertIsDisplayed()
+
+    composeTestRule.onNode(hasText("No")).performClick()
+    assert(rejected)
   }
 }

@@ -88,7 +88,6 @@ fun DetailScreenSheet(
           onReject = {
             showDialog = false // Close the dialog when rejected
           },
-          context = context,
           event = event)
     }
   } else {

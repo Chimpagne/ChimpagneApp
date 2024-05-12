@@ -135,18 +135,12 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
         onReject = {
           showDialog = false // Close the dialog when rejected
         },
-        context = contextMainActivity,
         event = event)
   }
 }
 
 @Composable
-fun popUpCalendar(
-    onAccept: () -> Unit,
-    onReject: () -> Unit,
-    context: Context,
-    event: ChimpagneEvent?
-) {
+fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEvent?) {
   val builder =
       AlertDialog(
           onDismissRequest = { onReject() },
