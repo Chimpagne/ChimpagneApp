@@ -28,7 +28,7 @@ fun SupplyDialogAccountEntry(
         text =
         "${account?.firstName} ${account?.lastName}" +
                 if (account!!.firebaseAuthUID == loggedUserUID)
-                  " (${stringResource(id = R.string.you)})"
+                  " (${stringResource(id = R.string.chimpagne_you)})"
                 else "")
     },
     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
