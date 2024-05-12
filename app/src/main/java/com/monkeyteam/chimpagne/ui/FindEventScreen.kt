@@ -81,7 +81,6 @@ import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
@@ -96,8 +95,7 @@ object FindEventScreens {
 fun MainFindEventScreen(
     navObject: NavigationActions,
     findViewModel: FindEventsViewModel,
-    accountViewModel: AccountViewModel,
-    eventViewModel: EventViewModel
+    accountViewModel: AccountViewModel
 ) {
   val pagerState = rememberPagerState { 2 }
   val coroutineScope = rememberCoroutineScope()
@@ -140,7 +138,7 @@ fun MainFindEventScreen(
       FindEventScreens.FORM ->
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
-          FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject, eventViewModel)
+          FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
     }
   }
 }
@@ -234,9 +232,7 @@ fun FindEventFormScreen(
       topBar = {
         TopAppBar(
             title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier
-                .shadow(4.dp)
-                .testTag("find_event_title"),
+            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
@@ -255,11 +251,10 @@ fun FindEventFormScreen(
         Button(
             onClick = { onSearchClick() },
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .height(56.dp)
-                .testTag("button_search"), // Typical height for buttons
+                Modifier.fillMaxWidth()
+                    .padding(8.dp)
+                    .height(56.dp)
+                    .testTag("button_search"), // Typical height for buttons
             shape = MaterialTheme.shapes.extraLarge) {
               if (uiState.loading) {
                 SpinnerView(MaterialTheme.colorScheme.onPrimary)
@@ -272,15 +267,10 @@ fun FindEventFormScreen(
               }
             }
       }) { innerPadding ->
-        Box(modifier = Modifier
-            .padding(innerPadding)
-            .testTag("find_event_form_screen")) {
+        Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
               modifier =
-              Modifier
-                  .fillMaxSize()
-                  .padding(horizontal = 16.dp)
-                  .verticalScroll(scrollState),
+                  Modifier.fillMaxSize().padding(horizontal = 16.dp).verticalScroll(scrollState),
               horizontalAlignment = Alignment.Start) {
                 Legend(
                     stringResource(id = R.string.find_event_event_location_legend),
@@ -292,18 +282,14 @@ fun FindEventFormScreen(
                 LocationSelector(
                     uiState.selectedLocation,
                     findViewModel::updateSelectedLocation,
-                    Modifier
-                        .fillMaxWidth()
-                        .testTag("input_location"))
+                    Modifier.fillMaxWidth().testTag("input_location"))
 
                 Spacer(Modifier.height(16.dp))
                 IconTextButton(
                     text = stringResource(id = R.string.find_event_event_locate_me_button),
                     icon = Icons.Rounded.MyLocation,
                     onClick = { requestLocationPermission() },
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .testTag("sel_location"))
+                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
                 Spacer(Modifier.height(16.dp))
 
                 Text(
@@ -346,9 +332,7 @@ fun FindEventFormScreen(
                 DateSelector(
                     uiState.selectedDate,
                     findViewModel::updateSelectedDate,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .testTag("sel_date"))
+                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"))
 
                 if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))
@@ -365,11 +349,11 @@ fun FindEventMapScreen(
     onBackIconClicked: () -> Unit,
     findViewModel: FindEventsViewModel,
     accountViewModel: AccountViewModel,
-    navObject: NavigationActions,
-    eventViewModel: EventViewModel
+    navObject: NavigationActions
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
+  val accountUIState by accountViewModel.uiState.collectAsState()
   var showPromptLogin by remember { mutableStateOf(false) }
 
   val context = LocalContext.current
@@ -377,14 +361,14 @@ fun FindEventMapScreen(
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
-    
-    val stringResJoining = stringResource(id = R.string.joining_toast)
-    val stringResFailiure = stringResource(id = R.string.join_event_failiure)
-    val stringResSuccess = stringResource(id = R.string.join_event_success)
 
-    val stringResStaff = stringResource(id = R.string.join_event_staff)
-    val stringResGuest = stringResource(id = R.string.join_event_guest)
-    val stringResOwner = stringResource(id = R.string.join_event_owner)
+  val stringResJoining = stringResource(id = R.string.joining_toast)
+  val stringResFailiure = stringResource(id = R.string.join_event_failiure)
+  val stringResSuccess = stringResource(id = R.string.join_event_success)
+
+  val stringResStaff = stringResource(id = R.string.join_event_staff)
+  val stringResGuest = stringResource(id = R.string.join_event_guest)
+  val stringResOwner = stringResource(id = R.string.join_event_owner)
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
@@ -413,42 +397,45 @@ fun FindEventMapScreen(
     }
   }
 
-    val onJoinClick: () -> Unit = {
-        when {
-            // Check if the user is not logged in
-            !accountViewModel.isUserLoggedIn() -> {
-                // Redirect user to login screen
-                showPromptLogin = true
-            }
+  val onJoinClick: () -> Unit = {
+    when {
+      // Check if the user is not logged in
+      !accountViewModel.isUserLoggedIn() -> {
+        // Redirect user to login screen
+        showPromptLogin = true
+      }
 
-            // The user has not yet joined the event
-            eventViewModel.getCurrentUserRole() == ChimpagneRole.NOT_IN_EVENT -> {
-                currentEvent?.let { event ->
-                    Toast.makeText(context, "$stringResJoining ${currentEvent?.title}", Toast.LENGTH_SHORT).show()
-                    
-                    findViewModel.joinEvent(
-                        event.id,
-                        { Toast.makeText(context, stringResSuccess, Toast.LENGTH_SHORT).show() },
-                        { Toast.makeText(context, stringResFailiure, Toast.LENGTH_SHORT).show() }
-                    )
-                }
-            }
+      // The user has not yet joined the event
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.NOT_IN_EVENT -> {
+        currentEvent?.let { event ->
+          Toast.makeText(context, "$stringResJoining ${currentEvent?.title}", Toast.LENGTH_SHORT)
+              .show()
 
-            // The user has already joined the event, or is a staff for the event,or is the organizer
-            eventViewModel.getCurrentUserRole() == ChimpagneRole.STAFF -> {
-                Toast.makeText(context, "You are already a staff member for this event.", Toast.LENGTH_SHORT).show()
-            }
-            eventViewModel.getCurrentUserRole() == ChimpagneRole.OWNER -> {
-                Toast.makeText(context, "You are the owner of this event.", Toast.LENGTH_SHORT).show()
-            }
-            eventViewModel.getCurrentUserRole() == ChimpagneRole.GUEST -> {
-                Toast.makeText(context, "You are already a guest at this event.", Toast.LENGTH_SHORT).show()
-            }
+          findViewModel.joinEvent(
+              event.id,
+              { Toast.makeText(context, stringResSuccess, Toast.LENGTH_SHORT).show() },
+              { Toast.makeText(context, stringResFailiure, Toast.LENGTH_SHORT).show() })
         }
+      }
+
+      // The user has already joined the event, or is a staff for the event,or is the organizer
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.STAFF -> {
+        Toast.makeText(context, stringResStaff, Toast.LENGTH_SHORT).show()
+      }
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.OWNER -> {
+        Toast.makeText(context, stringResOwner, Toast.LENGTH_SHORT).show()
+      }
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.GUEST -> {
+        Toast.makeText(context, stringResGuest, Toast.LENGTH_SHORT).show()
+      }
     }
+  }
 
-
-    val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
+  val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
       sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick) },
@@ -470,15 +457,13 @@ fun FindEventMapScreen(
 
           IconButton(
               modifier =
-              Modifier
-                  .padding(start = 12.dp, top = 12.dp)
-                  .testTag("go_back")
-                  .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-                  .background(
-                      color = MaterialTheme.colorScheme.surface,
-                      shape = RoundedCornerShape(100)
-                  )
-                  .padding(4.dp),
+                  Modifier.padding(start = 12.dp, top = 12.dp)
+                      .testTag("go_back")
+                      .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+                      .background(
+                          color = MaterialTheme.colorScheme.surface,
+                          shape = RoundedCornerShape(100))
+                      .padding(4.dp),
               onClick = { goBack() }) {
                 Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Go Back")
               }
