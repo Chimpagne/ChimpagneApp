@@ -6,6 +6,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -62,13 +63,8 @@ class EventCreationScreenTest {
     // Move to the Second Panel
 
     composeTestRule.onNodeWithTag("next_button").performClick()
-    // composeTestRule.onNodeWithTag("next_button")
-    // composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
-
     // Return to the First Panel
     composeTestRule.onNodeWithTag("previous_button").performClick()
-
-    // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
 
   @Test
@@ -151,15 +147,15 @@ class EventCreationScreenTest {
           2, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
     // composeTestRule.onNodeWithTag("tag_field").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("supplies_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_supplies_button").assertIsDisplayed()
 
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("add_supplies_button").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_supplies_button").performClick()
     // Assert that the SupplyPopup is displayed after clicking the button
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("supplies_title").assertIsDisplayed()
 
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("add_supplies_button").performClick()
     // Fill in the necessary fields in the SupplyPopup
     composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("New Item")
     composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
@@ -203,8 +199,7 @@ class EventCreationScreenTest {
     val valueBed = "2"
     composeTestRule.onNodeWithTag("n_beds").assertExists()
     composeTestRule.onNodeWithTag("n_beds").performTextInput(valueBed)
-
-    composeTestRule.onNodeWithTag("create_event_button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("last_button").assertDoesNotExist()
     composeTestRule.onNodeWithTag("next_button").performClick()
   }
 
@@ -229,9 +224,9 @@ class EventCreationScreenTest {
       EventCreationScreen(
           3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
-    composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("logistics_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("parking_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("beds_title").assertIsDisplayed()
   }
 
   @Test
