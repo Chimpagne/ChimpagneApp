@@ -26,8 +26,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.ui.components.Legend
-import com.monkeyteam.chimpagne.ui.components.SupplyPopup
+import com.monkeyteam.chimpagne.ui.event.details.supplies.EditSupplyDialog
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +52,8 @@ fun SuppliesPanel(eventViewModel: EventViewModel) {
 
     if (showAddDialog.value) {
 
-      SupplyPopup(
+      EditSupplyDialog(
+        ChimpagneSupply(),
           onDismissRequest = { showAddDialog.value = false }, onSave = eventViewModel::addSupply)
     }
 
