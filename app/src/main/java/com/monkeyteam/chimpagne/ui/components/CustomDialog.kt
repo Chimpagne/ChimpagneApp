@@ -20,51 +20,50 @@ import androidx.compose.ui.window.Dialog
 
 @Composable
 fun CustomDialog(
-  title: String,
-  description: String,
-  onDismissRequest: () -> Unit,
-  buttonDataList: List<ButtonData>,
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit = {}
+    title: String,
+    description: String,
+    onDismissRequest: () -> Unit,
+    buttonDataList: List<ButtonData>,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit = {}
 ) {
   Dialog(onDismissRequest = onDismissRequest) {
     Card(
-      modifier = modifier.fillMaxWidth().padding(16.dp),
-      shape = AlertDialogDefaults.shape,
+        modifier = modifier.fillMaxWidth().padding(16.dp),
+        shape = AlertDialogDefaults.shape,
     ) {
       Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-          title,
-          modifier = Modifier.fillMaxWidth(),
-          style =
-          TextStyle(
-            fontSize = 24.sp,
-            lineHeight = 32.sp,
-            fontWeight = FontWeight(400),
-            color = AlertDialogDefaults.titleContentColor,
-          )
-        )
-        Text(
-          description,
-          modifier = Modifier.fillMaxWidth().padding(0.dp, 7.dp),
-          style =
-          TextStyle(
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
-            fontWeight = FontWeight(400),
-            color = AlertDialogDefaults.textContentColor,
-            letterSpacing = 0.25.sp,
-          ))
-        content()
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-          buttonDataList.forEach {
-            TextButton(onClick = it.onClick, modifier = it.modifier) { Text(it.text) }
+          modifier = Modifier.fillMaxWidth().padding(16.dp),
+          verticalArrangement = Arrangement.Center,
+          horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                title,
+                modifier = Modifier.fillMaxWidth(),
+                style =
+                    TextStyle(
+                        fontSize = 24.sp,
+                        lineHeight = 32.sp,
+                        fontWeight = FontWeight(400),
+                        color = AlertDialogDefaults.titleContentColor,
+                    ))
+            Text(
+                description,
+                modifier = Modifier.fillMaxWidth().padding(0.dp, 7.dp),
+                style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 20.sp,
+                        fontWeight = FontWeight(400),
+                        color = AlertDialogDefaults.textContentColor,
+                        letterSpacing = 0.25.sp,
+                    ))
+            content()
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+              buttonDataList.forEach {
+                TextButton(onClick = it.onClick, modifier = it.modifier) { Text(it.text) }
+              }
+            }
           }
-        }
-      }
     }
   }
 }
