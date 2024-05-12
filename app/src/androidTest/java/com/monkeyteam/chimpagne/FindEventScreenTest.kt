@@ -22,6 +22,7 @@ import com.monkeyteam.chimpagne.ui.utilities.QRCodeAnalyser
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -91,7 +92,9 @@ class FindEventScreenTest {
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
-    assertTrue(findViewModel.uiState.value.loading)
+    // Should be false because the user is not logged in so it will not trigger the joinEvent
+    // function
+    assertFalse(findViewModel.uiState.value.loading)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
