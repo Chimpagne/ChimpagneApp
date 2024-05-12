@@ -184,19 +184,25 @@ class ChimpagneAccountManager(
     val updatedAccount =
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents + (id to true))
     when (role) {
-      ChimpagneRole.GUEST ->
+      ChimpagneRole.GUEST -> {
+          Log.d("h", "Hello I am a guest!!!!!!!!!!!!!!")
           eventManager.atomic.addGuest(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
-              onFailure)
+              onFailure
+          )
+      }
       ChimpagneRole.STAFF ->
           eventManager.atomic.addStaff(
               id,
               updatedAccount.firebaseAuthUID,
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
-      ChimpagneRole.OWNER -> updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+      ChimpagneRole.OWNER -> {
+          Log.d("h", "Hello I am the owner!!!!!!!!!!!!!!")
+          updateCurrentAccount(updatedAccount, onSuccess, onFailure)
+      }
       ChimpagneRole.NOT_IN_EVENT ->
           onFailure(
               Exception("Joining an event with ChimpagneRole.NOT_IN_EVENT ! Are you stupid ?"))

@@ -49,6 +49,7 @@
     <string name="find_event_near_me_toast">Localisation…</string>
     <string name="find_event_no_result">Pas de résultat</string>
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
+    <string name="joining_toast">En train de rejoindre</string>
     <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="supplies_description">Description</string>
@@ -85,5 +86,10 @@
     <string name="edit_event_toast_finish">L\'événement a été édité</string>
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
-    <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="my_events_screen_empty_past_events_list">Il n\'y a pas encore d\'Evénements passés</string>
+    <string name="join_event_failiure">Une Erreur est parvenue</string>
+    <string name="join_event_success">L\'Evénement à été rejoint avec succès</string>
+    <string name="join_event_staff">Vous êtes déjà un membre du Staff pour cet Evénement</string>
+    <string name="join_event_guest">Vous êtes déjà inscrit à cet Evénement</string>
+    <string name="join_event_owner">Vous êtes l\'Organisateur de cet Evénement</string>
 </resources>
