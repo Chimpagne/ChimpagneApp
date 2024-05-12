@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui.event.details
+package com.monkeyteam.chimpagne.ui.event.details.supplies
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -59,7 +59,6 @@ fun SuppliesScreen(
 
   var displayAddPopup by remember { mutableStateOf(false) }
   if (displayAddPopup) {
-
 //    EditSupplyDialog(
 //      supply = ChimpagneSupply(),
 //      onDismissRequest = { displayAddPopup = false },
@@ -71,54 +70,55 @@ fun SuppliesScreen(
   var displayAssignPopup by remember { mutableStateOf(false) }
   if (displayAssignPopup) {
     if (eventUiState.currentUserRole == ChimpagneRole.GUEST) {
-      GuestSupplyDialog(
-        supply = displayedSupply,
-        assignMyself = {
-          if (it) {
-            eventViewModel.assignSupplyAtomically(
-              displayedSupply.id, accountViewModelState.currentUserUID!!)
-          } else {
-            eventViewModel.unassignSupplyAtomically(
-              displayedSupply.id, accountViewModelState.currentUserUID!!)
-          }
-          displayAssignPopup = false
-          displayedSupply = ChimpagneSupply()
-        },
-        loggedUserUID = accountViewModelState.currentUserUID!!,
-        accounts = accountViewModelState.fetchedAccounts,
-        onDismissRequest = {
-          displayAssignPopup = false
-          displayedSupply = ChimpagneSupply()
-        })
+//      GuestSupplyDialog(
+//        supply = displayedSupply,
+//        assignMyself = {
+//          if (it) {
+//            eventViewModel.assignSupplyAtomically(
+//              displayedSupply.id, accountViewModelState.currentUserUID!!)
+//          } else {
+//            eventViewModel.unassignSupplyAtomically(
+//              displayedSupply.id, accountViewModelState.currentUserUID!!)
+//          }
+//          displayAssignPopup = false
+//          displayedSupply = ChimpagneSupply()
+//        },
+//        loggedUserUID = accountViewModelState.currentUserUID!!,
+//        accounts = accountViewModelState.fetchedAccounts,
+//        onDismissRequest = {
+//          displayAssignPopup = false
+//          displayedSupply = ChimpagneSupply()
+//        })
     } else {
-      StaffSupplyDialog(
-        supply = displayedSupply,
-        updateSupply = { eventViewModel.updateSupplyAtomically(it) },
-        deleteSupply = { eventViewModel.removeSupplyAtomically(displayedSupply.id) },
-        loggedUserUID = accountViewModelState.currentUserUID!!,
-        accounts = accountViewModelState.fetchedAccounts,
-        onDismissRequest = {
-          displayAssignPopup = false
-          displayedSupply = ChimpagneSupply()
-        })
+//      StaffSupplyDialog(
+//        supply = displayedSupply,
+//        updateSupply = { eventViewModel.updateSupplyAtomically(it) },
+//        deleteSupply = { eventViewModel.removeSupplyAtomically(displayedSupply.id) },
+//        loggedUserUID = accountViewModelState.currentUserUID!!,
+//        accounts = accountViewModelState.fetchedAccounts,
+//        onDismissRequest = {
+//          displayAssignPopup = false
+//          displayedSupply = ChimpagneSupply()
+//        })
     }
   }
 
   @Composable
-  fun DisplaySupplyListIfNotEmpty(listTitle: String, supplyList: List<ChimpagneSupply>, emptyText: String? = null) {
-    if (supplyList.isEmpty()) {
-      if (emptyText != null) Text(text = emptyText, modifier = Modifier.padding(12.dp, 8.dp))
-    } else {
+  fun DisplaySupplyListIfNotEmpty(listTitle: String, supplyList: List<ChimpagneSupply>) {
+    if (supplyList.isNotEmpty()) {
       Text(text = listTitle, modifier = Modifier.padding(12.dp, 8.dp))
-      supplyList.forEach { supply ->
-        SupplyCard(supply = supply) {
-          displayedSupply = supply
-          displayAssignPopup = true
+      LazyColumn {
+        supplyList.forEach { supply ->
+          item {
+            SupplyCard(supply = supply) {
+              displayedSupply = supply
+              displayAssignPopup = true
+            }
+          }
         }
       }
     }
   }
-
 
   Scaffold(
     floatingActionButton = {
@@ -143,7 +143,8 @@ fun SuppliesScreen(
       Text(
         text = stringResource(id = R.string.supplies_empty),
         modifier =
-        Modifier.fillMaxWidth()
+        Modifier
+          .fillMaxWidth()
           .fillMaxHeight()
           .padding(innerPadding)
           .wrapContentHeight(align = Alignment.CenterVertically)
@@ -151,56 +152,9 @@ fun SuppliesScreen(
         textAlign = TextAlign.Center)
     } else {
       Column(Modifier.padding(innerPadding)) {
-        LazyColumn {
-          if (suppliesAssignedToMe.isNotEmpty()) {
-            item {
-              Text(
-                stringResource(id = R.string.supplies_supply_assigned_to_you),
-                modifier = Modifier.padding(12.dp, 8.dp))
-            }
-            items(suppliesAssignedToMe.values.toList()) {
-              SupplyCard(
-                supply = it,
-                onClick = {
-                  displayAssignPopup = true
-                  displayedSupply = it
-                })
-            }
-          }
-
-          if (nonAssignedSupplies.isNotEmpty()) {
-            item {
-              Text(
-                stringResource(id = R.string.supplies_not_assigned_to_anyone),
-                modifier = Modifier.padding(12.dp, 8.dp).testTag("supply_not_assigned"))
-            }
-            items(nonAssignedSupplies.values.toList()) {
-              SupplyCard(
-                supply = it,
-                onClick = {
-                  displayAssignPopup = true
-                  displayedSupply = it
-                },
-                modifier = Modifier.testTag("supply_card"))
-            }
-          }
-
-          if (otherSupplies.isNotEmpty()) {
-            item {
-              Text(
-                stringResource(id = R.string.supplies_already_assigned),
-                modifier = Modifier.padding(12.dp, 8.dp))
-            }
-            items(otherSupplies.values.toList()) {
-              SupplyCard(
-                supply = it,
-                onClick = {
-                  displayAssignPopup = true
-                  displayedSupply = it
-                })
-            }
-          }
-        }
+        DisplaySupplyListIfNotEmpty(listTitle = stringResource(id = R.string.supplies_supply_assigned_to_you), supplyList = suppliesAssignedToMe.values.toList())
+        DisplaySupplyListIfNotEmpty(listTitle = stringResource(id = R.string.supplies_not_assigned_to_anyone), supplyList = nonAssignedSupplies.values.toList())
+        DisplaySupplyListIfNotEmpty(listTitle = stringResource(id = R.string.supplies_already_assigned), supplyList = otherSupplies.values.toList())
       }
     }
   }

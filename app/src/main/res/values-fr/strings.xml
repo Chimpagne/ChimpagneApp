@@ -100,4 +100,10 @@
 
     <string name="supplies_add_dialog_title">Ajouter une fourniture</string>
     <string name="supplies_dialog_description">Détails de la fourniture</string>
+
+    <string name="supplies_screen_title">Liste de fournitures</string>
+    <string name="supplies_empty">Aucune fourniture ajoutée !</string>
+    <string name="supplies_supply_assigned_to_you">Fournitures assignées à vous</string>
+    <string name="supplies_not_assigned_to_anyone">Fournitures assignées à personnes</string>
+    <string name="supplies_already_assigned">Fournitures déjà assignées</string>
 </resources>
