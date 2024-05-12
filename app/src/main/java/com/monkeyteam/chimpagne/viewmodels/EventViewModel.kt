@@ -33,7 +33,6 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
-
     fetchEvent(onSuccess, onFailure)
   }
 
@@ -48,20 +47,20 @@ class EventViewModel(
               if (it != null) {
                 _uiState.value =
                     EventUIState(
-                        it.id,
-                        it.title,
-                        it.description,
-                        it.location,
-                        it.public,
-                        it.tags,
-                        it.guests,
-                        it.staffs,
-                        it.startsAt(),
-                        it.endsAt(),
-                        it.supplies,
-                        it.parkingSpaces,
-                        it.beds,
-                        it.ownerId,
+                        id = it.id,
+                        title = it.title,
+                        description = it.description,
+                        location = it.location,
+                        public = it.public,
+                        tags = it.tags,
+                        guests = it.guests,
+                        staffs = it.staffs,
+                        startsAtCalendarDate = it.startsAt(),
+                        endsAtCalendarDate = it.endsAt(),
+                        supplies = it.supplies,
+                        parkingSpaces = it.parkingSpaces,
+                        beds = it.beds,
+                        ownerId = it.ownerId,
                         socialMediaLinks = it.socialMediaLinks)
                 _uiState.value =
                     _uiState.value.copy(
@@ -76,7 +75,6 @@ class EventViewModel(
             },
             {
               Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
-
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             })
@@ -163,7 +161,6 @@ class EventViewModel(
   }
 
   fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
@@ -274,6 +271,75 @@ class EventViewModel(
 
   fun getCurrentUserRole(): ChimpagneRole {
     return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+
+  fun promoteGuestToStaff(
+      uid: ChimpagneAccountUID,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+
+    eventManager.atomic.removeGuest(
+        _uiState.value.id,
+        uid,
+        {
+          eventManager.atomic.addStaff(
+              _uiState.value.id,
+              uid,
+              {
+                _uiState.value =
+                    _uiState.value.copy(
+                        guests = _uiState.value.guests - uid,
+                        staffs = _uiState.value.staffs + (uid to true),
+                        loading = false)
+                onSuccess()
+              },
+              {
+                Log.d("ADDED STAFF TO STAFF LIST", "Error : ", it)
+                _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(it)
+              })
+        },
+        {
+          Log.d("REMOVE GUEST FROM GUEST LIST", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+        })
+  }
+
+  fun demoteStaffToGuest(
+      uid: ChimpagneAccountUID,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+
+    eventManager.atomic.removeStaff(
+        _uiState.value.id,
+        uid,
+        {
+          eventManager.atomic.addGuest(
+              _uiState.value.id,
+              uid,
+              {
+                _uiState.value =
+                    _uiState.value.copy(
+                        guests = _uiState.value.guests + (uid to true),
+                        staffs = _uiState.value.staffs - uid,
+                        loading = false)
+                onSuccess()
+              },
+              {
+                Log.d("ADDED GUEST TO GUEST LIST", "Error : ", it)
+                _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(it)
+              })
+        },
+        {
+          Log.d("REMOVE STAFF FROM STAFF LIST", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+        })
   }
 
   data class EventUIState(
@@ -303,6 +369,4 @@ class EventViewModel(
       ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       return EventViewModel(eventID, database) as T
-    }
-  }
 }

@@ -117,9 +117,23 @@ class ChimpagneEventManager(
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
     events
         .document(id)
-        .delete()
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
+        .get()
+        .addOnSuccessListener { it ->
+          val event = it.toObject<ChimpagneEvent>()
+          if (event != null) {
+            val users =
+                listOf(event.ownerId) + event.staffs.keys.toList() + event.guests.keys.toList()
+            users.forEach { userUID ->
+              database.accountManager.atomic.leaveEvent(userUID, id, {}, {})
+            }
+          }
+          events
+              .document(id)
+              .delete()
+              .addOnSuccessListener { onSuccess() }
+              .addOnFailureListener { onFailure(it) }
+        }
+        .addOnFailureListener(onFailure)
   }
 
   fun getEvents(
