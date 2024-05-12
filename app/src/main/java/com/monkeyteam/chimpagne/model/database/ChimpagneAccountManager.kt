@@ -17,6 +17,8 @@ class ChimpagneAccountManager(
     private val profilePictures: StorageReference
 ) {
 
+  val atomic = AtomicChimpagneAccountManager(database, accounts, profilePictures)
+
   /**
    * This field stores the current logged user's account, you can retrieve it from any class using
    *
@@ -85,12 +87,12 @@ class ChimpagneAccountManager(
   }
 
   fun getAccounts(
-      uidList: List<ChimpagneAccountUID>,
+      uids: List<ChimpagneAccountUID>,
       onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
-        uidList.map { (it to accounts.document(it).get()) }.toMap()
+        uids.associate { (it to accounts.document(it).get()) }
     Tasks.whenAllComplete(tasks.values)
         .addOnSuccessListener {
           val results =

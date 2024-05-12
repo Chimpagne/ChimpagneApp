@@ -24,6 +24,7 @@ import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
+import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
@@ -166,6 +167,23 @@ class MainActivity : ComponentActivity() {
                   onJoinClick = {
                     navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
                   })
+            }
+            composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent({
+                accountViewModel.fetchAccounts(
+                    listOf(eventViewModel.uiState.value.ownerId) +
+                        eventViewModel.uiState.value.staffs.keys.toList() +
+                        eventViewModel.uiState.value.guests.keys.toList())
+              })
+              ManageStaffScreen(
+                  navObject = navActions,
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel)
             }
           }
         }

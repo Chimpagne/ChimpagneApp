@@ -31,8 +31,9 @@ class AccountManagerTests {
         {
           result = it
           loading = false
-        },
-        { assertTrue(false) })
+        }) {
+          assertTrue(false)
+        }
     while (loading) {}
 
     assertEquals(TEST_ACCOUNTS[0], result["PRINCE"])

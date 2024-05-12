@@ -56,11 +56,11 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
           navObject.navigateTo(Route.LOADING)
           accountViewModel.submitUpdatedAccount(
               onSuccess = {
-                navObject.navigateTo(Route.HOME_SCREEN)
+                navObject.clearAndNavigateTo(Route.HOME_SCREEN, true)
                 Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
               },
               onFailure = {
-                navObject.navigateTo(Route.LOGIN_SCREEN)
+                navObject.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
                 Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
               })
         } else {

@@ -28,6 +28,7 @@ import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
@@ -88,10 +89,6 @@ fun ViewDetailEventScreen(
   val context = LocalContext.current
 
   var showDialog by remember { mutableStateOf(false) }
-
-  // val ownerID = uiState.ownerId
-  // val ownerAccount = accountsState.fetchedAccounts[ownerID]
-
   Scaffold(
       topBar = {
         TopAppBar(
@@ -404,6 +401,22 @@ fun ViewDetailEventScreen(
                                           .testTag("edit"),
                                   onClick = {
                                     navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                  })
+                              Spacer(Modifier.height(16.dp))
+                              ChimpagneButton(
+                                  text =
+                                      stringResource(
+                                          id = R.string.event_details_screen_manage_staff_button),
+                                  icon = Icons.Rounded.PeopleAlt,
+                                  fontWeight = FontWeight.Bold,
+                                  fontSize = 24.sp,
+                                  modifier =
+                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                          .fillMaxWidth()
+                                          .testTag("manage staff"),
+                                  onClick = {
+                                    navObject.navigateTo(
+                                        Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                                   })
                             }
                             Spacer(Modifier.height(16.dp))

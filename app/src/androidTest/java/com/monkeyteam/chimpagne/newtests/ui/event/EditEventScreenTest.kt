@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.newtests.ui.event
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -44,7 +45,7 @@ class ButtonToastTest {
       EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
 
-    composeTestRule.onNodeWithTag("save_changes_button").performClick()
+    composeTestRule.onNodeWithTag("last_button").performClick()
     //  toasts are not composable in nature, which makes them difficult to test within the Jetpack
     // Compose framework.
   }
@@ -178,8 +179,8 @@ class EditEventScreenTestTest {
       val navActions = NavigationActions(navController)
       EditEventScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
     }
-    composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("logistics_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("parking_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("beds_title").assertIsDisplayed()
   }
 }
