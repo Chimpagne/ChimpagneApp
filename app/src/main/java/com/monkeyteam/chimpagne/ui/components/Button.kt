@@ -106,13 +106,6 @@ fun GoBackButton(navigationActions: NavigationActions) {
   }
 }
 
-/**
- * SocialButton is a button that can be used to link to social media platforms.
- *
- * @param imageLogo The image resource of the social media platform.
- * @param urlAsString The URL to the social media platform, make sure to use https://.
- * @param context The context of the activity.
- */
 @Composable
 fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag: String) {
   Image(
@@ -127,44 +120,19 @@ fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag:
               .testTag(testTag))
 }
 
-/**
- * SocialButtonRow is a row of social buttons that can be used to link to social media platforms.
- *
- * @param context The context of the activity.
- * @param discordURL The URL to the discord platform, make sure to use https://.
- * @param telegramURL The URL to the telegram platform, make sure to use https://.
- * @param whatsappURL The URL to the whatsapp platform, make sure to use https://.
- */
 @Composable
-fun SocialButtonRow(
-    context: Context,
-    discordURL: String = "",
-    telegramURL: String = "",
-    whatsappURL: String = "",
-) {
+fun SocialButtonRow(context: Context, socialMediaLinks: Map<String, SocialMedia>) {
   Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        if (discordURL.isNotEmpty()) {
-          SocialButton(
-              imageLogo = com.monkeyteam.chimpagne.R.drawable.discord,
-              urlAsString = discordURL,
-              context = context,
-              testTag = "Discord_Button")
-        }
-        if (telegramURL.isNotEmpty()) {
-          SocialButton(
-              imageLogo = com.monkeyteam.chimpagne.R.drawable.telegram,
-              urlAsString = telegramURL,
-              context = context,
-              testTag = "Telegram_Button")
-        }
-        if (whatsappURL.isNotEmpty()) {
-          SocialButton(
-              imageLogo = com.monkeyteam.chimpagne.R.drawable.whatsapp,
-              urlAsString = whatsappURL,
-              context = context,
-              testTag = "Whatsapp_Button")
+        for (socialMedia in socialMediaLinks.values) {
+          if (socialMedia.chosenGroupUrl.isNotEmpty()) {
+            SocialButton(
+                imageLogo = socialMedia.iconResource,
+                urlAsString = socialMedia.chosenGroupUrl,
+                context = context,
+                testTag = socialMedia.testTag)
+          }
         }
       }
 }

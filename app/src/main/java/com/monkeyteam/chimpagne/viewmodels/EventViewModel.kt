@@ -11,6 +11,8 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.components.SocialMedia
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -262,11 +264,16 @@ class EventViewModel(
     return buildChimpagneEvent().getRole(userUID)
   }
 
-  fun updateSocialMediaLink(link: Pair<String, String>) {
-    _uiState.value = _uiState.value.copy(socialMediaLinks = _uiState.value.socialMediaLinks + link)
-    fun getCurrentUserRole(): ChimpagneRole {
-      return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
-    }
+  fun updateSocialMediaLink(updatedSocialMedia: SocialMedia) {
+    _uiState.value =
+        _uiState.value.copy(
+            socialMediaLinks =
+                _uiState.value.socialMediaLinks +
+                    (updatedSocialMedia.platformName to updatedSocialMedia))
+  }
+
+  fun getCurrentUserRole(): ChimpagneRole {
+    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
   }
 
   data class EventUIState(
@@ -288,8 +295,8 @@ class EventViewModel(
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
       val loading: Boolean = false,
-      val socialMediaLinks: Map<String, String> =
-          mapOf("discord" to "", "telegram" to "", "whatsapp" to "")
+      val socialMediaLinks: Map<String, SocialMedia> =
+          SupportedSocialMedia.associateBy { it.platformName }
   )
 
   class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :

@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui.social
+package com.monkeyteam.chimpagne.ui.event
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -12,15 +12,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.SocialMedia
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @Composable
 fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  var discordUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("discord")) }
-  var telegramUrl by remember { mutableStateOf(uiState.socialMediaLinks.getValue("telegram")) }
-  var whatsappURL by remember { mutableStateOf(uiState.socialMediaLinks.getValue("whatsapp")) }
+  val socialMediaStates =
+      remember(uiState.socialMediaLinks) {
+        uiState.socialMediaLinks.mapValues { mutableStateOf(it.value.platformName) }
+      }
 
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
@@ -29,84 +31,53 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.testTag("social_media_title"))
     Spacer(modifier = Modifier.height(16.dp))
 
-    SocialMediaTextField(
-        url = discordUrl,
-        onUrlChange = { discordUrl = it },
-        labelResource = R.string.discord_group_invite_link,
-        iconResource = R.drawable.discord,
-        testTag = "discord_input",
-        updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platformName = "discord",
-        platformUrl = "https://discord.gg/")
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SocialMediaTextField(
-        url = telegramUrl,
-        onUrlChange = { telegramUrl = it },
-        labelResource = R.string.telegram_group_invite_link,
-        iconResource = R.drawable.telegram,
-        testTag = "telegram_input",
-        updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platformName = "telegram",
-        platformUrl = "https://t.me/")
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    SocialMediaTextField(
-        url = whatsappURL,
-        onUrlChange = { whatsappURL = it },
-        labelResource = R.string.whatsapp_group_invite_link,
-        iconResource = R.drawable.whatsapp,
-        testTag = "whatsapp_input",
-        updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) },
-        platformName = "whatsapp",
-        platformUrl = "https://chat.whatsapp.com/")
+    for ((platform) in socialMediaStates) {
+      SocialMediaTextField(
+          socialMedia = uiState.socialMediaLinks[platform]!!,
+          updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) })
+      Spacer(modifier = Modifier.height(16.dp))
+    }
   }
 }
 
 @Composable
 private fun SocialMediaTextField(
-    url: String,
-    onUrlChange: (String) -> Unit,
-    labelResource: Int,
-    iconResource: Int,
-    testTag: String,
-    updateSocialMediaLink: (Pair<String, String>) -> Unit,
-    platformName: String,
-    platformUrl: String
+    socialMedia: SocialMedia,
+    updateSocialMediaLink: (SocialMedia) -> Unit,
 ) {
-  val iconPainter: Painter = painterResource(id = iconResource)
+  val iconPainter: Painter = painterResource(id = socialMedia.iconResource)
   var hasError by remember { mutableStateOf(false) }
+  var currentChosenUrl by remember { mutableStateOf(socialMedia.chosenGroupUrl) }
 
   OutlinedTextField(
-      value = url,
+      value = currentChosenUrl,
       onValueChange = { newUrl ->
-        onUrlChange(newUrl)
-        hasError = (!newUrl.startsWith(platformUrl) and newUrl.isNotEmpty())
-        if (!hasError) {
-          updateSocialMediaLink(Pair(platformName, newUrl))
-        }
+        currentChosenUrl = newUrl
+        hasError = (!newUrl.startsWith(socialMedia.platformUrl) and newUrl.isNotEmpty())
+        updateSocialMediaLink(
+            socialMedia.copy(
+                chosenGroupUrl =
+                    if (!hasError) createFullUrl(socialMedia.platformUrl, newUrl) else ""))
       },
-      label = { Text(stringResource(id = labelResource)) },
+      label = { Text(stringResource(id = socialMedia.labelResource)) },
       leadingIcon = {
         Image(
             painter = iconPainter,
-            contentDescription = platformName,
+            contentDescription = socialMedia.platformName,
             modifier = Modifier.size(35.dp))
       },
       keyboardOptions = KeyboardOptions.Default,
-      modifier = Modifier.fillMaxWidth().testTag(testTag))
+      modifier = Modifier.fillMaxWidth().testTag(socialMedia.testTag))
 
   if (hasError) {
     Text(
-        "Invalid URL. Must start with: $platformUrl or be empty",
+        "Invalid URL. Must start with: ${socialMedia.platformUrl} or be empty",
         color = MaterialTheme.colorScheme.error,
         style = MaterialTheme.typography.bodySmall,
         modifier = Modifier.padding(start = 16.dp, top = 4.dp))
   }
 }
 
-private fun createFullUrl(platform: String, url: String): String {
-  return if (url.isEmpty()) "" else "$platform$url"
+private fun createFullUrl(platformUrl: String, url: String): String {
+  return if (url.isEmpty()) "" else platformUrl + url.removePrefix(platformUrl)
 }

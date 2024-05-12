@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -16,6 +17,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -244,17 +246,12 @@ class EventCreationScreenTest {
 
     composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
 
-    val testDiscord = "test discord"
-    composeTestRule.onNodeWithTag("discord_input").assertExists()
-    composeTestRule.onNodeWithTag("discord_input").performTextInput(testDiscord)
-
-    val testTelegram = "test telegram"
-    composeTestRule.onNodeWithTag("telegram_input").assertExists()
-    composeTestRule.onNodeWithTag("telegram_input").performTextInput(testTelegram)
-
-    val testWhatsapp = "test whatsapp"
-    composeTestRule.onNodeWithTag("whatsapp_input").assertExists()
-    composeTestRule.onNodeWithTag("whatsapp_input").performTextInput(testWhatsapp)
+    for (sm in SupportedSocialMedia) {
+      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertIsDisplayed()
+      val testInput = "test ${sm.testTag}"
+      composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
+      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
+    }
 
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
   }

@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -66,8 +67,10 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
   val context = LocalContext.current
-
   var showDialog by remember { mutableStateOf(false) }
+
+  // Otherwise delayed loading of edit event changes
+  LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   Scaffold(
       topBar = {
@@ -150,11 +153,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     .testTag("description"))
                         Spacer(Modifier.height(16.dp))
                         SocialButtonRow(
-                            context = context,
-                            discordURL = uiState.socialMediaLinks["discord"]!!,
-                            telegramURL = uiState.socialMediaLinks["telegram"]!!,
-                            whatsappURL = uiState.socialMediaLinks["whatsapp"]!!,
-                        )
+                            context = context, socialMediaLinks = uiState.socialMediaLinks)
                         Spacer(Modifier.height(16.dp))
                         if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 

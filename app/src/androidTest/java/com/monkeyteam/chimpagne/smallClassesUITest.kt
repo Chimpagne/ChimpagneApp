@@ -18,6 +18,7 @@ import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.SocialButton
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import java.util.Calendar
 import java.util.Locale
@@ -219,32 +220,38 @@ class TestSocialButtonConstructs {
 
   @Test
   fun AllThreeDisplayed() {
+    val mapSocialMedia = SupportedSocialMedia.associateBy { it.platformName }
+    val filledInSocialMedia =
+        mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
     composeTestRule.setContent {
-      SocialButtonRow(
-          context = context,
-          discordURL = "https://discord.gg/",
-          telegramURL = "https://t.me/",
-          whatsappURL = "https://chat.whatsapp.com/")
+      SocialButtonRow(context = context, socialMediaLinks = filledInSocialMedia)
     }
-
-    composeTestRule.onNodeWithTag("Telegram_Button").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("Whatsapp_Button").assertExists().isDisplayed()
+    composeTestRule.waitForIdle()
+    composeTestRule.onNodeWithTag("discord_input").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("whatsapp_input").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
   }
 
   @Test
   fun OnlyTelegramDisplayed() {
-    composeTestRule.setContent { SocialButtonRow(context = context, telegramURL = "https://t.me/") }
-    composeTestRule.onNodeWithTag("Telegram_Button").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("Whatsapp_Button").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
+    val socialMediaMap = SupportedSocialMedia.associateBy { it.platformName }
+    val telegramMap =
+        mapOf(socialMediaMap["telegram"]!!.platformName to socialMediaMap["telegram"]!!)
+    val withValueMap =
+        telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+    composeTestRule.setContent {
+      SocialButtonRow(context = context, socialMediaLinks = withValueMap)
+    }
+    composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
   }
 
   @Test
   fun NoneDisplayed() {
-    composeTestRule.setContent { SocialButtonRow(context = context) }
-    composeTestRule.onNodeWithTag("Discord_Button").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("Whatsapp_Button").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("Telegram_Button").assertDoesNotExist()
+    composeTestRule.setContent { SocialButtonRow(context = context, socialMediaLinks = emptyMap()) }
+    composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("telegram_input").assertDoesNotExist()
   }
 }
