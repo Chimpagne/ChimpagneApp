@@ -13,6 +13,6 @@ class ChimpagneEventTest {
             ownerId = "banana",
             staffs = mapOf("1" to true, "2" to true, "3" to true),
             guests = mapOf("4" to true))
-    assertEquals(setOf("banana", "1", "2", "3", "4"), event.getUserSet())
+    assertEquals(setOf("banana", "1", "2", "3", "4"), event.userSet())
   }
 }
