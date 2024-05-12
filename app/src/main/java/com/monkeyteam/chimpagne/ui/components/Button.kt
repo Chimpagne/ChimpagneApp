@@ -1,7 +1,12 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,10 +30,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import java.util.Locale
@@ -96,4 +104,35 @@ fun GoBackButton(navigationActions: NavigationActions) {
         contentDescription = "Go Back",
         tint = MaterialTheme.colorScheme.onSurface)
   }
+}
+
+@Composable
+fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag: String) {
+  Image(
+      painter = painterResource(id = imageLogo),
+      contentDescription = "Social Button",
+      modifier =
+          Modifier.size(55.dp)
+              .clickable {
+                val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(urlAsString))
+                context.startActivity(urlIntent)
+              }
+              .testTag(testTag))
+}
+
+@Composable
+fun SocialButtonRow(context: Context, socialMediaLinks: Map<String, SocialMedia>) {
+  Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        for (socialMedia in socialMediaLinks.values) {
+          if (socialMedia.chosenGroupUrl.isNotEmpty()) {
+            SocialButton(
+                imageLogo = socialMedia.iconResource,
+                urlAsString = socialMedia.chosenGroupUrl,
+                context = context,
+                testTag = socialMedia.testTag)
+          }
+        }
+      }
 }

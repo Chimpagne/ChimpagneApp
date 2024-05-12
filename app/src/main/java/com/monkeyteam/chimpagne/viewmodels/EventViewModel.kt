@@ -11,6 +11,8 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.components.SocialMedia
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +46,7 @@ class EventViewModel(
             {
               if (it != null) {
                 _uiState.value =
-                    _uiState.value.copy(
+                    EventUIState(
                         id = it.id,
                         title = it.title,
                         description = it.description,
@@ -58,7 +60,8 @@ class EventViewModel(
                         supplies = it.supplies,
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
-                        ownerId = it.ownerId)
+                        ownerId = it.ownerId,
+                        socialMediaLinks = it.socialMediaLinks)
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
@@ -99,7 +102,8 @@ class EventViewModel(
         ownerId = _uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
-        beds = _uiState.value.beds)
+        beds = _uiState.value.beds,
+        socialMediaLinks = _uiState.value.socialMediaLinks)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -257,6 +261,18 @@ class EventViewModel(
     return buildChimpagneEvent().getRole(userUID)
   }
 
+  fun updateSocialMediaLink(updatedSocialMedia: SocialMedia) {
+    _uiState.value =
+        _uiState.value.copy(
+            socialMediaLinks =
+                _uiState.value.socialMediaLinks +
+                    (updatedSocialMedia.platformName to updatedSocialMedia))
+  }
+
+  fun getCurrentUserRole(): ChimpagneRole {
+    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+  }
+
   fun promoteGuestToStaff(
       uid: ChimpagneAccountUID,
       onSuccess: () -> Unit = {},
@@ -326,31 +342,34 @@ class EventViewModel(
           onFailure(it)
         })
   }
-}
 
-data class EventUIState(
-    val id: String = "",
-    val title: String = "",
-    val description: String = "",
-    val location: Location = Location(),
-    val public: Boolean = false,
-    val tags: List<String> = emptyList(),
-    val guests: Map<String, Boolean> = emptyMap(),
-    val staffs: Map<String, Boolean> = emptyMap(),
-    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
-    val parkingSpaces: Int = 0,
-    val beds: Int = 0,
-    // unmodifiable by the UI
-    val ownerId: ChimpagneAccountUID = "",
-    val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-    val loading: Boolean = false
-)
+  data class EventUIState(
+      val id: String = "",
+      val title: String = "",
+      val description: String = "",
+      val location: Location = Location(),
+      val public: Boolean = false,
+      val tags: List<String> = emptyList(),
+      val guests: Map<String, Boolean> = emptyMap(),
+      val staffs: Map<String, Boolean> = emptyMap(),
+      val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
+      val parkingSpaces: Int = 0,
+      val beds: Int = 0,
 
-class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
-    ViewModelProvider.Factory {
-  override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return EventViewModel(eventID, database) as T
+      // unmodifiable by the UI
+      val ownerId: ChimpagneAccountUID = "",
+      val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
+      val loading: Boolean = false,
+      val socialMediaLinks: Map<String, SocialMedia> =
+          SupportedSocialMedia.associateBy { it.platformName }
+  )
+
+  class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
+      ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+      return EventViewModel(eventID, database) as T
+    }
   }
 }

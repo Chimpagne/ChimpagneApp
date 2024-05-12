@@ -43,6 +43,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +71,7 @@ import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
+import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -83,6 +85,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
   val context = LocalContext.current
 
   var showDialog by remember { mutableStateOf(false) }
+
+  // Otherwise event doesn't directly load
+  LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   Scaffold(
       topBar = {
@@ -258,7 +263,7 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                         Text(
                                             text =
                                                 "${uiState.guests.count()} ${stringResource(
-                                  id = R.string.event_details_screen_number_of_guests)}",
+                                        id = R.string.event_details_screen_number_of_guests)}",
                                             fontFamily = ChimpagneFontFamily,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -359,7 +364,8 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
 
                             // MAP WILL BE ADDED HERE
 
-                            // SOCIAL LINKS WILL BE ADDED HERE
+                            SocialButtonRow(
+                                context = context, socialMediaLinks = uiState.socialMediaLinks)
 
                             if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 

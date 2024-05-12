@@ -56,7 +56,6 @@
     <string name="supplies_unit">Unité</string>
     <string name="chimpagne_cancel">Annuler</string>
     <string name="chimpagne_add">Ajouter</string>
-
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
@@ -85,6 +84,10 @@
     <string name="edit_event">Editer l\'événement</string>
     <string name="edit_event_toast_finish">L\'événement a été édité</string>
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
+    <string name="telegram_group_invite_link">Lien d\'invitation au groupe Telegram</string>
+    <string name="whatsapp_group_invite_link">Lien d\'invitation au groupe Whatsapp</string>
+    <string name="discord_group_invite_link">Lien d\'invitation au groupe Discord</string>
+    <string name="links_to_social_media">Ajouter vos groupes de médias sociaux</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
     <string name="manage_staff_screen_title">Gérer le personnel</string>
