@@ -16,29 +16,29 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 
 @Composable
 fun SupplyDialogAccountEntry(
-  account: ChimpagneAccount?,
-  loggedUserUID: ChimpagneAccountUID,
-  showCheckBox: Boolean = false,
-  checked: Boolean = false,
-  onCheck: (Boolean) -> Unit = {}
+    account: ChimpagneAccount?,
+    loggedUserUID: ChimpagneAccountUID,
+    showCheckBox: Boolean = false,
+    checked: Boolean = false,
+    onCheck: (Boolean) -> Unit = {}
 ) {
   ListItem(
-    headlineContent = {
-      Text(
-        text =
-        "${account?.firstName} ${account?.lastName}" +
-                if (account!!.firebaseAuthUID == loggedUserUID)
-                  " (${stringResource(id = R.string.chimpagne_you)})"
-                else "")
-    },
-    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-    trailingContent = {
-      if (showCheckBox) {
-        Checkbox(
-          checked = checked,
-          onCheckedChange = onCheck,
-          modifier = Modifier.testTag("supply_account_checkbox"))
-      }
-    },
-    modifier = Modifier.clickable { onCheck(!checked) }.testTag("supply_account_entry"))
+      headlineContent = {
+        Text(
+            text =
+                "${account?.firstName} ${account?.lastName}" +
+                    if (account!!.firebaseAuthUID == loggedUserUID)
+                        " (${stringResource(id = R.string.chimpagne_you)})"
+                    else "")
+      },
+      colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+      trailingContent = {
+        if (showCheckBox) {
+          Checkbox(
+              checked = checked,
+              onCheckedChange = onCheck,
+              modifier = Modifier.testTag("supply_account_checkbox"))
+        }
+      },
+      modifier = Modifier.clickable { onCheck(!checked) }.testTag("supply_account_entry"))
 }

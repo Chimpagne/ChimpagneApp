@@ -19,22 +19,22 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 @Composable
 fun SupplyCard(supply: ChimpagneSupply, modifier: Modifier = Modifier, onClick: () -> Unit) {
   Card(
-    modifier =
-    modifier
-      .clickable { onClick() }
-      .padding(horizontal = 16.dp, vertical = 8.dp)
-      .fillMaxWidth(),
-    shape = RoundedCornerShape(16.dp),
-    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
-    Row(
-      horizontalArrangement = Arrangement.SpaceBetween,
-      modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-      Text(
-        text = "${supply.quantity} ${supply.unit}",
-        modifier = Modifier.testTag("supply_quantity_and_unit"))
-      Text(
-        text = "${supply.assignedTo.keys.size} assigned",
-        modifier = Modifier.testTag("supply_nb_assigned"))
-    }
-  }
+      modifier =
+          modifier
+              .clickable { onClick() }
+              .padding(horizontal = 16.dp, vertical = 8.dp)
+              .fillMaxWidth(),
+      shape = RoundedCornerShape(16.dp),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+              Text(
+                  text = "${supply.quantity} ${supply.unit}",
+                  modifier = Modifier.testTag("supply_quantity_and_unit"))
+              Text(
+                  text = "${supply.assignedTo.keys.size} assigned",
+                  modifier = Modifier.testTag("supply_nb_assigned"))
+            }
+      }
 }
