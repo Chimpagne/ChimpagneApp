@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class SupplyComponentsUITest {
+class SupplyComponentsUITests {
 
   @get:Rule val composeTestRule = createComposeRule()
 

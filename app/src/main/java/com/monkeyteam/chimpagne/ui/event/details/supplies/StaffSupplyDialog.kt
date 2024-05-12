@@ -37,13 +37,17 @@ fun StaffSupplyDialog(
         onDismissRequest = { displayDeleteSupplyDialog = false },
         buttonDataList =
             listOf(
-                ButtonData(stringResource(id = R.string.chimpagne_cancel)) {
-                  displayDeleteSupplyDialog = false
-                },
-                ButtonData(stringResource(id = R.string.chimpagne_confirm)) {
-                  deleteSupply()
-                  onDismissRequest()
-                }))
+                ButtonData(
+                    stringResource(id = R.string.chimpagne_cancel),
+                    modifier = Modifier.testTag("cancel_delete_button")) {
+                      displayDeleteSupplyDialog = false
+                    },
+                ButtonData(
+                    stringResource(id = R.string.chimpagne_confirm),
+                    modifier = Modifier.testTag("confirm_delete_button")) {
+                      deleteSupply()
+                      onDismissRequest()
+                    }))
   }
 
   var displayEditSupplyDialog by remember { mutableStateOf(false) }
@@ -62,20 +66,26 @@ fun StaffSupplyDialog(
       buttonDataList =
           listOf(
               ButtonData(
-                  stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest),
+                  stringResource(id = R.string.chimpagne_cancel),
+                  onClick = onDismissRequest,
+                  modifier = Modifier.testTag("cancel_supply_button")),
               ButtonData(
                   stringResource(id = R.string.chimpagne_delete),
-              ) {
-                displayDeleteSupplyDialog = true
-              },
-              ButtonData(stringResource(id = R.string.chimpagne_edit)) {
-                displayEditSupplyDialog = true
-              },
-              ButtonData(stringResource(id = R.string.chimpagne_save)) {
-                displayEditSupplyDialog = false
-                updateSupply(tempSupply)
-                onDismissRequest()
-              })) {
+                  modifier = Modifier.testTag("delete_supply_button")) {
+                    displayDeleteSupplyDialog = true
+                  },
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_edit),
+                  modifier = Modifier.testTag("edit_supply_button")) {
+                    displayEditSupplyDialog = true
+                  },
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_save),
+                  modifier = Modifier.testTag("save_supply_button")) {
+                    displayEditSupplyDialog = false
+                    updateSupply(tempSupply)
+                    onDismissRequest()
+                  })) {
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
           if (tempSupply.assignedTo.keys.isEmpty()) {
             item { Text(stringResource(id = R.string.supplies_supply_not_assigned)) }
