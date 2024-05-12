@@ -185,7 +185,6 @@ class ChimpagneAccountManager(
         currentUserAccount!!.copy(joinedEvents = currentUserAccount!!.joinedEvents + (id to true))
     when (role) {
       ChimpagneRole.GUEST -> {
-        Log.d("h", "Hello I am a guest!!!!!!!!!!!!!!")
         eventManager.atomic.addGuest(
             id,
             updatedAccount.firebaseAuthUID,
@@ -199,7 +198,6 @@ class ChimpagneAccountManager(
               { updateCurrentAccount(updatedAccount, onSuccess, onFailure) },
               onFailure)
       ChimpagneRole.OWNER -> {
-        Log.d("h", "Hello I am the owner!!!!!!!!!!!!!!")
         updateCurrentAccount(updatedAccount, onSuccess, onFailure)
       }
       ChimpagneRole.NOT_IN_EVENT ->
