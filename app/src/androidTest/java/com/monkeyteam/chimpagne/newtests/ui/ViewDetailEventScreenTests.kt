@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
@@ -14,6 +15,7 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
 import org.junit.Rule
@@ -38,7 +40,8 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, EventViewModel(testEventId, database))
+      ViewDetailEventScreen(
+          navActions, EventViewModel(testEventId, database), AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
@@ -58,7 +61,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
@@ -79,7 +82,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("go back").assertHasClickAction()
@@ -98,11 +101,14 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("leave").assertHasClickAction()
-    composeTestRule.onNodeWithTag("leave").performClick()
+    composeTestRule
+        .onNodeWithTag("leave")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 
   @Test
@@ -118,14 +124,14 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("edit").assertHasClickAction()
+    composeTestRule.onNodeWithTag("edit").assertIsDisplayed().assertHasClickAction()
   }
 
   @Test
-  fun testChatButton() {
+  fun testBedButton() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -135,14 +141,14 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("chat").assertHasClickAction()
+    composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction()
   }
 
   @Test
-  fun testLocationButton() {
+  fun testParkingButton() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -152,10 +158,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("location").assertHasClickAction()
+    composeTestRule.onNodeWithTag("parking").assertHasClickAction()
   }
 
   @Test
@@ -169,7 +175,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("supplies").assertHasClickAction()
@@ -186,7 +192,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("polls").assertHasClickAction()
@@ -203,7 +209,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("car pooling").assertHasClickAction()
@@ -220,7 +226,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()

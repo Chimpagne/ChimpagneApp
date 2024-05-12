@@ -74,9 +74,11 @@
     <string name="event_details_screen_manage_staff_button">Manage staff</string>
     <string name="event_details_screen_chat_button">Chat</string>
     <string name="event_details_screen_location_button">Location</string>
+    <string name="event_details_screen_bed_reservation">Bed Reservation</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
     <string name="event_details_screen_voting_button">Polls and voting</string>
     <string name="event_details_screen_car_pooling_button">Car pooling</string>
+    <string name="event_details_screen_parking">Parking</string>
     <string name="supplies_description">Description</string>
     <string name="supplies_quantity">Quantity</string>
     <string name="supplies_unit">Unit</string>
