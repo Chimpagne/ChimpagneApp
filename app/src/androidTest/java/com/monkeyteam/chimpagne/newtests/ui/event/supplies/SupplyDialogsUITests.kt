@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.newtests.ui.event.supplies
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
@@ -68,7 +69,7 @@ class SupplyDialogsUITests {
 
   @Test
   fun staffSupplyDialogTest() {
-    val supply = ChimpagneSupply()
+    val supply = ChimpagneSupply(assignedTo = mapOf("hector" to true))
 
     var dismissRequested = false
     var deleteButtonClicked = false
@@ -79,9 +80,11 @@ class SupplyDialogsUITests {
           { editButtonClicked = true },
           { deleteButtonClicked = true },
           "hector",
-          hashMapOf("hector" to ChimpagneAccount("hector")),
+          hashMapOf("hector" to ChimpagneAccount("hector"), "monkey" to ChimpagneAccount("monkey", "Monkey", "Prince")),
           onDismissRequest = { dismissRequested = true })
     }
+
+    composeTestRule.onNodeWithText("Monkey Prince", useUnmergedTree = true).performClick()
 
     composeTestRule.onNodeWithTag("cancel_supply_button").performClick()
     assertTrue(dismissRequested)
