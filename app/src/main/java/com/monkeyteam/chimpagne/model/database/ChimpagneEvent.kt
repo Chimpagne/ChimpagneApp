@@ -53,8 +53,8 @@ data class ChimpagneEvent(
     return ChimpagneRole.NOT_IN_EVENT
   }
 
-  fun getUserList(): List<ChimpagneAccountUID> {
-    return listOf(ownerId) + staffList() + guestList()
+  fun getUserSet(): Set<ChimpagneAccountUID> {
+    return setOf(ownerId) + staffList() + guestList()
   }
 
   constructor(
