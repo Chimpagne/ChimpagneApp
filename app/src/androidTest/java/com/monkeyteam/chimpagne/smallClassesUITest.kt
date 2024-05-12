@@ -271,31 +271,6 @@ class TestCalendar() {
     composeTestRule.onNodeWithTag("acceptButton").assertIsNotDisplayed()
 
     composeTestRule.onNodeWithTag("calendarButton").performClick()
-
-    /*    composeTestRule.waitForIdle()
-
-    composeTestRule.onNodeWithTag("rejectButton").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("acceptButton").assertIsDisplayed()
-
-    composeTestRule.onNodeWithTag("acceptButton").performClick()
-
-    assert(intentToLaunch != null)
-
-    assertEquals(Intent.ACTION_INSERT, intentToLaunch?.action)
-    assertEquals("Test Event", intentToLaunch?.getStringExtra(CalendarContract.Events.TITLE))
-
-    assertEquals("Test Event", intentToLaunch?.getStringExtra(CalendarContract.Events.TITLE))
-    assertEquals(
-        timestampBegin.seconds * 1000,
-        intentToLaunch?.getLongExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, -1))
-    assertEquals(
-        timestampEnd.seconds * 1000,
-        intentToLaunch?.getLongExtra(CalendarContract.EXTRA_EVENT_END_TIME, -1))
-    assertEquals("42.3,6.8", intentToLaunch?.getStringExtra(CalendarContract.Events.EVENT_LOCATION))
-    assertEquals(1440, intentToLaunch?.getIntExtra(CalendarContract.Reminders.MINUTES, -1))
-    assertEquals(
-        CalendarContract.Reminders.METHOD_ALERT,
-        intentToLaunch?.getIntExtra(CalendarContract.Reminders.METHOD, -1))*/
   }
 
   @Test
