@@ -135,17 +135,23 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
         onReject = {
           showDialog = false // Close the dialog when rejected
         },
-        context = contextMainActivity)
+        context = contextMainActivity,
+        event = event)
   }
 }
 
 @Composable
-fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, context: Context) {
+fun popUpCalendar(
+    onAccept: () -> Unit,
+    onReject: () -> Unit,
+    context: Context,
+    event: ChimpagneEvent?
+) {
   val builder =
       AlertDialog(
           onDismissRequest = { onReject() },
           title = { Text("Add to Calendar") },
-          text = { Text("Do you want to add this event to your calendar?") },
+          text = { Text("Do you want to add the event \"${event?.title}\" to your calendar?") },
           confirmButton = {
             Button(onClick = { onAccept() }, modifier = Modifier.testTag("acceptButton")) {
               Text("Yes")

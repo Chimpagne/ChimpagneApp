@@ -88,7 +88,8 @@ fun DetailScreenSheet(
           onReject = {
             showDialog = false // Close the dialog when rejected
           },
-          context = context)
+          context = context,
+          event = event)
     }
   } else {
     Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
