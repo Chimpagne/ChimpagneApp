@@ -343,6 +343,63 @@ class EventViewModel(
         })
   }
 
+  fun updateSupplyAtomically(supply: ChimpagneSupply) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.updateSupply(
+        _uiState.value.id,
+        supply,
+        {
+          _uiState.value =
+              _uiState.value.copy(
+                  supplies = _uiState.value.supplies + (supply.id to supply), loading = false)
+        },
+        {})
+  }
+
+  fun removeSupplyAtomically(supplyId: ChimpagneSupplyId) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.removeSupply(
+        _uiState.value.id,
+        supplyId,
+        {
+          _uiState.value =
+              _uiState.value.copy(supplies = _uiState.value.supplies - supplyId, loading = false)
+        },
+        {})
+  }
+
+  fun assignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.assignSupply(
+        _uiState.value.id,
+        supplyId,
+        accountUID,
+        {
+          val supply = _uiState.value.supplies[supplyId] ?: return@assignSupply
+          val newSupply = supply.copy(assignedTo = supply.assignedTo + (accountUID to true))
+          _uiState.value =
+              _uiState.value.copy(
+                  supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
+        },
+        {})
+  }
+
+  fun unassignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.unassignSupply(
+        _uiState.value.id,
+        supplyId,
+        accountUID,
+        {
+          val supply = _uiState.value.supplies[supplyId] ?: return@unassignSupply
+          val newSupply = supply.copy(assignedTo = supply.assignedTo - accountUID)
+          _uiState.value =
+              _uiState.value.copy(
+                  supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
+        },
+        {})
+  }
+
   data class EventUIState(
       val id: String = "",
       val title: String = "",
