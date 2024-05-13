@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.newtests.ui.event.supplies
 
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onNodeWithTag
@@ -47,22 +46,23 @@ class SuppliesScreenUITests {
     val accountViewModel = AccountViewModel(database)
 
     var loading = true
-    accountViewModel.loginToChimpagneAccount(ownerAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
+    accountViewModel.loginToChimpagneAccount(
+        ownerAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
 
-    eventViewModel.fetchEvent(onSuccess = {
-      accountViewModel.fetchAccounts(listOf(event.ownerId))
-    })
+    eventViewModel.fetchEvent(onSuccess = { accountViewModel.fetchAccounts(listOf(event.ownerId)) })
 
     while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading) {}
-
 
     var you = ""
     composeTestRule.setContent {
       you = stringResource(id = R.string.chimpagne_you)
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      SuppliesScreen(navObject = navActions, eventViewModel = eventViewModel, accountViewModel = accountViewModel)
+      SuppliesScreen(
+          navObject = navActions,
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("edit_supply_dialog").assertDoesNotExist()
@@ -77,17 +77,16 @@ class SuppliesScreenUITests {
 
     composeTestRule.onNodeWithTag("assigned_nobody").onChildAt(3).performClick()
     composeTestRule.onNodeWithTag("staff_supply_dialog").assertIsDisplayed()
-    composeTestRule.onNodeWithText("${ownerAccount.firstName} ${ownerAccount.lastName} ($you)", useUnmergedTree = true).performClick()
+    composeTestRule
+        .onNodeWithText(
+            "${ownerAccount.firstName} ${ownerAccount.lastName} ($you)", useUnmergedTree = true)
+        .performClick()
     composeTestRule.onNodeWithTag("save_supply_button").performClick()
     while (eventViewModel.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     composeTestRule.onNodeWithTag("assigned_you").onChildAt(0).assertIsDisplayed()
-
   }
 
-  @Test
-  fun guestViewTest() {
-
-  }
+  @Test fun guestViewTest() {}
 }

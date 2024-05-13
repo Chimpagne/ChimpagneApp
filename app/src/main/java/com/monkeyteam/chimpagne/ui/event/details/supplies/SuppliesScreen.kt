@@ -62,9 +62,7 @@ fun SuppliesScreen(
     EditSupplyDialog(
         supply = ChimpagneSupply(),
         onDismissRequest = { displayAddPopup = false },
-        onSave = {
-                      eventViewModel.updateSupplyAtomically(it)
-        })
+        onSave = { eventViewModel.updateSupplyAtomically(it) })
   }
 
   var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
@@ -75,11 +73,11 @@ fun SuppliesScreen(
           supply = displayedSupply,
           assignMyself = {
             if (it) {
-                                eventViewModel.assignSupplyAtomically(
-                                  displayedSupply.id, accountsUiState.currentUserUID!!)
+              eventViewModel.assignSupplyAtomically(
+                  displayedSupply.id, accountsUiState.currentUserUID!!)
             } else {
-                                eventViewModel.unassignSupplyAtomically(
-                                  displayedSupply.id, accountsUiState.currentUserUID!!)
+              eventViewModel.unassignSupplyAtomically(
+                  displayedSupply.id, accountsUiState.currentUserUID!!)
             }
             displayAssignPopup = false
             displayedSupply = ChimpagneSupply()
@@ -93,12 +91,8 @@ fun SuppliesScreen(
     } else {
       StaffSupplyDialog(
           supply = displayedSupply,
-          updateSupply = {
-                            eventViewModel.updateSupplyAtomically(it)
-          },
-          deleteSupply = {
-                            eventViewModel.removeSupplyAtomically(displayedSupply.id)
-          },
+          updateSupply = { eventViewModel.updateSupplyAtomically(it) },
+          deleteSupply = { eventViewModel.removeSupplyAtomically(displayedSupply.id) },
           loggedUserUID = accountsUiState.currentUserUID!!,
           accounts = accountsUiState.fetchedAccounts,
           onDismissRequest = {
@@ -109,7 +103,11 @@ fun SuppliesScreen(
   }
 
   @Composable
-  fun DisplaySupplyListIfNotEmpty(listTitle: String, supplyList: List<ChimpagneSupply>, testTag: String) {
+  fun DisplaySupplyListIfNotEmpty(
+      listTitle: String,
+      supplyList: List<ChimpagneSupply>,
+      testTag: String
+  ) {
     if (supplyList.isNotEmpty()) {
       Text(text = listTitle, modifier = Modifier.padding(12.dp, 8.dp))
       LazyColumn(modifier = Modifier.testTag(testTag)) {
@@ -159,13 +157,16 @@ fun SuppliesScreen(
           Column(Modifier.padding(innerPadding)) {
             DisplaySupplyListIfNotEmpty(
                 listTitle = stringResource(id = R.string.supplies_supply_assigned_to_you),
-                supplyList = suppliesAssignedToMe.values.toList(), testTag = "assigned_you")
+                supplyList = suppliesAssignedToMe.values.toList(),
+                testTag = "assigned_you")
             DisplaySupplyListIfNotEmpty(
                 listTitle = stringResource(id = R.string.supplies_not_assigned_to_anyone),
-                supplyList = nonAssignedSupplies.values.toList(), testTag = "assigned_nobody")
+                supplyList = nonAssignedSupplies.values.toList(),
+                testTag = "assigned_nobody")
             DisplaySupplyListIfNotEmpty(
                 listTitle = stringResource(id = R.string.supplies_already_assigned),
-                supplyList = otherSupplies.values.toList(), testTag = "assigned_other")
+                supplyList = otherSupplies.values.toList(),
+                testTag = "assigned_other")
           }
         }
       }
