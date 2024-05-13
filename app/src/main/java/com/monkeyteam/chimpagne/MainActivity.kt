@@ -21,7 +21,6 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
@@ -63,50 +62,22 @@ class MainActivity : ComponentActivity() {
           navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
         }
 
-        val loginToAccount:
-            (
-                id: String,
-                onSuccess: (ChimpagneAccount?) -> Unit,
-                onFailure: (Exception) -> Unit) -> Unit =
-            { id, onSuccess, onFailure ->
-              accountViewModel.loginToChimpagneAccount(id, onSuccess, onFailure)
-            }
-
-        val loginAccountNormal: (id: String) -> Unit = { id ->
-          loginToAccount(
-              id,
-              { account ->
-                if (account == null) {
-                  Log.d("MainActivity", "Account is not in database")
-                  navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
-                } else {
-                  Log.d("MainActivity", "Account is in database")
-                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-                }
-              },
-              { Log.e("MainActivity", "Failed to check if account is in database: $it") })
-        }
-
-        val loginAccountStart: (id: String) -> Unit = { id ->
-          loginToAccount(
-              id,
-              { account ->
-                if (account == null) {
-                  Log.d("MainActivity", "Account is not in database")
-                  navActions.clearAndNavigateTo(Route.LOGIN_SCREEN)
-                } else {
-                  Log.d("MainActivity", "Account is in database")
-                  navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-                }
-              },
-              { Log.e("MainActivity", "Failed to check if account is in database: $it") })
-        }
-
-        val login: () -> Unit = {
+        val login: (failureRoute: String) -> Unit = { successRoute ->
           if (FirebaseAuth.getInstance().currentUser != null) {
-            loginAccountStart(FirebaseAuth.getInstance().currentUser?.uid!!)
+            accountViewModel.loginToChimpagneAccount(
+                FirebaseAuth.getInstance().currentUser?.uid!!,
+                { account ->
+                  if (account == null) {
+                    Log.d("MainActivity", "Account is not in database")
+                    navActions.clearAndNavigateTo(successRoute)
+                  } else {
+                    Log.d("MainActivity", "Account is in database")
+                    navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+                  }
+                },
+                { Log.e("MainActivity", "Failed to check if account is in database: $it") })
           } else {
-            navActions.navigateTo(Route.LOGIN_SCREEN)
+            navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
           }
         }
 
@@ -120,11 +91,11 @@ class MainActivity : ComponentActivity() {
           NavHost(navController = navController, startDestination = Route.LOADING_LOGIN) {
             composable(Route.LOADING_LOGIN) {
               SpinnerView()
-              login()
+              login(Route.LOGIN_SCREEN)
             }
             composable(Route.LOGIN_SCREEN) {
               LoginScreen(
-                  onSuccessfulLogin = { uid -> loginAccountNormal(uid) },
+                  onSuccessfulLogin = { uid -> login(Route.ACCOUNT_CREATION_SCREEN) },
                   onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
@@ -171,16 +142,34 @@ class MainActivity : ComponentActivity() {
               myEventsViewModel.fetchMyEvents()
               MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
             }
-            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
-              ViewDetailEventScreen(
-                  navObject = navActions,
-                  eventViewModel =
-                      viewModel(
-                          factory =
-                              EventViewModel.EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)),
-                  accountViewModel = accountViewModel)
-            }
+            composable(
+                route = Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}",
+                deepLinks =
+                    listOf(
+                        navDeepLink {
+                          uriPattern = "https://www.manigo.ch/events/?uid={EventID}"
+                          action = Intent.ACTION_VIEW
+                        }),
+                arguments =
+                    listOf(
+                        navArgument("EventID") { type = NavType.StringType },
+                    )) { backStackEntry ->
+                  val deeplinkHandled = intent?.action != Intent.ACTION_VIEW
+                  if (!deeplinkHandled) {
+                    if (FirebaseAuth.getInstance().currentUser != null) {
+                      accountViewModel.loginToChimpagneAccount(
+                          FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
+                    }
+                  }
+                  ViewDetailEventScreen(
+                      navObject = navActions,
+                      eventViewModel =
+                          viewModel(
+                              factory =
+                                  EventViewModel.EventViewModelFactory(
+                                      backStackEntry.arguments?.getString("EventID"), database)),
+                      accountViewModel = accountViewModel)
+                }
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
                   viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
@@ -191,28 +180,6 @@ class MainActivity : ComponentActivity() {
                     navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
                   })
             }
-            composable(
-                route = Route.ONLINE_EVENT_VIEW,
-                deepLinks =
-                    listOf(
-                        navDeepLink {
-                          uriPattern = "https://www.manigo.ch/events/?uid={EventID}"
-                          action = Intent.ACTION_VIEW
-                        }),
-                arguments =
-                    listOf(
-                        navArgument("EventID") { type = NavType.StringType },
-                    )) {
-                  if (FirebaseAuth.getInstance().currentUser != null) {
-                    loginToAccount(
-                        FirebaseAuth.getInstance().currentUser?.uid!!,
-                        { Log.d("MainActivity", "Account is in database") },
-                        { Log.e("MainActivity", "Failed to check if account is in database: $it") })
-                  }
-
-                  val EventID = it.arguments?.getString("EventID")
-                  navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${EventID}")
-                }
             composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =
                   viewModel(

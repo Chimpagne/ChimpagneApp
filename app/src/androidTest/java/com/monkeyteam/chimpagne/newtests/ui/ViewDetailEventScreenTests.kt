@@ -240,7 +240,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()
