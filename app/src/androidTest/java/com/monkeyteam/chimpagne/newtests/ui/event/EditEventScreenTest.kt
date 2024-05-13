@@ -2,7 +2,9 @@ package com.monkeyteam.chimpagne.newtests.ui.event
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -13,9 +15,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -41,10 +44,11 @@ class ButtonToastTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
-    composeTestRule.onNodeWithTag("save_changes_button").performClick()
+    composeTestRule.onNodeWithTag("last_button").performClick()
     //  toasts are not composable in nature, which makes them difficult to test within the Jetpack
     // Compose framework.
   }
@@ -63,7 +67,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     // Move to the Second Panel
@@ -84,7 +89,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
@@ -96,7 +102,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
   }
 
@@ -109,7 +116,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
 
       val context = LocalContext.current
       tagsLegendS = context.getString(R.string.event_creation_screen_tags_legend)
@@ -130,7 +138,8 @@ class EditEventScreenTestTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      EditEventScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     // Tags (comma-separated)
@@ -149,7 +158,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     val title = "Sample Event Title"
@@ -164,7 +174,8 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(19, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          19, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
@@ -176,10 +187,35 @@ class EditEventScreenTestTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EditEventScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EditEventScreen(
+          2, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
-    composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("logistics_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("parking_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("beds_title").assertIsDisplayed()
+  }
+
+  @Test
+  fun testSocialMediaPanelUI() {
+    // Now we do this to go the correct screen
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EditEventScreen(
+          3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
+    }
+
+    composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
+
+    for (sm in SupportedSocialMedia) {
+      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertIsDisplayed()
+      val testInput = "test ${sm.testTag}"
+      composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
+      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
+    }
+
+    composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
+
+    composeTestRule.onNodeWithTag("last_button").assertIsDisplayed()
   }
 }

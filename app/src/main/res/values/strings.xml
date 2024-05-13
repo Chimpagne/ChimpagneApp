@@ -27,9 +27,9 @@
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
     <string name="event_creation_screen_public_legend">Event Publicity</string>
-    <string name="event_creation_screen_groceries">Supplies</string>
-    <string name="event_creation_screen_add_groceries">Add supplies</string>
-    <string name="event_creation_screen_logistics">Logistics</string>
+    <string name="event_creation_screen_supplies">Supplies</string>
+    <string name="event_creation_screen_add_supplies">Add supplies</string>
+    <string name="event_creation_screen_logistics">Advanced Logistics</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Number of parking places</string>
     <string name="event_creation_screen_number_beds">Number of beds</string>
@@ -70,6 +70,7 @@
     <string name="event_details_screen_report_problem">Report a Problem</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit this event</string>
+    <string name="event_details_screen_manage_staff_button">Manage staff</string>
     <string name="event_details_screen_chat_button">Chat</string>
     <string name="event_details_screen_location_button">Location</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
@@ -83,7 +84,15 @@
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
+    <string name="telegram_group_invite_link">Telegram group invite link</string>
+    <string name="whatsapp_group_invite_link">Whatsapp group invite link</string>
+    <string name="discord_group_invite_link">Discord group invite link</string>
+    <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
-
+    <string name="manage_staff_screen_title">Manage Staff</string>
+    <string name="manage_staff_screen_staff_list_name">Staff List:</string>
+    <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>
+    <string name="manage_staff_screen_guest_list_name">Guest List:</string>
+    <string name="manage_staff_screen_empty_guest_list">There are no guests in this event:</string>
 </resources>
