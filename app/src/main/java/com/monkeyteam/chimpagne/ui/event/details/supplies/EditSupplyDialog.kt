@@ -55,7 +55,7 @@ fun EditSupplyDialog(
               })) {
         Row(Modifier.fillMaxWidth()) {
           OutlinedTextField(
-              modifier = Modifier.weight(0.25f).padding(5.dp).testTag("supplies_quantity_field"),
+              modifier = Modifier.weight(0.50f).padding(5.dp).testTag("supplies_quantity_field"),
               maxLines = 1,
               value = quantity,
               onValueChange = {
@@ -67,11 +67,10 @@ fun EditSupplyDialog(
                 if (it == "") quantity = "0"
               },
               keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-              keyboardActions = KeyboardActions(onDone = { /* Handle Done action */}),
               textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
               placeholder = { Text(stringResource(id = R.string.supplies_quantity)) })
           OutlinedTextField(
-              modifier = Modifier.weight(0.75f).padding(5.dp).testTag("supplies_unit_field"),
+              modifier = Modifier.weight(0.50f).padding(5.dp).testTag("supplies_unit_field"),
               maxLines = 1,
               value = unit,
               onValueChange = { unit = it },
