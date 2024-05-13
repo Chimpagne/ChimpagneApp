@@ -27,9 +27,8 @@ fun EditEventScreen(
   // This screen is made of several panels
   // The user can go from panel either by swiping left and right,
   // or by clicking the buttons on the bottom of the screen.
-
   val uiState by eventViewModel.uiState.collectAsState()
-  val pagerState = rememberPagerState(initialPage = initialPage) { 3 }
+  val pagerState = rememberPagerState(initialPage = initialPage) { 4 }
   val context = LocalContext.current
   Scaffold(
       topBar = {
@@ -69,6 +68,7 @@ fun EditEventScreen(
             0 -> FirstPanel(eventViewModel)
             1 -> TagsAndPubPanel(eventViewModel)
             2 -> AdvancedLogisticsPanel(eventViewModel)
+            3 -> ChooseSocialsPanel(eventViewModel)
           }
         }
       }
