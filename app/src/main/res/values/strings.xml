@@ -116,7 +116,7 @@
     <string name="supplies_supply_assigned_to_you">Supplies assigned to you</string>
     <string name="supplies_not_assigned_to_anyone">Supplies not assigned to anyone</string>
     <string name="supplies_already_assigned">Supplies already assigned</string>
-    <string name="supplies_empty">No created supply</string>
+    <string name="supplies_empty">No supply created</string>
     <string name="supplies_delete">Delete this supply ?</string>
     <string name="supplies_delete_description">This action is irreversible !</string>
 </resources>
