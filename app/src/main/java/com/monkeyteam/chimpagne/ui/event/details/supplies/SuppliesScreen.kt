@@ -39,74 +39,75 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuppliesScreen(
-  navObject: NavigationActions,
-  eventViewModel: EventViewModel,
-  accountViewModel: AccountViewModel
+    navObject: NavigationActions,
+    eventViewModel: EventViewModel,
+    accountViewModel: AccountViewModel
 ) {
   val eventUiState by eventViewModel.uiState.collectAsState()
   val accountsUiState by accountViewModel.uiState.collectAsState()
 
   val suppliesAssignedToMe =
-    eventUiState.supplies.filter {
-      it.value.assignedTo.containsKey(accountsUiState.currentUserUID!!)
-    }
+      eventUiState.supplies.filter {
+        it.value.assignedTo.containsKey(accountsUiState.currentUserUID!!)
+      }
   val nonAssignedSupplies = eventUiState.supplies.filter { it.value.assignedTo.isEmpty() }
   val otherSupplies =
-    eventUiState.supplies.filter {
-      it.value.assignedTo.isNotEmpty() &&
-              !it.value.assignedTo.containsKey(accountsUiState.currentUserUID)
-    }
+      eventUiState.supplies.filter {
+        it.value.assignedTo.isNotEmpty() &&
+            !it.value.assignedTo.containsKey(accountsUiState.currentUserUID)
+      }
 
   var displayAddPopup by remember { mutableStateOf(false) }
   if (displayAddPopup) {
     EditSupplyDialog(
-      supply = ChimpagneSupply(),
-      onDismissRequest = { displayAddPopup = false },
-      onSave = { eventViewModel.updateSupplyAtomically(it) })
+        supply = ChimpagneSupply(),
+        onDismissRequest = { displayAddPopup = false },
+        onSave = { eventViewModel.updateSupplyAtomically(it) })
   }
 
   var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
   var displayAssignPopup by remember { mutableStateOf(false) }
   if (displayAssignPopup) {
+    println("BANANA ${eventUiState.currentUserRole}")
     if (eventUiState.currentUserRole == ChimpagneRole.GUEST) {
       GuestSupplyDialog(
-        supply = displayedSupply,
-        assignMyself = {
-          if (it) {
-            eventViewModel.assignSupplyAtomically(
-              displayedSupply.id, accountsUiState.currentUserUID!!)
-          } else {
-            eventViewModel.unassignSupplyAtomically(
-              displayedSupply.id, accountsUiState.currentUserUID!!)
-          }
-          displayAssignPopup = false
-          displayedSupply = ChimpagneSupply()
-        },
-        loggedUserUID = accountsUiState.currentUserUID!!,
-        accounts = accountsUiState.fetchedAccounts,
-        onDismissRequest = {
-          displayAssignPopup = false
-          displayedSupply = ChimpagneSupply()
-        })
+          supply = displayedSupply,
+          assignMyself = {
+            if (it) {
+              eventViewModel.assignSupplyAtomically(
+                  displayedSupply.id, accountsUiState.currentUserUID!!)
+            } else {
+              eventViewModel.unassignSupplyAtomically(
+                  displayedSupply.id, accountsUiState.currentUserUID!!)
+            }
+            displayAssignPopup = false
+            displayedSupply = ChimpagneSupply()
+          },
+          loggedUserUID = accountsUiState.currentUserUID!!,
+          accounts = accountsUiState.fetchedAccounts,
+          onDismissRequest = {
+            displayAssignPopup = false
+            displayedSupply = ChimpagneSupply()
+          })
     } else {
       StaffSupplyDialog(
-        supply = displayedSupply,
-        updateSupply = { eventViewModel.updateSupplyAtomically(it) },
-        deleteSupply = { eventViewModel.removeSupplyAtomically(displayedSupply.id) },
-        loggedUserUID = accountsUiState.currentUserUID!!,
-        accounts = accountsUiState.fetchedAccounts,
-        onDismissRequest = {
-          displayAssignPopup = false
-          displayedSupply = ChimpagneSupply()
-        })
+          supply = displayedSupply,
+          updateSupply = { eventViewModel.updateSupplyAtomically(it) },
+          deleteSupply = { eventViewModel.removeSupplyAtomically(displayedSupply.id) },
+          loggedUserUID = accountsUiState.currentUserUID!!,
+          accounts = accountsUiState.fetchedAccounts,
+          onDismissRequest = {
+            displayAssignPopup = false
+            displayedSupply = ChimpagneSupply()
+          })
     }
   }
 
   @Composable
   fun DisplaySupplyListIfNotEmpty(
-    listTitle: String,
-    supplyList: List<ChimpagneSupply>,
-    testTag: String
+      listTitle: String,
+      supplyList: List<ChimpagneSupply>,
+      testTag: String
   ) {
     if (supplyList.isNotEmpty()) {
       Text(text = listTitle, modifier = Modifier.padding(12.dp, 8.dp))
@@ -124,50 +125,50 @@ fun SuppliesScreen(
   }
 
   Scaffold(
-    floatingActionButton = {
-      if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
-          .contains(eventUiState.currentUserRole)) {
-        FloatingActionButton(
-          onClick = { displayAddPopup = true }, modifier = Modifier.testTag("supply_add")) {
-          Icon(Icons.Default.Add, contentDescription = "Add")
+      floatingActionButton = {
+        if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
+            .contains(eventUiState.currentUserRole)) {
+          FloatingActionButton(
+              onClick = { displayAddPopup = true }, modifier = Modifier.testTag("supply_add")) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+              }
+        }
+      },
+      topBar = {
+        TopAppBar(
+            title = { Text(stringResource(id = R.string.supplies_screen_title)) },
+            modifier = Modifier.shadow(4.dp),
+            navigationIcon = {
+              IconButton(onClick = { navObject.goBack() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+              }
+            })
+      }) { innerPadding ->
+        if (eventUiState.supplies.isEmpty()) {
+          Text(
+              text = stringResource(id = R.string.supplies_empty),
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .fillMaxHeight()
+                      .padding(innerPadding)
+                      .wrapContentHeight(align = Alignment.CenterVertically)
+                      .testTag("supply_nothing"),
+              textAlign = TextAlign.Center)
+        } else {
+          Column(Modifier.padding(innerPadding)) {
+            DisplaySupplyListIfNotEmpty(
+                listTitle = stringResource(id = R.string.supplies_supply_assigned_to_you),
+                supplyList = suppliesAssignedToMe.values.toList(),
+                testTag = "assigned_you")
+            DisplaySupplyListIfNotEmpty(
+                listTitle = stringResource(id = R.string.supplies_not_assigned_to_anyone),
+                supplyList = nonAssignedSupplies.values.toList(),
+                testTag = "assigned_nobody")
+            DisplaySupplyListIfNotEmpty(
+                listTitle = stringResource(id = R.string.supplies_already_assigned),
+                supplyList = otherSupplies.values.toList(),
+                testTag = "assigned_other")
+          }
         }
       }
-    },
-    topBar = {
-      TopAppBar(
-        title = { Text(stringResource(id = R.string.supplies_screen_title)) },
-        modifier = Modifier.shadow(4.dp),
-        navigationIcon = {
-          IconButton(onClick = { navObject.goBack() }) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-          }
-        })
-    }) { innerPadding ->
-    if (eventUiState.supplies.isEmpty()) {
-      Text(
-        text = stringResource(id = R.string.supplies_empty),
-        modifier =
-        Modifier.fillMaxWidth()
-          .fillMaxHeight()
-          .padding(innerPadding)
-          .wrapContentHeight(align = Alignment.CenterVertically)
-          .testTag("supply_nothing"),
-        textAlign = TextAlign.Center)
-    } else {
-      Column(Modifier.padding(innerPadding)) {
-        DisplaySupplyListIfNotEmpty(
-          listTitle = stringResource(id = R.string.supplies_supply_assigned_to_you),
-          supplyList = suppliesAssignedToMe.values.toList(),
-          testTag = "assigned_you")
-        DisplaySupplyListIfNotEmpty(
-          listTitle = stringResource(id = R.string.supplies_not_assigned_to_anyone),
-          supplyList = nonAssignedSupplies.values.toList(),
-          testTag = "assigned_nobody")
-        DisplaySupplyListIfNotEmpty(
-          listTitle = stringResource(id = R.string.supplies_already_assigned),
-          supplyList = otherSupplies.values.toList(),
-          testTag = "assigned_other")
-      }
-    }
-  }
 }

@@ -172,20 +172,20 @@ class MainActivity : ComponentActivity() {
             }
             composable(Route.SUPPLIES_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =
-                viewModel(
-                  factory =
-                  EventViewModel.EventViewModelFactory(
-                    backStackEntry.arguments?.getString("EventID"), database))
+                  viewModel(
+                      factory =
+                          EventViewModel.EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent({
                 accountViewModel.fetchAccounts(
-                  listOf(eventViewModel.uiState.value.ownerId) +
-                          eventViewModel.uiState.value.staffs.keys.toList() +
-                          eventViewModel.uiState.value.guests.keys.toList())
+                    listOf(eventViewModel.uiState.value.ownerId) +
+                        eventViewModel.uiState.value.staffs.keys.toList() +
+                        eventViewModel.uiState.value.guests.keys.toList())
               })
               SuppliesScreen(
-                navObject = navActions,
-                eventViewModel = eventViewModel,
-                accountViewModel = accountViewModel)
+                  navObject = navActions,
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel)
             }
           }
         }

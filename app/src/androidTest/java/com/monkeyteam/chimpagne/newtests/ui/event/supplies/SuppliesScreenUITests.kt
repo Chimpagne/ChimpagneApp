@@ -31,7 +31,8 @@ class SuppliesScreenUITests {
   val database = Database()
 
   val ownerAccount = TEST_ACCOUNTS[1]
-  val event = TEST_EVENTS[0]
+  val guestAccount = TEST_ACCOUNTS[0]
+  val event = TEST_EVENTS[2]
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -53,6 +54,7 @@ class SuppliesScreenUITests {
     eventViewModel.fetchEvent(onSuccess = { accountViewModel.fetchAccounts(listOf(event.ownerId)) })
 
     while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     var you = ""
     composeTestRule.setContent {
@@ -69,13 +71,13 @@ class SuppliesScreenUITests {
     composeTestRule.onNodeWithTag("guest_supply_dialog").assertDoesNotExist()
     composeTestRule.onNodeWithTag("staff_supply_dialog").assertDoesNotExist()
 
-    composeTestRule.onNodeWithTag("assigned_nobody").onChildAt(3).assertDoesNotExist()
+    composeTestRule.onNodeWithTag("assigned_nobody").onChildAt(1).assertDoesNotExist()
     composeTestRule.onNodeWithTag("supply_add").performClick()
     composeTestRule.onNodeWithTag("supplies_add_button").performClick()
     while (eventViewModel.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
-    composeTestRule.onNodeWithTag("assigned_nobody").onChildAt(3).performClick()
+    composeTestRule.onNodeWithTag("assigned_nobody").onChildAt(1).performClick()
     composeTestRule.onNodeWithTag("staff_supply_dialog").assertIsDisplayed()
     composeTestRule
         .onNodeWithText(
@@ -88,5 +90,44 @@ class SuppliesScreenUITests {
     composeTestRule.onNodeWithTag("assigned_you").onChildAt(0).assertIsDisplayed()
   }
 
-  @Test fun guestViewTest() {}
+  @Test
+  fun guestViewTest() {
+    val eventViewModel = EventViewModel(event.id, database)
+    val accountViewModel = AccountViewModel(database)
+
+    var loading = true
+    accountViewModel.loginToChimpagneAccount(
+        guestAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
+    while (loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    eventViewModel.fetchEvent(onSuccess = { accountViewModel.fetchAccounts(listOf(event.ownerId)) })
+
+    while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading) {}
+
+    var you = ""
+    composeTestRule.setContent {
+      you = stringResource(id = R.string.chimpagne_you)
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      SuppliesScreen(
+          navObject = navActions,
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel)
+    }
+
+    composeTestRule.onNodeWithTag("edit_supply_dialog").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("guest_supply_dialog").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("staff_supply_dialog").assertDoesNotExist()
+
+    composeTestRule.onNodeWithTag("assigned_you").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("assigned_nobody").onChildAt(0).performClick()
+    composeTestRule.onNodeWithTag("guest_supply_dialog").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("guest_supply_assign").performClick()
+    while (eventViewModel.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    composeTestRule.onNodeWithTag("guest_supply_dialog").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("assigned_you").onChildAt(0).performClick()
+  }
 }

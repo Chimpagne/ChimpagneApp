@@ -24,18 +24,18 @@ class SupplyDialogsUITests {
   @Test
   fun guestSupplyDialogAssignTest() {
     val assignedSupply =
-      ChimpagneSupply(
-        id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
+        ChimpagneSupply(
+            id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
     val unassignedSupply =
-      ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
+        ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
     var supply = unassignedSupply
     composeTestRule.setContent {
       GuestSupplyDialog(
-        supply,
-        { if (it) supply = assignedSupply else supply = unassignedSupply },
-        "hector",
-        hashMapOf("hector" to ChimpagneAccount("hector")),
-        onDismissRequest = {})
+          supply,
+          { if (it) supply = assignedSupply else supply = unassignedSupply },
+          "hector",
+          hashMapOf("hector" to ChimpagneAccount("hector")),
+          onDismissRequest = {})
     }
 
     composeTestRule.onNodeWithTag("guest_supply_dialog").isDisplayed()
@@ -47,18 +47,18 @@ class SupplyDialogsUITests {
   @Test
   fun guestSupplyDialogUnassignTest() {
     val assignedSupply =
-      ChimpagneSupply(
-        id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
+        ChimpagneSupply(
+            id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
     val unassignedSupply =
-      ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
+        ChimpagneSupply(id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf())
     var supply = assignedSupply
     composeTestRule.setContent {
       GuestSupplyDialog(
-        supply,
-        { if (it) supply = assignedSupply else supply = unassignedSupply },
-        "hector",
-        hashMapOf("hector" to ChimpagneAccount("hector")),
-        onDismissRequest = {})
+          supply,
+          { if (it) supply = assignedSupply else supply = unassignedSupply },
+          "hector",
+          hashMapOf("hector" to ChimpagneAccount("hector")),
+          onDismissRequest = {})
     }
 
     composeTestRule.onNodeWithTag("guest_supply_dialog").isDisplayed()
@@ -76,14 +76,14 @@ class SupplyDialogsUITests {
     var editButtonClicked = false
     composeTestRule.setContent {
       StaffSupplyDialog(
-        supply,
-        { editButtonClicked = true },
-        { deleteButtonClicked = true },
-        "hector",
-        hashMapOf(
-          "hector" to ChimpagneAccount("hector"),
-          "monkey" to ChimpagneAccount("monkey", "Monkey", "Prince")),
-        onDismissRequest = { dismissRequested = true })
+          supply,
+          { editButtonClicked = true },
+          { deleteButtonClicked = true },
+          "hector",
+          hashMapOf(
+              "hector" to ChimpagneAccount("hector"),
+              "monkey" to ChimpagneAccount("monkey", "Monkey", "Prince")),
+          onDismissRequest = { dismissRequested = true })
     }
 
     composeTestRule.onNodeWithText("Monkey Prince", useUnmergedTree = true).performClick()

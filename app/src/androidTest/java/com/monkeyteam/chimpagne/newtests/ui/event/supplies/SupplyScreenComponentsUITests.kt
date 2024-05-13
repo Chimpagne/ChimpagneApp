@@ -18,8 +18,8 @@ class SupplyScreenComponentsUITests {
   @get:Rule val composeTestRule = createComposeRule()
 
   private val supply =
-    ChimpagneSupply(
-      id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
+      ChimpagneSupply(
+          id = "a", unit = "bananas", quantity = 3, assignedTo = hashMapOf("hector" to true))
 
   @Test
   fun supplyCardTest() {
@@ -32,14 +32,14 @@ class SupplyScreenComponentsUITests {
   fun supplyAccountEntryTest() {
     composeTestRule.setContent {
       SupplyDialogAccountEntry(
-        account = TEST_ACCOUNTS[0],
-        loggedUserUID = TEST_ACCOUNTS[0].firebaseAuthUID,
-        showCheckBox = true)
+          account = TEST_ACCOUNTS[0],
+          loggedUserUID = TEST_ACCOUNTS[0].firebaseAuthUID,
+          showCheckBox = true)
     }
 
     composeTestRule
-      .onNodeWithTag("supply_account_entry", useUnmergedTree = true)
-      .assertHasClickAction()
+        .onNodeWithTag("supply_account_entry", useUnmergedTree = true)
+        .assertHasClickAction()
     composeTestRule.onNodeWithTag("supply_account_checkbox", useUnmergedTree = true).assertExists()
   }
 }
