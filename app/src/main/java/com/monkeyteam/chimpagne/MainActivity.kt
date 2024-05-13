@@ -29,6 +29,7 @@ import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
+import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
@@ -41,7 +42,6 @@ import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
@@ -155,7 +155,8 @@ class MainActivity : ComponentActivity() {
             composable(Route.EVENT_CREATION_SCREEN) {
               EventCreationScreen(
                   navObject = navActions,
-                  eventViewModel = viewModel(factory = EventViewModelFactory(null, database)))
+                  eventViewModel =
+                      viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
             }
             composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
               val eventID = backStackEntry.arguments?.getString("EventID")
@@ -176,13 +177,12 @@ class MainActivity : ComponentActivity() {
                   eventViewModel =
                       viewModel(
                           factory =
-                              EventViewModelFactory(
-                                  backStackEntry.arguments?.getString("EventID"), database)),
-                  accountViewModel = accountViewModel)
+                              EventViewModel.EventViewModelFactory(
+                                  backStackEntry.arguments?.getString("EventID"), database)))
             }
             composable(Route.JOIN_EVENT_SCREEN) {
               val eventViewModel: EventViewModel =
-                  viewModel(factory = EventViewModelFactory(null, database))
+                  viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
               val event = eventViewModel.buildChimpagneEvent()
               DetailScreenSheet(
                   event = event,
@@ -212,6 +212,23 @@ class MainActivity : ComponentActivity() {
                   val EventID = it.arguments?.getString("EventID")
                   navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${EventID}")
                 }
+            composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModel.EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent({
+                accountViewModel.fetchAccounts(
+                    listOf(eventViewModel.uiState.value.ownerId) +
+                        eventViewModel.uiState.value.staffs.keys.toList() +
+                        eventViewModel.uiState.value.guests.keys.toList())
+              })
+              ManageStaffScreen(
+                  navObject = navActions,
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel)
+            }
           }
         }
       }

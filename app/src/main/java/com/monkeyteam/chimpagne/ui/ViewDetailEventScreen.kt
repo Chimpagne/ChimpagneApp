@@ -29,6 +29,7 @@ import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
@@ -43,6 +44,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -72,6 +74,7 @@ import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
+import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -93,6 +96,8 @@ fun ViewDetailEventScreen(
   var showDialog by remember { mutableStateOf(false) }
   var showPromptLogin by remember { mutableStateOf(false) }
   val clipboardManager = LocalClipboardManager.current
+  // Otherwise event doesn't directly load
+  LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   Scaffold(
       topBar = {
@@ -280,7 +285,7 @@ fun ViewDetailEventScreen(
                                         Text(
                                             text =
                                                 "${uiState.guests.count()} ${stringResource(
-                                  id = R.string.event_details_screen_number_of_guests)}",
+                                        id = R.string.event_details_screen_number_of_guests)}",
                                             fontFamily = ChimpagneFontFamily,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -381,7 +386,8 @@ fun ViewDetailEventScreen(
 
                             // MAP WILL BE ADDED HERE
 
-                            // SOCIAL LINKS WILL BE ADDED HERE
+                            SocialButtonRow(
+                                context = context, socialMediaLinks = uiState.socialMediaLinks)
 
                             if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 
@@ -438,6 +444,22 @@ fun ViewDetailEventScreen(
                                       navObject.navigateTo(
                                           Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                                     }
+                                  })
+                              Spacer(Modifier.height(16.dp))
+                              ChimpagneButton(
+                                  text =
+                                      stringResource(
+                                          id = R.string.event_details_screen_manage_staff_button),
+                                  icon = Icons.Rounded.PeopleAlt,
+                                  fontWeight = FontWeight.Bold,
+                                  fontSize = 24.sp,
+                                  modifier =
+                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                          .fillMaxWidth()
+                                          .testTag("manage staff"),
+                                  onClick = {
+                                    navObject.navigateTo(
+                                        Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                                   })
                             }
                             Spacer(Modifier.height(16.dp))
