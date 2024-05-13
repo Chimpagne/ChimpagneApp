@@ -68,7 +68,6 @@ fun SuppliesScreen(
   var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
   var displayAssignPopup by remember { mutableStateOf(false) }
   if (displayAssignPopup) {
-    println("BANANA ${eventUiState.currentUserRole}")
     if (eventUiState.currentUserRole == ChimpagneRole.GUEST) {
       GuestSupplyDialog(
           supply = displayedSupply,
