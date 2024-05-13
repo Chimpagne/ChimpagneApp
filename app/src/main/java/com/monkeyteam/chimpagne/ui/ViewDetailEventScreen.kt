@@ -416,8 +416,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                       stringResource(
                                           id = R.string.event_details_screen_manage_staff_button),
                                   icon = Icons.Rounded.PeopleAlt,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 24.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
