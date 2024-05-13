@@ -16,6 +16,7 @@ object Route {
   const val MY_EVENTS_SCREEN = "myEvents"
   const val VIEW_DETAIL_EVENT_SCREEN = "viewDetailEventScreen"
   const val MANAGE_STAFF_SCREEN = "manageStaffScreen"
+  const val SUPPLIES_SCREEN = "SuppliesScreen"
 }
 
 class NavigationActions(private val navController: NavHostController) {
