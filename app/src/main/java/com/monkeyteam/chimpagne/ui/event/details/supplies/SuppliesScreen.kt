@@ -59,50 +59,52 @@ fun SuppliesScreen(
 
   var displayAddPopup by remember { mutableStateOf(false) }
   if (displayAddPopup) {
-    //    EditSupplyDialog(
-    //      supply = ChimpagneSupply(),
-    //      onDismissRequest = { displayAddPopup = false },
-    //      onSave = { eventViewModel.updateSupplyAtomically(it) })
+    EditSupplyDialog(
+        supply = ChimpagneSupply(),
+        onDismissRequest = { displayAddPopup = false },
+        onSave = {
+          //            eventViewModel.updateSupplyAtomically(it)
+        })
   }
 
   var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
   var displayAssignPopup by remember { mutableStateOf(false) }
   if (displayAssignPopup) {
     if (eventUiState.currentUserRole == ChimpagneRole.GUEST) {
-            GuestSupplyDialog(
-              supply = displayedSupply,
-              assignMyself = {
-                if (it) {
-//                  eventViewModel.assignSupplyAtomically(
-//                    displayedSupply.id, accountViewModelState.currentUserUID!!)
-                } else {
-//                  eventViewModel.unassignSupplyAtomically(
-//                    displayedSupply.id, accountViewModelState.currentUserUID!!)
-                }
-                displayAssignPopup = false
-                displayedSupply = ChimpagneSupply()
-              },
-              loggedUserUID = accountsUiState.currentUserUID!!,
-              accounts = accountsUiState.fetchedAccounts,
-              onDismissRequest = {
-                displayAssignPopup = false
-                displayedSupply = ChimpagneSupply()
-              })
+      GuestSupplyDialog(
+          supply = displayedSupply,
+          assignMyself = {
+            if (it) {
+              //                  eventViewModel.assignSupplyAtomically(
+              //                    displayedSupply.id, accountViewModelState.currentUserUID!!)
+            } else {
+              //                  eventViewModel.unassignSupplyAtomically(
+              //                    displayedSupply.id, accountViewModelState.currentUserUID!!)
+            }
+            displayAssignPopup = false
+            displayedSupply = ChimpagneSupply()
+          },
+          loggedUserUID = accountsUiState.currentUserUID!!,
+          accounts = accountsUiState.fetchedAccounts,
+          onDismissRequest = {
+            displayAssignPopup = false
+            displayedSupply = ChimpagneSupply()
+          })
     } else {
-            StaffSupplyDialog(
-              supply = displayedSupply,
-              updateSupply = {
-//                eventViewModel.updateSupplyAtomically(it)
-                             },
-              deleteSupply = {
-//                eventViewModel.removeSupplyAtomically(displayedSupply.id)
-                             },
-              loggedUserUID = accountsUiState.currentUserUID!!,
-              accounts = accountsUiState.fetchedAccounts,
-              onDismissRequest = {
-                displayAssignPopup = false
-                displayedSupply = ChimpagneSupply()
-              })
+      StaffSupplyDialog(
+          supply = displayedSupply,
+          updateSupply = {
+            //                eventViewModel.updateSupplyAtomically(it)
+          },
+          deleteSupply = {
+            //                eventViewModel.removeSupplyAtomically(displayedSupply.id)
+          },
+          loggedUserUID = accountsUiState.currentUserUID!!,
+          accounts = accountsUiState.fetchedAccounts,
+          onDismissRequest = {
+            displayAssignPopup = false
+            displayedSupply = ChimpagneSupply()
+          })
     }
   }
 

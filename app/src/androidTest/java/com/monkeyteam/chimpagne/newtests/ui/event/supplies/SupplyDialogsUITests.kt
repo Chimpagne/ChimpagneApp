@@ -80,7 +80,9 @@ class SupplyDialogsUITests {
           { editButtonClicked = true },
           { deleteButtonClicked = true },
           "hector",
-          hashMapOf("hector" to ChimpagneAccount("hector"), "monkey" to ChimpagneAccount("monkey", "Monkey", "Prince")),
+          hashMapOf(
+              "hector" to ChimpagneAccount("hector"),
+              "monkey" to ChimpagneAccount("monkey", "Monkey", "Prince")),
           onDismissRequest = { dismissRequested = true })
     }
 

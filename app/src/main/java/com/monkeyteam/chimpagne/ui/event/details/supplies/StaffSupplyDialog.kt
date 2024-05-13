@@ -90,7 +90,11 @@ fun StaffSupplyDialog(
           if (tempSupply.assignedTo.keys.isEmpty()) {
             item { Text(stringResource(id = R.string.supplies_supply_not_assigned)) }
           } else {
-            item { Text(stringResource(id = R.string.supplies_supply_assigned_to), modifier = Modifier.testTag("staff_list")) }
+            item {
+              Text(
+                  stringResource(id = R.string.supplies_supply_assigned_to),
+                  modifier = Modifier.testTag("staff_list"))
+            }
             accounts.entries.forEach { (userUID, userAccount) ->
               if (tempSupply.assignedTo[userUID] == true) {
                 item {
