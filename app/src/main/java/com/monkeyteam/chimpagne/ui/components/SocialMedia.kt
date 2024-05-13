@@ -38,3 +38,16 @@ val SupportedSocialMedia =
             testTag = "whatsapp_input",
         ),
     )
+
+fun convertSMLinksToSM(socialMediaLinks: Map<String, String>): Map<String, SocialMedia> {
+  val socialMediaMap = SupportedSocialMedia.associateBy { it.platformName }
+  return socialMediaLinks
+      .mapNotNull { (key, url) ->
+        socialMediaMap[key]?.let { key to it.copy(chosenGroupUrl = url) }
+      }
+      .toMap()
+}
+
+fun convertSMToSMLinks(socialMedia: Map<String, SocialMedia>): Map<String, String> {
+  return socialMedia.mapValues { it.value.chosenGroupUrl }
+}

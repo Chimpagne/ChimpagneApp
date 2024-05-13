@@ -13,6 +13,8 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.SocialMedia
 import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
+import com.monkeyteam.chimpagne.ui.components.convertSMLinksToSM
+import com.monkeyteam.chimpagne.ui.components.convertSMToSMLinks
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,7 +63,7 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
-                        socialMediaLinks = it.socialMediaLinks)
+                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks))
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
@@ -103,7 +105,7 @@ class EventViewModel(
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        socialMediaLinks = _uiState.value.socialMediaLinks)
+        socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
