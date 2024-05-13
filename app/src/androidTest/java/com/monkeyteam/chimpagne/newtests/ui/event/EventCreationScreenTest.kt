@@ -4,7 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -16,9 +18,10 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.viewmodels.EventViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -53,19 +56,15 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     // Move to the Second Panel
 
     composeTestRule.onNodeWithTag("next_button").performClick()
-    // composeTestRule.onNodeWithTag("next_button")
-    // composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
-
     // Return to the First Panel
     composeTestRule.onNodeWithTag("previous_button").performClick()
-
-    // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
 
   @Test
@@ -74,7 +73,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
@@ -86,7 +86,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
   }
 
@@ -99,7 +100,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
 
       val context = LocalContext.current
       tagsLegendS = context.getString(R.string.event_creation_screen_tags_legend)
@@ -120,7 +122,8 @@ class EventCreationScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      EventCreationScreen(1, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     // Tags (comma-separated)
@@ -140,18 +143,19 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(2, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          2, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
     // composeTestRule.onNodeWithTag("tag_field").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("supplies_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_supplies_button").assertIsDisplayed()
 
-    composeTestRule.onNodeWithTag("add_groceries_button").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("add_supplies_button").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("add_supplies_button").performClick()
     // Assert that the SupplyPopup is displayed after clicking the button
-    composeTestRule.onNodeWithTag("groceries_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("supplies_title").assertIsDisplayed()
 
-    composeTestRule.onNodeWithTag("add_groceries_button").performClick()
+    composeTestRule.onNodeWithTag("add_supplies_button").performClick()
     // Fill in the necessary fields in the SupplyPopup
     composeTestRule.onNodeWithTag("supplies_description_field").performTextInput("New Item")
     composeTestRule.onNodeWithTag("supplies_quantity_field").performTextInput("5")
@@ -167,7 +171,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(0, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     val title = "Sample Event Title"
@@ -183,7 +188,8 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     val value = "4"
@@ -193,10 +199,8 @@ class EventCreationScreenTest {
     val valueBed = "2"
     composeTestRule.onNodeWithTag("n_beds").assertExists()
     composeTestRule.onNodeWithTag("n_beds").performTextInput(valueBed)
-
-    composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
-
-    composeTestRule.onNodeWithTag("create_event_button").performClick()
+    composeTestRule.onNodeWithTag("last_button").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("next_button").performClick()
   }
 
   @Test
@@ -205,7 +209,7 @@ class EventCreationScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
       EventCreationScreen(
-          19, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+          19, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
     composeTestRule.onNodeWithText("Title").assertDoesNotExist()
     composeTestRule.onNodeWithText("Description").assertDoesNotExist()
@@ -217,10 +221,33 @@ class EventCreationScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventCreationScreen(4, navActions, viewModel(factory = EventViewModelFactory(null, database)))
+      EventCreationScreen(
+          3, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
-    composeTestRule.onNodeWithTag("logistics_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("parking_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("beds_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("logistics_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("parking_title").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("beds_title").assertIsDisplayed()
+  }
+
+  @Test
+  fun testSocialMediaPanelUIEdit() {
+    // Now we do this to go the correct screen
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventCreationScreen(
+          4, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
+    }
+
+    composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
+
+    for (sm in SupportedSocialMedia) {
+      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertIsDisplayed()
+      val testInput = "test ${sm.testTag}"
+      composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
+      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
+    }
+
+    composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
   }
 }
