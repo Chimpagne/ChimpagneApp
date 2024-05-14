@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import java.util.Calendar
 
 typealias ChimpagneEventId = String
@@ -23,7 +24,9 @@ data class ChimpagneEvent(
     val ownerId: ChimpagneAccountUID = "",
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
-    val beds: Int = 0
+    val beds: Int = 0,
+    val socialMediaLinks: Map<String, String> =
+        SupportedSocialMedia.associateBy { it.platformName }.mapValues { it.value.chosenGroupUrl }
 ) {
 
   fun guestList(): Set<String> {
@@ -49,6 +52,10 @@ data class ChimpagneEvent(
     return ChimpagneRole.NOT_IN_EVENT
   }
 
+  fun userSet(): Set<ChimpagneAccountUID> {
+    return setOf(ownerId) + staffList() + guestList()
+  }
+
   constructor(
       id: String,
       title: String,
@@ -63,7 +70,8 @@ data class ChimpagneEvent(
       ownerId: ChimpagneAccountUID,
       supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       parkingSpaces: Int,
-      beds: Int
+      beds: Int,
+      socialMediaLinks: Map<String, String>
   ) : this(
       id,
       title,
@@ -78,5 +86,6 @@ data class ChimpagneEvent(
       ownerId,
       supplies,
       parkingSpaces,
-      beds)
+      beds,
+      socialMediaLinks)
 }

@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bed
+import androidx.compose.material.icons.rounded.DirectionsCar
+import androidx.compose.material.icons.rounded.Layers
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @Composable
@@ -30,15 +34,15 @@ fun AdvancedLogisticsPanel(eventViewModel: EventViewModel) {
   var parkingText by remember { mutableStateOf(uiState.parkingSpaces.toString()) }
   var bedsText by remember { mutableStateOf(uiState.beds.toString()) }
   Column(modifier = Modifier.padding(16.dp)) {
-    Text(
+    Legend(
         stringResource(id = R.string.event_creation_screen_logistics),
-        style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.testTag("logistics_title"))
+        Icons.Rounded.Layers,
+        "logistics_title")
     Spacer(modifier = Modifier.height(16.dp))
-    Text(
+    Legend(
         stringResource(id = R.string.event_creation_screen_parking),
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.testTag("parking_title"))
+        Icons.Rounded.DirectionsCar,
+        "parking_title")
     OutlinedTextField(
         value = parkingText,
         onValueChange = {
@@ -54,10 +58,8 @@ fun AdvancedLogisticsPanel(eventViewModel: EventViewModel) {
         modifier = Modifier.fillMaxWidth().testTag("n_parking"))
 
     Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        stringResource(id = R.string.event_creation_screen_beds),
-        style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.testTag("beds_title"))
+    Legend(
+        stringResource(id = R.string.event_creation_screen_beds), Icons.Rounded.Bed, "beds_title")
     OutlinedTextField(
         value = bedsText,
         onValueChange = {
