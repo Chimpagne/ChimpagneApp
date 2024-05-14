@@ -141,9 +141,9 @@ fun ViewDetailEventScreen(
                     item {
                       Box(
                           modifier =
-                              Modifier.height(250.dp)
+                              Modifier.height(200.dp)
                                   .fillMaxWidth()
-                                  .padding(horizontal = 16.dp, vertical = 16.dp)
+                                  .padding(horizontal = 16.dp, vertical = 8.dp)
                                   .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
                                   .clip(RoundedCornerShape(16.dp))
                                   .background(MaterialTheme.colorScheme.primaryContainer),
@@ -155,7 +155,7 @@ fun ViewDetailEventScreen(
                                 contentDescription = "Event Banner",
                                 modifier =
                                     Modifier.matchParentSize()
-                                        .padding(16.dp)
+                                        .padding(8.dp)
                                         .clip(RoundedCornerShape(16.dp)),
                                 contentScale = ContentScale.Crop)
                           }
@@ -339,9 +339,10 @@ fun ViewDetailEventScreen(
                                   }\n ${accountsState.currentUserAccount?.firstName} ${accountsState.currentUserAccount?.lastName}",
                                       fontSize = 14.sp,
                                       fontFamily = ChimpagneFontFamily,
-                                      color = MaterialTheme.colorScheme.onPrimaryContainer)
+                                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                      modifier = Modifier.padding(start = 20.dp, end = 20.dp))
 
-                                  Spacer(modifier = Modifier.height(16.dp))
+                                  Spacer(modifier = Modifier.height(8.dp))
 
                                   ChimpagneButton(
                                       text =
@@ -373,76 +374,97 @@ fun ViewDetailEventScreen(
                                 icons =
                                     listOf(
                                         IconInfo(
-                                            Icons.Rounded.ChatBubbleOutline,
-                                            stringResource(
-                                                id = R.string.event_details_screen_chat_button)) {
-                                              Toast.makeText(
-                                                      context,
-                                                      /* TODO Implement this later */
-                                                      "This function will be implemented in a future version",
-                                                      Toast.LENGTH_SHORT)
-                                                  .show()
-                                            },
-                                        IconInfo(
-                                            Icons.Rounded.Backpack,
-                                            stringResource(
-                                                id =
-                                                    R.string
-                                                        .event_details_screen_supplies_button)) {
+                                            icon = Icons.Rounded.ChatBubbleOutline,
+                                            description =
+                                                stringResource(
+                                                    id = R.string.event_details_screen_chat_button),
+                                            onClick = {
                                               Toast.makeText(
                                                       context,
                                                       "This function will be implemented in a future version",
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
+                                            testTag = "chat" // Add unique testTag
+                                            ),
                                         IconInfo(
-                                            Icons.Rounded.DirectionsCar,
-                                            stringResource(
-                                                id =
-                                                    R.string
-                                                        .event_details_screen_car_pooling_button)) {
+                                            icon = Icons.Rounded.Backpack,
+                                            description =
+                                                stringResource(
+                                                    id =
+                                                        R.string
+                                                            .event_details_screen_supplies_button),
+                                            onClick = {
                                               Toast.makeText(
                                                       context,
-                                                      /* TODO Implement this later */
                                                       "This function will be implemented in a future version",
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
+                                            testTag = "supplies" // Add unique testTag
+                                            ),
                                         IconInfo(
-                                            Icons.Rounded.Poll,
-                                            stringResource(
-                                                id = R.string.event_details_screen_voting_button)) {
+                                            icon = Icons.Rounded.DirectionsCar,
+                                            description =
+                                                stringResource(
+                                                    id =
+                                                        R.string
+                                                            .event_details_screen_car_pooling_button),
+                                            onClick = {
                                               Toast.makeText(
                                                       context,
-                                                      /* TODO Implement this later */
                                                       "This function will be implemented in a future version",
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
+                                            testTag = "car pooling" // Add unique testTag
+                                            ),
                                         IconInfo(
-                                            Icons.Rounded.Home,
-                                            stringResource(
-                                                id =
-                                                    R.string
-                                                        .event_details_screen_bed_reservation)) {
+                                            icon = Icons.Rounded.Poll,
+                                            description =
+                                                stringResource(
+                                                    id =
+                                                        R.string
+                                                            .event_details_screen_voting_button),
+                                            onClick = {
                                               Toast.makeText(
                                                       context,
-                                                      /* TODO Implement this later */
                                                       "This function will be implemented in a future version",
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
+                                            testTag = "polls" // Add unique testTag
+                                            ),
                                         IconInfo(
-                                            Icons.Rounded.DirectionsCar,
-                                            stringResource(
-                                                id = R.string.event_details_screen_parking)) {
+                                            icon = Icons.Rounded.Home,
+                                            description =
+                                                stringResource(
+                                                    id =
+                                                        R.string
+                                                            .event_details_screen_bed_reservation),
+                                            onClick = {
                                               Toast.makeText(
                                                       context,
-                                                      /* TODO Implement this later */
                                                       "This function will be implemented in a future version",
                                                       Toast.LENGTH_SHORT)
                                                   .show()
-                                            }))
+                                            },
+                                            testTag = "bed_reservation" // Add unique testTag
+                                            ),
+                                        IconInfo(
+                                            icon = Icons.Rounded.DirectionsCar,
+                                            description =
+                                                stringResource(
+                                                    id = R.string.event_details_screen_parking),
+                                            onClick = {
+                                              Toast.makeText(
+                                                      context,
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            },
+                                            testTag = "parking" // Add unique testTag
+                                            )))
 
                             Spacer(Modifier.height(16.dp))
                           }
@@ -525,7 +547,10 @@ fun IconRow(icons: List<IconInfo>) {
     icons.forEach { iconInfo ->
       Column(
           horizontalAlignment = Alignment.CenterHorizontally,
-          modifier = Modifier.padding(horizontal = 16.dp).clickable(onClick = iconInfo.onClick)) {
+          modifier =
+              Modifier.padding(horizontal = 16.dp)
+                  .clickable(onClick = iconInfo.onClick)
+                  .testTag(iconInfo.testTag)) {
             Icon(
                 imageVector = iconInfo.icon,
                 contentDescription = iconInfo.description,
@@ -540,4 +565,9 @@ fun IconRow(icons: List<IconInfo>) {
   }
 }
 
-data class IconInfo(val icon: ImageVector, val description: String, val onClick: () -> Unit)
+data class IconInfo(
+    val icon: ImageVector,
+    val description: String,
+    val onClick: () -> Unit,
+    val testTag: String
+)
