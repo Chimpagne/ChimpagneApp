@@ -400,8 +400,6 @@ fun ViewDetailEventScreen(
                                       stringResource(
                                           id = R.string.event_details_screen_leave_button),
                                   icon = Icons.Rounded.RemoveCircleOutline,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 30.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                                           .fillMaxWidth()
@@ -435,8 +433,6 @@ fun ViewDetailEventScreen(
                                       stringResource(
                                           id = R.string.event_details_screen_edit_button),
                                   icon = Icons.Rounded.Edit,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 24.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
@@ -455,8 +451,6 @@ fun ViewDetailEventScreen(
                                       stringResource(
                                           id = R.string.event_details_screen_manage_staff_button),
                                   icon = Icons.Rounded.PeopleAlt,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 24.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
@@ -489,8 +483,6 @@ fun ViewDetailEventScreen(
                                 text =
                                     stringResource(id = R.string.event_details_screen_chat_button),
                                 icon = Icons.Rounded.ChatBubbleOutline,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -509,8 +501,6 @@ fun ViewDetailEventScreen(
                                     stringResource(
                                         id = R.string.event_details_screen_location_button),
                                 icon = Icons.Rounded.LocationOn,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -529,8 +519,6 @@ fun ViewDetailEventScreen(
                                     stringResource(
                                         id = R.string.event_details_screen_supplies_button),
                                 icon = Icons.Rounded.Backpack,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -549,8 +537,6 @@ fun ViewDetailEventScreen(
                                     stringResource(
                                         id = R.string.event_details_screen_voting_button),
                                 icon = Icons.Rounded.Poll,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -569,8 +555,6 @@ fun ViewDetailEventScreen(
                                     stringResource(
                                         id = R.string.event_details_screen_car_pooling_button),
                                 icon = Icons.Rounded.DirectionsCar,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()

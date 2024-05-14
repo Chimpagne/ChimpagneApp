@@ -16,9 +16,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -80,8 +78,6 @@ class CalendarTests() {
       ChimpagneButton(
           text = "Add to Calendar",
           icon = Icons.Default.CalendarMonth,
-          fontWeight = FontWeight.Bold,
-          fontSize = 16.sp,
           onClick = { intentToLaunch = createCalendarIntent(ChimpagneEvent) },
           backgroundColor = MaterialTheme.colorScheme.primary,
           shape = RoundedCornerShape(12.dp),
