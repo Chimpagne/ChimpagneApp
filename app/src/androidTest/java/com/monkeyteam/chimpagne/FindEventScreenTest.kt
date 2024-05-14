@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne
 
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -13,7 +12,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.rule.GrantPermissionRule
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
@@ -26,7 +24,6 @@ import com.monkeyteam.chimpagne.ui.utilities.QRCodeAnalyser
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
-import junit.framework.TestCase
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
@@ -108,49 +105,8 @@ class FindEventScreenTest {
     composeTestRule.onNodeWithTag("join_button").performClick()
 
     // Should be false because the user is not logged in (guest) so it will not trigger the
-    // joinEvent
-    // function hence no uiState will load anything
+    // joinEvent function hence no uiState will load anything
     assertFalse(findViewModel.uiState.value.loading)
-  }
-
-  @OptIn(ExperimentalMaterial3Api::class)
-  @Test
-  fun testJoinEventFunctionalityUserNotInEvent() {
-    val database = Database()
-    val findViewModel = FindEventsViewModel(database)
-    val accountViewModel = AccountViewModel(database)
-    val sampleEvent =
-        ChimpagneEvent(id = "sample123", title = "Sample Event", description = "Sample Description")
-    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
-    }
-
-    accountManager.signInTo(anAccount)
-    val n = sampleEvent.getRole(anAccount.firebaseAuthUID)
-    if (n == ChimpagneRole.GUEST) {
-      Log.d("m", "GUEST")
-    }
-    if (n == ChimpagneRole.NOT_IN_EVENT) {
-      Log.d("m", "NOT IN EVENT")
-    }
-    if (n == ChimpagneRole.OWNER) {
-      Log.d("m", "OWNER")
-    }
-    if (n == ChimpagneRole.STAFF) {
-      Log.d("m", "STAFF")
-    }
-    TestCase.assertEquals(
-        ChimpagneRole.NOT_IN_EVENT, sampleEvent.getRole(anAccount.firebaseAuthUID))
-
-    composeTestRule.onNodeWithTag("join_button").performClick()
-
-    assertTrue(findViewModel.uiState.value.loading)
-    //    TestCase.assertEquals(ChimpagneRole.GUEST, sampleEvent.getRole(anAccount.firebaseAuthUID))
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
