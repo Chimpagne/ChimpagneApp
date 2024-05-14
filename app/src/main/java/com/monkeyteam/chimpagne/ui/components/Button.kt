@@ -40,9 +40,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.R
@@ -50,15 +49,15 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import java.util.Locale
 
 @Composable
 fun ChimpagneButton(
     modifier: Modifier = Modifier,
-    text: String,
+    text: String = "Click Me",
     icon: ImageVector? = null,
-    fontWeight: FontWeight,
-    fontSize: TextUnit,
+    textStyle: TextStyle = ChimpagneTypography.displayMedium,
     onClick: () -> Unit,
     backgroundColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = RoundedCornerShape(12.dp),
@@ -78,9 +77,7 @@ fun ChimpagneButton(
             text = text,
             modifier = Modifier.weight(1f),
             fontFamily = ChimpagneFontFamily,
-            fontWeight = fontWeight,
-            fontSize = fontSize,
-            lineHeight = fontSize,
+            style = textStyle,
             textAlign = TextAlign.Center)
       }
 }
