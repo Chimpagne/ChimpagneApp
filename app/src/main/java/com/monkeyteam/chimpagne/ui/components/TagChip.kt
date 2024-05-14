@@ -39,7 +39,7 @@ fun SimpleTagChip(tag: String) {
   Text(
       text = "#$tag",
       style = MaterialTheme.typography.bodyLarge,
-      color = MaterialTheme.colorScheme.primary,
+      color = MaterialTheme.colorScheme.onPrimaryContainer,
       modifier = Modifier.padding(end = 8.dp))
 }
 
