@@ -54,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -367,6 +368,87 @@ fun ViewDetailEventScreen(
                             SocialButtonRow(
                                 context = context, socialMediaLinks = uiState.socialMediaLinks)
 
+
+                          IconRow(
+                              icons = listOf(
+                                  IconInfo(Icons.Rounded.RemoveCircleOutline, stringResource(id = R.string.event_details_screen_leave_button)) {
+                                      if (uiState.currentUserRole != ChimpagneRole.OWNER) {
+                                          eventViewModel.leaveTheEvent(
+                                              onSuccess = {
+                                                  Toast.makeText(
+                                                      context,
+                                                      context.getString(R.string.event_details_screen_leave_toast_success),
+                                                      Toast.LENGTH_SHORT
+                                                  ).show()
+                                                  navObject.goBack()
+                                              }
+                                          )
+                                      }
+                                  },
+                                  IconInfo(Icons.Rounded.PeopleAlt, stringResource(id = R.string.event_details_screen_manage_staff_button)) {
+                                      if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+                                          navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
+                                      }
+                                  },
+                                  IconInfo(Icons.Rounded.ChatBubbleOutline, stringResource(id = R.string.event_details_screen_chat_button)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.LocationOn, stringResource(id = R.string.event_details_screen_location_button)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.Backpack, stringResource(id = R.string.event_details_screen_supplies_button)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.Poll, stringResource(id = R.string.event_details_screen_voting_button)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.Home, stringResource(id = R.string.event_details_screen_bed_reservation)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.DirectionsCar, stringResource(id = R.string.event_details_screen_car_pooling_button)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.DirectionsCar, stringResource(id = R.string.event_details_screen_parking)) {
+                                      Toast.makeText(
+                                          context,
+                                          "This function will be implemented in a future version",
+                                          Toast.LENGTH_SHORT
+                                      ).show()
+                                  },
+                                  IconInfo(Icons.Rounded.Edit, stringResource(id = R.string.event_details_screen_edit_button)) {
+                                      if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+                                          navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                      }
+                                  }
+                              )
+                          )
+
+                          Spacer(Modifier.height(16.dp))
+
                             if (uiState.currentUserRole != ChimpagneRole.OWNER) {
 
                               ChimpagneButton(
@@ -397,19 +479,6 @@ fun ViewDetailEventScreen(
 
                             // Only the owner can manage the staff
                             if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-
-                              ChimpagneButton(
-                                  text =
-                                      stringResource(
-                                          id = R.string.event_details_screen_edit_button),
-                                  icon = Icons.Rounded.Edit,
-                                  modifier =
-                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                          .fillMaxWidth()
-                                          .testTag("edit"),
-                                  onClick = {
-                                    navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
-                                  })
                               Spacer(Modifier.height(16.dp))
                               ChimpagneButton(
                                   text =
@@ -609,3 +678,39 @@ fun ViewDetailEventScreen(
             }
       }
 }
+
+@Composable
+fun IconRow(icons: List<IconInfo>) {
+    Row(
+        modifier = Modifier
+            .horizontalScroll(rememberScrollState())
+            .padding(8.dp)
+    ) {
+        icons.forEach { iconInfo ->
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .clickable(onClick = iconInfo.onClick)
+            ) {
+                Icon(
+                    imageVector = iconInfo.icon,
+                    contentDescription = iconInfo.description,
+                    modifier = Modifier.size(36.dp)
+                )
+                Text(
+                    text = iconInfo.description,
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+data class IconInfo(
+    val icon: ImageVector,
+    val description: String,
+    val onClick: () -> Unit
+)
