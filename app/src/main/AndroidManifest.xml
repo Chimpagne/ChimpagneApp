@@ -37,8 +37,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter android:autoVerify="true">
-                <data android:host="@string/deep_link_url_event_host"
-                    android:pathPrefix="@string/deep_link_url_event_prefix"
+                <data android:host="www.manigo.ch"
+                    android:pathPrefix="/events"
                     android:scheme="https" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
