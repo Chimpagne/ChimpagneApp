@@ -69,6 +69,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
+import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
@@ -218,6 +219,9 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                                     fontWeight = FontWeight.Bold)
                                               }
                                         }
+                                        CalendarButton(
+                                            event = eventViewModel.buildChimpagneEvent(),
+                                            contextMainActivity = context)
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                           Text(
                                               text = stringResource(id = R.string.date_tools_until),
@@ -374,8 +378,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                       stringResource(
                                           id = R.string.event_details_screen_leave_button),
                                   icon = Icons.Rounded.RemoveCircleOutline,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 30.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                                           .fillMaxWidth()
@@ -405,8 +407,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                       stringResource(
                                           id = R.string.event_details_screen_edit_button),
                                   icon = Icons.Rounded.Edit,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 24.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
@@ -420,8 +420,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                       stringResource(
                                           id = R.string.event_details_screen_manage_staff_button),
                                   icon = Icons.Rounded.PeopleAlt,
-                                  fontWeight = FontWeight.Bold,
-                                  fontSize = 24.sp,
                                   modifier =
                                       Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                           .fillMaxWidth()
@@ -436,8 +434,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                 text =
                                     stringResource(id = R.string.event_details_screen_chat_button),
                                 icon = Icons.Rounded.ChatBubbleOutline,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -456,8 +452,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     stringResource(
                                         id = R.string.event_details_screen_location_button),
                                 icon = Icons.Rounded.LocationOn,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -476,8 +470,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     stringResource(
                                         id = R.string.event_details_screen_supplies_button),
                                 icon = Icons.Rounded.Backpack,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -492,8 +484,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     stringResource(
                                         id = R.string.event_details_screen_voting_button),
                                 icon = Icons.Rounded.Poll,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
@@ -512,8 +502,6 @@ fun ViewDetailEventScreen(navObject: NavigationActions, eventViewModel: EventVie
                                     stringResource(
                                         id = R.string.event_details_screen_car_pooling_button),
                                 icon = Icons.Rounded.DirectionsCar,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                                         .fillMaxWidth()
