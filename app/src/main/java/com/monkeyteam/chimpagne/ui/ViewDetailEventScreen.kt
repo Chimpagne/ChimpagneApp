@@ -28,12 +28,10 @@ import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -78,6 +76,7 @@ import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -273,8 +272,11 @@ fun ViewDetailEventScreen(
                                               .padding(horizontal = 24.dp, vertical = 8.dp)) {
                                         Text(
                                             text =
-                                                "${uiState.guests.count()} ${stringResource(
-                                        id = R.string.event_details_screen_number_of_guests)}",
+                                                "${uiState.guests.count()} ${
+                                          stringResource(
+                                              id = R.string.event_details_screen_number_of_guests
+                                          )
+                                      }",
                                             fontFamily = ChimpagneFontFamily,
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -330,15 +332,23 @@ fun ViewDetailEventScreen(
                                       })
                                   Text(
                                       text =
-                                          "${stringResource(
-                                            id = R.string.event_details_screen_organized_by)}\n ${accountsState.currentUserAccount?.firstName} ${accountsState.currentUserAccount?.lastName}",
+                                          "${
+                                      stringResource(
+                                          id = R.string.event_details_screen_organized_by
+                                      )
+                                  }\n ${accountsState.currentUserAccount?.firstName} ${accountsState.currentUserAccount?.lastName}",
                                       fontSize = 14.sp,
                                       fontFamily = ChimpagneFontFamily,
                                       color = MaterialTheme.colorScheme.onPrimaryContainer)
 
-                                  Spacer(modifier = Modifier.weight(1f))
+                                  Spacer(modifier = Modifier.height(16.dp))
 
-                                  Button(
+                                  ChimpagneButton(
+                                      text =
+                                          stringResource(
+                                              id = R.string.event_details_screen_report_problem),
+                                      icon = Icons.Default.Warning,
+                                      textStyle = ChimpagneTypography.displaySmall,
                                       onClick = {
                                         Toast.makeText(
                                                 context,
@@ -346,120 +356,109 @@ fun ViewDetailEventScreen(
                                                 Toast.LENGTH_SHORT)
                                             .show()
                                       },
-                                      modifier = Modifier.testTag("reportProblem")) {
-                                        Text(
-                                            text =
-                                                stringResource(
-                                                    id =
-                                                        R.string
-                                                            .event_details_screen_report_problem),
-                                            color = Color.White)
-                                        Spacer(modifier = Modifier.size(6.dp))
-                                        Icon(
-                                            imageVector = Icons.Default.Warning,
-                                            contentDescription = "Report a Problem",
-                                            tint = Color.White,
-                                            modifier = Modifier.size(16.dp))
-                                      }
+                                      modifier = Modifier.testTag("reportProblem"),
+                                  )
                                 }
+
+                            Spacer(Modifier.height(16.dp))
 
                             // MAP WILL BE ADDED HERE
 
                             SocialButtonRow(
                                 context = context, socialMediaLinks = uiState.socialMediaLinks)
 
+                            Spacer(Modifier.height(16.dp))
 
-                          IconRow(
-                              icons = listOf(
-                                  IconInfo(Icons.Rounded.RemoveCircleOutline, stringResource(id = R.string.event_details_screen_leave_button)) {
-                                      if (uiState.currentUserRole != ChimpagneRole.OWNER) {
-                                          eventViewModel.leaveTheEvent(
-                                              onSuccess = {
-                                                  Toast.makeText(
+                            IconRow(
+                                icons =
+                                    listOf(
+                                        IconInfo(
+                                            Icons.Rounded.ChatBubbleOutline,
+                                            stringResource(
+                                                id = R.string.event_details_screen_chat_button)) {
+                                              Toast.makeText(
                                                       context,
-                                                      context.getString(R.string.event_details_screen_leave_toast_success),
-                                                      Toast.LENGTH_SHORT
-                                                  ).show()
-                                                  navObject.goBack()
-                                              }
-                                          )
-                                      }
-                                  },
-                                  IconInfo(Icons.Rounded.PeopleAlt, stringResource(id = R.string.event_details_screen_manage_staff_button)) {
-                                      if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-                                          navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
-                                      }
-                                  },
-                                  IconInfo(Icons.Rounded.ChatBubbleOutline, stringResource(id = R.string.event_details_screen_chat_button)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.LocationOn, stringResource(id = R.string.event_details_screen_location_button)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.Backpack, stringResource(id = R.string.event_details_screen_supplies_button)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.Poll, stringResource(id = R.string.event_details_screen_voting_button)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.Home, stringResource(id = R.string.event_details_screen_bed_reservation)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.DirectionsCar, stringResource(id = R.string.event_details_screen_car_pooling_button)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.DirectionsCar, stringResource(id = R.string.event_details_screen_parking)) {
-                                      Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT
-                                      ).show()
-                                  },
-                                  IconInfo(Icons.Rounded.Edit, stringResource(id = R.string.event_details_screen_edit_button)) {
-                                      if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-                                          navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
-                                      }
-                                  }
-                              )
-                          )
+                                                      /* TODO Implement this later */
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            },
+                                        IconInfo(
+                                            Icons.Rounded.Backpack,
+                                            stringResource(
+                                                id =
+                                                    R.string
+                                                        .event_details_screen_supplies_button)) {
+                                              Toast.makeText(
+                                                      context,
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            },
+                                        IconInfo(
+                                            Icons.Rounded.DirectionsCar,
+                                            stringResource(
+                                                id =
+                                                    R.string
+                                                        .event_details_screen_car_pooling_button)) {
+                                              Toast.makeText(
+                                                      context,
+                                                      /* TODO Implement this later */
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            },
+                                        IconInfo(
+                                            Icons.Rounded.Poll,
+                                            stringResource(
+                                                id = R.string.event_details_screen_voting_button)) {
+                                              Toast.makeText(
+                                                      context,
+                                                      /* TODO Implement this later */
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            },
+                                        IconInfo(
+                                            Icons.Rounded.Home,
+                                            stringResource(
+                                                id =
+                                                    R.string
+                                                        .event_details_screen_bed_reservation)) {
+                                              Toast.makeText(
+                                                      context,
+                                                      /* TODO Implement this later */
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            },
+                                        IconInfo(
+                                            Icons.Rounded.DirectionsCar,
+                                            stringResource(
+                                                id = R.string.event_details_screen_parking)) {
+                                              Toast.makeText(
+                                                      context,
+                                                      /* TODO Implement this later */
+                                                      "This function will be implemented in a future version",
+                                                      Toast.LENGTH_SHORT)
+                                                  .show()
+                                            }))
 
-                          Spacer(Modifier.height(16.dp))
-
-                            if (uiState.currentUserRole != ChimpagneRole.OWNER) {
-
+                            Spacer(Modifier.height(16.dp))
+                          }
+                    }
+                    item {
+                      if (uiState.currentUserRole != ChimpagneRole.OWNER) {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                            contentAlignment = Alignment.Center) {
                               ChimpagneButton(
                                   text =
                                       stringResource(
                                           id = R.string.event_details_screen_leave_button),
                                   icon = Icons.Rounded.RemoveCircleOutline,
-                                  modifier =
-                                      Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                                          .fillMaxWidth()
-                                          .testTag("leave"),
+                                  modifier = Modifier.padding(horizontal = 16.dp).testTag("leave"),
+                                  textStyle = ChimpagneTypography.displayMedium,
                                   onClick = {
                                     eventViewModel.leaveTheEvent(
                                         onSuccess = {
@@ -474,204 +473,45 @@ fun ViewDetailEventScreen(
                                         })
                                   })
                             }
+                      }
 
-                            Spacer(Modifier.height(24.dp))
-
-                            // Only the owner can manage the staff
-                            if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-                              Spacer(Modifier.height(16.dp))
+                      // Only the owner can manage the staff
+                      if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                            horizontalArrangement = Arrangement.Start) {
                               ChimpagneButton(
                                   text =
                                       stringResource(
                                           id = R.string.event_details_screen_manage_staff_button),
                                   icon = Icons.Rounded.PeopleAlt,
                                   modifier =
-                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                          .fillMaxWidth()
+                                      Modifier.padding(horizontal = 2.dp)
+                                          .height(60.dp)
+                                          .weight(1f)
                                           .testTag("manage staff"),
+                                  textStyle = ChimpagneTypography.displaySmall,
                                   onClick = {
                                     navObject.navigateTo(
                                         Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                                   })
-                            }
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text =
-                                    stringResource(id = R.string.event_details_screen_chat_button),
-                                icon = Icons.Rounded.ChatBubbleOutline,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("chat"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text =
-                                    stringResource(
-                                        id = R.string.event_details_screen_location_button),
-                                icon = Icons.Rounded.LocationOn,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("location"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text =
-                                    stringResource(
-                                        id = R.string.event_details_screen_supplies_button),
-                                icon = Icons.Rounded.Backpack,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("supplies"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text =
-                                    stringResource(
-                                        id = R.string.event_details_screen_voting_button),
-                                icon = Icons.Rounded.Poll,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("polls"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text =
-                                    stringResource(
-                                        id = R.string.event_details_screen_bed_reservation),
-                                icon = Icons.Rounded.Home,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("bed_reservation"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text =
-                                    stringResource(
-                                        id = R.string.event_details_screen_car_pooling_button),
-                                icon = Icons.Rounded.DirectionsCar,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("car pooling"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-                            Spacer(Modifier.height(16.dp))
-                            ChimpagneButton(
-                                text = stringResource(id = R.string.event_details_screen_parking),
-                                icon = Icons.Rounded.DirectionsCar,
-                                modifier =
-                                    Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                        .fillMaxWidth()
-                                        .testTag("parking"),
-                                onClick = {
-                                  /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
-                                })
-
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                thickness = 1.dp,
-                                color = Color.LightGray)
-                          }
-                    }
-
-                    item {
-                      Column(
-                          modifier = Modifier.fillMaxSize(),
-                          horizontalAlignment = Alignment.Start) {
-                            if (uiState.currentUserRole != ChimpagneRole.OWNER) {
-
-                              ChimpagneButton(
-                                  text =
-                                      stringResource(
-                                          id = R.string.event_details_screen_leave_button),
-                                  icon = Icons.Rounded.RemoveCircleOutline,
-                                  modifier =
-                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                          .fillMaxWidth()
-                                          .testTag("leave"),
-                                  onClick = {
-                                    eventViewModel.leaveTheEvent(
-                                        onSuccess = {
-                                          Toast.makeText(
-                                                  context,
-                                                  context.getString(
-                                                      R.string
-                                                          .event_details_screen_leave_toast_success),
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                          navObject.goBack()
-                                        })
-                                  })
-                            }
-
-                            // Only the owner can edit the event settings
-                            if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-
                               ChimpagneButton(
                                   text =
                                       stringResource(
                                           id = R.string.event_details_screen_edit_button),
                                   icon = Icons.Rounded.Edit,
                                   modifier =
-                                      Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                          .fillMaxWidth()
+                                      Modifier.padding(horizontal = 2.dp)
+                                          .height(60.dp)
+                                          .weight(1f)
                                           .testTag("edit"),
+                                  textStyle = ChimpagneTypography.displaySmall,
                                   onClick = {
                                     navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                                   })
                             }
-                          }
+                      }
+
                       Spacer(Modifier.height(16.dp))
                     }
                   }
@@ -681,36 +521,23 @@ fun ViewDetailEventScreen(
 
 @Composable
 fun IconRow(icons: List<IconInfo>) {
-    Row(
-        modifier = Modifier
-            .horizontalScroll(rememberScrollState())
-            .padding(8.dp)
-    ) {
-        icons.forEach { iconInfo ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .clickable(onClick = iconInfo.onClick)
-            ) {
-                Icon(
-                    imageVector = iconInfo.icon,
-                    contentDescription = iconInfo.description,
-                    modifier = Modifier.size(36.dp)
-                )
-                Text(
-                    text = iconInfo.description,
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
-        }
+  Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp)) {
+    icons.forEach { iconInfo ->
+      Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier = Modifier.padding(horizontal = 16.dp).clickable(onClick = iconInfo.onClick)) {
+            Icon(
+                imageVector = iconInfo.icon,
+                contentDescription = iconInfo.description,
+                modifier = Modifier.size(40.dp))
+            Text(
+                text = iconInfo.description,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 4.dp))
+          }
     }
+  }
 }
 
-data class IconInfo(
-    val icon: ImageVector,
-    val description: String,
-    val onClick: () -> Unit
-)
+data class IconInfo(val icon: ImageVector, val description: String, val onClick: () -> Unit)

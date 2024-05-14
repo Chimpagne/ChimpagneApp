@@ -29,6 +29,7 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
@@ -69,6 +70,7 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
             verticalArrangement = Arrangement.Center) {
               ChimpagneButton(
                   modifier = Modifier.testTag("open_events_button"),
+                  textStyle = ChimpagneTypography.displayLarge,
                   onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
                       showPromptLogin = true
@@ -80,11 +82,13 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("discover_events_button"),
+                  textStyle = ChimpagneTypography.displayLarge,
                   onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                   text = stringResource(R.string.homescreen_join_event))
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("organize_event_button"),
+                  textStyle = ChimpagneTypography.displayLarge,
                   onClick = {
                     if (!accountViewModel.isUserLoggedIn()) {
                       showPromptLogin = true

@@ -70,11 +70,11 @@
     <string name="event_details_screen_report_problem">Signaler un Problème</string>
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
-    <string name="event_details_screen_edit_button">Éditer l\'événement</string>
+    <string name="event_details_screen_edit_button">Éditer l\'Evénement</string>
     <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
     <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
-    <string name="event_details_screen_bed_reservation">Réservation de Lits</string>
+    <string name="event_details_screen_bed_reservation">Hébergement</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
     <string name="event_details_screen_parking">Parking</string>
