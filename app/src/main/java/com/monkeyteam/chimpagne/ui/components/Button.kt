@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.ui.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +27,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -32,9 +39,14 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
+import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
@@ -100,6 +112,57 @@ fun GoBackButton(navigationActions: NavigationActions) {
         contentDescription = "Go Back",
         tint = MaterialTheme.colorScheme.onSurface)
   }
+}
+
+@Composable
+fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
+  var showDialog by remember { mutableStateOf(false) }
+  IconButton(modifier = Modifier.testTag("calendarButton"), onClick = { showDialog = true }) {
+    Icon(
+        imageVector = Icons.Default.CalendarMonth,
+        contentDescription = "Add to Calendar",
+        tint = MaterialTheme.colorScheme.onSurface,
+        modifier = Modifier.testTag("calendarButtonIcon"))
+  }
+  if (showDialog) {
+    popUpCalendar(
+        onAccept = {
+          val intent = createCalendarIntent(event)
+          if (intent != null) {
+            contextMainActivity.startActivity(intent)
+          } else {
+            Toast.makeText(
+                    contextMainActivity, "Event can't be added to calendar", Toast.LENGTH_SHORT)
+                .show()
+          }
+          showDialog = false
+        },
+        onReject = { showDialog = false },
+        event = event)
+  }
+}
+
+@Composable
+fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEvent?) {
+  val textQuestion =
+      stringResource(id = R.string.add_event_to_calendar_prefix) +
+          event?.title +
+          stringResource(id = R.string.add_event_to_calendar_suffix)
+  val builder =
+      AlertDialog(
+          onDismissRequest = { onReject() },
+          title = { Text("Add to Calendar") },
+          text = { Text(textQuestion) },
+          confirmButton = {
+            Button(onClick = { onAccept() }, modifier = Modifier.testTag("acceptButton")) {
+              Text("Yes")
+            }
+          },
+          dismissButton = {
+            Button(onClick = { onReject() }, modifier = Modifier.testTag("rejectButton")) {
+              Text("No")
+            }
+          })
 }
 
 @Composable
