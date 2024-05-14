@@ -1,8 +1,8 @@
 package com.monkeyteam.chimpagne
 
 import DateSelector
-import android.content.Intent
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,11 +40,11 @@ import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
-import com.monkeyteam.chimpagne.ui.components.popUpCalendar
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.components.SocialButton
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
+import com.monkeyteam.chimpagne.ui.components.popUpCalendar
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.utilities.GoogleAuthentication
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import java.util.Calendar
@@ -52,6 +52,7 @@ import java.util.Locale
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
+import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -226,6 +227,7 @@ class ProfileIconTest {
   }
 }
 
+@RunWith(Enclosed::class)
 class TestCalendar() {
 
   @get:Rule val composeTestRule = createComposeRule()
@@ -384,60 +386,64 @@ class TestCalendar() {
 
     composeTestRule.onNodeWithTag("acceptButton").assertIsNotDisplayed()
     composeTestRule.onNodeWithTag("rejectButton").assertIsNotDisplayed()
-
-class TestSocialButtonConstructs {
-
-  @get:Rule val composeTestRule = createComposeRule()
-
-  private val context: Context = ApplicationProvider.getApplicationContext()
-
-  @Test
-  fun testSocialButton() {
-    composeTestRule.setContent {
-      SocialButton(
-          imageLogo = R.drawable.discord,
-          urlAsString = "https://discord.gg/",
-          context = context,
-          testTag = "Discord_Button")
-    }
-
-    composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
   }
 
-  @Test
-  fun AllThreeDisplayed() {
-    val mapSocialMedia = SupportedSocialMedia.associateBy { it.platformName }
-    val filledInSocialMedia =
-        mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
-    composeTestRule.setContent {
-      SocialButtonRow(context = context, socialMediaLinks = filledInSocialMedia)
-    }
-    composeTestRule.waitForIdle()
-    composeTestRule.onNodeWithTag("discord_input").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("whatsapp_input").assertExists().isDisplayed()
-    composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
-  }
+  class TestSocialButtonConstructs {
 
-  @Test
-  fun OnlyTelegramDisplayed() {
-    val socialMediaMap = SupportedSocialMedia.associateBy { it.platformName }
-    val telegramMap =
-        mapOf(socialMediaMap["telegram"]!!.platformName to socialMediaMap["telegram"]!!)
-    val withValueMap =
-        telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
-    composeTestRule.setContent {
-      SocialButtonRow(context = context, socialMediaLinks = withValueMap)
-    }
-    composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
-  }
+    @get:Rule val composeTestRule = createComposeRule()
 
-  @Test
-  fun NoneDisplayed() {
-    composeTestRule.setContent { SocialButtonRow(context = context, socialMediaLinks = emptyMap()) }
-    composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
-    composeTestRule.onNodeWithTag("telegram_input").assertDoesNotExist()
+    private val context: Context = ApplicationProvider.getApplicationContext()
+
+    @Test
+    fun testSocialButton() {
+      composeTestRule.setContent {
+        SocialButton(
+            imageLogo = R.drawable.discord,
+            urlAsString = "https://discord.gg/",
+            context = context,
+            testTag = "Discord_Button")
+      }
+
+      composeTestRule.onNodeWithTag("Discord_Button").assertExists().isDisplayed()
+    }
+
+    @Test
+    fun AllThreeDisplayed() {
+      val mapSocialMedia = SupportedSocialMedia.associateBy { it.platformName }
+      val filledInSocialMedia =
+          mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+      composeTestRule.setContent {
+        SocialButtonRow(context = context, socialMediaLinks = filledInSocialMedia)
+      }
+      composeTestRule.waitForIdle()
+      composeTestRule.onNodeWithTag("discord_input").assertExists().isDisplayed()
+      composeTestRule.onNodeWithTag("whatsapp_input").assertExists().isDisplayed()
+      composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
+    }
+
+    @Test
+    fun OnlyTelegramDisplayed() {
+      val socialMediaMap = SupportedSocialMedia.associateBy { it.platformName }
+      val telegramMap =
+          mapOf(socialMediaMap["telegram"]!!.platformName to socialMediaMap["telegram"]!!)
+      val withValueMap =
+          telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+      composeTestRule.setContent {
+        SocialButtonRow(context = context, socialMediaLinks = withValueMap)
+      }
+      composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
+      composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
+      composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
+    }
+
+    @Test
+    fun NoneDisplayed() {
+      composeTestRule.setContent {
+        SocialButtonRow(context = context, socialMediaLinks = emptyMap())
+      }
+      composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
+      composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
+      composeTestRule.onNodeWithTag("telegram_input").assertDoesNotExist()
+    }
   }
 }

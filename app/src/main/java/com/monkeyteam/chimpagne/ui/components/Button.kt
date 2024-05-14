@@ -1,9 +1,9 @@
 package com.monkeyteam.chimpagne.ui.components
 
 import android.content.Context
-import android.widget.Toast
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,16 +38,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
-import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import java.util.Locale
@@ -166,6 +166,9 @@ fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEv
               Text("No")
             }
           })
+}
+
+@Composable
 fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag: String) {
   Image(
       painter = painterResource(id = imageLogo),
