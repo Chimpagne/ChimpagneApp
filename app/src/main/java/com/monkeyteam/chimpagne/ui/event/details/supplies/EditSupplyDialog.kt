@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui.event.details.supplies
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -52,35 +51,33 @@ fun EditSupplyDialog(
                         unit = unit))
                 onDismissRequest()
               })) {
-        Row(Modifier.fillMaxWidth()) {
-          OutlinedTextField(
-              modifier = Modifier.weight(0.50f).padding(5.dp).testTag("supplies_quantity_field"),
-              maxLines = 1,
-              value = quantity,
-              onValueChange = {
-                if ((it.toIntOrNull() ?: -1) > 0) {
-                  if (quantity == "0") {
-                    if (it.first() == '0') quantity = it.drop(1) else quantity = it.dropLast(1)
-                  } else quantity = it
-                }
-                if (it == "") quantity = "0"
-              },
-              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-              textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-              placeholder = { Text(stringResource(id = R.string.supplies_quantity)) })
-          OutlinedTextField(
-              modifier = Modifier.weight(0.50f).padding(5.dp).testTag("supplies_unit_field"),
-              maxLines = 1,
-              value = unit,
-              onValueChange = { unit = it },
-              placeholder = { Text(stringResource(id = R.string.supplies_unit)) })
-        }
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("supplies_quantity_field"),
+            maxLines = 1,
+            value = quantity,
+            onValueChange = {
+              if ((it.toIntOrNull() ?: -1) > 0) {
+                if (quantity == "0") {
+                  if (it.first() == '0') quantity = it.drop(1) else quantity = it.dropLast(1)
+                } else quantity = it
+              }
+              if (it == "") quantity = "0"
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            label = { Text(stringResource(id = R.string.supplies_quantity)) })
+
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("supplies_unit_field"),
+            maxLines = 1,
+            value = unit,
+            onValueChange = { unit = it },
+            label = { Text(stringResource(id = R.string.supplies_unit)) })
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("supplies_description_field"),
             maxLines = 1,
             value = description,
             onValueChange = { description = it },
-            placeholder = { Text(stringResource(id = R.string.supplies_description)) })
+            label = { Text(stringResource(id = R.string.supplies_description)) })
       }
 }

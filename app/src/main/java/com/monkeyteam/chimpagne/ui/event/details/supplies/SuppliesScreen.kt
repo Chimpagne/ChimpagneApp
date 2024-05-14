@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -137,11 +136,7 @@ fun SuppliesScreen(
         TopAppBar(
             title = { Text(stringResource(id = R.string.supplies_screen_title)) },
             modifier = Modifier.shadow(4.dp),
-            navigationIcon = {
-              IconButton(onClick = { navObject.goBack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-              }
-            })
+            navigationIcon = { GoBackButton(navObject) })
       }) { innerPadding ->
         if (eventUiState.supplies.isEmpty()) {
           Text(

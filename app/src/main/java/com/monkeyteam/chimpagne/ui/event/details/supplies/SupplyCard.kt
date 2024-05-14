@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 
 @Composable
@@ -33,7 +35,8 @@ fun SupplyCard(supply: ChimpagneSupply, modifier: Modifier = Modifier, onClick: 
                   text = "${supply.quantity} ${supply.unit}",
                   modifier = Modifier.testTag("supply_quantity_and_unit"))
               Text(
-                  text = "${supply.assignedTo.keys.size} assigned",
+                  text =
+                      "${supply.assignedTo.keys.size} ${stringResource(id = R.string.supplies_nb_assigned)}",
                   modifier = Modifier.testTag("supply_nb_assigned"))
             }
       }

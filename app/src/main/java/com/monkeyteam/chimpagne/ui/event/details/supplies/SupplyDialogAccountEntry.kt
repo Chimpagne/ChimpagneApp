@@ -24,12 +24,12 @@ fun SupplyDialogAccountEntry(
 ) {
   ListItem(
       headlineContent = {
-        Text(
-            text =
-                "${account?.firstName} ${account?.lastName}" +
-                    if (account!!.firebaseAuthUID == loggedUserUID)
-                        " (${stringResource(id = R.string.chimpagne_you)})"
-                    else "")
+        val accountName = "${account?.firstName} ${account?.lastName}"
+        val accountIsYou =
+            if (account!!.firebaseAuthUID == loggedUserUID)
+                " (${stringResource(id = R.string.chimpagne_you)})"
+            else ""
+        Text(text = accountName + accountIsYou)
       },
       colors = ListItemDefaults.colors(containerColor = Color.Transparent),
       trailingContent = {

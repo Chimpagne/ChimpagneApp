@@ -95,36 +95,37 @@ fun StaffSupplyDialog(
                   stringResource(id = R.string.supplies_supply_assigned_to),
                   modifier = Modifier.testTag("staff_list"))
             }
-            accounts.entries.forEach { (userUID, userAccount) ->
-              if (tempSupply.assignedTo[userUID] == true) {
-                item {
-                  SupplyDialogAccountEntry(
-                      account = userAccount,
-                      loggedUserUID = loggedUserUID,
-                      showCheckBox = true,
-                      true) {
-                        tempSupply = tempSupply.copy(assignedTo = tempSupply.assignedTo - userUID)
-                      }
+            accounts.entries
+                .filter { (userUID) -> tempSupply.assignedTo[userUID] == true }
+                .forEach { (userUID, userAccount) ->
+                  item {
+                    SupplyDialogAccountEntry(
+                        account = userAccount,
+                        loggedUserUID = loggedUserUID,
+                        showCheckBox = true,
+                        true) {
+                          tempSupply = tempSupply.copy(assignedTo = tempSupply.assignedTo - userUID)
+                        }
+                  }
                 }
-              }
-            }
           }
           if (!tempSupply.assignedTo.keys.containsAll(accounts.keys)) {
             item { Text(stringResource(id = R.string.supplies_not_assigned_to)) }
-            accounts.entries.forEach { (userUID, userAccount) ->
-              if (tempSupply.assignedTo[userUID] != true) {
-                item {
-                  SupplyDialogAccountEntry(
-                      account = userAccount,
-                      loggedUserUID = loggedUserUID,
-                      showCheckBox = true,
-                      false) {
-                        tempSupply =
-                            tempSupply.copy(assignedTo = tempSupply.assignedTo + (userUID to true))
-                      }
+            accounts.entries
+                .filter { (userUID) -> tempSupply.assignedTo[userUID] != true }
+                .forEach { (userUID, userAccount) ->
+                  item {
+                    SupplyDialogAccountEntry(
+                        account = userAccount,
+                        loggedUserUID = loggedUserUID,
+                        showCheckBox = true,
+                        false) {
+                          tempSupply =
+                              tempSupply.copy(
+                                  assignedTo = tempSupply.assignedTo + (userUID to true))
+                        }
+                  }
                 }
-              }
-            }
           }
         }
       }

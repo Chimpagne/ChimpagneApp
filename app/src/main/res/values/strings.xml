@@ -113,7 +113,7 @@
     <string name="supplies_quantity">Quantity</string>
     <string name="supplies_unit">Unit</string>
     <string name="supplies_assign_myself">Assign myself</string>
-    <string name="supplies_unassign_myself">Unassign myself</string>
+    <string name="supplies_unassign_myself">Remove myself</string>
     <string name="supplies_supply_not_assigned">Supply not assigned !</string>
     <string name="supplies_supply_assigned_to">Supply already assigned to</string>
     <string name="supplies_not_assigned_to">Supply not assigned to</string>
@@ -123,4 +123,5 @@
     <string name="supplies_empty">No supply created</string>
     <string name="supplies_delete">Delete this supply ?</string>
     <string name="supplies_delete_description">This action is irreversible !</string>
+    <string name="supplies_nb_assigned">assigned</string>
 </resources>

@@ -112,7 +112,7 @@
     <string name="supplies_quantity">Quantité</string>
     <string name="supplies_unit">Unité</string>
     <string name="supplies_assign_myself">M\'assigner</string>
-    <string name="supplies_unassign_myself">Me désassigner</string>
+    <string name="supplies_unassign_myself">Me retirer</string>
     <string name="supplies_supply_not_assigned">Cette fourniture n\'est pas assignée !</string>
     <string name="supplies_supply_assigned_to">Personnes assignées</string>
     <string name="supplies_not_assigned_to">Personnes non assignées</string>
@@ -122,4 +122,5 @@
     <string name="supplies_empty">Aucune fourniture ajoutée !</string>
     <string name="supplies_delete">Supprimer cette fourniture ?</string>
     <string name="supplies_delete_description">Cette action est irreversible !</string>
+    <string name="supplies_nb_assigned">assignés</string>
 </resources>
