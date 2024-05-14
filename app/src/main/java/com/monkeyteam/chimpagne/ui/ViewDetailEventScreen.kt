@@ -67,6 +67,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
@@ -121,10 +122,10 @@ fun ViewDetailEventScreen(
             navigationIcon = {
               IconButton(
                   onClick = {
-                    if (!accountViewModel.isUserLoggedIn()) {
-                      showPromptLogin = true
-                    } else {
+                    if (accountViewModel.isUserLoggedIn()) {
                       navObject.goBack()
+                    } else {
+                      showPromptLogin = true
                     }
                   },
                   modifier = Modifier.testTag("go back")) {
@@ -407,9 +408,7 @@ fun ViewDetailEventScreen(
                                           .fillMaxWidth()
                                           .testTag("leave"),
                                   onClick = {
-                                    if (!accountViewModel.isUserLoggedIn()) {
-                                      showPromptLogin = true
-                                    } else {
+                                    if (accountViewModel.isUserLoggedIn()) {
                                       eventViewModel.leaveTheEvent(
                                           onSuccess = {
                                             Toast.makeText(
@@ -421,6 +420,8 @@ fun ViewDetailEventScreen(
                                                 .show()
                                             navObject.goBack()
                                           })
+                                    } else {
+                                      showPromptLogin = true
                                     }
                                   })
                             }
@@ -442,11 +443,11 @@ fun ViewDetailEventScreen(
                                           .fillMaxWidth()
                                           .testTag("edit"),
                                   onClick = {
-                                    if (!accountViewModel.isUserLoggedIn()) {
-                                      showPromptLogin = true
-                                    } else {
+                                    if (accountViewModel.isUserLoggedIn()) {
                                       navObject.navigateTo(
                                           Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                    } else {
+                                      showPromptLogin = true
                                     }
                                   })
                               Spacer(Modifier.height(16.dp))
@@ -478,7 +479,9 @@ fun ViewDetailEventScreen(
                                         .testTag("share"),
                                 onClick = {
                                   val annotatedString = buildAnnotatedString {
-                                    append("https://www.manigo.ch/events/?uid=${uiState.id}")
+                                    append(
+                                        getString(context, R.string.deep_link_url_event) +
+                                            uiState.id)
                                   }
                                   clipboardManager.setText(annotatedString)
                                 })

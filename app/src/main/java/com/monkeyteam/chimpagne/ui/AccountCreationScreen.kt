@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getString
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -61,11 +62,19 @@ fun AccountCreation(
           navObject.navigateTo(Route.LOADING)
           accountViewModel.submitUpdatedAccount(
               onSuccess = {
-                Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        getString(context, R.string.account_created_toast),
+                        Toast.LENGTH_SHORT)
+                    .show()
                 onSuccess()
               },
               onFailure = {
-                Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        getString(context, R.string.acount_creation_failed_toast),
+                        Toast.LENGTH_SHORT)
+                    .show()
                 onFailure()
               })
         } else {

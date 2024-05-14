@@ -104,4 +104,9 @@
 
     <string name="supplies_add_dialog_title">Ajouter une fourniture</string>
     <string name="supplies_dialog_description">Détails de la fourniture</string>
+
+    <!-- AccountCreation -->
+    <string name="account_created_toast">Compte créé</string>
+    <string name="acount_creation_failed_toast">Création de compte échouée</string>
+
 </resources>

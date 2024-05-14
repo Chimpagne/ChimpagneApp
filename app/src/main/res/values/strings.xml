@@ -104,4 +104,13 @@
 
     <string name="supplies_add_dialog_title">Add a supply</string>
     <string name="supplies_dialog_description">Enter the supply details</string>
+
+    <!-- DeepLinks -->
+    <string name="deep_link_url_event" translatable="false">https://www.manigo.ch/events/?uid=</string>
+    <string name="deep_link_url_event_host" translatable="false">www.manigo.ch</string>
+    <string name="deep_link_url_event_prefix" translatable="false">/events</string>
+
+    <!-- AccountCreation -->
+    <string name="account_created_toast">Account created</string>
+    <string name="acount_creation_failed_toast">Account creation failed</string>
 </resources>

@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 FirebaseAuth.getInstance().currentUser?.uid!!,
                 { account ->
                   if (account == null) {
-                    Log.d("MainActivity", "Account is not in database")
+                    Log.e("MainActivity", "Account is not in database")
                     navActions.clearAndNavigateTo(successRoute)
                   } else {
                     Log.d("MainActivity", "Account is in database")
@@ -99,13 +99,17 @@ class MainActivity : ComponentActivity() {
                   onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
-              val onSuccessACS = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) }
-              val onFailureACS = { navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true) }
+              val onSuccessAccountCreationScreen = {
+                navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+              }
+              val onFailureAccountCreationScreen = {
+                navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+              }
               AccountCreation(
                   navObject = navActions,
                   accountViewModel = accountViewModel,
-                  onSuccess = onSuccessACS,
-                  onFailure = onFailureACS)
+                  onSuccess = onSuccessAccountCreationScreen,
+                  onFailure = onFailureAccountCreationScreen)
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
               AccountSettings(
@@ -147,7 +151,7 @@ class MainActivity : ComponentActivity() {
                 deepLinks =
                     listOf(
                         navDeepLink {
-                          uriPattern = "https://www.manigo.ch/events/?uid={EventID}"
+                          uriPattern = getString(R.string.deep_link_url_event) + "{EventID}"
                           action = Intent.ACTION_VIEW
                         }),
                 arguments =
