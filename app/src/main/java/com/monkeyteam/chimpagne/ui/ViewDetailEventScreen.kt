@@ -463,8 +463,6 @@ fun ViewDetailEventScreen(
                             Spacer(Modifier.height(16.dp))
                             ChimpagneButton(
                                 text = stringResource(id = R.string.share_event_button),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
                                 icon = Icons.Rounded.Share,
                                 modifier =
                                     Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
