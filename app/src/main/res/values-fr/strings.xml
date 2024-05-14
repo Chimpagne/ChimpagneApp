@@ -90,6 +90,7 @@
     <string name="join_event_staff">Vous êtes déjà un membre du Staff pour cet Evénement</string>
     <string name="join_event_guest">Vous êtes déjà inscrit à cet Evénement</string>
     <string name="join_event_owner">Vous êtes l\'Organisateur de cet Evénement</string>
+    <string name="share_event_button">Partager</string>
     <string name="calendar_failed">L\'événement ne peut pas être ajouté au calendrier</string>
     <string name="add_event_to_calendar_prefix">Voulez-vous ajouter l\'événement \"</string>
     <string name="add_event_to_calendar_suffix">\" à votre calendrier ?</string>
@@ -109,4 +110,9 @@
 
     <string name="supplies_add_dialog_title">Ajouter une fourniture</string>
     <string name="supplies_dialog_description">Détails de la fourniture</string>
+
+    <!-- AccountCreation -->
+    <string name="account_created_toast">Compte créé</string>
+    <string name="acount_creation_failed_toast">Création de compte échouée</string>
+
 </resources>
