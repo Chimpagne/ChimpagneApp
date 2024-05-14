@@ -13,6 +13,10 @@ data class Location(
 
   constructor(name: String) : this(name = name, latitude = 0.0, longitude = 0.0, geohash = "")
 
+  fun asGooglePlex(): String {
+    return "$latitude,$longitude"
+  }
+
   constructor(
       name: String,
       latitude: Double,

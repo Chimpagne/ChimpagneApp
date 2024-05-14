@@ -225,7 +225,7 @@ class FindEventScreenTest {
   fun testEventDetailSheetDisplay() {
     val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
 
-    composeTestRule.setContent { DetailScreenSheet(sampleEvent) {} }
+    composeTestRule.setContent { DetailScreenSheet(event = sampleEvent) }
 
     // Assert that event details are displayed correctly
     composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()

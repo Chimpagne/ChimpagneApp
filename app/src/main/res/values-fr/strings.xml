@@ -90,6 +90,9 @@
     <string name="join_event_staff">Vous êtes déjà un membre du Staff pour cet Evénement</string>
     <string name="join_event_guest">Vous êtes déjà inscrit à cet Evénement</string>
     <string name="join_event_owner">Vous êtes l\'Organisateur de cet Evénement</string>
+    <string name="calendar_failed">L\'événement ne peut pas être ajouté au calendrier</string>
+    <string name="add_event_to_calendar_prefix">Voulez-vous ajouter l\'événement \"</string>
+    <string name="add_event_to_calendar_suffix">\" à votre calendrier ?</string>
     <string name="manage_staff_screen_title">Gérer le personnel</string>
     <string name="manage_staff_screen_staff_list_name">Liste du personnel:</string>
     <string name="manage_staff_screen_empty_staff_list">Il n\'y a pas de personnel dans l\'événement</string>
