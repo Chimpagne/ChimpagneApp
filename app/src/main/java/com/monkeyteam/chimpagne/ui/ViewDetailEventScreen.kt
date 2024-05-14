@@ -72,6 +72,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
+import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
@@ -240,6 +241,9 @@ fun ViewDetailEventScreen(
                                                     fontWeight = FontWeight.Bold)
                                               }
                                         }
+                                        CalendarButton(
+                                            event = eventViewModel.buildChimpagneEvent(),
+                                            contextMainActivity = context)
                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                           Text(
                                               text = stringResource(id = R.string.date_tools_until),

@@ -27,8 +27,6 @@
     <string name="event_creation_screen_event_made_public">Cet événement a été rendu publique !</string>
     <string name="event_creation_screen_make_event_public">Rendre cet événement publique</string>
     <string name="event_creation_screen_public_legend">Visibilité De l\'événement</string>
-    <string name="event_creation_screen_supplies">Courses</string>
-    <string name="event_creation_screen_add_supplies">Ajouter des courses</string>
     <string name="event_creation_screen_logistics">Logistique avancée</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
@@ -51,9 +49,6 @@
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
     <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
-    <string name="supplies_description">Description</string>
-    <string name="supplies_quantity">Quantité</string>
-    <string name="supplies_unit">Unité</string>
     <string name="chimpagne_cancel">Annuler</string>
     <string name="chimpagne_add">Ajouter</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
@@ -78,7 +73,6 @@
     <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
     <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
-    <string name="event_details_screen_supplies_button">Trucs à amener</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
     <string name="edit_event">Editer l\'événement</string>
@@ -91,9 +85,23 @@
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
     <string name="share_event_button">Partager</string>
+    <string name="calendar_failed">L\'événement ne peut pas être ajouté au calendrier</string>
+    <string name="add_event_to_calendar_prefix">Voulez-vous ajouter l\'événement \"</string>
+    <string name="add_event_to_calendar_suffix">\" à votre calendrier ?</string>
     <string name="manage_staff_screen_title">Gérer le personnel</string>
     <string name="manage_staff_screen_staff_list_name">Liste du personnel:</string>
     <string name="manage_staff_screen_empty_staff_list">Il n\'y a pas de personnel dans l\'événement</string>
     <string name="manage_staff_screen_guest_list_name">Liste des invités:</string>
     <string name="manage_staff_screen_empty_guest_list">Il n\'y a pas d\'invités à cette événement</string>
+
+    <!--  Supplies  -->
+    <string name="event_creation_screen_supplies">Courses</string>
+    <string name="event_creation_screen_add_supplies">Ajouter des courses</string>
+    <string name="event_details_screen_supplies_button">Trucs à amener</string>
+    <string name="supplies_description">Description</string>
+    <string name="supplies_quantity">Quantité</string>
+    <string name="supplies_unit">Unité</string>
+
+    <string name="supplies_add_dialog_title">Ajouter une fourniture</string>
+    <string name="supplies_dialog_description">Détails de la fourniture</string>
 </resources>
