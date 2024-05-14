@@ -86,4 +86,7 @@
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="calendar_failed">L\'événement ne peut pas être ajouté au calendrier</string>
+    <string name="add_event_to_calendar_prefix">Voulez-vous ajouter l\'événement \"</string>
+    <string name="add_event_to_calendar_suffix">\" à votre calendrier ?</string>
 </resources>

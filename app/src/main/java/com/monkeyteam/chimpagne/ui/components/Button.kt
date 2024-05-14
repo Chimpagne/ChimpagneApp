@@ -34,10 +34,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -139,11 +141,15 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
 
 @Composable
 fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEvent?) {
+  val textQuestion =
+      stringResource(id = R.string.add_event_to_calendar_prefix) +
+          event?.title +
+          stringResource(id = R.string.add_event_to_calendar_suffix)
   val builder =
       AlertDialog(
           onDismissRequest = { onReject() },
           title = { Text("Add to Calendar") },
-          text = { Text("Do you want to add the event \"${event?.title}\" to your calendar?") },
+          text = { Text(textQuestion) },
           confirmButton = {
             Button(onClick = { onAccept() }, modifier = Modifier.testTag("acceptButton")) {
               Text("Yes")
