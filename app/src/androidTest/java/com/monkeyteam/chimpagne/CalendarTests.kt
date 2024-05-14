@@ -40,6 +40,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class CalendarTests() {
+  val database = Database()
+  val accountViewModel = AccountViewModel(database = database)
 
   @get:Rule val composeTestRule = createComposeRule()
 
