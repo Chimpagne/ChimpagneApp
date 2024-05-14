@@ -87,6 +87,10 @@
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="calendar_failed">Event can\'t be added to calendar</string>
+    <string name="add_event_to_calendar_prefix">Do you want to add the event \"</string>
+    <string name="add_event_to_calendar_suffix">\" to your calendar ?</string>
+
     <string name="manage_staff_screen_title">Manage Staff</string>
     <string name="manage_staff_screen_staff_list_name">Staff List:</string>
     <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>

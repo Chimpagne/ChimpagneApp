@@ -398,7 +398,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick) },
+      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick, context) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
