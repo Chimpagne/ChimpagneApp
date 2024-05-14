@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -106,7 +107,8 @@ class FindEventScreenTest {
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
-    // Should be false because the user is not logged in (guest) so it will not trigger the joinEvent
+    // Should be false because the user is not logged in (guest) so it will not trigger the
+    // joinEvent
     // function hence no uiState will load anything
     assertFalse(findViewModel.uiState.value.loading)
   }
@@ -118,7 +120,7 @@ class FindEventScreenTest {
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
     val sampleEvent =
-      ChimpagneEvent(id = "sample123", title = "Sample Event", description = "Sample Description")
+        ChimpagneEvent(id = "sample123", title = "Sample Event", description = "Sample Description")
     findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
 
     composeTestRule.setContent {
@@ -129,12 +131,26 @@ class FindEventScreenTest {
     }
 
     accountManager.signInTo(anAccount)
-    TestCase.assertEquals(ChimpagneRole.NOT_IN_EVENT, sampleEvent.getRole(anAccount.firebaseAuthUID))
+    val n = sampleEvent.getRole(anAccount.firebaseAuthUID)
+    if (n == ChimpagneRole.GUEST) {
+      Log.d("m", "GUEST")
+    }
+    if (n == ChimpagneRole.NOT_IN_EVENT) {
+      Log.d("m", "NOT IN EVENT")
+    }
+    if (n == ChimpagneRole.OWNER) {
+      Log.d("m", "OWNER")
+    }
+    if (n == ChimpagneRole.STAFF) {
+      Log.d("m", "STAFF")
+    }
+    TestCase.assertEquals(
+        ChimpagneRole.NOT_IN_EVENT, sampleEvent.getRole(anAccount.firebaseAuthUID))
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
     assertTrue(findViewModel.uiState.value.loading)
-//    TestCase.assertEquals(ChimpagneRole.GUEST, sampleEvent.getRole(anAccount.firebaseAuthUID))
+    //    TestCase.assertEquals(ChimpagneRole.GUEST, sampleEvent.getRole(anAccount.firebaseAuthUID))
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

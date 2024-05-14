@@ -75,6 +75,7 @@ import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
@@ -416,6 +417,8 @@ fun FindEventMapScreen(
               event.id,
               { Toast.makeText(context, stringResSuccess, Toast.LENGTH_SHORT).show() },
               { Toast.makeText(context, stringResFailiure, Toast.LENGTH_SHORT).show() })
+
+          navObject.clearAndNavigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id})", false)
         }
       }
 
