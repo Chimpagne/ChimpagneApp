@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
@@ -103,7 +104,11 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("leave").assertIsDisplayed().assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("leave")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 
   @Test
@@ -122,7 +127,11 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("edit").assertIsDisplayed().assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("edit")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 
   @Test
@@ -224,6 +233,10 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, AccountViewModel(database))
     }
 
-    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("manage staff")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 }
