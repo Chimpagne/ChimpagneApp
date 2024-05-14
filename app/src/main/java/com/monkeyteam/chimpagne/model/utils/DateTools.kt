@@ -1,9 +1,13 @@
 package com.monkeyteam.chimpagne.model.utils
 
+import android.content.Intent
+import android.provider.CalendarContract
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -48,4 +52,24 @@ fun simpleDateFormat(timestamp: Timestamp): String {
 fun simpleTimeFormat(timestamp: Timestamp): String {
   val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
   return timeFormat.format(timestamp.toDate())
+}
+
+fun createCalendarIntent(event: ChimpagneEvent?): Intent? {
+  if (event == null) {
+    Log.e("CalendarIntents", "Event is null")
+    return null
+  }
+
+  val intent =
+      Intent(Intent.ACTION_INSERT).apply {
+        data = CalendarContract.Events.CONTENT_URI
+        putExtra(CalendarContract.Events.TITLE, event.title)
+        putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.startsAt().timeInMillis)
+        putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.endsAt().timeInMillis)
+        putExtra(CalendarContract.Events.EVENT_LOCATION, event.location.asGooglePlex())
+        putExtra(CalendarContract.Reminders.MINUTES, 1440) // 1 day before
+        putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
+      }
+  Log.d("CalendarIntents", "Calendar Intent created successfully")
+  return intent
 }
