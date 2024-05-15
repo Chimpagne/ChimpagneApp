@@ -125,9 +125,6 @@
     <string name="supplies_delete_description">This action is irreversible !</string>
     <string name="supplies_nb_assigned">assigned</string>
 
-    <string name="supplies_add_dialog_title">Add a supply</string>
-    <string name="supplies_dialog_description">Enter the supply details</string>
-
     <!-- DeepLinks -->
     <string name="deep_link_url_event" translatable="false">https://www.manigo.ch/events/?uid=</string>
     <string name="deep_link_url_event_host" translatable="false">www.manigo.ch</string>
