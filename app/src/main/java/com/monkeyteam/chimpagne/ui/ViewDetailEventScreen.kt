@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,7 +29,6 @@ import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.QrCodeScanner
@@ -166,8 +166,6 @@ fun ViewDetailEventScreen(
                                   .clip(RoundedCornerShape(16.dp))
                                   .background(MaterialTheme.colorScheme.primaryContainer),
                           contentAlignment = Alignment.Center) {
-                            // For now, image is static -> needs to be added in the UI State for
-                            // event view model
                             Image(
                                 painter = painterResource(id = R.drawable.default_party_image),
                                 contentDescription = "Event Banner",
@@ -279,26 +277,51 @@ fun ViewDetailEventScreen(
                                               }
                                         }
                                       }
-                                  Box(
-                                      modifier =
-                                          Modifier.shadow(
-                                                  elevation = 10.dp,
-                                                  shape = RoundedCornerShape(16.dp))
-                                              .clip(RoundedCornerShape(50))
-                                              .background(
-                                                  MaterialTheme.colorScheme.primaryContainer)
-                                              .padding(horizontal = 24.dp, vertical = 8.dp)) {
-                                        Text(
-                                            text =
-                                                "${uiState.guests.count()} ${
-                                          stringResource(
-                                              id = R.string.event_details_screen_number_of_guests
-                                          )
-                                      }",
-                                            fontFamily = ChimpagneFontFamily,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            modifier = Modifier.testTag("number of guests"))
+                                  Row(
+                                      verticalAlignment = Alignment.CenterVertically,
+                                      horizontalArrangement = Arrangement.Center,
+                                      modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                                        Box(
+                                            modifier =
+                                                Modifier.shadow(
+                                                        elevation = 10.dp,
+                                                        shape = RoundedCornerShape(16.dp))
+                                                    .clip(RoundedCornerShape(50))
+                                                    .background(
+                                                        MaterialTheme.colorScheme.primaryContainer)
+                                                    .padding(
+                                                        horizontal = 24.dp, vertical = 12.dp)) {
+                                              Text(
+                                                  text =
+                                                      "${uiState.guests.count()} ${
+                                                stringResource(
+                                                    id = R.string.event_details_screen_number_of_guests
+                                                )
+                                            }",
+                                                  fontFamily = ChimpagneFontFamily,
+                                                  fontWeight = FontWeight.Bold,
+                                                  color =
+                                                      MaterialTheme.colorScheme.onPrimaryContainer,
+                                                  modifier = Modifier.testTag("number of guests"))
+                                            }
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        IconButton(
+                                            onClick = {
+                                              val annotatedString = buildAnnotatedString {
+                                                append(
+                                                    getString(
+                                                        context, R.string.deep_link_url_event) +
+                                                        uiState.id)
+                                              }
+                                              clipboardManager.setText(annotatedString)
+                                            },
+                                            modifier = Modifier.size(36.dp).testTag("share")) {
+                                              Icon(
+                                                  imageVector = Icons.Rounded.Share,
+                                                  contentDescription = "Share Event",
+                                                  tint =
+                                                      MaterialTheme.colorScheme.onPrimaryContainer)
+                                            }
                                       }
                                 }
                             Spacer(Modifier.height(8.dp))
@@ -379,8 +402,6 @@ fun ViewDetailEventScreen(
                                   )
                                 }
 
-                            Spacer(Modifier.height(16.dp))
-
                             // MAP WILL BE ADDED HERE
 
                             SocialButtonRow(
@@ -403,8 +424,7 @@ fun ViewDetailEventScreen(
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
-                                            testTag = "chat" // Add unique testTag
-                                            ),
+                                            testTag = "chat"),
                                         IconInfo(
                                             icon = Icons.Rounded.Backpack,
                                             description =
@@ -419,8 +439,7 @@ fun ViewDetailEventScreen(
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
-                                            testTag = "supplies" // Add unique testTag
-                                            ),
+                                            testTag = "supplies"),
                                         IconInfo(
                                             icon = Icons.Rounded.DirectionsCar,
                                             description =
@@ -435,8 +454,7 @@ fun ViewDetailEventScreen(
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
-                                            testTag = "car pooling" // Add unique testTag
-                                            ),
+                                            testTag = "car pooling"),
                                         IconInfo(
                                             icon = Icons.Rounded.Poll,
                                             description =
@@ -451,8 +469,7 @@ fun ViewDetailEventScreen(
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
-                                            testTag = "polls" // Add unique testTag
-                                            ),
+                                            testTag = "polls"),
                                         IconInfo(
                                             icon = Icons.Rounded.Home,
                                             description =
@@ -467,8 +484,7 @@ fun ViewDetailEventScreen(
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
-                                            testTag = "bed_reservation" // Add unique testTag
-                                            ),
+                                            testTag = "bed_reservation"),
                                         IconInfo(
                                             icon = Icons.Rounded.DirectionsCar,
                                             description =
@@ -481,8 +497,7 @@ fun ViewDetailEventScreen(
                                                       Toast.LENGTH_SHORT)
                                                   .show()
                                             },
-                                            testTag = "parking" // Add unique testTag
-                                            )))
+                                            testTag = "parking")))
 
                             Spacer(Modifier.height(16.dp))
                           }
@@ -519,26 +534,8 @@ fun ViewDetailEventScreen(
                             }
                       }
 
-                      Spacer(Modifier.height(24.dp))
-
                       // Only the owner can edit the event settings
                       if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-
-                        ChimpagneButton(
-                            text = stringResource(id = R.string.event_details_screen_edit_button),
-                            icon = Icons.Rounded.Edit,
-                            modifier =
-                                Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                    .fillMaxWidth()
-                                    .testTag("edit"),
-                            onClick = {
-                              if (accountViewModel.isUserLoggedIn()) {
-                                navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
-                              } else {
-                                showPromptLogin = true
-                              }
-                            })
-                        Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text =
                                 stringResource(
@@ -549,10 +546,11 @@ fun ViewDetailEventScreen(
                                     .height(60.dp)
                                     .weight(1f)
                                     .testTag("manage staff"),
-                            textStyle = ChimpagneTypography.displaySmall,
+                            textStyle = ChimpagneTypography.displayMedium,
                             onClick = {
                               navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                             })
+                        Spacer(Modifier.height(16.dp))
                         ChimpagneButton(
                             text = stringResource(id = R.string.event_details_screen_edit_button),
                             icon = Icons.Rounded.Edit,
@@ -561,107 +559,13 @@ fun ViewDetailEventScreen(
                                     .height(60.dp)
                                     .weight(1f)
                                     .testTag("edit"),
-                            textStyle = ChimpagneTypography.displaySmall,
+                            textStyle = ChimpagneTypography.displayMedium,
                             onClick = {
                               navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                             })
                       }
 
                       Spacer(Modifier.height(16.dp))
-                      ChimpagneButton(
-                          text = stringResource(id = R.string.share_event_button),
-                          icon = Icons.Rounded.Share,
-                          modifier =
-                              Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                  .fillMaxWidth()
-                                  .testTag("share"),
-                          onClick = {
-                            val annotatedString = buildAnnotatedString {
-                              append(getString(context, R.string.deep_link_url_event) + uiState.id)
-                            }
-                            clipboardManager.setText(annotatedString)
-                          })
-                      Spacer(Modifier.height(16.dp))
-                      ChimpagneButton(
-                          text = stringResource(id = R.string.event_details_screen_chat_button),
-                          icon = Icons.Rounded.ChatBubbleOutline,
-                          modifier =
-                              Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                  .fillMaxWidth()
-                                  .testTag("chat"),
-                          onClick = {
-                            /* TODO Implement this later */
-                            Toast.makeText(
-                                    context,
-                                    "This function will be implemented in a future version",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          })
-                      Spacer(Modifier.height(16.dp))
-                      ChimpagneButton(
-                          text = stringResource(id = R.string.event_details_screen_location_button),
-                          icon = Icons.Rounded.LocationOn,
-                          modifier =
-                              Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                  .fillMaxWidth()
-                                  .testTag("location"),
-                          onClick = {
-                            /* TODO Implement this later */
-                            Toast.makeText(
-                                    context,
-                                    "This function will be implemented in a future version",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          })
-                      Spacer(Modifier.height(16.dp))
-                      ChimpagneButton(
-                          text = stringResource(id = R.string.event_details_screen_supplies_button),
-                          icon = Icons.Rounded.Backpack,
-                          modifier =
-                              Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                  .fillMaxWidth()
-                                  .testTag("supplies"),
-                          onClick = {
-                            /* TODO Implement this later */
-                            Toast.makeText(
-                                    context,
-                                    "This function will be implemented in a future version",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          })
-                      Spacer(Modifier.height(16.dp))
-                      ChimpagneButton(
-                          text = stringResource(id = R.string.event_details_screen_voting_button),
-                          icon = Icons.Rounded.Poll,
-                          modifier =
-                              Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                  .fillMaxWidth()
-                                  .testTag("polls"),
-                          onClick = {
-                            /* TODO Implement this later */
-                            Toast.makeText(
-                                    context,
-                                    "This function will be implemented in a future version",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          })
-                      Spacer(Modifier.height(16.dp))
-                      ChimpagneButton(
-                          text =
-                              stringResource(id = R.string.event_details_screen_car_pooling_button),
-                          icon = Icons.Rounded.DirectionsCar,
-                          modifier =
-                              Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                  .fillMaxWidth()
-                                  .testTag("car pooling"),
-                          onClick = {
-                            /* TODO Implement this later */
-                            Toast.makeText(
-                                    context,
-                                    "This function will be implemented in a future version",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          })
                     }
                   }
             }
