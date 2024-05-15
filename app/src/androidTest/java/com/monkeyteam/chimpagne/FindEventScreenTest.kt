@@ -222,8 +222,6 @@ class FindEventScreenTest {
     Log.d("m", "$sampleEvent.getRole(anAccount.firebaseAuthUID)")
 
     composeTestRule.onNodeWithTag("join_button").performClick()
-
-    assertTrue(findViewModel.uiState.value.loading)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

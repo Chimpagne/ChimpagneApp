@@ -404,13 +404,13 @@ fun FindEventMapScreen(
       // Check if the user is not logged in
       !accountViewModel.isUserLoggedIn() -> {
         // Redirect user to login screen
-        Log.d("m", "HEREEEEEEEEE")
         showPromptLogin = true
       }
 
       // The user has not yet joined the event
       currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.NOT_IN_EVENT -> {
+          Log.d("m", "BLOCK 1")
         currentEvent?.let { event ->
           Toast.makeText(context, "$stringResJoining ${currentEvent?.title}", Toast.LENGTH_SHORT)
               .show()
@@ -427,14 +427,17 @@ fun FindEventMapScreen(
       // The user has already joined the event, or is a staff for the event,or is the organizer
       currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.STAFF -> {
+          Log.d("m", "BLOCK 2")
         Toast.makeText(context, stringResStaff, Toast.LENGTH_SHORT).show()
       }
       currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.OWNER -> {
+          Log.d("m", "BLOCK 2")
         Toast.makeText(context, stringResOwner, Toast.LENGTH_SHORT).show()
       }
       currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.GUEST -> {
+          Log.d("m", "BLOCK 3")
         Toast.makeText(context, stringResGuest, Toast.LENGTH_SHORT).show()
       }
     }
