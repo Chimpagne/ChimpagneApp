@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne
 
+import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -218,7 +219,11 @@ class FindEventScreenTest {
       FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
     }
 
+    Log.d("m", "$sampleEvent.getRole(anAccount.firebaseAuthUID)")
+
     composeTestRule.onNodeWithTag("join_button").performClick()
+
+    assertTrue(findViewModel.uiState.value.loading)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

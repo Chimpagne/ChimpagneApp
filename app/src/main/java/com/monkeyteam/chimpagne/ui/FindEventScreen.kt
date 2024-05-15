@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.ui
 import DateSelector
 import android.Manifest
 import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -403,6 +404,7 @@ fun FindEventMapScreen(
       // Check if the user is not logged in
       !accountViewModel.isUserLoggedIn() -> {
         // Redirect user to login screen
+          Log.d("m", "HEREEEEEEEEE")
         showPromptLogin = true
       }
 
