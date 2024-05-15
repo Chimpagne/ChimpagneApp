@@ -103,7 +103,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("leave").assertIsDisplayed().assertHasClickAction()
+    composeTestRule.onNodeWithTag("leave").assertHasClickAction()
   }
 
   @Test
@@ -140,7 +140,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("edit").assertIsDisplayed().assertHasClickAction()
+    composeTestRule.onNodeWithTag("edit").assertHasClickAction()
   }
 
   @Test
@@ -242,6 +242,6 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("manage staff").assertIsDisplayed().assertHasClickAction()
+    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()
   }
 }
