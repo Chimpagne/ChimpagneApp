@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui
 
-import DateSelector
 import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
@@ -69,6 +68,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.components.DateRangeSelector
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
@@ -327,10 +327,17 @@ fun FindEventFormScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                DateSelector(
-                    uiState.selectedDate,
-                    findViewModel::updateSelectedDate,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"))
+                //                DateSelector(
+                //                    uiState.selectedDate,
+                //                    findViewModel::updateSelectedDate,
+                //                    modifier =
+                // Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"))
+
+                DateRangeSelector(
+                    startDate = uiState.startDate,
+                    endDate = uiState.endDate,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"),
+                    selectDateRange = findViewModel::updateDateRange)
 
                 if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))

@@ -33,6 +33,13 @@ fun buildTimestamp(day: Int, month: Int, year: Int, hour: Int, minute: Int): Tim
   return buildTimestamp(buildCalendar(day, month, year, hour, minute))
 }
 
+fun setCalendarToMidnight(calendar: Calendar) {
+  calendar.set(Calendar.HOUR_OF_DAY, 0)
+  calendar.set(Calendar.MINUTE, 0)
+  calendar.set(Calendar.SECOND, 0)
+  calendar.set(Calendar.MILLISECOND, 0)
+}
+
 @Composable
 fun timestampToStringWithDateAndTime(timestamp: Timestamp): String {
   return DateFormat.getDateInstance(DateFormat.LONG).format(timestamp.toDate()) +
