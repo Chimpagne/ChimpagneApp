@@ -75,20 +75,22 @@ private fun DateRangeSelectorDialog(
           listOf(
               ButtonData(
                   stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest),
-              ButtonData(stringResource(id = R.string.chimpagne_ok), modifier = Modifier.testTag("date_range_submit")) {
-                val newStartDate =
-                    dateRangeState.selectedStartDateMillis?.let {
-                      Calendar.getInstance().apply { timeInMillis = it }
-                    } ?: Calendar.getInstance()
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_ok),
+                  modifier = Modifier.testTag("date_range_submit")) {
+                    val newStartDate =
+                        dateRangeState.selectedStartDateMillis?.let {
+                          Calendar.getInstance().apply { timeInMillis = it }
+                        } ?: Calendar.getInstance()
 
-                val newEndDate =
-                    dateRangeState.selectedEndDateMillis?.let {
-                      Calendar.getInstance().apply { timeInMillis = it }
-                    } ?: newStartDate
+                    val newEndDate =
+                        dateRangeState.selectedEndDateMillis?.let {
+                          Calendar.getInstance().apply { timeInMillis = it }
+                        } ?: newStartDate
 
-                onSubmit(newStartDate, newEndDate)
-                onDismissRequest()
-              })) {
+                    onSubmit(newStartDate, newEndDate)
+                    onDismissRequest()
+                  })) {
         DateRangePicker(
             state = dateRangeState,
             showModeToggle = false,

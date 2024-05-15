@@ -327,12 +327,6 @@ fun FindEventFormScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                //                DateSelector(
-                //                    uiState.selectedDate,
-                //                    findViewModel::updateSelectedDate,
-                //                    modifier =
-                // Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"))
-
                 DateRangeSelector(
                     startDate = uiState.startDate,
                     endDate = uiState.endDate,

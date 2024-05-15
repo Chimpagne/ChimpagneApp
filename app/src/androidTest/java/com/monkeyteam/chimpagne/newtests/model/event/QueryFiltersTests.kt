@@ -9,7 +9,6 @@ import com.monkeyteam.chimpagne.model.database.onlyPublicFilter
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
-import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -22,15 +21,14 @@ class QueryFiltersTests {
 
   val database = Database()
 
-  val events = listOf(
-    ChimpagneEvent(
-      id = "banana",
-      public = true,
-      location = Location("EPFL", 46.519124, 6.567593),
-      startsAtTimestamp = buildTimestamp(10, 1, 2024, 10, 1),
-      endsAtTimestamp = buildTimestamp(1, 1, 2025, 10, 1)
-    )
-  )
+  val events =
+      listOf(
+          ChimpagneEvent(
+              id = "banana",
+              public = true,
+              location = Location("EPFL", 46.519124, 6.567593),
+              startsAtTimestamp = buildTimestamp(10, 1, 2024, 10, 1),
+              endsAtTimestamp = buildTimestamp(1, 1, 2025, 10, 1)))
 
   @Before
   fun init() {
@@ -39,7 +37,10 @@ class QueryFiltersTests {
 
   @Test
   fun firstTest() {
-    val filter = Filter.and(onlyPublicFilter(), happensInDateRangeFilter(buildCalendar(9, 1, 2024, 10, 1), events[0].startsAt()))
+    val filter =
+        Filter.and(
+            onlyPublicFilter(),
+            happensInDateRangeFilter(buildCalendar(9, 1, 2024, 10, 1), events[0].startsAt()))
 
     var loading = true
     var fetchedEvents = listOf<ChimpagneEvent>()
