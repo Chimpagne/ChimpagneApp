@@ -106,6 +106,7 @@ class ViewDetailEventScreenTests {
 
     composeTestRule
         .onNodeWithTag("leave")
+        .assertExists()
         .performScrollTo()
         .assertIsDisplayed()
         .assertHasClickAction()
@@ -147,6 +148,7 @@ class ViewDetailEventScreenTests {
 
     composeTestRule
         .onNodeWithTag("edit")
+        .assertExists()
         .performScrollTo()
         .assertIsDisplayed()
         .assertHasClickAction()
@@ -253,6 +255,7 @@ class ViewDetailEventScreenTests {
 
     composeTestRule
         .onNodeWithTag("manage staff")
+        .assertExists()
         .performScrollTo()
         .assertIsDisplayed()
         .assertHasClickAction()
