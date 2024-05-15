@@ -106,9 +106,9 @@ fun ViewDetailEventScreen(
       topBar = {
         TopAppBar(
             title = {
-              Column(
-                  modifier = Modifier.fillMaxWidth(),
-                  horizontalAlignment = Alignment.CenterHorizontally) {
+              Row(
+                  modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                  verticalAlignment = Alignment.CenterVertically) {
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
                         text = uiState.title,
@@ -141,6 +141,121 @@ fun ViewDetailEventScreen(
                     modifier = Modifier.size(36.dp).testTag("scan QR"))
               }
             })
+      },
+      bottomBar = {
+        val iconList = mutableListOf<IconInfo>()
+
+        if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+          iconList.add(
+              IconInfo(
+                  icon = Icons.Rounded.Edit,
+                  description = stringResource(id = R.string.event_details_screen_edit_button),
+                  onClick = { navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}") },
+                  testTag = "edit"))
+          iconList.add(
+              IconInfo(
+                  icon = Icons.Rounded.PeopleAlt,
+                  description =
+                      stringResource(id = R.string.event_details_screen_manage_staff_button),
+                  onClick = { navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}") },
+                  testTag = "manage staff"))
+        } else {
+          iconList.add(
+              IconInfo(
+                  icon = Icons.Rounded.RemoveCircleOutline,
+                  description = stringResource(id = R.string.event_details_screen_leave_button),
+                  onClick = {
+                    if (accountViewModel.isUserLoggedIn()) {
+                      eventViewModel.leaveTheEvent(
+                          onSuccess = {
+                            Toast.makeText(
+                                    context,
+                                    context.getString(
+                                        R.string.event_details_screen_leave_toast_success),
+                                    Toast.LENGTH_SHORT)
+                                .show()
+                            navObject.goBack()
+                          })
+                    } else {
+                      showPromptLogin = true
+                    }
+                  },
+                  testTag = "leave"))
+        }
+
+        iconList.addAll(
+            listOf(
+                IconInfo(
+                    icon = Icons.Rounded.ChatBubbleOutline,
+                    description = stringResource(id = R.string.event_details_screen_chat_button),
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              "This function will be implemented in a future version",
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    testTag = "chat"),
+                IconInfo(
+                    icon = Icons.Rounded.Backpack,
+                    description =
+                        stringResource(id = R.string.event_details_screen_supplies_button),
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              "This function will be implemented in a future version",
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    testTag = "supplies"),
+                IconInfo(
+                    icon = Icons.Rounded.DirectionsCar,
+                    description =
+                        stringResource(id = R.string.event_details_screen_car_pooling_button),
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              "This function will be implemented in a future version",
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    testTag = "car pooling"),
+                IconInfo(
+                    icon = Icons.Rounded.Poll,
+                    description = stringResource(id = R.string.event_details_screen_voting_button),
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              "This function will be implemented in a future version",
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    testTag = "polls"),
+                IconInfo(
+                    icon = Icons.Rounded.Home,
+                    description =
+                        stringResource(id = R.string.event_details_screen_bed_reservation),
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              "This function will be implemented in a future version",
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    testTag = "bed_reservation"),
+                IconInfo(
+                    icon = Icons.Rounded.DirectionsCar,
+                    description = stringResource(id = R.string.event_details_screen_parking),
+                    onClick = {
+                      Toast.makeText(
+                              context,
+                              "This function will be implemented in a future version",
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    },
+                    testTag = "parking")))
+
+        IconRow(icons = iconList)
       }) { innerPadding ->
         if (showDialog) {
           QRCodeDialog(eventId = uiState.id, onDismiss = { showDialog = false })
@@ -294,10 +409,10 @@ fun ViewDetailEventScreen(
                                               Text(
                                                   text =
                                                       "${uiState.guests.count()} ${
-                                                stringResource(
-                                                    id = R.string.event_details_screen_number_of_guests
-                                                )
-                                            }",
+                                              stringResource(
+                                                  id = R.string.event_details_screen_number_of_guests
+                                              )
+                                          }",
                                                   fontFamily = ChimpagneFontFamily,
                                                   fontWeight = FontWeight.Bold,
                                                   color =
@@ -406,149 +521,6 @@ fun ViewDetailEventScreen(
 
                             SocialButtonRow(
                                 context = context, socialMediaLinks = uiState.socialMediaLinks)
-
-                            Spacer(Modifier.height(16.dp))
-
-                            val iconList = mutableListOf<IconInfo>()
-
-                            if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-                              iconList.add(
-                                  IconInfo(
-                                      icon = Icons.Rounded.Edit,
-                                      description =
-                                          stringResource(
-                                              id = R.string.event_details_screen_edit_button),
-                                      onClick = {
-                                        navObject.navigateTo(
-                                            Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
-                                      },
-                                      testTag = "edit"))
-                              iconList.add(
-                                  IconInfo(
-                                      icon = Icons.Rounded.PeopleAlt,
-                                      description =
-                                          stringResource(
-                                              id =
-                                                  R.string
-                                                      .event_details_screen_manage_staff_button),
-                                      onClick = {
-                                        navObject.navigateTo(
-                                            Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
-                                      },
-                                      testTag = "manage staff"))
-                            } else {
-                              iconList.add(
-                                  IconInfo(
-                                      icon = Icons.Rounded.RemoveCircleOutline,
-                                      description =
-                                          stringResource(
-                                              id = R.string.event_details_screen_leave_button),
-                                      onClick = {
-                                        if (accountViewModel.isUserLoggedIn()) {
-                                          eventViewModel.leaveTheEvent(
-                                              onSuccess = {
-                                                Toast.makeText(
-                                                        context,
-                                                        context.getString(
-                                                            R.string
-                                                                .event_details_screen_leave_toast_success),
-                                                        Toast.LENGTH_SHORT)
-                                                    .show()
-                                                navObject.goBack()
-                                              })
-                                        } else {
-                                          showPromptLogin = true
-                                        }
-                                      },
-                                      testTag = "leave"))
-                            }
-
-                            iconList.addAll(
-                                listOf(
-                                    IconInfo(
-                                        icon = Icons.Rounded.ChatBubbleOutline,
-                                        description =
-                                            stringResource(
-                                                id = R.string.event_details_screen_chat_button),
-                                        onClick = {
-                                          Toast.makeText(
-                                                  context,
-                                                  "This function will be implemented in a future version",
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                        },
-                                        testTag = "chat"),
-                                    IconInfo(
-                                        icon = Icons.Rounded.Backpack,
-                                        description =
-                                            stringResource(
-                                                id = R.string.event_details_screen_supplies_button),
-                                        onClick = {
-                                          Toast.makeText(
-                                                  context,
-                                                  "This function will be implemented in a future version",
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                        },
-                                        testTag = "supplies"),
-                                    IconInfo(
-                                        icon = Icons.Rounded.DirectionsCar,
-                                        description =
-                                            stringResource(
-                                                id =
-                                                    R.string
-                                                        .event_details_screen_car_pooling_button),
-                                        onClick = {
-                                          Toast.makeText(
-                                                  context,
-                                                  "This function will be implemented in a future version",
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                        },
-                                        testTag = "car pooling"),
-                                    IconInfo(
-                                        icon = Icons.Rounded.Poll,
-                                        description =
-                                            stringResource(
-                                                id = R.string.event_details_screen_voting_button),
-                                        onClick = {
-                                          Toast.makeText(
-                                                  context,
-                                                  "This function will be implemented in a future version",
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                        },
-                                        testTag = "polls"),
-                                    IconInfo(
-                                        icon = Icons.Rounded.Home,
-                                        description =
-                                            stringResource(
-                                                id = R.string.event_details_screen_bed_reservation),
-                                        onClick = {
-                                          Toast.makeText(
-                                                  context,
-                                                  "This function will be implemented in a future version",
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                        },
-                                        testTag = "bed_reservation"),
-                                    IconInfo(
-                                        icon = Icons.Rounded.DirectionsCar,
-                                        description =
-                                            stringResource(
-                                                id = R.string.event_details_screen_parking),
-                                        onClick = {
-                                          Toast.makeText(
-                                                  context,
-                                                  "This function will be implemented in a future version",
-                                                  Toast.LENGTH_SHORT)
-                                              .show()
-                                        },
-                                        testTag = "parking")))
-
-                            IconRow(icons = iconList)
-
-                            Spacer(Modifier.height(16.dp))
                           }
                     }
                   }
