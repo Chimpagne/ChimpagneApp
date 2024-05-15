@@ -75,6 +75,7 @@
     <string name="event_details_screen_car_pooling_button">Car pooling</string>
     <string name="chimpagne_cancel">Cancel</string>
     <string name="chimpagne_add">Add</string>
+    <string name="chimpagne_ok">Ok</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
@@ -113,4 +114,8 @@
     <!-- AccountCreation -->
     <string name="account_created_toast">Account created</string>
     <string name="acount_creation_failed_toast">Account creation failed</string>
+
+    <!-- DateRangeSelector -->
+    <string name="select_date_range_for_query">Select a date range for the query</string>
+
 </resources>

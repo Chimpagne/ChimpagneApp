@@ -26,6 +26,7 @@ fun buildCalendar(timestamp: Timestamp): Calendar {
 fun buildCalendar(day: Int, month: Int, year: Int, hour: Int, minute: Int): Calendar {
   val calendar = Calendar.getInstance()
   calendar.set(year, month, day, hour, minute, 0)
+  calendar.set(Calendar.MILLISECOND, 0)
   return calendar
 }
 

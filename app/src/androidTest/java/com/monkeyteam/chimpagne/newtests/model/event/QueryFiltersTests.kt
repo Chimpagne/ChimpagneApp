@@ -4,9 +4,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.happensOnDayFiler
+import com.monkeyteam.chimpagne.model.database.happensInDateRangeFilter
 import com.monkeyteam.chimpagne.model.database.onlyPublicFilter
+import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
+import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import junit.framework.TestCase.assertEquals
@@ -20,29 +22,38 @@ class QueryFiltersTests {
 
   val database = Database()
 
+  val events = listOf(
+    ChimpagneEvent(
+      id = "banana",
+      public = true,
+      location = Location("EPFL", 46.519124, 6.567593),
+      startsAtTimestamp = buildTimestamp(10, 1, 2024, 10, 1),
+      endsAtTimestamp = buildTimestamp(1, 1, 2025, 10, 1)
+    )
+  )
+
   @Before
   fun init() {
-    initializeTestDatabase()
+    initializeTestDatabase(events)
   }
 
   @Test
   fun firstTest() {
-    val day = buildCalendar(9, 5, 2030, 15, 15)
-    val filter = Filter.and(onlyPublicFilter(), happensOnDayFiler(day))
+    val filter = Filter.and(onlyPublicFilter(), happensInDateRangeFilter(buildCalendar(9, 1, 2024, 10, 1), events[0].startsAt()))
 
     var loading = true
-    var events = listOf<ChimpagneEvent>()
+    var fetchedEvents = listOf<ChimpagneEvent>()
     database.eventManager.getAllEventsByFilterAroundLocation(
-        TEST_EVENTS[0].location,
+        events[0].location,
         5000.0,
         {
-          events = it
+          fetchedEvents = it
           loading = false
         },
         { assertTrue(false) },
         filter)
     while (loading) {}
 
-    assertEquals(listOf<ChimpagneEvent>(), events)
+    assertEquals(events, fetchedEvents)
   }
 }

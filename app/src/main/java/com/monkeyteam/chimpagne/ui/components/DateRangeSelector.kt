@@ -14,7 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.utils.setCalendarToMidnight
 import java.text.DateFormat
 import java.util.Calendar
@@ -23,7 +26,7 @@ import java.util.Calendar
 fun DateRangeSelector(
     startDate: Calendar,
     endDate: Calendar,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     selectDateRange: (Calendar, Calendar) -> Unit
 ) {
 
@@ -39,7 +42,7 @@ fun DateRangeSelector(
           "${DateFormat.getDateInstance(DateFormat.MEDIUM).format(startDate.time)} - ${DateFormat.getDateInstance(DateFormat.MEDIUM).format(endDate.time)}",
       icon = Icons.Rounded.CalendarToday,
       onClick = { showDialog = true },
-      modifier = modifier)
+      modifier = modifier.testTag("date_range_button"))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,13 +68,14 @@ private fun DateRangeSelectorDialog(
               })
 
   CustomDialog(
-      title = "Date range for the query",
+      title = stringResource(id = R.string.select_date_range_for_query),
       description = "",
       onDismissRequest = onDismissRequest,
       buttonDataList =
           listOf(
-              ButtonData("Cancel", onClick = onDismissRequest),
-              ButtonData("Ok") {
+              ButtonData(
+                  stringResource(id = R.string.chimpagne_cancel), onClick = onDismissRequest),
+              ButtonData(stringResource(id = R.string.chimpagne_ok), modifier = Modifier.testTag("date_range_submit")) {
                 val newStartDate =
                     dateRangeState.selectedStartDateMillis?.let {
                       Calendar.getInstance().apply { timeInMillis = it }
