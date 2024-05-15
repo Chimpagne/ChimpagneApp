@@ -140,7 +140,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("edit").assertHasClickAction()
+    composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
   }
 
   @Test
@@ -157,7 +157,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction()
+    composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction().performClick()
   }
 
   @Test
@@ -174,7 +174,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("parking").assertHasClickAction()
+    composeTestRule.onNodeWithTag("parking").assertHasClickAction().performClick()
   }
 
   @Test
@@ -191,7 +191,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("supplies").assertHasClickAction()
+    composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()
   }
 
   @Test
@@ -208,7 +208,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("polls").assertHasClickAction()
+    composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
   }
 
   @Test
@@ -225,7 +225,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("car pooling").assertHasClickAction()
+    composeTestRule.onNodeWithTag("car pooling").assertHasClickAction().performClick()
   }
 
   @Test
@@ -242,6 +242,6 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()
+    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction().performClick()
   }
 }
