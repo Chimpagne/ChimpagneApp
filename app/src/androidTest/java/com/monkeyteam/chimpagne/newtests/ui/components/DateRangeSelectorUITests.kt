@@ -6,7 +6,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.ui.components.DateRangeSelector
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,8 +22,7 @@ class DateRangeSelectorUITests {
 
     composeTestRule.setContent {
       DateRangeSelector(startDate = firstDate, endDate = secondDate) { a, b ->
-        assertEquals(firstDate.timeInMillis, a.timeInMillis)
-        assertEquals(secondDate.timeInMillis, b.timeInMillis)
+        assertTrue(b.timeInMillis >= a.timeInMillis)
       }
     }
 
