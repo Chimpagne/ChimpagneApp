@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
+import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
@@ -63,7 +65,8 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
-                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks))
+                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
+                        polls = it.polls)
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
@@ -105,7 +108,8 @@ class EventViewModel(
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
+        socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
+        polls = _uiState.value.polls)
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -416,6 +420,7 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
+      val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",
