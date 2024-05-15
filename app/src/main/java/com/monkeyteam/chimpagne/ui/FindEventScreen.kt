@@ -404,7 +404,7 @@ fun FindEventMapScreen(
       // Check if the user is not logged in
       !accountViewModel.isUserLoggedIn() -> {
         // Redirect user to login screen
-          Log.d("m", "HEREEEEEEEEE")
+        Log.d("m", "HEREEEEEEEEE")
         showPromptLogin = true
       }
 
