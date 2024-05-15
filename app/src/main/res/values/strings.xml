@@ -85,10 +85,10 @@
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="share_event_button">Share</string>
     <string name="calendar_failed">Event can\'t be added to calendar</string>
     <string name="add_event_to_calendar_prefix">Do you want to add the event \"</string>
     <string name="add_event_to_calendar_suffix">\" to your calendar ?</string>
-
     <string name="manage_staff_screen_title">Manage Staff</string>
     <string name="manage_staff_screen_staff_list_name">Staff List:</string>
     <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>
@@ -124,4 +124,16 @@
     <string name="supplies_delete">Delete this supply ?</string>
     <string name="supplies_delete_description">This action is irreversible !</string>
     <string name="supplies_nb_assigned">assigned</string>
+
+    <string name="supplies_add_dialog_title">Add a supply</string>
+    <string name="supplies_dialog_description">Enter the supply details</string>
+
+    <!-- DeepLinks -->
+    <string name="deep_link_url_event" translatable="false">https://www.manigo.ch/events/?uid=</string>
+    <string name="deep_link_url_event_host" translatable="false">www.manigo.ch</string>
+    <string name="deep_link_url_event_prefix" translatable="false">/events</string>
+
+    <!-- AccountCreation -->
+    <string name="account_created_toast">Account created</string>
+    <string name="acount_creation_failed_toast">Account creation failed</string>
 </resources>

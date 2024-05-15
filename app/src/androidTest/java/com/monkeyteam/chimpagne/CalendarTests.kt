@@ -31,6 +31,7 @@ import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import java.util.Calendar
 import org.junit.Rule
@@ -39,6 +40,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class CalendarTests() {
+  val database = Database()
+  val accountViewModel = AccountViewModel(database = database)
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -96,7 +99,10 @@ class CalendarTests() {
       val navActions = NavigationActions(navController)
       val database = Database()
       val eventViewModel = EventViewModel(database = database)
-      ViewDetailEventScreen(navObject = navActions, eventViewModel = eventViewModel)
+      ViewDetailEventScreen(
+          navObject = navActions,
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()
