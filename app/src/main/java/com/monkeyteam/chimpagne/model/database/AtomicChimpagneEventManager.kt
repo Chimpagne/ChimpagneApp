@@ -143,13 +143,13 @@ class AtomicChimpagneEventManager(
       eventId: ChimpagneEventId,
       pollId: ChimpagnePollId,
       accountUID: ChimpagneAccountUID,
-      optionId: ChimpagnePollOptionId,
+      optionIndex: ChimpagnePollOptionListIndex,
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     events
         .document(eventId)
-        .update("polls.${pollId}.votes.${accountUID}", optionId)
+        .update("polls.${pollId}.votes.${accountUID}", optionIndex)
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }

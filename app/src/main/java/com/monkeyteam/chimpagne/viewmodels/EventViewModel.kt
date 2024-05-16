@@ -8,7 +8,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
-import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionId
+import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
@@ -453,7 +453,7 @@ class EventViewModel(
 
   fun castPollVoteAtomically(
       pollId: ChimpagnePollId,
-      optionId: ChimpagnePollOptionId,
+      optionIndex: ChimpagnePollOptionListIndex,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
@@ -462,11 +462,11 @@ class EventViewModel(
         _uiState.value.id,
         pollId,
         accountManager.currentUserAccount!!.firebaseAuthUID,
-        optionId,
+        optionIndex,
         {
           val newVotes =
               _uiState.value.polls[pollId]!!.votes +
-                  (accountManager.currentUserAccount!!.firebaseAuthUID to optionId)
+                  (accountManager.currentUserAccount!!.firebaseAuthUID to optionIndex)
           val newPoll = _uiState.value.polls[pollId]!!.copy(votes = newVotes)
           _uiState.value =
               _uiState.value.copy(

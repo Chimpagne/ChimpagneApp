@@ -4,7 +4,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
-import com.monkeyteam.chimpagne.model.database.ChimpagnePollOption
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
@@ -385,11 +384,7 @@ class EventViewModelTests {
         ChimpagnePoll(
             title = "monkey",
             query = "are you a monkey ?",
-            options =
-                mapOf(
-                    Pair("1", ChimpagnePollOption("1", "yes")),
-                    Pair("2", ChimpagnePollOption("2", "no")),
-                    Pair("3", ChimpagnePollOption("3", "I wish not to answer"))),
+            options = listOf("yes", "no", "I wish not to answer"),
             votes = emptyMap())
 
     eventSearchVM.createPollAtomically(
@@ -414,7 +409,7 @@ class EventViewModelTests {
     database.accountManager.signInTo(TEST_ACCOUNTS[0])
     eventSearchVM2.castPollVoteAtomically(
         pollId = poll.id,
-        optionId = "1",
+        optionIndex = 0,
         onSuccess = { assertTrue(true) },
         onFailure = { assertTrue(false) })
     while (eventSearchVM2.uiState.value.loading) {}
@@ -423,7 +418,7 @@ class EventViewModelTests {
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
     eventSearchVM2.castPollVoteAtomically(
         pollId = poll.id,
-        optionId = "1",
+        optionIndex = 0,
         onSuccess = { assertTrue(true) },
         onFailure = { assertTrue(false) })
     while (eventSearchVM2.uiState.value.loading) {}
@@ -432,7 +427,7 @@ class EventViewModelTests {
     database.accountManager.signInTo(TEST_ACCOUNTS[2])
     eventSearchVM2.castPollVoteAtomically(
         pollId = poll.id,
-        optionId = "2",
+        optionIndex = 1,
         onSuccess = { assertTrue(true) },
         onFailure = { assertTrue(false) })
 
@@ -447,15 +442,15 @@ class EventViewModelTests {
             TEST_ACCOUNTS[2].firebaseAuthUID))
 
     assertEquals(
-        "1", eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[0].firebaseAuthUID])
+        0, eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[0].firebaseAuthUID])
     assertEquals(
-        "1", eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[1].firebaseAuthUID])
+        0, eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[1].firebaseAuthUID])
     assertEquals(
-        "2", eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[2].firebaseAuthUID])
+        1, eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[2].firebaseAuthUID])
 
-    assertEquals(2, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["1"])
-    assertEquals(1, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["2"])
-    assertEquals(0, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["3"])
+    assertEquals(2, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[0])
+    assertEquals(1, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[1])
+    assertEquals(0, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[2])
 
     val eventSearchVM3 =
         EventViewModel(
@@ -475,15 +470,15 @@ class EventViewModelTests {
             TEST_ACCOUNTS[2].firebaseAuthUID))
 
     assertEquals(
-        "1", eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[0].firebaseAuthUID])
+        0, eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[0].firebaseAuthUID])
     assertEquals(
-        "1", eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[1].firebaseAuthUID])
+        0, eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[1].firebaseAuthUID])
     assertEquals(
-        "2", eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[2].firebaseAuthUID])
+        1, eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[2].firebaseAuthUID])
 
-    assertEquals(2, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["1"])
-    assertEquals(1, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["2"])
-    assertEquals(0, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["3"])
+    assertEquals(2, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[0])
+    assertEquals(1, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[1])
+    assertEquals(0, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[2])
 
     eventSearchVM3.deletePollAtomically(
         pollId = poll.id, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })

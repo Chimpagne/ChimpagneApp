@@ -1,34 +1,31 @@
 package com.monkeyteam.chimpagne.model.database
 
-import androidx.collection.ArrayMap
 import java.util.UUID
 
 typealias ChimpagnePollId = String
 
-typealias ChimpagnePollOptionId = String
+typealias ChimpagnePollOption = String
+
+typealias ChimpagnePollOptionListIndex = Int
 
 data class ChimpagnePoll(
     val id: ChimpagnePollId = UUID.randomUUID().toString(),
     val title: String = "",
     val query: String = "",
-    val options: Map<ChimpagnePollOptionId, ChimpagnePollOption> = emptyMap(),
-    val votes: Map<ChimpagneAccountUID, ChimpagnePollOptionId> = emptyMap(),
+    // OPTIONS STRINGS MUST BE DISTINCT
+    val options: List<ChimpagnePollOption> = emptyList(),
+    val votes: Map<ChimpagneAccountUID, ChimpagnePollOptionListIndex> = emptyMap(),
 ) {
-  private fun getVotesPerOptions(): Map<ChimpagnePollOptionId, List<ChimpagneAccountUID>> {
-    val votesPerOptions: MutableMap<ChimpagnePollOptionId, List<ChimpagneAccountUID>> = ArrayMap()
-    options.keys.forEach { optionId -> votesPerOptions[optionId] = emptyList() }
-    votes.forEach { (accountUID, optionId) ->
-      votesPerOptions[optionId] = votesPerOptions[optionId]!!.plus(accountUID)
+  private fun getVotesPerOptions(): List<List<ChimpagneAccountUID>> {
+    val votesPerOptions: ArrayList<List<ChimpagneAccountUID>> = arrayListOf()
+    options.forEach { _ -> votesPerOptions.add(emptyList()) }
+    votes.forEach { (accountUID, optionIndex) ->
+      votesPerOptions[optionIndex] = votesPerOptions[optionIndex].plus(accountUID)
     }
-    return votesPerOptions
+    return votesPerOptions.toList()
   }
 
-  fun getNumberOfVotesPerOption(): Map<ChimpagnePollOptionId, Int> {
-    return getVotesPerOptions().mapValues { entry -> entry.value.size }
+  fun getNumberOfVotesPerOption(): List<Int> {
+    return getVotesPerOptions().map { it.size }
   }
 }
-
-data class ChimpagnePollOption(
-    val id: ChimpagnePollOptionId = UUID.randomUUID().toString(),
-    val optionText: String = "",
-)

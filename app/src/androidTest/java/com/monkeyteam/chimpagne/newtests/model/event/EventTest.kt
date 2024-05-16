@@ -3,7 +3,6 @@ package com.monkeyteam.chimpagne.newtests.model.event
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
-import com.monkeyteam.chimpagne.model.database.ChimpagnePollOption
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
@@ -135,10 +134,7 @@ class EventTest {
         ChimpagnePoll(
             title = "title",
             query = "is this app for event organisation ?",
-            options =
-                mapOf(
-                    Pair("1", ChimpagnePollOption("1", "yes")),
-                    Pair("2", ChimpagnePollOption("2", "no"))),
+            options = listOf("yes", "no"),
             votes = emptyMap())
 
     var loading = true
@@ -161,32 +157,17 @@ class EventTest {
 
     loading = true
     eventManager.atomic.castPollVote(
-        event.id,
-        poll.id,
-        account0.firebaseAuthUID,
-        "1",
-        { loading = false },
-        { assertTrue(false) })
+        event.id, poll.id, account0.firebaseAuthUID, 0, { loading = false }, { assertTrue(false) })
     while (loading) {}
 
     loading = true
     eventManager.atomic.castPollVote(
-        event.id,
-        poll.id,
-        account1.firebaseAuthUID,
-        "1",
-        { loading = false },
-        { assertTrue(false) })
+        event.id, poll.id, account1.firebaseAuthUID, 0, { loading = false }, { assertTrue(false) })
     while (loading) {}
 
     loading = true
     eventManager.atomic.castPollVote(
-        event.id,
-        poll.id,
-        account2.firebaseAuthUID,
-        "2",
-        { loading = false },
-        { assertTrue(false) })
+        event.id, poll.id, account2.firebaseAuthUID, 1, { loading = false }, { assertTrue(false) })
     while (loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
@@ -206,12 +187,12 @@ class EventTest {
         updatedEvent.polls[poll.id]!!.votes.keys.toSet(),
         setOf(account0.firebaseAuthUID, account1.firebaseAuthUID, account2.firebaseAuthUID))
 
-    assertEquals("1", updatedEvent.polls[poll.id]!!.votes[account0.firebaseAuthUID])
-    assertEquals("1", updatedEvent.polls[poll.id]!!.votes[account1.firebaseAuthUID])
-    assertEquals("2", updatedEvent.polls[poll.id]!!.votes[account2.firebaseAuthUID])
+    assertEquals(0, updatedEvent.polls[poll.id]!!.votes[account0.firebaseAuthUID])
+    assertEquals(0, updatedEvent.polls[poll.id]!!.votes[account1.firebaseAuthUID])
+    assertEquals(1, updatedEvent.polls[poll.id]!!.votes[account2.firebaseAuthUID])
 
-    assertEquals(2, updatedEvent.polls[poll.id]!!.getNumberOfVotesPerOption()["1"])
-    assertEquals(1, updatedEvent.polls[poll.id]!!.getNumberOfVotesPerOption()["2"])
+    assertEquals(2, updatedEvent.polls[poll.id]!!.getNumberOfVotesPerOption()[0])
+    assertEquals(1, updatedEvent.polls[poll.id]!!.getNumberOfVotesPerOption()[1])
 
     loading = true
     eventManager.atomic.deletePoll(event.id, poll.id, { loading = false }, { assertTrue(false) })
