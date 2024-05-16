@@ -98,12 +98,13 @@ class SuppliesScreenUITests {
     var loading = true
     accountViewModel.loginToChimpagneAccount(
         guestAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
-    while (loading) {}
-    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+    composeTestRule.waitUntil(timeoutMillis = 5000) { !loading }
 
     eventViewModel.fetchEvent(onSuccess = { accountViewModel.fetchAccounts(listOf(event.ownerId)) })
 
-    while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading) {}
+    composeTestRule.waitUntil(timeoutMillis = 5000) {
+      !eventViewModel.uiState.value.loading && !accountViewModel.uiState.value.loading
+    }
 
     var you = ""
     composeTestRule.setContent {
