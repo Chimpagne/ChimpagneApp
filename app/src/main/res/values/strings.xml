@@ -135,4 +135,6 @@
     <string name="acount_creation_failed_toast">Account creation failed</string>
     <string name="public_string">Public</string>
     <string name="private_string">Private</string>
+    <string name="title_should_not_be_empty">The event title should not be empty</string>
+    <string name="invalid_dates">Invalid dates</string>
 </resources>

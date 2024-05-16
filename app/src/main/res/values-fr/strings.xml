@@ -130,5 +130,7 @@
     <string name="acount_creation_failed_toast">Création de compte échouée</string>
     <string name="public_string">Public</string>
     <string name="private_string">Privé</string>
+    <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
+    <string name="invalid_dates">Dates invalides</string>
 
 </resources>

@@ -43,12 +43,16 @@ fun EventCreationScreen(
             lastButtonText = stringResource(id = R.string.event_creation_screen_create_event),
             lastButtonOnClick = {
               if (!uiState.loading) {
-                Toast.makeText(
-                        context,
-                        context.getString(R.string.event_creation_screen_toast_creating),
-                        Toast.LENGTH_SHORT)
-                    .show()
                 eventViewModel.createTheEvent(
+                    onInvalidInputs = {
+                      var translatedString = context.getString(R.string.title_should_not_be_empty)
+                      if (it == "Invalid dates") {
+                        translatedString = context.getString(R.string.invalid_dates)
+                        println("INVALID DATE")
+                      }
+
+                      Toast.makeText(context, translatedString, Toast.LENGTH_SHORT).show()
+                    },
                     onSuccess = {
                       Toast.makeText(
                               context,
