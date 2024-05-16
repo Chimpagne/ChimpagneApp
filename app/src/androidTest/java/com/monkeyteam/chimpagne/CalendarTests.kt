@@ -100,9 +100,7 @@ class CalendarTests() {
       val database = Database()
       val eventViewModel = EventViewModel(database = database)
       ViewDetailEventScreen(
-          navObject = navActions,
-          eventViewModel = eventViewModel,
-          accountViewModel = accountViewModel)
+          navObject = navActions, eventViewModel = eventViewModel, AccountViewModel(database))
     }
 
     composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()
