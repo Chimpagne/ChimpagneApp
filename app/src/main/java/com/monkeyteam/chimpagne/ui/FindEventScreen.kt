@@ -2,9 +2,15 @@ package com.monkeyteam.chimpagne.ui
 
 import DateSelector
 import android.Manifest
-import android.content.pm.PackageManager
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.IntentSender
+import android.location.LocationManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -27,7 +33,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.HourglassEmpty
 import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material.icons.rounded.QrCodeScanner
@@ -59,9 +67,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.CurrentLocationRequest
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -69,12 +81,15 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
+import com.monkeyteam.chimpagne.ui.theme.CustomGreen
+import com.monkeyteam.chimpagne.ui.theme.CustomOrange
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
@@ -142,6 +157,7 @@ fun MainFindEventScreen(
   }
 }
 
+@SuppressLint("MissingPermission")
 @ExperimentalMaterial3Api
 @Composable
 fun FindEventFormScreen(
@@ -154,6 +170,8 @@ fun FindEventFormScreen(
 
   var showDialog by remember { mutableStateOf(false) }
 
+  var locationState by remember { mutableStateOf<LocationState>(LocationState.Idle) }
+
   val uiState by findViewModel.uiState.collectAsState()
   val context = LocalContext.current
   val scrollState = rememberScrollState()
@@ -163,38 +181,73 @@ fun FindEventFormScreen(
     LocationServices.getFusedLocationProviderClient(context)
   }
 
-  val locationPermissionRequest =
-      rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.RequestMultiplePermissions(),
-          onResult = { permissions ->
-            when {
-              permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                  permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
-                if (ActivityCompat.checkSelfPermission(
-                    context, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED) {
-                  showToast("Location permission denied")
-                  return@rememberLauncherForActivityResult
-                }
+  val getLocation = {
+    showToast(context.getString(R.string.find_event_event_locate_searching))
+    locationState = LocationState.Searching
+    fusedLocationProviderClient
+        .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
+        .addOnSuccessListener { location ->
+          location?.let {
+            showToast(context.getString(R.string.find_event_location_set))
+            findViewModel.updateSelectedLocation(Location("mylocation", it.latitude, it.longitude))
+            locationState = LocationState.Set(it)
+          } ?: showToast(context.getString(R.string.find_event_location_not_found))
+        }
+        .addOnFailureListener {
+          showToast(context.getString(R.string.find_event_location_not_found) + " : ${it.message}")
+          locationState = LocationState.Error("Unable to get location: ${it.message}")
+        }
+  }
 
-                showToast("Getting location")
-                fusedLocationProviderClient
-                    .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
-                    .addOnSuccessListener { location ->
-                      location?.let {
-                        showToast("Location OK")
-                        findViewModel.updateSelectedLocation(
-                            Location("mylocation", it.latitude, it.longitude))
-                      }
-                    }
-                    .addOnFailureListener { showToast("Unable to get location: ${it.message}") }
-              }
-              else -> showToast("Location permission denied")
-            }
-          })
+  val startForResult =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) getLocation()
+            else showToast(context.getString(R.string.find_event_location_not_found))
+          }
+
+  val checkAndRequestGPS = {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+      Log.d("FindEventFormScreen", "GPS asked to be turned on")
+
+      // GPS is not enabled, proceed to ask user to enable it
+      val locationRequest =
+          LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
+      val builder =
+          LocationSettingsRequest.Builder().addLocationRequest(locationRequest).setAlwaysShow(true)
+
+      val client: SettingsClient = LocationServices.getSettingsClient(context)
+      val task = client.checkLocationSettings(builder.build())
+
+      task.addOnSuccessListener { getLocation() }
+
+      task.addOnFailureListener { exception ->
+        if (exception is ResolvableApiException) {
+          try {
+            startForResult.launch(IntentSenderRequest.Builder(exception.resolution).build())
+          } catch (_: IntentSender.SendIntentException) {}
+        }
+      }
+    } else {
+      Log.d("FindEventFormScreen", "GPS already turned on")
+      getLocation()
+    }
+  }
+
+  val locationPermissionRequest =
+      rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+          permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+          // Permissions granted, now check if GPS is enabled and request enabling if necessary.
+          checkAndRequestGPS()
+        } else {
+          showToast(context.getString(R.string.permission_denied))
+          locationState = LocationState.Error("Location permission denied")
+        }
+      }
 
   val requestLocationPermission = {
     locationPermissionRequest.launch(
@@ -209,7 +262,7 @@ fun FindEventFormScreen(
             if (granted) {
               showDialog = true
             } else {
-              showToast("Camera permission denied")
+              showToast(context.getString(R.string.permission_denied))
             }
           })
 
@@ -223,7 +276,9 @@ fun FindEventFormScreen(
           val uid = it.substringAfter("?uid=")
 
           findViewModel.fetchEvent(
-              uid, onSuccess = showScannedEvent, onFailure = { showToast("Event not found") })
+              uid,
+              onSuccess = showScannedEvent,
+              onFailure = { showToast(context.getString(R.string.find_event_no_result)) })
         })
   }
 
@@ -261,7 +316,7 @@ fun FindEventFormScreen(
                 Icon(Icons.Rounded.Search, contentDescription = "Search")
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    stringResource(id = R.string.find_event_search_button_text),
+                    stringResource(id = R.string.find_event_search_button_text).uppercase(),
                     style = ChimpagneTypography.bodyLarge)
               }
             }
@@ -284,11 +339,32 @@ fun FindEventFormScreen(
                     Modifier.fillMaxWidth().testTag("input_location"))
 
                 Spacer(Modifier.height(16.dp))
+
                 IconTextButton(
-                    text = stringResource(id = R.string.find_event_event_locate_me_button),
-                    icon = Icons.Rounded.MyLocation,
+                    text =
+                        when (locationState) {
+                          is LocationState.Set ->
+                              stringResource(id = R.string.find_event_location_set)
+                          is LocationState.Searching ->
+                              stringResource(id = R.string.find_event_event_locate_searching)
+                          else -> stringResource(id = R.string.find_event_event_locate_me_button)
+                        },
+                    icon =
+                        when (locationState) {
+                          is LocationState.Set -> Icons.Rounded.CheckCircle
+                          is LocationState.Searching -> Icons.Default.HourglassEmpty
+                          else -> Icons.Rounded.MyLocation
+                        },
+                    color =
+                        when (locationState) {
+                          is LocationState.Set -> CustomGreen
+                          is LocationState.Searching -> CustomOrange
+                          else -> MaterialTheme.colorScheme.surfaceVariant
+                        },
                     onClick = { requestLocationPermission() },
-                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_location"))
+                    modifier =
+                        Modifier.align(Alignment.CenterHorizontally)
+                            .testTag("request_location_permission_button"))
                 Spacer(Modifier.height(16.dp))
 
                 Text(

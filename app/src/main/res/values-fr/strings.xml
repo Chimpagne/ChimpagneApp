@@ -35,7 +35,7 @@
     <string name="event_creation_screen_add_supplies">Ajouter des fournitures</string>
     <string name="event_creation_screen_beds">Lits</string>
     <string name="close">Fermer</string>
-    <string name="find_event_page_title">Trouver une soirée</string>
+    <string name="find_event_page_title">Trouver un évènement</string>
     <string name="find_event_search_button_text">Chercher</string>
     <string name="find_event_event_location_legend">Lieu</string>
     <string name="find_event_event_tags_legend">Ajouter des tags de recherche</string>
@@ -66,16 +66,19 @@
     <string name="date_tools_until">Jusqu\'au</string>
     <string name="date_tools_at">à</string>
     <string name="event_details_screen_number_of_guests">personnes ont rejoint</string>
+    <string name="event_details_screen_organized_by">Organisé par</string>
     <string name="event_details_screen_report_problem">Signaler un Problème</string>
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
-    <string name="event_details_screen_edit_button">Éditer l\'événement</string>
+    <string name="event_details_screen_edit_button">Éditer l\'Evénement</string>
     <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
     <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
+    <string name="event_details_screen_bed_reservation">Hébergement</string>
     <string name="event_details_screen_supplies_button">Fournitures</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
+    <string name="event_details_screen_parking">Parking</string>
     <string name="edit_event">Editer l\'événement</string>
     <string name="edit_event_toast_finish">L\'événement a été édité</string>
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
@@ -85,6 +88,12 @@
     <string name="links_to_social_media">Ajouter vos groupes de médias sociaux</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+
+    <string name="find_event_location_set">Localisé</string>
+    <string name="find_event_location_not_found">Localisation échouée</string>
+    <string name="permission_denied">Permission refusée</string>
+    <string name="find_event_event_locate_searching">Localisation…</string>
+
     <string name="share_event_button">Partager</string>
     <string name="calendar_failed">L\'événement ne peut pas être ajouté au calendrier</string>
     <string name="add_event_to_calendar_prefix">Voulez-vous ajouter l\'événement \"</string>
@@ -132,5 +141,6 @@
     <string name="private_string">Privé</string>
     <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
     <string name="invalid_dates">Dates invalides</string>
+
 
 </resources>

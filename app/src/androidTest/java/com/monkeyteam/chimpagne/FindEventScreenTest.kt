@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne
 
+import android.location.LocationManager
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -11,6 +12,7 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.rule.GrantPermissionRule
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.DetailScreenSheet
@@ -18,13 +20,14 @@ import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.utilities.QRCodeAnalyser
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 
 class FindEventScreenTest {
 
@@ -39,6 +42,46 @@ class FindEventScreenTest {
           android.Manifest.permission.ACCESS_FINE_LOCATION,
           android.Manifest.permission.ACCESS_COARSE_LOCATION,
           android.Manifest.permission.CAMERA)
+
+  private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+  private lateinit var locationManager: LocationManager
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun requestLocationPermissionTest() {
+    val locationManager = mock(LocationManager::class.java)
+    `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true)
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
+    }
+
+    // Perform the action that checks GPS status
+    composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
+
+    // Assertions or further actions can be added here
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun requestLocationPermissionFalseTest() {
+    val locationManager = mock(LocationManager::class.java)
+    `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(false)
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
+    }
+
+    // Perform the action that checks GPS status
+    composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
+
+    // Assertions or further actions can be added here
+  }
 
   @Test
   fun testQRCodeScanner() {
@@ -142,7 +185,6 @@ class FindEventScreenTest {
 
       MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
-    composeTestRule.onNodeWithTag("sel_location").performClick()
 
     composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
     composeTestRule.onNodeWithTag("button_search").performClick()
@@ -186,7 +228,7 @@ class FindEventScreenTest {
     }
 
     // Check if the location selector is displayed
-    composeTestRule.onNodeWithTag("sel_location").assertExists()
+    composeTestRule.onNodeWithTag("input_location").assertExists()
 
     // Check if the date selector is displayed
     composeTestRule.onNodeWithTag("sel_date").assertExists()
@@ -207,7 +249,6 @@ class FindEventScreenTest {
     val fvm = FindEventsViewModel(database = database)
 
     composeTestRule.setContent {
-      val analyser = QRCodeAnalyser {}
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
