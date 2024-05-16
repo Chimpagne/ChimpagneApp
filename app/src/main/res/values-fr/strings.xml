@@ -51,7 +51,7 @@
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="chimpagne_cancel">Annuler</string>
     <string name="chimpagne_add">Ajouter</string>
-    <string name="chimpagne_ok">Ok</string>
+    <string name="chimpagne_ok">OK</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
@@ -111,6 +111,6 @@
     <string name="acount_creation_failed_toast">Création de compte échouée</string>
 
     <!-- DateRangeSelector -->
-    <string name="select_date_range_for_query">Selectionnez une période pour la recherche</string>
+    <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>
 
 </resources>
