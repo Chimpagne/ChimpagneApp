@@ -15,6 +15,8 @@ import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 
+const val SLEEP_AMOUNT_MILLIS: Long = 300
+
 val TEST_EVENTS =
     listOf(
         ChimpagneEvent(
@@ -72,7 +74,9 @@ val TEST_EVENTS =
             staffs = emptyMap(),
             /* SAME AS EVENT 1 */
             startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
-            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15)),
+            endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15),
+            ownerId = "JUAN",
+            supplies = mapOf("1" to ChimpagneSupply("1", "c", 1, "h"))),
         ChimpagneEvent(
             id = "LOTR",
             title = "Watch LOTR",

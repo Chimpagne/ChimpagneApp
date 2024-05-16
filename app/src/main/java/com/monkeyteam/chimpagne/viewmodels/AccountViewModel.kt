@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +24,7 @@ class AccountViewModel(database: Database) : ViewModel() {
   fun loginToChimpagneAccount(
       uid: String,
       onSuccess: (ChimpagneAccount?) -> Unit,
-      onFailure: (Exception) -> Unit
+      onFailure: (Exception) -> Unit,
   ) {
     _uiState.value = _uiState.value.copy(currentUserUID = uid, loading = true)
     viewModelScope.launch {
@@ -125,6 +126,14 @@ class AccountViewModel(database: Database) : ViewModel() {
   fun isUserLoggedIn(): Boolean {
     return FirebaseAuth.getInstance().currentUser != null
   }
+
+  fun fetchAccounts(accountUIDs: List<ChimpagneAccountUID>) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    accountManager.getAccounts(
+        accountUIDs,
+        { _uiState.value = _uiState.value.copy(fetchedAccounts = it, loading = false) },
+        { _uiState.value = _uiState.value.copy(loading = false) })
+  }
 }
 
 /**
@@ -138,6 +147,7 @@ data class AccountUIState(
     val tempAccount: ChimpagneAccount = ChimpagneAccount(),
     val currentUserProfilePicture: Uri? = null,
     val tempProfilePicture: Uri? = null,
+    val fetchedAccounts: Map<ChimpagneAccountUID, ChimpagneAccount?> = hashMapOf(),
     val loading: Boolean = false
 )
 

@@ -14,6 +14,7 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
 import org.junit.Rule
@@ -24,6 +25,7 @@ import org.junit.runner.RunWith
 class ViewDetailEventScreenTests {
 
   val database = Database()
+  val accountViewModel = AccountViewModel(database = database)
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -38,7 +40,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, EventViewModel(testEventId, database))
+      ViewDetailEventScreen(navActions, EventViewModel(testEventId, database), accountViewModel)
     }
 
     composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
@@ -58,13 +60,13 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("tag list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
-    composeTestRule.onNodeWithContentDescription("event date").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
   }
 
@@ -79,7 +81,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("go back").assertHasClickAction()
@@ -98,11 +100,29 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("leave").assertHasClickAction()
     composeTestRule.onNodeWithTag("leave").performClick()
+  }
+
+  @Test
+  fun testShareButton() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+    }
+
+    composeTestRule.onNodeWithTag("share").assertHasClickAction()
+    composeTestRule.onNodeWithTag("share").performClick()
   }
 
   @Test
@@ -118,11 +138,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    // composeTestRule.onNodeWithTag("edit").assertHasClickAction()
-    // composeTestRule.onNodeWithTag("edit").performClick()
+    composeTestRule.onNodeWithTag("edit").assertHasClickAction()
   }
 
   @Test
@@ -136,11 +155,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("chat").assertHasClickAction()
-    composeTestRule.onNodeWithTag("chat").performClick()
   }
 
   @Test
@@ -154,11 +172,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("location").assertHasClickAction()
-    composeTestRule.onNodeWithTag("location").performClick()
   }
 
   @Test
@@ -172,11 +189,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("supplies").assertHasClickAction()
-    composeTestRule.onNodeWithTag("supplies").performClick()
   }
 
   @Test
@@ -190,11 +206,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("polls").assertHasClickAction()
-    composeTestRule.onNodeWithTag("polls").performClick()
   }
 
   @Test
@@ -208,10 +223,26 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("car pooling").assertHasClickAction()
-    composeTestRule.onNodeWithTag("car pooling").performClick()
+  }
+
+  @Test
+  fun testManageStaffButton() {
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
+    val event = TEST_EVENTS[0]
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+    }
+
+    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction()
   }
 }

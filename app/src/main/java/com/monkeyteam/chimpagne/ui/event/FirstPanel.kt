@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CalendarToday
 import androidx.compose.material.icons.rounded.Description
@@ -32,72 +33,76 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun FirstPanel(eventViewModel: EventViewModel) {
   val uiState by eventViewModel.uiState.collectAsState()
 
-  Column(modifier = Modifier.padding(16.dp)) {
-    Legend(
-        stringResource(id = R.string.event_creation_screen_title_legend),
-        Icons.Rounded.Title,
-        "Title")
-    Spacer(Modifier.height(16.dp))
-    OutlinedTextField(
-        value = uiState.title,
-        onValueChange = eventViewModel::updateEventTitle,
-        label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
-        modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
+  LazyColumn(horizontalAlignment = Alignment.Start) {
+    item {
+      Column(modifier = Modifier.padding(16.dp)) {
+        Legend(
+            stringResource(id = R.string.event_creation_screen_title_legend),
+            Icons.Rounded.Title,
+            "Title")
+        Spacer(Modifier.height(16.dp))
+        OutlinedTextField(
+            value = uiState.title,
+            onValueChange = eventViewModel::updateEventTitle,
+            label = { Text(stringResource(id = R.string.event_creation_screen_title)) },
+            modifier = Modifier.fillMaxWidth().testTag("add_a_title"))
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Legend(
-        stringResource(id = R.string.event_creation_screen_description_legend),
-        Icons.Rounded.Description,
-        "Description")
+        Legend(
+            stringResource(id = R.string.event_creation_screen_description_legend),
+            Icons.Rounded.Description,
+            "Description")
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    OutlinedTextField(
-        value = uiState.description,
-        onValueChange = eventViewModel::updateEventDescription,
-        label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
-        modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
-        maxLines = 3)
-    Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(
+            value = uiState.description,
+            onValueChange = eventViewModel::updateEventDescription,
+            label = { Text(stringResource(id = R.string.event_creation_screen_description)) },
+            modifier = Modifier.fillMaxWidth().testTag("add_a_description"),
+            maxLines = 3)
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Legend(
-        stringResource(id = R.string.event_creation_screen_location_legend),
-        Icons.Rounded.LocationOn,
-        "Location")
+        Legend(
+            stringResource(id = R.string.event_creation_screen_location_legend),
+            Icons.Rounded.LocationOn,
+            "Location")
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    LocationSelector(uiState.location, eventViewModel::updateEventLocation)
+        LocationSelector(uiState.location, eventViewModel::updateEventLocation)
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Legend(
-        stringResource(id = R.string.event_creation_screen_start_date_legend),
-        Icons.Rounded.CalendarToday,
-        "Start Date")
+        Legend(
+            stringResource(id = R.string.event_creation_screen_start_date_legend),
+            Icons.Rounded.CalendarToday,
+            "Start Date")
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    DateSelector(
-        selectedDate = uiState.startsAtCalendarDate,
-        onDateSelected = eventViewModel::updateEventStartCalendarDate,
-        modifier = Modifier.align(Alignment.CenterHorizontally),
-        selectTimeOfDay = true)
+        DateSelector(
+            selectedDate = uiState.startsAtCalendarDate,
+            onDateSelected = eventViewModel::updateEventStartCalendarDate,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            selectTimeOfDay = true)
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Legend(
-        stringResource(id = R.string.event_creation_screen_end_date_legend),
-        Icons.Rounded.CalendarToday,
-        "End Date")
+        Legend(
+            stringResource(id = R.string.event_creation_screen_end_date_legend),
+            Icons.Rounded.CalendarToday,
+            "End Date")
 
-    Spacer(modifier = Modifier.height(16.dp))
-    // We will need to add some tests for DateSelector also
-    DateSelector(
-        selectedDate = uiState.endsAtCalendarDate,
-        onDateSelected = eventViewModel::updateEventEndCalendarDate,
-        modifier = Modifier.align(Alignment.CenterHorizontally),
-        selectTimeOfDay = true)
+        Spacer(modifier = Modifier.height(16.dp))
+        // We will need to add some tests for DateSelector also
+        DateSelector(
+            selectedDate = uiState.endsAtCalendarDate,
+            onDateSelected = eventViewModel::updateEventEndCalendarDate,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            selectTimeOfDay = true)
+      }
+    }
   }
 }
