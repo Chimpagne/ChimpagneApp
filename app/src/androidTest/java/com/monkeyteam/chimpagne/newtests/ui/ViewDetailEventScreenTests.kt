@@ -158,6 +158,9 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
+    // Wait for navigation to complete with a timeout
+    while (navController?.currentDestination?.route !=
+        Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {}
     assertTrue(
         navController?.currentDestination?.route ==
             Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}")
@@ -273,6 +276,10 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("manage staff").assertHasClickAction().performClick()
+    // Wait for navigation to complete with a timeout
+    while (navController?.currentDestination?.route !=
+        Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {}
+
     assertTrue(
         navController?.currentDestination?.route ==
             Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}")
