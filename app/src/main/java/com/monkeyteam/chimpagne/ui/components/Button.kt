@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui.components
 
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent

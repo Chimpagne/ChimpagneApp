@@ -188,7 +188,6 @@ fun FindEventFormScreen(
         .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
         .addOnSuccessListener { location ->
           location?.let {
-            Thread.sleep(3000)
             showToast(context.getString(R.string.find_event_location_set))
             findViewModel.updateSelectedLocation(Location("mylocation", it.latitude, it.longitude))
             locationState = LocationState.Set(it)
@@ -285,7 +284,9 @@ fun FindEventFormScreen(
           val uid = it.substringAfter("?uid=")
 
           findViewModel.fetchEvent(
-              uid, onSuccess = showScannedEvent, onFailure = { showToast(context.getString(R.string.find_event_no_result)) })
+              uid,
+              onSuccess = showScannedEvent,
+              onFailure = { showToast(context.getString(R.string.find_event_no_result)) })
         })
   }
 
