@@ -202,13 +202,8 @@ fun FindEventFormScreen(
   val startForResult =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-              // GPS was enabled by the user
-              getLocation()
-            } else {
-              // User purposefully denied GPS
-              showToast(context.getString(R.string.find_event_location_not_found))
-            }
+            if (result.resultCode == Activity.RESULT_OK) getLocation()
+            else showToast(context.getString(R.string.find_event_location_not_found))
           }
 
   val checkAndRequestGPS = {
@@ -220,8 +215,8 @@ fun FindEventFormScreen(
       // GPS is not enabled, proceed to ask user to enable it
       val locationRequest =
           LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
-      val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-      builder.setAlwaysShow(true)
+      val builder =
+          LocationSettingsRequest.Builder().addLocationRequest(locationRequest).setAlwaysShow(true)
 
       val client: SettingsClient = LocationServices.getSettingsClient(context)
       val task = client.checkLocationSettings(builder.build())
@@ -231,11 +226,8 @@ fun FindEventFormScreen(
       task.addOnFailureListener { exception ->
         if (exception is ResolvableApiException) {
           try {
-            val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
-            startForResult.launch(intentSenderRequest)
-          } catch (sendEx: IntentSender.SendIntentException) {
-            // Handle error
-          }
+            startForResult.launch(IntentSenderRequest.Builder(exception.resolution).build())
+          } catch (_: IntentSender.SendIntentException) {}
         }
       }
     } else {

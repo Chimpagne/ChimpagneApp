@@ -65,6 +65,24 @@ class FindEventScreenTest {
     // Assertions or further actions can be added here
   }
 
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun requestLocationPermissionFalseTest() {
+    val locationManager = mock(LocationManager::class.java)
+    `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(false)
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
+    }
+
+    // Perform the action that checks GPS status
+    composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
+
+    // Assertions or further actions can be added here
+  }
+
   @Test
   fun testQRCodeScanner() {
 
