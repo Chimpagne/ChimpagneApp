@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.model.utils
+package com.monkeyteam.chimpagne.ui.utilities
 
 import android.content.Context
 import androidx.compose.runtime.Composable
