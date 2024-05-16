@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne
 
-import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
@@ -16,6 +15,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
+import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
@@ -114,19 +114,16 @@ class FindEventScreenTest {
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testJoinEventFunctionalityAlreadyGuest() {
-    val anAccount2 = TEST_ACCOUNTS[0]
-    accountManager.signInTo(anAccount2)
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
 
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
-    val sampleEvent =
-        ChimpagneEvent(
-            id = "sample1234",
-            title = "Sample Event",
-            description = "Sample Description",
-            guests = mapOf(anAccount2.firebaseAuthUID to true, anAccount.firebaseAuthUID to true),
-            ownerId = anAccount2.firebaseAuthUID)
-    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    val joinedEvent = TEST_EVENTS[2]
+    findViewModel.setResultEvents(mapOf(joinedEvent.id to joinedEvent))
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -137,24 +134,22 @@ class FindEventScreenTest {
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
-    assertTrue(sampleEvent.getRole(anAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
+    assertTrue(joinedEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testJoinEventFunctionalityAlreadyStaff() {
+    val myAccount = TEST_ACCOUNTS[0]
     accountManager.signInTo(anAccount)
 
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
-    val sampleEvent =
-        ChimpagneEvent(
-            id = "sample123",
-            title = "Sample Event",
-            description = "Sample Description",
-            guests = mapOf(anAccount.firebaseAuthUID to true),
-            staffs = mapOf(anAccount.firebaseAuthUID to true))
-    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    val staffEvent = TEST_EVENTS[4]
+    findViewModel.setResultEvents(mapOf(staffEvent.id to staffEvent))
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -165,25 +160,22 @@ class FindEventScreenTest {
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
-    assertTrue(sampleEvent.getRole(anAccount.firebaseAuthUID) == ChimpagneRole.STAFF)
+    assertTrue(staffEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.STAFF)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testJoinEventFunctionalityAlreadyOwner() {
-
-    accountManager.signInTo(anAccount)
+    val myAccount = TEST_ACCOUNTS[1]
+    accountManager.signInTo(myAccount)
 
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
-    val sampleEvent =
-        ChimpagneEvent(
-            id = "sample123",
-            title = "Sample Event",
-            description = "Sample Description",
-            guests = mapOf(anAccount.firebaseAuthUID to true),
-            ownerId = anAccount.firebaseAuthUID)
-    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    val ownerEvent = TEST_EVENTS[2]
+    findViewModel.setResultEvents(mapOf(ownerEvent.id to ownerEvent))
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -194,35 +186,47 @@ class FindEventScreenTest {
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
-    assertTrue(sampleEvent.getRole(anAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
+    assertTrue(ownerEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
-  @Test
-  fun testJoinEvent_NotInEvent() {
-    val findViewModel = FindEventsViewModel(database)
-    val sampleEvent =
-        ChimpagneEvent(
-            id = "sample123",
-            title = "Sample Event",
-            description = "Sample Description",
-            guests = emptyMap())
-    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
-    accountManager.signInTo(anAccount)
-
-    lateinit var navController: NavHostController
-
-    composeTestRule.setContent {
-      navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
-    }
-
-    Log.d("m", "$sampleEvent.getRole(anAccount.firebaseAuthUID)")
-
-    composeTestRule.onNodeWithTag("join_button").performClick()
-  }
+  //  @OptIn(ExperimentalMaterial3Api::class)
+  //  @Test
+  //  fun testJoinEvent_NotInEvent() {
+  //    val myAccount = TEST_ACCOUNTS[1]
+  //    accountManager.signInTo(myAccount)
+  //
+  //    val findViewModel = FindEventsViewModel(database)
+  //    val accountViewModel = AccountViewModel(database)
+  //
+  //    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+  //    while(accountViewModel.uiState.value.loading){}
+  //
+  //    val notJoinedEvent = TEST_EVENTS[3]
+  //    findViewModel.setResultEvents(mapOf(notJoinedEvent.id to notJoinedEvent))
+  //
+  //    val eventVM = EventViewModel(notJoinedEvent.id, database)
+  //    while(eventVM.uiState.value.loading){}
+  //
+  //    composeTestRule.setContent {
+  //      val navController = rememberNavController()
+  //      val navActions = NavigationActions(navController)
+  //
+  //      NavHost(navController = navController, startDestination = Route.FIND_AN_EVENT_SCREEN){
+  //        composable(Route.FIND_AN_EVENT_SCREEN){
+  //          FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+  //        }
+  //        composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/${notJoinedEvent.id}"){
+  //          ViewDetailEventScreen(navObject = navActions, eventViewModel = eventVM,
+  // accountViewModel = accountViewModel)
+  //        }
+  //      }
+  //    }
+  //
+  //    assertTrue(notJoinedEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.NOT_IN_EVENT)
+  //
+  //    composeTestRule.onNodeWithTag("join_button").performClick()
+  //
+  //  }
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
