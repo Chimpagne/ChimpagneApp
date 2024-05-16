@@ -28,7 +28,6 @@ data class ChimpagneEvent(
     val image: String = "", // TODO: Add image
     val socialMediaLinks: Map<String, String> =
         SupportedSocialMedia.associateBy { it.platformName }.mapValues { it.value.chosenGroupUrl }
-
 ) {
 
   fun guestList(): Set<String> {

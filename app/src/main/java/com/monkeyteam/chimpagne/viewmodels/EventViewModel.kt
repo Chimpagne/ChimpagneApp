@@ -63,6 +63,7 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
+                        image = it.image,
                         socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks))
                 _uiState.value =
                     _uiState.value.copy(
@@ -99,8 +100,8 @@ class EventViewModel(
         tags = _uiState.value.tags,
         guests = _uiState.value.guests,
         staffs = _uiState.value.staffs,
-        startsAt = _uiState.value.startsAtCalendarDate,
-        endsAt = _uiState.value.endsAtCalendarDate,
+        // startsAt = _uiState.value.startsAtCalendarDate,
+        // endsAt = _uiState.value.endsAtCalendarDate,
         ownerId = _uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
@@ -416,6 +417,7 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
+      val image: String = "",
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",

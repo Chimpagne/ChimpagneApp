@@ -37,6 +37,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import java.text.DateFormat
 import java.util.Calendar
 
@@ -165,7 +166,7 @@ fun TimePickerDialog(
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp).testTag("title"),
                     text = title,
-                    style = MaterialTheme.typography.labelMedium)
+                    style = ChimpagneTypography.labelMedium)
                 content()
                 Row(modifier = Modifier.height(40.dp).fillMaxWidth()) {
                   Spacer(modifier = Modifier.weight(1f))

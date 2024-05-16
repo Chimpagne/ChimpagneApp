@@ -23,9 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
@@ -78,16 +76,12 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
                       navObject.navigateTo(Route.MY_EVENTS_SCREEN)
                     }
                   },
-                  text = stringResource(id = R.string.homescreen_my_events),
-                  fontWeight = FontWeight.Bold,
-                  fontSize = 30.sp)
+                  text = stringResource(id = R.string.homescreen_my_events))
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("discover_events_button"),
                   onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
-                  text = stringResource(R.string.homescreen_join_event),
-                  fontWeight = FontWeight.Bold,
-                  fontSize = 30.sp)
+                  text = stringResource(R.string.homescreen_join_event))
               Spacer(modifier = Modifier.height(16.dp))
               ChimpagneButton(
                   modifier = Modifier.testTag("organize_event_button"),
@@ -98,9 +92,7 @@ fun HomeScreen(navObject: NavigationActions, accountViewModel: AccountViewModel)
                       navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
                     }
                   },
-                  text = stringResource(R.string.homescreen_organize_event),
-                  fontWeight = FontWeight.Bold,
-                  fontSize = 30.sp)
+                  text = stringResource(R.string.homescreen_organize_event))
             }
       }
 }
