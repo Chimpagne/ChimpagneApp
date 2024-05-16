@@ -77,6 +77,7 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -433,25 +434,22 @@ fun FindEventMapScreen(
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
+  var currentEvents by remember { mutableStateOf<List<ChimpagneEvent>>(listOf()) }
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
   }
-  val onMarkerClick: (MarkerData) -> Unit = { markerData ->
+  val onMarkerClick: (Cluster<MarkerData>) -> Unit = { markers ->
     coroutineScope.launch {
-      currentEvent = uiState.events[markerData.id]
-      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markerData.position)) }
-
+      currentEvents = markers.items.mapNotNull { marker -> uiState.events[marker.id] }
+      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markers.position)) }
       launch { scaffoldState.bottomSheetState.expand() }
     }
   }
 
   LaunchedEffect(uiState.events.size) {
-    if (uiState.events.size == 1) {
-      currentEvent = uiState.events.values.first()
-      scaffoldState.bottomSheetState.expand()
-    }
+    currentEvents = uiState.events.values.toList()
+    scaffoldState.bottomSheetState.expand()
   }
 
   val goBack = {
@@ -462,20 +460,24 @@ fun FindEventMapScreen(
     }
   }
 
-  val onJoinClick: () -> Unit = {
-    if (currentEvent != null) {
-      Toast.makeText(context, "Joining ${currentEvent?.title}", Toast.LENGTH_SHORT).show()
-      findViewModel.joinEvent(
-          currentEvent!!.id,
-          { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
-          { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
-    }
+  val onJoinClick: (ChimpagneEvent) -> Unit = { event ->
+    Toast.makeText(context, "Joining ${event.title}", Toast.LENGTH_SHORT).show()
+    findViewModel.joinEvent(
+        event.id,
+        { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
+        { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
   }
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick, context) },
+      sheetContent = {
+        if (currentEvents.size == 1) {
+          DetailScreenSheet(event = currentEvents.first(), onJoinClick, context)
+        } else {
+          // Optionally handle multiple events or display an empty state here
+        }
+      },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {

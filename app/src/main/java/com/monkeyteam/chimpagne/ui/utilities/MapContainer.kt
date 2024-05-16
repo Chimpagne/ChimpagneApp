@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.Circle
@@ -43,7 +44,7 @@ fun getZoomLevel(radius: Double): Float {
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     isMapInitialized: Boolean = false,
-    onMarkerClick: (MarkerData) -> Unit,
+    onMarkerClick: (Cluster<MarkerData>) -> Unit,
     events: Map<String, ChimpagneEvent>,
     radius: Double,
     startingPosition: Location?,
@@ -87,11 +88,11 @@ fun MapContainer(
           ChimpagneClustering(
               items = markersData,
               onClusterClick = {
-                cameraPositionState.move(CameraUpdateFactory.zoomIn())
-                false
+                  onMarkerClick(it)
+                  true
               },
-              onClusterItemClick = { e ->
-                onMarkerClick(e)
+              onClusterItemClick = {markerData ->
+                onMarkerClick(SingletonCluster(markerData))
                 true
               })
         }

@@ -30,12 +30,12 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 @Composable
 fun DetailScreenSheet(
     event: ChimpagneEvent?,
-    onJoinClick: () -> Unit = {},
+    onJoinClick: (ChimpagneEvent) -> Unit = {},
     context: Context? = null
 ) {
   var showDialog by remember { mutableStateOf(false) }
-  val enhancedOnJoinClick = {
-    onJoinClick()
+  val enhancedOnJoinClick: (ChimpagneEvent) -> Unit = {
+    onJoinClick(it)
     showDialog = true
   }
   if (event != null && event.id.isNotBlank()) {
@@ -69,7 +69,7 @@ fun DetailScreenSheet(
               }
 
           Button(
-              onClick = enhancedOnJoinClick,
+              onClick = { enhancedOnJoinClick(event) },
               modifier = Modifier.align(Alignment.CenterHorizontally).testTag("join_button")) {
                 Text(stringResource(id = R.string.find_event_join_event_button_text))
               }
