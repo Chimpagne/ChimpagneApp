@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.SocialMedia
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @Composable
@@ -27,7 +28,7 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
   Column(modifier = Modifier.padding(16.dp)) {
     Text(
         stringResource(id = R.string.links_to_social_media),
-        style = MaterialTheme.typography.headlineSmall,
+        style = ChimpagneTypography.headlineSmall,
         modifier = Modifier.testTag("social_media_title"))
     Spacer(modifier = Modifier.height(16.dp))
 
@@ -73,7 +74,7 @@ private fun SocialMediaTextField(
     Text(
         "Invalid URL. Must start with: ${socialMedia.platformUrl} or be empty",
         color = MaterialTheme.colorScheme.error,
-        style = MaterialTheme.typography.bodySmall,
+        style = ChimpagneTypography.bodySmall,
         modifier = Modifier.padding(start = 16.dp, top = 4.dp))
   }
 }

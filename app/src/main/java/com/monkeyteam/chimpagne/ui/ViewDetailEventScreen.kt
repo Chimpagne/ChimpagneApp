@@ -55,7 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -74,11 +73,13 @@ import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -97,7 +98,7 @@ fun ViewDetailEventScreen(
   var showDialog by remember { mutableStateOf(false) }
   var showPromptLogin by remember { mutableStateOf(false) }
   val clipboardManager = LocalClipboardManager.current
-  // Otherwise event doesn't directly load
+
   LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   Scaffold(
@@ -111,7 +112,8 @@ fun ViewDetailEventScreen(
                     Text(
                         text = uiState.title,
                         fontSize = 30.sp,
-                        fontFamily = ChimpagneFontFamily,
+                        style = ChimpagneTypography.titleLarge,
+                        maxLines = 2,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.testTag("event title"))
                     Spacer(modifier = Modifier.weight(1f))
@@ -166,14 +168,7 @@ fun ViewDetailEventScreen(
                           contentAlignment = Alignment.Center) {
                             // For now, image is static -> needs to be added in the UI State for
                             // event view model
-                            Image(
-                                painter = painterResource(id = R.drawable.default_party_image),
-                                contentDescription = "Event Banner",
-                                modifier =
-                                    Modifier.matchParentSize()
-                                        .padding(16.dp)
-                                        .clip(RoundedCornerShape(16.dp)),
-                                contentScale = ContentScale.Crop)
+                            ImageWithBlackFilterOverlay(uiState.image)
                           }
                     }
                     item {
@@ -523,11 +518,7 @@ fun ViewDetailEventScreen(
                                         .testTag("supplies"),
                                 onClick = {
                                   /* TODO Implement this later */
-                                  Toast.makeText(
-                                          context,
-                                          "This function will be implemented in a future version",
-                                          Toast.LENGTH_SHORT)
-                                      .show()
+                                  navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
                                 })
                             Spacer(Modifier.height(16.dp))
                             ChimpagneButton(

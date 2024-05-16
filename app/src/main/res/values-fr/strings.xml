@@ -31,6 +31,8 @@
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
+    <string name="event_creation_screen_supplies">Fournitures</string>
+    <string name="event_creation_screen_add_supplies">Ajouter des fournitures</string>
     <string name="event_creation_screen_beds">Lits</string>
     <string name="close">Fermer</string>
     <string name="find_event_page_title">Trouver une soirée</string>
@@ -50,8 +52,6 @@
     <string name="joining_toast">En train de rejoindre</string>
     <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
-    <string name="chimpagne_cancel">Annuler</string>
-    <string name="chimpagne_add">Ajouter</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
@@ -74,6 +74,7 @@
     <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
     <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
+    <string name="event_details_screen_supplies_button">Fournitures</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
     <string name="event_details_screen_car_pooling_button">Covoiturages</string>
     <string name="edit_event">Editer l\'événement</string>
@@ -100,19 +101,40 @@
     <string name="manage_staff_screen_guest_list_name">Liste des invités:</string>
     <string name="manage_staff_screen_empty_guest_list">Il n\'y a pas d\'invités à cette événement</string>
 
-    <!--  Supplies  -->
-    <string name="event_creation_screen_supplies">Courses</string>
-    <string name="event_creation_screen_add_supplies">Ajouter des courses</string>
-    <string name="event_details_screen_supplies_button">Trucs à amener</string>
+    <!-- Chimpagne -->
+    <string name="chimpagne_cancel">Annuler</string>
+    <string name="chimpagne_edit">Éditer</string>
+    <string name="chimpagne_save">Sauvegarder</string>
+    <string name="chimpagne_confirm">Confirmer</string>
+    <string name="chimpagne_add">Ajouter</string>
+    <string name="chimpagne_delete">Supprimer</string>
+    <string name="chimpagne_you">Vous</string>
+
+    <!--    Supplies    -->
+    <string name="supplies_screen_title">Liste de fournitures</string>
+    <string name="supplies_dialog_description">Détails de la fourniture</string>
+    <string name="supplies_edit_dialog_title">Édition de la fourniture</string>
+    <string name="supplies_add_dialog_title">Ajouter une fourniture</string>
     <string name="supplies_description">Description</string>
     <string name="supplies_quantity">Quantité</string>
     <string name="supplies_unit">Unité</string>
-
-    <string name="supplies_add_dialog_title">Ajouter une fourniture</string>
-    <string name="supplies_dialog_description">Détails de la fourniture</string>
+    <string name="supplies_assign_myself">M\'assigner</string>
+    <string name="supplies_unassign_myself">Me retirer</string>
+    <string name="supplies_supply_not_assigned">Cette fourniture n\'est pas assignée !</string>
+    <string name="supplies_supply_assigned_to">Personnes assignées</string>
+    <string name="supplies_not_assigned_to">Personnes non assignées</string>
+    <string name="supplies_supply_assigned_to_you">Fournitures assignées à vous</string>
+    <string name="supplies_not_assigned_to_anyone">Fournitures assignées à personnes</string>
+    <string name="supplies_already_assigned">Fournitures déjà assignées</string>
+    <string name="supplies_empty">Aucune fourniture ajoutée !</string>
+    <string name="supplies_delete">Supprimer cette fourniture ?</string>
+    <string name="supplies_delete_description">Cette action est irreversible !</string>
+    <string name="supplies_nb_assigned">assignés</string>
 
     <!-- AccountCreation -->
     <string name="account_created_toast">Compte créé</string>
     <string name="acount_creation_failed_toast">Création de compte échouée</string>
+    <string name="public_string">Public</string>
+    <string name="private_string">Privé</string>
 
 </resources>

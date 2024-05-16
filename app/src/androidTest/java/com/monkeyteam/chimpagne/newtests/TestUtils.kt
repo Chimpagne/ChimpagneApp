@@ -75,7 +75,8 @@ val TEST_EVENTS =
             /* SAME AS EVENT 1 */
             startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
             endsAtTimestamp = buildTimestamp(11, 5, 2024, 15, 15),
-            ownerId = "JUAN"),
+            ownerId = "JUAN",
+            supplies = mapOf("1" to ChimpagneSupply("1", "c", 1, "h"))),
         ChimpagneEvent(
             id = "LOTR",
             title = "Watch LOTR",

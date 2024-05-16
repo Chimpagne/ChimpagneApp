@@ -77,6 +77,7 @@ import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
@@ -265,7 +266,7 @@ fun FindEventFormScreen(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     stringResource(id = R.string.find_event_search_button_text),
-                    style = MaterialTheme.typography.bodyLarge)
+                    style = ChimpagneTypography.bodyLarge)
               }
             }
       }) { innerPadding ->
