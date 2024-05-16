@@ -100,12 +100,13 @@ class EventViewModel(
         tags = _uiState.value.tags,
         guests = _uiState.value.guests,
         staffs = _uiState.value.staffs,
-        // startsAt = _uiState.value.startsAtCalendarDate,
-        // endsAt = _uiState.value.endsAtCalendarDate,
+        startsAt = _uiState.value.startsAtCalendarDate,
+        endsAt = _uiState.value.endsAtCalendarDate,
         ownerId = _uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
+        image = "",
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
   }
 
