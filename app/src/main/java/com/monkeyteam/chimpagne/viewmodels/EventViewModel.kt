@@ -110,22 +110,38 @@ class EventViewModel(
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
   }
 
-  fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun createTheEvent(
+      onSuccess: (id: String) -> Unit = {},
+      onInvalidInputs: (String) -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
-      eventManager.createEvent(
-          buildChimpagneEvent(),
-          {
-            _uiState.value = _uiState.value.copy(id = it)
-            eventID = _uiState.value.id
-            _uiState.value = _uiState.value.copy(loading = false)
-            onSuccess(it)
-          },
-          {
-            Log.d("CREATE AN EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
+      if (_uiState.value.title.isEmpty() ||
+          _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
+          uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
+
+        if (_uiState.value.title.isEmpty()) {
+          onInvalidInputs("Title should not be empty")
+        } else {
+          onInvalidInputs("Invalid dates")
+        }
+      } else {
+
+        eventManager.createEvent(
+            buildChimpagneEvent(),
+            {
+              _uiState.value = _uiState.value.copy(id = it)
+              eventID = _uiState.value.id
+              _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess(it)
+            },
+            {
+              Log.d("CREATE AN EVENT", "Error : ", it)
+              _uiState.value = _uiState.value.copy(loading = false)
+              onFailure(it)
+            })
+      }
     }
   }
 

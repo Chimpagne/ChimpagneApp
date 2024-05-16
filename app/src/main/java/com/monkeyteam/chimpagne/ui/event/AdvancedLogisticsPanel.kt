@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import kotlin.math.abs
 
 @Composable
 fun AdvancedLogisticsPanel(eventViewModel: EventViewModel) {
@@ -48,7 +49,7 @@ fun AdvancedLogisticsPanel(eventViewModel: EventViewModel) {
         onValueChange = {
           parkingText = it
           try {
-            eventViewModel.updateParkingSpaces(parkingText.toInt())
+            eventViewModel.updateParkingSpaces(abs(parkingText.toInt()))
           } catch (_: Exception) {
             eventViewModel.updateParkingSpaces(0)
           }
@@ -65,7 +66,7 @@ fun AdvancedLogisticsPanel(eventViewModel: EventViewModel) {
         onValueChange = {
           bedsText = it
           try {
-            eventViewModel.updateBeds(bedsText.toInt())
+            eventViewModel.updateBeds(abs(bedsText.toInt()))
           } catch (_: Exception) {
             eventViewModel.updateBeds(0)
           }
