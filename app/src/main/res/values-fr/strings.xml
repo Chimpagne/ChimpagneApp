@@ -51,9 +51,6 @@
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
     <string name="search_location">Rechercher un lieu</string>
     <string name="accountEditScreenButton">Modifier le compte</string>
-    <string name="chimpagne_cancel">Annuler</string>
-    <string name="chimpagne_add">Ajouter</string>
-    <string name="chimpagne_ok">OK</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
@@ -115,6 +112,7 @@
     <string name="chimpagne_add">Ajouter</string>
     <string name="chimpagne_delete">Supprimer</string>
     <string name="chimpagne_you">Vous</string>
+    <string name="chimpagne_ok">OK</string>
 
     <!--    Supplies    -->
     <string name="supplies_screen_title">Liste de fournitures</string>
