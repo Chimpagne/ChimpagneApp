@@ -70,10 +70,9 @@ class FindEventsViewModel(database: Database) : ViewModel() {
   }
 
   fun fetchAroundLocation(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    println("FETCHING AROUND LOCATION")
     eventManager.getAllEventsByFilterAroundLocation(
         _uiState.value.selectedLocation!!,
-        99999.0,
+        9999999999.0,
         {
           _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id })
           if (it.isEmpty()) {

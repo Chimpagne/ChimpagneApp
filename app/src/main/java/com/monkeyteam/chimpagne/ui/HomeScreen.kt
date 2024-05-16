@@ -4,7 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -62,11 +62,7 @@ class LocationViewModel(myContext: Context) {
     if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) ==
         PackageManager.PERMISSION_GRANTED) {
       fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-        location?.let {
-          println("UPDATING LOCATION WITH VALUES")
-          println(it.latitude)
-          onLocationSuccess(it.latitude, it.longitude)
-        }
+        location?.let { onLocationSuccess(it.latitude, it.longitude) }
       }
     }
   }
@@ -128,6 +124,7 @@ fun HomeScreen(
           PromptLogin(context, navObject)
           showPromptLogin = false
         }
+        val N_CLOSEST = 4
 
         Box(
             modifier =
@@ -190,15 +187,11 @@ fun HomeScreen(
 
                                         findViewModel.uiState.value.selectedLocation?.let {
                                           closestEventsState.value =
-                                              getClosestNEvent(eventsNearMe, 4, it)
+                                              getClosestNEvent(eventsNearMe, N_CLOSEST, it)
                                         }
                                       },
-                                      onFailure = { println("couscous") })
+                                      onFailure = { Log.e("err", "Failure fetchAroundLocation") })
                                 }
-                              } else {
-                                Toast.makeText(
-                                        context, "Location permission denied", Toast.LENGTH_SHORT)
-                                    .show()
                               }
                             }
                     LaunchedEffect(Unit) {
