@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
 fun TagChip(tag: String, onRemove: () -> Unit) {
@@ -26,7 +27,7 @@ fun TagChip(tag: String, onRemove: () -> Unit) {
           Text(
               text = tag,
               modifier = Modifier.padding(start = 16.dp),
-              style = MaterialTheme.typography.bodyMedium)
+              style = ChimpagneTypography.bodyMedium)
           IconButton(onClick = onRemove) {
             Icon(imageVector = Icons.Rounded.Close, contentDescription = "Remove tag")
           }
@@ -38,7 +39,16 @@ fun TagChip(tag: String, onRemove: () -> Unit) {
 fun SimpleTagChip(tag: String) {
   Text(
       text = "#$tag",
-      style = MaterialTheme.typography.bodyLarge,
+      style = ChimpagneTypography.bodyLarge,
       color = MaterialTheme.colorScheme.onPrimaryContainer,
+      modifier = Modifier.padding(end = 8.dp))
+}
+
+@Composable
+fun SmallSimpleTagChip(tag: String) {
+  Text(
+      text = "#$tag",
+      style = ChimpagneTypography.bodyMedium,
+      color = MaterialTheme.colorScheme.primary,
       modifier = Modifier.padding(end = 8.dp))
 }

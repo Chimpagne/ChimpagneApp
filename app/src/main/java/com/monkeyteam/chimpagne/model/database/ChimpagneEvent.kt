@@ -25,8 +25,10 @@ data class ChimpagneEvent(
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
+    val image: String = "", // TODO: Add image
     val socialMediaLinks: Map<String, String> =
-        SupportedSocialMedia.associateBy { it.platformName }.mapValues { it.value.chosenGroupUrl }
+        SupportedSocialMedia.associateBy { it.platformName }.mapValues { it.value.chosenGroupUrl },
+    val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap()
 ) {
 
   fun guestList(): Set<String> {
@@ -71,7 +73,9 @@ data class ChimpagneEvent(
       supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       parkingSpaces: Int,
       beds: Int,
-      socialMediaLinks: Map<String, String>
+      image: String,
+      socialMediaLinks: Map<String, String>,
+      polls: Map<ChimpagnePollId, ChimpagnePoll>
   ) : this(
       id,
       title,
@@ -87,5 +91,7 @@ data class ChimpagneEvent(
       supplies,
       parkingSpaces,
       beds,
-      socialMediaLinks)
+      image,
+      socialMediaLinks,
+      polls)
 }

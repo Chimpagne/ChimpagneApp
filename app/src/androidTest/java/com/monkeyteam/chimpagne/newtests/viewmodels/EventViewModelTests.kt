@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
@@ -360,5 +361,132 @@ class EventViewModelTests {
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertEquals(event.supplies, eventViewModel.uiState.value.supplies)
+  }
+
+  @Test
+  fun pollFunctionalityTest() {
+    initializeTestDatabase()
+
+    val eventSearchVM =
+        EventViewModel(
+            eventID = testEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    // Wait for database to get the data
+    while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertEquals(testEvent.id, eventSearchVM.uiState.value.id)
+
+    val poll =
+        ChimpagnePoll(
+            title = "monkey",
+            query = "are you a monkey ?",
+            options = listOf("yes", "no", "I wish not to answer"),
+            votes = emptyMap())
+
+    eventSearchVM.createPollAtomically(
+        poll = poll, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    while (eventSearchVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM.uiState.value.polls.keys.contains(poll.id))
+
+    val eventSearchVM2 =
+        EventViewModel(
+            eventID = testEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventSearchVM2.uiState.value.polls.keys.contains(poll.id))
+
+    database.accountManager.signInTo(TEST_ACCOUNTS[0])
+    eventSearchVM2.castPollVoteAtomically(
+        pollId = poll.id,
+        optionIndex = 0,
+        onSuccess = { assertTrue(true) },
+        onFailure = { assertTrue(false) })
+    while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
+    eventSearchVM2.castPollVoteAtomically(
+        pollId = poll.id,
+        optionIndex = 0,
+        onSuccess = { assertTrue(true) },
+        onFailure = { assertTrue(false) })
+    while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    database.accountManager.signInTo(TEST_ACCOUNTS[2])
+    eventSearchVM2.castPollVoteAtomically(
+        pollId = poll.id,
+        optionIndex = 1,
+        onSuccess = { assertTrue(true) },
+        onFailure = { assertTrue(false) })
+
+    while (eventSearchVM2.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertEquals(
+        eventSearchVM2.uiState.value.polls[poll.id]!!.votes.keys.toSet(),
+        setOf(
+            TEST_ACCOUNTS[0].firebaseAuthUID,
+            TEST_ACCOUNTS[1].firebaseAuthUID,
+            TEST_ACCOUNTS[2].firebaseAuthUID))
+
+    assertEquals(
+        0, eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[0].firebaseAuthUID])
+    assertEquals(
+        0, eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[1].firebaseAuthUID])
+    assertEquals(
+        1, eventSearchVM2.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[2].firebaseAuthUID])
+
+    assertEquals(2, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[0])
+    assertEquals(1, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[1])
+    assertEquals(0, eventSearchVM2.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[2])
+
+    val eventSearchVM3 =
+        EventViewModel(
+            eventID = testEvent.id,
+            database = database,
+            onSuccess = { assertTrue(true) },
+            onFailure = { assertTrue(false) })
+
+    while (eventSearchVM3.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertEquals(
+        eventSearchVM3.uiState.value.polls[poll.id]!!.votes.keys.toSet(),
+        setOf(
+            TEST_ACCOUNTS[0].firebaseAuthUID,
+            TEST_ACCOUNTS[1].firebaseAuthUID,
+            TEST_ACCOUNTS[2].firebaseAuthUID))
+
+    assertEquals(
+        0, eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[0].firebaseAuthUID])
+    assertEquals(
+        0, eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[1].firebaseAuthUID])
+    assertEquals(
+        1, eventSearchVM3.uiState.value.polls[poll.id]!!.votes[TEST_ACCOUNTS[2].firebaseAuthUID])
+
+    assertEquals(2, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[0])
+    assertEquals(1, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[1])
+    assertEquals(0, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()[2])
+
+    eventSearchVM3.deletePollAtomically(
+        pollId = poll.id, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    while (eventSearchVM3.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertEquals(false, eventSearchVM3.uiState.value.polls.containsKey(poll.id))
+
+    database.accountManager.signInTo(TEST_ACCOUNTS[1])
   }
 }

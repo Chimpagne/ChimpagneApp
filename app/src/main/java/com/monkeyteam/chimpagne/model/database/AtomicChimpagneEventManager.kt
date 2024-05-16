@@ -112,4 +112,45 @@ class AtomicChimpagneEventManager(
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener(onFailure)
   }
+
+  fun createPoll(
+      eventId: ChimpagneEventId,
+      poll: ChimpagnePoll,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    events
+        .document(eventId)
+        .update("polls.${poll.id}", poll)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun deletePoll(
+      eventId: ChimpagneEventId,
+      pollId: ChimpagnePollId,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    events
+        .document(eventId)
+        .update("polls.${pollId}", FieldValue.delete())
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun castPollVote(
+      eventId: ChimpagneEventId,
+      pollId: ChimpagnePollId,
+      accountUID: ChimpagneAccountUID,
+      optionIndex: ChimpagnePollOptionListIndex,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    events
+        .document(eventId)
+        .update("polls.${pollId}.votes.${accountUID}", optionIndex)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
 }

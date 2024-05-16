@@ -71,6 +71,30 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
+  fun fetchAroundLocation(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    eventManager.getAllEventsByFilterAroundLocation(
+        _uiState.value.selectedLocation!!,
+        9999999999.0,
+        {
+          _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id })
+          if (it.isEmpty()) {
+            Log.d("FETCHING EVENTS BY LOCATION QUERY", "No events found")
+            setLoading(false)
+            onFailure(Exception("No events found"))
+          } else {
+            // DO NO FORGET TO SETLOADING TO FALSE AFTER SUCCESS (where function is called)
+            // (AFTER UI RECOMPOSITION)
+            Log.d("FETCHING EVENTS BY LOCATION QUERY", "Success")
+            onSuccess()
+          }
+        },
+        {
+          Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
+          setLoading(false)
+          onFailure(it)
+        })
+  }
+
   fun fetchEvent(
       id: ChimpagneEventId,
       onSuccess: () -> Unit = {},

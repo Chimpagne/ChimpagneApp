@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -82,10 +83,12 @@ fun ChimpagneButton(
       }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
 fun IconTextButton(
     text: String,
     icon: ImageVector,
+    color: Color = MaterialTheme.colorScheme.surfaceVariant,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -94,8 +97,7 @@ fun IconTextButton(
       modifier =
           modifier
               .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-              .background(
-                  shape = RoundedCornerShape(100), color = MaterialTheme.colorScheme.surfaceVariant)
+              .background(shape = RoundedCornerShape(100), color = color)
               .clickable(onClick = onClick)
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
