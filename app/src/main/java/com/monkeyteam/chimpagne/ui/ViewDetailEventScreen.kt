@@ -452,8 +452,7 @@ fun ViewDetailEventScreen(
                                         stringResource(
                                             id = R.string.event_details_screen_supplies_button),
                                     onClick = {
-                                            navObject.navigateTo(
-                                                Route.SUPPLIES_SCREEN + "/" + uiState.id)
+                                      navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
                                     },
                                     testTag = "supplies"),
                                 IconInfo(
