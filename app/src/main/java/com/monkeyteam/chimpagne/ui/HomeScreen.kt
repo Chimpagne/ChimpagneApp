@@ -48,6 +48,7 @@ import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
@@ -130,6 +131,7 @@ fun HomeScreen(
             modifier =
                 Modifier.fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
+
                     .padding(innerPadding)) {
               // Events Feed taking the top half of the screen
               LazyColumn(
@@ -149,6 +151,7 @@ fun HomeScreen(
                           onClick = {
                             navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
                           })
+
                     }
                   }
 
