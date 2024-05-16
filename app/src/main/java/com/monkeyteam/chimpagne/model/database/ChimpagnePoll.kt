@@ -16,8 +16,9 @@ data class ChimpagnePoll(
 ) {
   private fun getVotesPerOptions(): Map<ChimpagnePollOptionId, List<ChimpagneAccountUID>> {
     val votesPerOptions: MutableMap<ChimpagnePollOptionId, List<ChimpagneAccountUID>> = ArrayMap()
+    options.keys.forEach { optionId -> votesPerOptions[optionId] = emptyList() }
     votes.forEach { (accountUID, optionId) ->
-      votesPerOptions[optionId] = votesPerOptions[optionId]?.plus(accountUID) ?: listOf(accountUID)
+      votesPerOptions[optionId] = votesPerOptions[optionId]!!.plus(accountUID)
     }
     return votesPerOptions
   }

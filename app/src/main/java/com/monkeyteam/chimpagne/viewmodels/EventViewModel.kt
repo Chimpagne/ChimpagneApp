@@ -8,6 +8,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
+import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
@@ -404,6 +405,65 @@ class EventViewModel(
                   supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
         },
         {})
+  }
+
+  fun createAPollAtomically(
+      poll: ChimpagnePoll,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.createPoll(
+        _uiState.value.id,
+        poll,
+        {
+          _uiState.value =
+              _uiState.value.copy(polls = _uiState.value.polls + (poll.id to poll), loading = false)
+          onSuccess()
+        },
+        { onFailure(it) })
+  }
+
+  fun deleteAPollAtomically(
+      pollId: ChimpagnePollId,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.deletePoll(
+        _uiState.value.id,
+        pollId,
+        {
+          _uiState.value =
+              _uiState.value.copy(polls = _uiState.value.polls - (pollId), loading = false)
+          onSuccess()
+        },
+        { onFailure(it) })
+  }
+
+  fun addVoteForPollAtomically(
+      pollId: ChimpagnePollId,
+      optionId: ChimpagnePollOptionId,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.castPollVote(
+        _uiState.value.id,
+        pollId,
+        accountManager.currentUserAccount!!.firebaseAuthUID,
+        optionId,
+        {
+          val newVotes =
+              _uiState.value.polls[pollId]!!.votes +
+                  (accountManager.currentUserAccount!!.firebaseAuthUID to optionId)
+          val newPoll = _uiState.value.polls[pollId]!!.copy(votes = newVotes)
+          _uiState.value =
+              _uiState.value.copy(
+                  polls = _uiState.value.polls + (pollId to newPoll), loading = false)
+          onSuccess()
+        },
+        { onFailure(it) })
   }
 
   data class EventUIState(
