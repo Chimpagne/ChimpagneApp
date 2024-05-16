@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -70,30 +69,30 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
-    fun fetchAroundLocation(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}){
-        println("FETCHING AROUND LOCATION");
-        eventManager.getAllEventsByFilterAroundLocation(
-            _uiState.value.selectedLocation!!,
-                99999.0,
-            {
-                _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id })
-                if (it.isEmpty()) {
-                    Log.d("FETCHING EVENTS BY LOCATION QUERY", "No events found")
-                    setLoading(false)
-                    onFailure(Exception("No events found"))
-                } else {
-                    // DO NO FORGET TO SETLOADING TO FALSE AFTER SUCCESS (where function is called)
-                    // (AFTER UI RECOMPOSITION)
-                    Log.d("FETCHING EVENTS BY LOCATION QUERY", "Success")
-                    onSuccess()
-                }
-            },
-            {
-                Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
-                setLoading(false)
-                onFailure(it)
-            })
-    }
+  fun fetchAroundLocation(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    println("FETCHING AROUND LOCATION")
+    eventManager.getAllEventsByFilterAroundLocation(
+        _uiState.value.selectedLocation!!,
+        99999.0,
+        {
+          _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id })
+          if (it.isEmpty()) {
+            Log.d("FETCHING EVENTS BY LOCATION QUERY", "No events found")
+            setLoading(false)
+            onFailure(Exception("No events found"))
+          } else {
+            // DO NO FORGET TO SETLOADING TO FALSE AFTER SUCCESS (where function is called)
+            // (AFTER UI RECOMPOSITION)
+            Log.d("FETCHING EVENTS BY LOCATION QUERY", "Success")
+            onSuccess()
+          }
+        },
+        {
+          Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
+          setLoading(false)
+          onFailure(it)
+        })
+  }
 
   fun fetchEvent(
       id: ChimpagneEventId,
