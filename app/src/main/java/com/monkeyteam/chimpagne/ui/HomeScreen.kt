@@ -160,6 +160,7 @@ fun HomeScreen(
                 }
             }
 
+            // New comment
             ChimpagneButton(
                     modifier = Modifier.testTag("open_events_button"),
                     onClick = {
