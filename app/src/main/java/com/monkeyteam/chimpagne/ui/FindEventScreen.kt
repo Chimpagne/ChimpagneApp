@@ -88,6 +88,7 @@ import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
 import com.monkeyteam.chimpagne.ui.theme.CustomOrange
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
@@ -315,7 +316,7 @@ fun FindEventFormScreen(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     stringResource(id = R.string.find_event_search_button_text),
-                    style = MaterialTheme.typography.bodyLarge)
+                    style = ChimpagneTypography.bodyLarge)
               }
             }
       }) { innerPadding ->
@@ -471,7 +472,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick) },
+      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick, context) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {

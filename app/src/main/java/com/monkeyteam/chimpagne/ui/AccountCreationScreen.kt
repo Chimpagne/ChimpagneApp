@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getString
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -18,7 +19,12 @@ import com.monkeyteam.chimpagne.ui.utilities.checkNotEmpty
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
-fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewModel) {
+fun AccountCreation(
+    navObject: NavigationActions,
+    accountViewModel: AccountViewModel,
+    onSuccess: () -> Unit = {},
+    onFailure: () -> Unit = {}
+) {
 
   val accountViewModelState by accountViewModel.uiState.collectAsState()
   val context = LocalContext.current
@@ -56,16 +62,24 @@ fun AccountCreation(navObject: NavigationActions, accountViewModel: AccountViewM
           navObject.navigateTo(Route.LOADING)
           accountViewModel.submitUpdatedAccount(
               onSuccess = {
-                navObject.navigateTo(Route.HOME_SCREEN)
-                Toast.makeText(context, "Account created", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        getString(context, R.string.account_created_toast),
+                        Toast.LENGTH_SHORT)
+                    .show()
+                onSuccess()
               },
               onFailure = {
-                navObject.navigateTo(Route.LOGIN_SCREEN)
-                Toast.makeText(context, "Failed to create account", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        getString(context, R.string.acount_creation_failed_toast),
+                        Toast.LENGTH_SHORT)
+                    .show()
+                onFailure()
               })
         } else {
           Log.d("AccountCreation", "Account creation failed")
-          navObject.popBackStack()
+          onFailure()
         }
       },
       navObject = navObject)

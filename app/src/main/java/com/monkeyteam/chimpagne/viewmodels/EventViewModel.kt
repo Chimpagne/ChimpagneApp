@@ -11,6 +11,10 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.components.SocialMedia
+import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
+import com.monkeyteam.chimpagne.ui.components.convertSMLinksToSM
+import com.monkeyteam.chimpagne.ui.components.convertSMToSMLinks
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +35,6 @@ class EventViewModel(
   val uiState: StateFlow<EventUIState> = _uiState
 
   init {
-
     fetchEvent(onSuccess, onFailure)
   }
 
@@ -46,20 +49,22 @@ class EventViewModel(
               if (it != null) {
                 _uiState.value =
                     EventUIState(
-                        it.id,
-                        it.title,
-                        it.description,
-                        it.location,
-                        it.public,
-                        it.tags,
-                        it.guests,
-                        it.staffs,
-                        it.startsAt(),
-                        it.endsAt(),
-                        it.supplies,
-                        it.parkingSpaces,
-                        it.beds,
-                        it.ownerId)
+                        id = it.id,
+                        title = it.title,
+                        description = it.description,
+                        location = it.location,
+                        public = it.public,
+                        tags = it.tags,
+                        guests = it.guests,
+                        staffs = it.staffs,
+                        startsAtCalendarDate = it.startsAt(),
+                        endsAtCalendarDate = it.endsAt(),
+                        supplies = it.supplies,
+                        parkingSpaces = it.parkingSpaces,
+                        beds = it.beds,
+                        ownerId = it.ownerId,
+                        image = it.image,
+                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks))
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
@@ -73,7 +78,6 @@ class EventViewModel(
             },
             {
               Log.d("FETCHING AN EVENT WITH ID", "Error : ", it)
-
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             })
@@ -101,7 +105,9 @@ class EventViewModel(
         ownerId = _uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
-        beds = _uiState.value.beds)
+        beds = _uiState.value.beds,
+        image = "",
+        socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
   }
 
   fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -159,7 +165,6 @@ class EventViewModel(
   }
 
   fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
@@ -187,6 +192,14 @@ class EventViewModel(
   fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
+      val accountUID = accountManager.currentUserAccount!!.firebaseAuthUID
+      _uiState.value.supplies
+          .filter { (_, supply) -> supply.assignedTo[accountUID] == true }
+          .keys
+          .forEach { supplyId ->
+            eventManager.atomic.unassignSupply(_uiState.value.id, supplyId, accountUID)
+          }
+
       accountManager.leaveEvent(
           _uiState.value.id,
           {
@@ -260,35 +273,173 @@ class EventViewModel(
     return buildChimpagneEvent().getRole(userUID)
   }
 
+  fun updateSocialMediaLink(updatedSocialMedia: SocialMedia) {
+    _uiState.value =
+        _uiState.value.copy(
+            socialMediaLinks =
+                _uiState.value.socialMediaLinks +
+                    (updatedSocialMedia.platformName to updatedSocialMedia))
+  }
+
   fun getCurrentUserRole(): ChimpagneRole {
     return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
   }
-}
 
-data class EventUIState(
-    val id: String = "",
-    val title: String = "",
-    val description: String = "",
-    val location: Location = Location(),
-    val public: Boolean = false,
-    val tags: List<String> = emptyList(),
-    val guests: Map<String, Boolean> = emptyMap(),
-    val staffs: Map<String, Boolean> = emptyMap(),
-    val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val endsAtCalendarDate: Calendar = Calendar.getInstance(),
-    val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
-    val parkingSpaces: Int = 0,
-    val beds: Int = 0,
+  fun promoteGuestToStaff(
+      uid: ChimpagneAccountUID,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
 
-    // unmodifiable by the UI
-    val ownerId: ChimpagneAccountUID = "",
-    val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-    val loading: Boolean = false,
-)
+    eventManager.atomic.removeGuest(
+        _uiState.value.id,
+        uid,
+        {
+          eventManager.atomic.addStaff(
+              _uiState.value.id,
+              uid,
+              {
+                _uiState.value =
+                    _uiState.value.copy(
+                        guests = _uiState.value.guests - uid,
+                        staffs = _uiState.value.staffs + (uid to true),
+                        loading = false)
+                onSuccess()
+              },
+              {
+                Log.d("ADDED STAFF TO STAFF LIST", "Error : ", it)
+                _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(it)
+              })
+        },
+        {
+          Log.d("REMOVE GUEST FROM GUEST LIST", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+        })
+  }
 
-class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
-    ViewModelProvider.Factory {
-  override fun <T : ViewModel> create(modelClass: Class<T>): T {
-    return EventViewModel(eventID, database) as T
+  fun demoteStaffToGuest(
+      uid: ChimpagneAccountUID,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+
+    eventManager.atomic.removeStaff(
+        _uiState.value.id,
+        uid,
+        {
+          eventManager.atomic.addGuest(
+              _uiState.value.id,
+              uid,
+              {
+                _uiState.value =
+                    _uiState.value.copy(
+                        guests = _uiState.value.guests + (uid to true),
+                        staffs = _uiState.value.staffs - uid,
+                        loading = false)
+                onSuccess()
+              },
+              {
+                Log.d("ADDED GUEST TO GUEST LIST", "Error : ", it)
+                _uiState.value = _uiState.value.copy(loading = false)
+                onFailure(it)
+              })
+        },
+        {
+          Log.d("REMOVE STAFF FROM STAFF LIST", "Error : ", it)
+          _uiState.value = _uiState.value.copy(loading = false)
+          onFailure(it)
+        })
+  }
+
+  fun updateSupplyAtomically(supply: ChimpagneSupply) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.updateSupply(
+        _uiState.value.id,
+        supply,
+        {
+          _uiState.value =
+              _uiState.value.copy(
+                  supplies = _uiState.value.supplies + (supply.id to supply), loading = false)
+        },
+        {})
+  }
+
+  fun removeSupplyAtomically(supplyId: ChimpagneSupplyId) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.removeSupply(
+        _uiState.value.id,
+        supplyId,
+        {
+          _uiState.value =
+              _uiState.value.copy(supplies = _uiState.value.supplies - supplyId, loading = false)
+        },
+        {})
+  }
+
+  fun assignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.assignSupply(
+        _uiState.value.id,
+        supplyId,
+        accountUID,
+        {
+          val supply = _uiState.value.supplies[supplyId] ?: return@assignSupply
+          val newSupply = supply.copy(assignedTo = supply.assignedTo + (accountUID to true))
+          _uiState.value =
+              _uiState.value.copy(
+                  supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
+        },
+        {})
+  }
+
+  fun unassignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.unassignSupply(
+        _uiState.value.id,
+        supplyId,
+        accountUID,
+        {
+          val supply = _uiState.value.supplies[supplyId] ?: return@unassignSupply
+          val newSupply = supply.copy(assignedTo = supply.assignedTo - accountUID)
+          _uiState.value =
+              _uiState.value.copy(
+                  supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
+        },
+        {})
+  }
+
+  data class EventUIState(
+      val id: String = "",
+      val title: String = "",
+      val description: String = "",
+      val location: Location = Location(),
+      val public: Boolean = false,
+      val tags: List<String> = emptyList(),
+      val guests: Map<String, Boolean> = emptyMap(),
+      val staffs: Map<String, Boolean> = emptyMap(),
+      val startsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
+      val parkingSpaces: Int = 0,
+      val beds: Int = 0,
+      val image: String = "",
+
+      // unmodifiable by the UI
+      val ownerId: ChimpagneAccountUID = "",
+      val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
+      val loading: Boolean = false,
+      val socialMediaLinks: Map<String, SocialMedia> =
+          SupportedSocialMedia.associateBy { it.platformName }
+  )
+
+  class EventViewModelFactory(private val eventID: String? = null, private val database: Database) :
+      ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+      return EventViewModel(eventID, database) as T
+    }
   }
 }
