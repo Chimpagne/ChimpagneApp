@@ -324,7 +324,7 @@ fun FindEventFormScreen(
                 Icon(Icons.Rounded.Search, contentDescription = "Search")
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    stringResource(id = R.string.find_event_search_button_text),
+                    stringResource(id = R.string.find_event_search_button_text).uppercase(),
                     style = ChimpagneTypography.bodyLarge)
               }
             }

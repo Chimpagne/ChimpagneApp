@@ -27,7 +27,7 @@ val ChimpagneTypography =
         bodyMedium =
             TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 14.sp, lineHeight = 20.sp),
         bodyLarge =
-            TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 16.sp, lineHeight = 24.sp),
+            TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 18.sp, lineHeight = 24.sp),
         bodySmall =
             TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 12.sp, lineHeight = 18.sp),
         titleMedium =

@@ -142,7 +142,6 @@ class FindEventScreenTest {
 
       MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
-    composeTestRule.onNodeWithTag("sel_location").performClick()
 
     composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
     composeTestRule.onNodeWithTag("button_search").performClick()
@@ -186,7 +185,7 @@ class FindEventScreenTest {
     }
 
     // Check if the location selector is displayed
-    composeTestRule.onNodeWithTag("sel_location").assertExists()
+    composeTestRule.onNodeWithTag("input_location").assertExists()
 
     // Check if the date selector is displayed
     composeTestRule.onNodeWithTag("sel_date").assertExists()
