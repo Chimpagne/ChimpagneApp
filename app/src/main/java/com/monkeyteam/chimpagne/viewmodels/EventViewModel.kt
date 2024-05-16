@@ -63,6 +63,7 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
+                        image = it.image,
                         socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks))
                 _uiState.value =
                     _uiState.value.copy(
@@ -105,6 +106,7 @@ class EventViewModel(
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
+        image = "",
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
   }
 
@@ -190,6 +192,14 @@ class EventViewModel(
   fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
+      val accountUID = accountManager.currentUserAccount!!.firebaseAuthUID
+      _uiState.value.supplies
+          .filter { (_, supply) -> supply.assignedTo[accountUID] == true }
+          .keys
+          .forEach { supplyId ->
+            eventManager.atomic.unassignSupply(_uiState.value.id, supplyId, accountUID)
+          }
+
       accountManager.leaveEvent(
           _uiState.value.id,
           {
@@ -416,6 +426,7 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
+      val image: String = "",
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",

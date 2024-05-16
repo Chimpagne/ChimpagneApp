@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -55,11 +54,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -74,6 +71,7 @@ import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
@@ -141,121 +139,6 @@ fun ViewDetailEventScreen(
                     modifier = Modifier.size(36.dp).testTag("scan QR"))
               }
             })
-      },
-      bottomBar = {
-        val iconList = mutableListOf<IconInfo>()
-
-        if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-          iconList.add(
-              IconInfo(
-                  icon = Icons.Rounded.Edit,
-                  description = stringResource(id = R.string.event_details_screen_edit_button),
-                  onClick = { navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}") },
-                  testTag = "edit"))
-          iconList.add(
-              IconInfo(
-                  icon = Icons.Rounded.PeopleAlt,
-                  description =
-                      stringResource(id = R.string.event_details_screen_manage_staff_button),
-                  onClick = { navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}") },
-                  testTag = "manage staff"))
-        } else {
-          iconList.add(
-              IconInfo(
-                  icon = Icons.Rounded.RemoveCircleOutline,
-                  description = stringResource(id = R.string.event_details_screen_leave_button),
-                  onClick = {
-                    if (accountViewModel.isUserLoggedIn()) {
-                      eventViewModel.leaveTheEvent(
-                          onSuccess = {
-                            Toast.makeText(
-                                    context,
-                                    context.getString(
-                                        R.string.event_details_screen_leave_toast_success),
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                            navObject.goBack()
-                          })
-                    } else {
-                      showPromptLogin = true
-                    }
-                  },
-                  testTag = "leave"))
-        }
-
-        iconList.addAll(
-            listOf(
-                IconInfo(
-                    icon = Icons.Rounded.ChatBubbleOutline,
-                    description = stringResource(id = R.string.event_details_screen_chat_button),
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              "This function will be implemented in a future version",
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
-                    testTag = "chat"),
-                IconInfo(
-                    icon = Icons.Rounded.Backpack,
-                    description =
-                        stringResource(id = R.string.event_details_screen_supplies_button),
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              "This function will be implemented in a future version",
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
-                    testTag = "supplies"),
-                IconInfo(
-                    icon = Icons.Rounded.DirectionsCar,
-                    description =
-                        stringResource(id = R.string.event_details_screen_car_pooling_button),
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              "This function will be implemented in a future version",
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
-                    testTag = "car pooling"),
-                IconInfo(
-                    icon = Icons.Rounded.Poll,
-                    description = stringResource(id = R.string.event_details_screen_voting_button),
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              "This function will be implemented in a future version",
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
-                    testTag = "polls"),
-                IconInfo(
-                    icon = Icons.Rounded.Home,
-                    description =
-                        stringResource(id = R.string.event_details_screen_bed_reservation),
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              "This function will be implemented in a future version",
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
-                    testTag = "bed_reservation"),
-                IconInfo(
-                    icon = Icons.Rounded.DirectionsCar,
-                    description = stringResource(id = R.string.event_details_screen_parking),
-                    onClick = {
-                      Toast.makeText(
-                              context,
-                              "This function will be implemented in a future version",
-                              Toast.LENGTH_SHORT)
-                          .show()
-                    },
-                    testTag = "parking")))
-
-        IconRow(icons = iconList)
       }) { innerPadding ->
         if (showDialog) {
           QRCodeDialog(eventId = uiState.id, onDismiss = { showDialog = false })
@@ -269,261 +152,369 @@ fun ViewDetailEventScreen(
                 Modifier.fillMaxSize()
                     .padding(innerPadding)
                     .background(MaterialTheme.colorScheme.background)) {
-              LazyColumn(
-                  modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-                    item {
-                      Box(
-                          modifier =
-                              Modifier.height(200.dp)
-                                  .fillMaxWidth()
-                                  .padding(horizontal = 16.dp, vertical = 8.dp)
-                                  .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
-                                  .clip(RoundedCornerShape(16.dp))
-                                  .background(MaterialTheme.colorScheme.primaryContainer),
-                          contentAlignment = Alignment.Center) {
-                            Image(
-                                painter = painterResource(id = R.drawable.default_party_image),
-                                contentDescription = "Event Banner",
-                                modifier =
-                                    Modifier.matchParentSize()
-                                        .padding(8.dp)
-                                        .clip(RoundedCornerShape(16.dp)),
-                                contentScale = ContentScale.Crop)
-                          }
-                    }
-                    item {
-                      Column(
-                          modifier = Modifier.fillMaxSize(),
-                          horizontalAlignment = Alignment.CenterHorizontally) {
-                            Row(
-                                modifier =
-                                    Modifier.horizontalScroll(rememberScrollState())
-                                        .testTag("tag list")) {
-                                  uiState.tags.forEach { tag ->
+              LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
+                item {
+                  Box(
+                      modifier =
+                          Modifier.height(200.dp)
+                              .fillMaxWidth()
+                              .padding(horizontal = 16.dp, vertical = 8.dp)
+                              .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
+                              .clip(RoundedCornerShape(16.dp))
+                              .background(MaterialTheme.colorScheme.primaryContainer),
+                      contentAlignment = Alignment.Center) {
+                        ImageWithBlackFilterOverlay(uiState.image)
+                      }
+                }
+                item {
+                  Column(
+                      modifier = Modifier.fillMaxSize(),
+                      horizontalAlignment = Alignment.CenterHorizontally) {
+                        Row(
+                            modifier =
+                                Modifier.horizontalScroll(rememberScrollState())
+                                    .testTag("tag list")) {
+                              uiState.tags.forEach { tag ->
+                                Box(
+                                    modifier =
+                                        Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                            .shadow(
+                                                elevation = 10.dp,
+                                                shape = RoundedCornerShape(16.dp))
+                                            .clip(RoundedCornerShape(50))
+                                            .background(MaterialTheme.colorScheme.primaryContainer)
+                                            .padding(horizontal = 16.dp, vertical = 8.dp)) {
+                                      SimpleTagChip(tag)
+                                    }
+                              }
+                            }
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.LightGray)
+                        Column(
+                            modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                              Row(
+                                  modifier = Modifier.fillMaxWidth().testTag("event date"),
+                                  horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                      Text(
+                                          text = stringResource(id = R.string.date_tools_from),
+                                          fontFamily = ChimpagneFontFamily,
+                                          fontSize = 16.sp,
+                                          color = Color.Gray)
+                                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text =
+                                                simpleDateFormat(
+                                                    buildTimestamp(uiState.startsAtCalendarDate)),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold)
+                                        Text(
+                                            text =
+                                                simpleTimeFormat(
+                                                    buildTimestamp(uiState.startsAtCalendarDate)),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold)
+                                      }
+                                    }
+                                    CalendarButton(
+                                        event = eventViewModel.buildChimpagneEvent(),
+                                        contextMainActivity = context)
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                      Text(
+                                          text = stringResource(id = R.string.date_tools_until),
+                                          fontFamily = ChimpagneFontFamily,
+                                          fontSize = 16.sp,
+                                          color = Color.Gray)
+                                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text =
+                                                simpleDateFormat(
+                                                    buildTimestamp(uiState.endsAtCalendarDate)),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold)
+                                        Text(
+                                            text =
+                                                simpleTimeFormat(
+                                                    buildTimestamp(uiState.endsAtCalendarDate)),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold)
+                                      }
+                                    }
+                                  }
+                              Row(
+                                  verticalAlignment = Alignment.CenterVertically,
+                                  horizontalArrangement = Arrangement.Center,
+                                  modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                                     Box(
                                         modifier =
-                                            Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                                .shadow(
+                                            Modifier.shadow(
                                                     elevation = 10.dp,
                                                     shape = RoundedCornerShape(16.dp))
                                                 .clip(RoundedCornerShape(50))
                                                 .background(
                                                     MaterialTheme.colorScheme.primaryContainer)
-                                                .padding(horizontal = 16.dp, vertical = 8.dp)) {
-                                          SimpleTagChip(tag)
+                                                .padding(horizontal = 24.dp, vertical = 12.dp)) {
+                                          Text(
+                                              text =
+                                                  "${uiState.guests.count()} ${
+                                            stringResource(
+                                                id = R.string.event_details_screen_number_of_guests
+                                            )
+                                        }",
+                                              fontFamily = ChimpagneFontFamily,
+                                              fontWeight = FontWeight.Bold,
+                                              color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                              modifier = Modifier.testTag("number of guests"))
+                                        }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    IconButton(
+                                        onClick = {
+                                          val annotatedString = buildAnnotatedString {
+                                            append(
+                                                getString(context, R.string.deep_link_url_event) +
+                                                    uiState.id)
+                                          }
+                                          clipboardManager.setText(annotatedString)
+                                        },
+                                        modifier = Modifier.size(36.dp).testTag("share")) {
+                                          Icon(
+                                              imageVector = Icons.Rounded.Share,
+                                              contentDescription = "Share Event",
+                                              tint = MaterialTheme.colorScheme.onPrimaryContainer)
                                         }
                                   }
-                                }
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                thickness = 1.dp,
-                                color = Color.LightGray)
-                            Column(
-                                modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally) {
-                                  Row(
-                                      modifier = Modifier.fillMaxWidth().testTag("event date"),
-                                      horizontalArrangement = Arrangement.SpaceBetween) {
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                          Text(
-                                              text = stringResource(id = R.string.date_tools_from),
-                                              fontFamily = ChimpagneFontFamily,
-                                              fontSize = 16.sp,
-                                              color = Color.Gray)
-                                          Column(
-                                              horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(
-                                                    text =
-                                                        simpleDateFormat(
-                                                            buildTimestamp(
-                                                                uiState.startsAtCalendarDate)),
-                                                    fontFamily = ChimpagneFontFamily,
-                                                    fontSize = 16.sp,
-                                                    color =
-                                                        MaterialTheme.colorScheme
-                                                            .onPrimaryContainer,
-                                                    fontWeight = FontWeight.Bold)
-                                                Text(
-                                                    text =
-                                                        simpleTimeFormat(
-                                                            buildTimestamp(
-                                                                uiState.startsAtCalendarDate)),
-                                                    fontFamily = ChimpagneFontFamily,
-                                                    fontSize = 16.sp,
-                                                    color =
-                                                        MaterialTheme.colorScheme
-                                                            .onPrimaryContainer,
-                                                    fontWeight = FontWeight.Bold)
-                                              }
-                                        }
-                                        CalendarButton(
-                                            event = eventViewModel.buildChimpagneEvent(),
-                                            contextMainActivity = context)
-                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                          Text(
-                                              text = stringResource(id = R.string.date_tools_until),
-                                              fontFamily = ChimpagneFontFamily,
-                                              fontSize = 16.sp,
-                                              color = Color.Gray)
-                                          Column(
-                                              horizontalAlignment = Alignment.CenterHorizontally) {
-                                                Text(
-                                                    text =
-                                                        simpleDateFormat(
-                                                            buildTimestamp(
-                                                                uiState.endsAtCalendarDate)),
-                                                    fontFamily = ChimpagneFontFamily,
-                                                    fontSize = 16.sp,
-                                                    color =
-                                                        MaterialTheme.colorScheme
-                                                            .onPrimaryContainer,
-                                                    fontWeight = FontWeight.Bold)
-                                                Text(
-                                                    text =
-                                                        simpleTimeFormat(
-                                                            buildTimestamp(
-                                                                uiState.endsAtCalendarDate)),
-                                                    fontFamily = ChimpagneFontFamily,
-                                                    fontSize = 16.sp,
-                                                    color =
-                                                        MaterialTheme.colorScheme
-                                                            .onPrimaryContainer,
-                                                    fontWeight = FontWeight.Bold)
-                                              }
-                                        }
-                                      }
-                                  Row(
-                                      verticalAlignment = Alignment.CenterVertically,
-                                      horizontalArrangement = Arrangement.Center,
-                                      modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                                        Box(
-                                            modifier =
-                                                Modifier.shadow(
-                                                        elevation = 10.dp,
-                                                        shape = RoundedCornerShape(16.dp))
-                                                    .clip(RoundedCornerShape(50))
-                                                    .background(
-                                                        MaterialTheme.colorScheme.primaryContainer)
-                                                    .padding(
-                                                        horizontal = 24.dp, vertical = 12.dp)) {
-                                              Text(
-                                                  text =
-                                                      "${uiState.guests.count()} ${
-                                              stringResource(
-                                                  id = R.string.event_details_screen_number_of_guests
-                                              )
-                                          }",
-                                                  fontFamily = ChimpagneFontFamily,
-                                                  fontWeight = FontWeight.Bold,
-                                                  color =
-                                                      MaterialTheme.colorScheme.onPrimaryContainer,
-                                                  modifier = Modifier.testTag("number of guests"))
-                                            }
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        IconButton(
-                                            onClick = {
-                                              val annotatedString = buildAnnotatedString {
-                                                append(
-                                                    getString(
-                                                        context, R.string.deep_link_url_event) +
-                                                        uiState.id)
-                                              }
-                                              clipboardManager.setText(annotatedString)
-                                            },
-                                            modifier = Modifier.size(36.dp).testTag("share")) {
-                                              Icon(
-                                                  imageVector = Icons.Rounded.Share,
-                                                  contentDescription = "Share Event",
-                                                  tint =
-                                                      MaterialTheme.colorScheme.onPrimaryContainer)
-                                            }
-                                      }
-                                }
-                            Spacer(Modifier.height(8.dp))
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                thickness = 1.dp,
-                                color = Color.LightGray)
+                            }
+                        Spacer(Modifier.height(8.dp))
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.LightGray)
 
-                            var expandedDescription by remember { mutableStateOf(false) }
-                            val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
-                            Row(
-                                modifier =
-                                    Modifier.fillMaxWidth()
-                                        .testTag("description")
-                                        .clickable { expandedDescription = !expandedDescription }
-                                        .padding(horizontal = 16.dp)) {
-                                  Text(
-                                      text = uiState.description,
-                                      fontSize = 16.sp,
-                                      fontFamily = ChimpagneFontFamily,
-                                      color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                      maxLines = maxLines,
-                                      modifier = Modifier.weight(1f))
-                                  Icon(
-                                      imageVector =
-                                          if (expandedDescription) Icons.Filled.ArrowDropUp
-                                          else Icons.Filled.ArrowDropDown,
-                                      contentDescription =
-                                          if (expandedDescription) "Collapse" else "Expand",
-                                      tint = MaterialTheme.colorScheme.primary)
-                                }
+                        var expandedDescription by remember { mutableStateOf(false) }
+                        val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
+                        Row(
+                            modifier =
+                                Modifier.fillMaxWidth()
+                                    .testTag("description")
+                                    .clickable { expandedDescription = !expandedDescription }
+                                    .padding(horizontal = 16.dp)) {
+                              Text(
+                                  text = uiState.description,
+                                  fontSize = 16.sp,
+                                  fontFamily = ChimpagneFontFamily,
+                                  color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                  maxLines = maxLines,
+                                  modifier = Modifier.weight(1f))
+                              Icon(
+                                  imageVector =
+                                      if (expandedDescription) Icons.Filled.ArrowDropUp
+                                      else Icons.Filled.ArrowDropDown,
+                                  contentDescription =
+                                      if (expandedDescription) "Collapse" else "Expand",
+                                  tint = MaterialTheme.colorScheme.primary)
+                            }
 
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                thickness = 1.dp,
-                                color = Color.LightGray)
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.LightGray)
 
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                                  ProfileIcon(
-                                      uri = accountsState.currentUserProfilePicture,
-                                      onClick = {
-                                        Toast.makeText(
-                                                context,
-                                                "This function will be implemented in a future version",
-                                                Toast.LENGTH_SHORT)
-                                            .show()
-                                      })
-                                  Text(
-                                      text =
-                                          "${
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+                              ProfileIcon(
+                                  uri = accountsState.currentUserProfilePicture,
+                                  onClick = {
+                                    Toast.makeText(
+                                            context,
+                                            "This function will be implemented in a future version",
+                                            Toast.LENGTH_SHORT)
+                                        .show()
+                                  })
+                              Text(
+                                  text =
+                                      "${
+                                    stringResource(
+                                        id = R.string.event_details_screen_organized_by
+                                    )
+                                }\n ${accountsState.currentUserAccount?.firstName} ${accountsState.currentUserAccount?.lastName}",
+                                  fontSize = 14.sp,
+                                  fontFamily = ChimpagneFontFamily,
+                                  color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                  modifier = Modifier.padding(start = 20.dp, end = 20.dp))
+
+                              Spacer(modifier = Modifier.height(8.dp))
+
+                              ChimpagneButton(
+                                  text =
                                       stringResource(
-                                          id = R.string.event_details_screen_organized_by
-                                      )
-                                  }\n ${accountsState.currentUserAccount?.firstName} ${accountsState.currentUserAccount?.lastName}",
-                                      fontSize = 14.sp,
-                                      fontFamily = ChimpagneFontFamily,
-                                      color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                      modifier = Modifier.padding(start = 20.dp, end = 20.dp))
+                                          id = R.string.event_details_screen_report_problem),
+                                  icon = Icons.Default.Warning,
+                                  textStyle = ChimpagneTypography.displaySmall,
+                                  onClick = {
+                                    Toast.makeText(
+                                            context,
+                                            "This function will be implemented in a future version",
+                                            Toast.LENGTH_SHORT)
+                                        .show()
+                                  },
+                                  modifier = Modifier.testTag("reportProblem"),
+                              )
+                            }
 
-                                  Spacer(modifier = Modifier.height(8.dp))
+                        // MAP WILL BE ADDED HERE
 
-                                  ChimpagneButton(
-                                      text =
-                                          stringResource(
-                                              id = R.string.event_details_screen_report_problem),
-                                      icon = Icons.Default.Warning,
-                                      textStyle = ChimpagneTypography.displaySmall,
-                                      onClick = {
-                                        Toast.makeText(
-                                                context,
-                                                "This function will be implemented in a future version",
-                                                Toast.LENGTH_SHORT)
-                                            .show()
-                                      },
-                                      modifier = Modifier.testTag("reportProblem"),
-                                  )
-                                }
+                        SocialButtonRow(
+                            context = context, socialMediaLinks = uiState.socialMediaLinks)
 
-                            // MAP WILL BE ADDED HERE
+                        Spacer(Modifier.height(16.dp))
 
-                            SocialButtonRow(
-                                context = context, socialMediaLinks = uiState.socialMediaLinks)
-                          }
-                    }
-                  }
+                        val iconList = mutableListOf<IconInfo>()
+
+                        if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+                          iconList.add(
+                              IconInfo(
+                                  icon = Icons.Rounded.Edit,
+                                  description =
+                                      stringResource(
+                                          id = R.string.event_details_screen_edit_button),
+                                  onClick = {
+                                    navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
+                                  },
+                                  testTag = "edit"))
+                          iconList.add(
+                              IconInfo(
+                                  icon = Icons.Rounded.PeopleAlt,
+                                  description =
+                                      stringResource(
+                                          id = R.string.event_details_screen_manage_staff_button),
+                                  onClick = {
+                                    navObject.navigateTo(
+                                        Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
+                                  },
+                                  testTag = "manage staff"))
+                        } else {
+                          iconList.add(
+                              IconInfo(
+                                  icon = Icons.Rounded.RemoveCircleOutline,
+                                  description =
+                                      stringResource(
+                                          id = R.string.event_details_screen_leave_button),
+                                  onClick = {
+                                    if (accountViewModel.isUserLoggedIn()) {
+                                      eventViewModel.leaveTheEvent(
+                                          onSuccess = {
+                                            Toast.makeText(
+                                                    context,
+                                                    context.getString(
+                                                        R.string
+                                                            .event_details_screen_leave_toast_success),
+                                                    Toast.LENGTH_SHORT)
+                                                .show()
+                                            navObject.goBack()
+                                          })
+                                    } else {
+                                      showPromptLogin = true
+                                    }
+                                  },
+                                  testTag = "leave"))
+                        }
+
+                        iconList.addAll(
+                            listOf(
+                                IconInfo(
+                                    icon = Icons.Rounded.ChatBubbleOutline,
+                                    description =
+                                        stringResource(
+                                            id = R.string.event_details_screen_chat_button),
+                                    onClick = {
+                                      Toast.makeText(
+                                              context,
+                                              "This function will be implemented in a future version",
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                    },
+                                    testTag = "chat"),
+                                IconInfo(
+                                    icon = Icons.Rounded.Backpack,
+                                    description =
+                                        stringResource(
+                                            id = R.string.event_details_screen_supplies_button),
+                                    onClick = {
+                                      Toast.makeText(
+                                              context,
+                                              "This function will be implemented in a future version",
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                    },
+                                    testTag = "supplies"),
+                                IconInfo(
+                                    icon = Icons.Rounded.DirectionsCar,
+                                    description =
+                                        stringResource(
+                                            id = R.string.event_details_screen_car_pooling_button),
+                                    onClick = {
+                                      Toast.makeText(
+                                              context,
+                                              "This function will be implemented in a future version",
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                    },
+                                    testTag = "car pooling"),
+                                IconInfo(
+                                    icon = Icons.Rounded.Poll,
+                                    description =
+                                        stringResource(
+                                            id = R.string.event_details_screen_voting_button),
+                                    onClick = {
+                                      Toast.makeText(
+                                              context,
+                                              "This function will be implemented in a future version",
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                    },
+                                    testTag = "polls"),
+                                IconInfo(
+                                    icon = Icons.Rounded.Home,
+                                    description =
+                                        stringResource(
+                                            id = R.string.event_details_screen_bed_reservation),
+                                    onClick = {
+                                      Toast.makeText(
+                                              context,
+                                              "This function will be implemented in a future version",
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                    },
+                                    testTag = "bed_reservation"),
+                                IconInfo(
+                                    icon = Icons.Rounded.DirectionsCar,
+                                    description =
+                                        stringResource(id = R.string.event_details_screen_parking),
+                                    onClick = {
+                                      Toast.makeText(
+                                              context,
+                                              "This function will be implemented in a future version",
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                    },
+                                    testTag = "parking")))
+
+                        IconRow(icons = iconList)
+                      }
+                }
+              }
             }
       }
 }

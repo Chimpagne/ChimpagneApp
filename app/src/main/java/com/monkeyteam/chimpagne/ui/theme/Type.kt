@@ -28,6 +28,8 @@ val ChimpagneTypography =
                 lineHeight = 18.0.sp),
         headlineMedium =
             TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 24.sp, lineHeight = 28.sp),
+        bodyMedium =
+            TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 14.sp, lineHeight = 20.sp),
         bodyLarge =
             TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 16.sp, lineHeight = 24.sp),
         bodySmall =
@@ -37,4 +39,14 @@ val ChimpagneTypography =
                 fontFamily = ChimpagneFontFamily,
                 fontWeight = FontWeight.Medium,
                 fontSize = 12.sp,
-                lineHeight = 16.sp))
+                lineHeight = 16.sp),
+        titleMedium =
+            TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 20.sp, lineHeight = 24.sp),
+        titleSmall =
+            TextStyle(fontFamily = ChimpagneFontFamily, fontSize = 16.sp, lineHeight = 24.sp),
+        titleLarge =
+            TextStyle(
+                fontFamily = ChimpagneFontFamily,
+                fontSize = 24.sp,
+                lineHeight = 28.sp,
+                fontWeight = FontWeight.Bold))
