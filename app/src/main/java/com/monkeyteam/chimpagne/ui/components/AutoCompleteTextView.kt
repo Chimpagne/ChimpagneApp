@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -29,6 +28,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
 fun <T> AutoCompleteTextView(
@@ -93,7 +93,7 @@ fun QuerySearch(
       value = query,
       onValueChange = onQueryChanged,
       label = { Text(text = label) },
-      textStyle = MaterialTheme.typography.bodySmall,
+      textStyle = ChimpagneTypography.bodySmall,
       singleLine = true,
       trailingIcon = {
         if (showClearButton) {

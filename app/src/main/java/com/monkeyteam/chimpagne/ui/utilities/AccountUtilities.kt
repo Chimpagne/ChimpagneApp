@@ -22,7 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,6 +44,7 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
 
 @Composable
@@ -123,7 +123,7 @@ fun AccountChangeBody(
                   horizontalArrangement = Arrangement.Center) {
                     Text(
                         text = stringResource(id = topBarText),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = ChimpagneTypography.titleLarge,
                         modifier = Modifier.testTag("accountCreationLabel"))
                   }
             },
