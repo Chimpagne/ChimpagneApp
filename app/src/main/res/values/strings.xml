@@ -89,7 +89,7 @@
     <string name="find_event_location_set">Location set</string>
     <string name="find_event_location_not_found">Location not found</string>
     <string name="permission_denied">Permission denied</string>
-    <string name="find_event_event_locate_searching">Searching</string>
+    <string name="find_event_event_locate_searching">Locating…</string>
 
     <string name="share_event_button">Share</string>
     <string name="calendar_failed">Event can\'t be added to calendar</string>

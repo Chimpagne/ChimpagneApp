@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -86,9 +87,9 @@ import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
 import com.monkeyteam.chimpagne.ui.theme.CustomOrange
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
@@ -181,13 +182,13 @@ fun FindEventFormScreen(
   }
 
   val getLocation = {
-    showToast("Getting location")
+    showToast(context.getString(R.string.find_event_event_locate_searching))
     locationState = LocationState.Searching
     fusedLocationProviderClient
         .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
         .addOnSuccessListener { location ->
           location?.let {
-              Thread.sleep(3000)
+            Thread.sleep(3000)
             showToast(context.getString(R.string.find_event_location_set))
             findViewModel.updateSelectedLocation(Location("mylocation", it.latitude, it.longitude))
             locationState = LocationState.Set(it)
@@ -199,11 +200,24 @@ fun FindEventFormScreen(
         }
   }
 
+  val startForResult =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+              // GPS was enabled by the user
+              getLocation()
+            } else {
+              // User purposefully denied GPS
+              showToast(context.getString(R.string.find_event_location_not_found))
+            }
+          }
+
   val checkAndRequestGPS = {
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 
       Log.d("FindEventFormScreen", "GPS asked to be turned on")
+
       // GPS is not enabled, proceed to ask user to enable it
       val locationRequest =
           LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
@@ -213,26 +227,20 @@ fun FindEventFormScreen(
       val client: SettingsClient = LocationServices.getSettingsClient(context)
       val task = client.checkLocationSettings(builder.build())
 
-      task.addOnSuccessListener {
-        // GPS is now enabled, get the location
-        Log.d("FindEventFormScreen", "GPS enabled")
-        getLocation()
-      }
+      task.addOnSuccessListener { getLocation() }
 
       task.addOnFailureListener { exception ->
-        Log.d("FindEventFormScreen", "entered in ecxception")
         if (exception is ResolvableApiException) {
-          // Prompt the user to enable GPS
           try {
-            exception.startResolutionForResult((context as Activity), 0x1)
+            val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
+            startForResult.launch(intentSenderRequest)
           } catch (sendEx: IntentSender.SendIntentException) {
-            // Handle the error appropriately
+            // Handle error
           }
         }
       }
     } else {
-      Log.d("FindEventFormScreen", "GPS already tunred on")
-      // GPS is already enabled, get the location
+      Log.d("FindEventFormScreen", "GPS already turned on")
       getLocation()
     }
   }
@@ -263,7 +271,7 @@ fun FindEventFormScreen(
             if (granted) {
               showDialog = true
             } else {
-              showToast("Camera permission denied")
+              showToast(context.getString(R.string.permission_denied))
             }
           })
 
@@ -277,7 +285,7 @@ fun FindEventFormScreen(
           val uid = it.substringAfter("?uid=")
 
           findViewModel.fetchEvent(
-              uid, onSuccess = showScannedEvent, onFailure = { showToast("Event not found") })
+              uid, onSuccess = showScannedEvent, onFailure = { showToast(context.getString(R.string.find_event_no_result)) })
         })
   }
 

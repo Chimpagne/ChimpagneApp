@@ -62,4 +62,4 @@ val md_theme_dark_background = Color(0xFF1C1B1E)
 val md_theme_dark_onBackground = Color(0xFFE6E1E6)
 
 val CustomGreen = Color(0xFF4CAF50)
-val CustomOrange = Color(0xFFFF5722)
+val CustomOrange = Color(0xFFFF8222)
