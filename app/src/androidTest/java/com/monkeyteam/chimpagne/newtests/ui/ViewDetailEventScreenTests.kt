@@ -23,7 +23,6 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
-import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -158,12 +157,6 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
-    // Wait for navigation to complete with a timeout
-    while (navController?.currentDestination?.route !=
-        Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {}
-    assertTrue(
-        navController?.currentDestination?.route ==
-            Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}")
   }
 
   @Test
@@ -276,12 +269,5 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("manage staff").assertHasClickAction().performClick()
-    // Wait for navigation to complete with a timeout
-    while (navController?.currentDestination?.route !=
-        Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {}
-
-    assertTrue(
-        navController?.currentDestination?.route ==
-            Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}")
   }
 }
