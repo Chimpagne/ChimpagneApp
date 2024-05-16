@@ -192,6 +192,14 @@ class EventViewModel(
   fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
+      val accountUID = accountManager.currentUserAccount!!.firebaseAuthUID
+      _uiState.value.supplies
+          .filter { (_, supply) -> supply.assignedTo[accountUID] == true }
+          .keys
+          .forEach { supplyId ->
+            eventManager.atomic.unassignSupply(_uiState.value.id, supplyId, accountUID)
+          }
+
       accountManager.leaveEvent(
           _uiState.value.id,
           {
