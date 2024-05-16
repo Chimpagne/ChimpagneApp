@@ -9,9 +9,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -126,97 +129,100 @@ fun HomeScreen(
           showPromptLogin = false
         }
 
-        Column(
+        Box(
             modifier =
                 Modifier.fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(innerPadding),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-              Column() {
-                Text(
-                    text = "Events near you",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(16.dp))
-                LazyColumn() {
-                  items(closestEventsState.value) { event ->
-                    EventCard(
-                        event,
-                        onClick = {
-                          navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                        })
+                    .padding(innerPadding)) {
+              // Events Feed taking the top half of the screen
+              LazyColumn(
+                  modifier =
+                      Modifier.fillMaxHeight(0.5f)
+                          .fillMaxWidth()
+                          .background(MaterialTheme.colorScheme.surface)) {
+                    item {
+                      Text(
+                          text = "Events near you",
+                          style = MaterialTheme.typography.headlineLarge,
+                          modifier = Modifier.padding(16.dp))
+                    }
+                    items(closestEventsState.value) { event ->
+                      EventCard(
+                          event,
+                          onClick = {
+                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                          })
+                    }
                   }
-                }
-              }
 
-              ChimpagneButton(
-                  modifier = Modifier.testTag("open_events_button"),
-                  onClick = {
-                    if (!accountViewModel.isUserLoggedIn()) {
-                      showPromptLogin = true
-                    } else {
-                      navObject.navigateTo(Route.MY_EVENTS_SCREEN)
-                    }
-                  },
-                  text = stringResource(id = R.string.homescreen_my_events),
-              )
-              Spacer(modifier = Modifier.height(16.dp))
-
-              val permissionLauncher =
-                  rememberLauncherForActivityResult(
-                      contract = ActivityResultContracts.RequestPermission()) { isGranted ->
-                        if (isGranted) {
-                          locationViewModel.startLocationUpdates(context) { lat, lng ->
-                            findViewModel.updateSelectedLocation(Location("mylocation", lat, lng))
-
-                            findViewModel.fetchAroundLocation(
-                                onSuccess = {
-                                  findViewModel.uiState.value.events.forEach { (t, u) ->
-                                    eventsNearMe.add(u)
-                                  }
-
-                                  findViewModel.uiState.value.selectedLocation?.let {
-                                    closestEventsState.value = getClosestNEvent(eventsNearMe, 4, it)
-                                    println("CLOSEST EVENTS")
-
-                                    /*
-                                    For example, closestEvents might contains a list of ChimpagneEvent like this:
-                                    ChimpagneEvent(id=SECOND_EVENT, title=Second event, description=I love bananas, location=Location(name=EPFL, latitude=46.51913, longitude=6.56758, geohash=u0k8tkw3ed), public=true, tags=[bananas, monkeys], guests={}, staffs={}, startsAtTimestamp=Timestamp(seconds=1718032500, nanoseconds=758000000), endsAtTimestamp=Timestamp(seconds=1718118900, nanoseconds=758000000), ownerId=JUAN, supplies={1=c 1 h, 2=kk 2 j, 3=gbn 3 h}, parkingSpaces=10, beds=5)
-                                    ChimpagneEvent(id=FIRST_EVENT, title=First event, description=a random description, location=Location(name=EPFL, latitude=46.519124, longitude=6.567593, geohash=u0k8tkw3s1), public=true, tags=[vegan, monkeys], guests={}, staffs={}, startsAtTimestamp=Timestamp(seconds=1717946100, nanoseconds=757000000), endsAtTimestamp=Timestamp(seconds=1718118900, nanoseconds=757000000), ownerId=JUAN, supplies={1=d 1 g, 2=ff 2 d, 3=ee 3 e}, parkingSpaces=1, beds=2)
-
-                                     */
-                                    closestEventsState.value.forEach { e -> println(e) }
-                                  }
-                                },
-                                onFailure = { println("couscous") })
+              // Buttons taking the bottom half of the screen
+              Column(
+                  modifier =
+                      Modifier.fillMaxHeight(0.5f).fillMaxWidth().align(Alignment.BottomCenter),
+                  horizontalAlignment = Alignment.CenterHorizontally,
+                  verticalArrangement = Arrangement.Center) {
+                    ChimpagneButton(
+                        modifier = Modifier.testTag("open_events_button"),
+                        onClick = {
+                          if (!accountViewModel.isUserLoggedIn()) {
+                            showPromptLogin = true
+                          } else {
+                            navObject.navigateTo(Route.MY_EVENTS_SCREEN)
                           }
-                        } else {
-                          // Handle permission denied
-                          Toast.makeText(context, "Location permission denied", Toast.LENGTH_SHORT)
-                              .show()
-                        }
-                      }
-              LaunchedEffect(Unit) {
-                permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-              }
+                        },
+                        text = stringResource(id = R.string.homescreen_my_events),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-              ChimpagneButton(
-                  modifier = Modifier.testTag("discover_events_button"),
-                  onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
-                  text = stringResource(R.string.homescreen_join_event),
-              )
-              Spacer(modifier = Modifier.height(16.dp))
-              ChimpagneButton(
-                  modifier = Modifier.testTag("organize_event_button"),
-                  onClick = {
-                    if (!accountViewModel.isUserLoggedIn()) {
-                      showPromptLogin = true
-                    } else {
-                      navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
+                    val permissionLauncher =
+                        rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.RequestPermission()) { isGranted ->
+                              if (isGranted) {
+                                locationViewModel.startLocationUpdates(context) { lat, lng ->
+                                  findViewModel.updateSelectedLocation(
+                                      Location("mylocation", lat, lng))
+
+                                  findViewModel.fetchAroundLocation(
+                                      onSuccess = {
+                                        findViewModel.uiState.value.events.forEach { (_, u) ->
+                                          eventsNearMe.add(u)
+                                        }
+
+                                        findViewModel.uiState.value.selectedLocation?.let {
+                                          closestEventsState.value =
+                                              getClosestNEvent(eventsNearMe, 4, it)
+                                        }
+                                      },
+                                      onFailure = { println("couscous") })
+                                }
+                              } else {
+                                Toast.makeText(
+                                        context, "Location permission denied", Toast.LENGTH_SHORT)
+                                    .show()
+                              }
+                            }
+                    LaunchedEffect(Unit) {
+                      permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
-                  },
-                  text = stringResource(R.string.homescreen_organize_event),
-              )
+
+                    ChimpagneButton(
+                        modifier = Modifier.testTag("discover_events_button"),
+                        onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
+                        text = stringResource(R.string.homescreen_join_event),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    ChimpagneButton(
+                        modifier = Modifier.testTag("organize_event_button"),
+                        onClick = {
+                          if (!accountViewModel.isUserLoggedIn()) {
+                            showPromptLogin = true
+                          } else {
+                            navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
+                          }
+                        },
+                        text = stringResource(R.string.homescreen_organize_event),
+                    )
+                  }
             }
       }
 }

@@ -50,7 +50,7 @@ fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () 
               .shadow(4.dp)
               .fillMaxWidth()
               .clickable { onClick() }
-              .aspectRatio(1.7f),
+              .aspectRatio(1.9f),
       shape = RoundedCornerShape(12.dp),
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(modifier = Modifier.fillMaxSize()) {
