@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +25,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
 fun DetailScreenSheet(
@@ -44,22 +44,22 @@ fun DetailScreenSheet(
         horizontalAlignment = Alignment.CenterHorizontally) {
           Text(
               text = event.title,
-              style = MaterialTheme.typography.headlineMedium,
+              style = ChimpagneTypography.headlineMedium,
               modifier = Modifier.padding(bottom = 8.dp))
 
           Text(
               text = event.startsAt().time.toString(),
-              style = MaterialTheme.typography.bodyMedium,
+              style = ChimpagneTypography.bodyMedium,
               modifier = Modifier.padding(bottom = 8.dp))
 
           Text(
               text = event.endsAt().time.toString(),
-              style = MaterialTheme.typography.bodyMedium,
+              style = ChimpagneTypography.bodyMedium,
               modifier = Modifier.padding(bottom = 8.dp))
 
           Text(
               text = event.description,
-              style = MaterialTheme.typography.bodySmall,
+              style = ChimpagneTypography.bodySmall,
               modifier = Modifier.padding(bottom = 8.dp))
 
           Row(
@@ -88,7 +88,7 @@ fun DetailScreenSheet(
     Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
       Text(
           stringResource(id = R.string.find_event_no_event_available),
-          style = MaterialTheme.typography.bodyMedium)
+          style = ChimpagneTypography.bodyMedium)
     }
   }
 }

@@ -113,4 +113,6 @@
     <!-- AccountCreation -->
     <string name="account_created_toast">Account created</string>
     <string name="acount_creation_failed_toast">Account creation failed</string>
+    <string name="public_string">Public</string>
+    <string name="private_string">Private</string>
 </resources>
