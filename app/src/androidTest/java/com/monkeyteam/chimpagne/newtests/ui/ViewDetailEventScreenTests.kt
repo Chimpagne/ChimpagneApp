@@ -1,21 +1,29 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -132,15 +140,27 @@ class ViewDetailEventScreenTests {
     val event = TEST_EVENTS[0]
     val eventVM = EventViewModel(event.id, database)
 
+    var navController: NavHostController? = null
+
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      navController = rememberNavController()
+      val navActions = NavigationActions(navController!!)
+      NavHost(navController = navController!!, startDestination = Route.VIEW_DETAIL_EVENT_SCREEN) {
+        composable(Route.VIEW_DETAIL_EVENT_SCREEN) {
+          ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+        }
+        composable(Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
+          EditEventScreen(navObject = navActions, eventViewModel = eventVM)
+        }
+      }
     }
 
     composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
+    assertTrue(
+        navController?.currentDestination?.route ==
+            Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}")
   }
 
   @Test
@@ -228,20 +248,33 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("car pooling").assertHasClickAction().performClick()
   }
 
+  @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testManageStaffButton() {
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
     val event = TEST_EVENTS[0]
     val eventVM = EventViewModel(event.id, database)
-
+    var navController: NavHostController? = null
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      navController = rememberNavController()
+      val navActions = NavigationActions(navController!!)
+
+      NavHost(navController = navController!!, startDestination = Route.VIEW_DETAIL_EVENT_SCREEN) {
+        composable(Route.VIEW_DETAIL_EVENT_SCREEN) {
+          ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+        }
+        composable(Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {
+          ManageStaffScreen(
+              navObject = navActions, eventViewModel = eventVM, accountViewModel = accountViewModel)
+        }
+      }
     }
 
     composeTestRule.onNodeWithTag("manage staff").assertHasClickAction().performClick()
+    assertTrue(
+        navController?.currentDestination?.route ==
+            Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}")
   }
 }
