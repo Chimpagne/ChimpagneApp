@@ -51,6 +51,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEventManager
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -78,35 +79,6 @@ class LocationViewModel(myContext: Context) {
                     onLocationSuccess(it.latitude, it.longitude)
                 }
             }
-        }
-    }
-}
-@Composable
-fun EventCard(event: ChimpagneEvent) {
-    Card(
-            modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-    ) {
-        Column(
-                modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                    text = event.title,
-                    style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                    text = event.description,
-                    style = MaterialTheme.typography.bodyMedium
-            )
-            Row {
-                Text(
-                        text = "Start Date: ${event.startsAtTimestamp.toDate()}",
-                        style = MaterialTheme.typography.bodySmall
-                )
-            }
-
-            // Add more event details as needed
         }
     }
 }
@@ -181,8 +153,7 @@ fun HomeScreen(
                         }
                     },
                     text = stringResource(id = R.string.homescreen_my_events),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp)
+                )
             Spacer(modifier = Modifier.height(16.dp))
 
             val permissionLauncher = rememberLauncherForActivityResult(
@@ -243,9 +214,10 @@ fun HomeScreen(
                         modifier = Modifier.padding(16.dp)
                 )
                 LazyColumn {
-                    // TODO : change the code so that when closestEvents is modified elsewhere, this list is automatically updated with the newest content
                     items(closestEventsState.value) { event ->
-                        EventCard(event)
+                        EventCard(event, onClick = {
+                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                        })
                     }
                 }
             }
@@ -253,8 +225,7 @@ fun HomeScreen(
                     modifier = Modifier.testTag("discover_events_button"),
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                     text = stringResource(R.string.homescreen_join_event),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp)
+                    )
             Spacer(modifier = Modifier.height(16.dp))
             ChimpagneButton(
                     modifier = Modifier.testTag("organize_event_button"),
@@ -266,8 +237,7 @@ fun HomeScreen(
                         }
                     },
                     text = stringResource(R.string.homescreen_organize_event),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp)
+                    )
         }
     }
 }
