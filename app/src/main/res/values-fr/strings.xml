@@ -35,7 +35,7 @@
     <string name="event_creation_screen_add_supplies">Ajouter des fournitures</string>
     <string name="event_creation_screen_beds">Lits</string>
     <string name="close">Fermer</string>
-    <string name="find_event_page_title">Trouver une soirée</string>
+    <string name="find_event_page_title">Trouver un évènement</string>
     <string name="find_event_search_button_text">Chercher</string>
     <string name="find_event_event_location_legend">Lieu</string>
     <string name="find_event_event_tags_legend">Ajouter des tags de recherche</string>
@@ -88,6 +88,12 @@
     <string name="links_to_social_media">Ajouter vos groupes de médias sociaux</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+
+    <string name="find_event_location_set">Localisé</string>
+    <string name="find_event_location_not_found">Localisation échouée</string>
+    <string name="permission_denied">Permission refusée</string>
+    <string name="find_event_event_locate_searching">Localisation…</string>
+
     <string name="share_event_button">Partager</string>
     <string name="calendar_failed">L\'événement ne peut pas être ajouté au calendrier</string>
     <string name="add_event_to_calendar_prefix">Voulez-vous ajouter l\'événement \"</string>
@@ -133,5 +139,6 @@
     <string name="acount_creation_failed_toast">Création de compte échouée</string>
     <string name="public_string">Public</string>
     <string name="private_string">Privé</string>
+
 
 </resources>

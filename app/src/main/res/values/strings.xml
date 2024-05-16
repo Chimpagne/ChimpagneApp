@@ -88,6 +88,12 @@
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+
+    <string name="find_event_location_set">Location set</string>
+    <string name="find_event_location_not_found">Location not found</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="find_event_event_locate_searching">Locating…</string>
+
     <string name="share_event_button">Share</string>
     <string name="calendar_failed">Event can\'t be added to calendar</string>
     <string name="add_event_to_calendar_prefix">Do you want to add the event \"</string>
@@ -97,6 +103,7 @@
     <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>
     <string name="manage_staff_screen_guest_list_name">Guest List:</string>
     <string name="manage_staff_screen_empty_guest_list">There are no guests in this event:</string>
+
 
     <!-- Chimpagne -->
     <string name="chimpagne_cancel">Cancel</string>
