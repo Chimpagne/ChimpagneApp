@@ -74,22 +74,24 @@ fun getWeather(
                         val weather =
                             Weather(
                                 location = location,
+                                weatherDescription =
+                                forecastDay
+                                    .getJSONObject("day")
+                                    .getJSONObject("condition")
+                                    .getString("text"),
+                                weatherIcon =
+                                forecastDay
+                                    .getJSONObject("day")
+                                    .getJSONObject("condition")
+                                    .getString("icon"),
                                 temperatureLow =
                                     forecastDay.getJSONObject("day").getDouble("mintemp_c"),
                                 temperatureHigh =
                                     forecastDay.getJSONObject("day").getDouble("maxtemp_c"),
                                 maxWindSpeed =
                                     forecastDay.getJSONObject("day").getDouble("maxwind_kph"),
-                                weatherDescription =
-                                    forecastDay
-                                        .getJSONObject("day")
-                                        .getJSONObject("condition")
-                                        .getString("text"),
-                                weatherIcon =
-                                    forecastDay
-                                        .getJSONObject("day")
-                                        .getJSONObject("condition")
-                                        .getString("icon"))
+                                windDirection = forecastDay.getJSONObject("day").getString("wind_dir"))
+
                         onSuccess(weather)
                       } else {
                         Log.e("WeatherHelper", "Json response does not match location")
