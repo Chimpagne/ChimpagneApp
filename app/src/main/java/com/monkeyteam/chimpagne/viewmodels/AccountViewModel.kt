@@ -124,7 +124,7 @@ class AccountViewModel(database: Database) : ViewModel() {
   }
 
   fun isUserLoggedIn(): Boolean {
-    return FirebaseAuth.getInstance().currentUser != null
+      return accountManager.currentUserAccount != null
   }
 
   fun fetchAccounts(accountUIDs: List<ChimpagneAccountUID>) {

@@ -89,7 +89,7 @@ class FindEventScreenTest {
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
-  fun testJoinEventFunctionalityGuestUser() {
+  fun testJoinEventFunctionalityNotLoggedInUser() {
     val database = Database()
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
@@ -114,18 +114,19 @@ class FindEventScreenTest {
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testJoinEventFunctionalityAlreadyGuest() {
+    val anAccount2 = TEST_ACCOUNTS[0]
+    accountManager.signInTo(anAccount2)
 
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
     val sampleEvent =
         ChimpagneEvent(
-            id = "sample123",
+            id = "sample1234",
             title = "Sample Event",
             description = "Sample Description",
-            guests = mapOf(anAccount.firebaseAuthUID to true))
+            guests = mapOf(anAccount2.firebaseAuthUID to true, anAccount.firebaseAuthUID to true),
+            ownerId = anAccount2.firebaseAuthUID)
     findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
-
-    accountManager.signInTo(anAccount)
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -142,6 +143,7 @@ class FindEventScreenTest {
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testJoinEventFunctionalityAlreadyStaff() {
+    accountManager.signInTo(anAccount)
 
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
@@ -153,8 +155,6 @@ class FindEventScreenTest {
             guests = mapOf(anAccount.firebaseAuthUID to true),
             staffs = mapOf(anAccount.firebaseAuthUID to true))
     findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
-
-    accountManager.signInTo(anAccount)
 
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -172,6 +172,8 @@ class FindEventScreenTest {
   @Test
   fun testJoinEventFunctionalityAlreadyOwner() {
 
+    accountManager.signInTo(anAccount)
+
     val findViewModel = FindEventsViewModel(database)
     val accountViewModel = AccountViewModel(database)
     val sampleEvent =
@@ -182,8 +184,6 @@ class FindEventScreenTest {
             guests = mapOf(anAccount.firebaseAuthUID to true),
             ownerId = anAccount.firebaseAuthUID)
     findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
-
-    accountManager.signInTo(anAccount)
 
     composeTestRule.setContent {
       val navController = rememberNavController()
