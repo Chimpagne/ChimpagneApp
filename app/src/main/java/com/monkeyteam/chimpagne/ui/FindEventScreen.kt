@@ -370,7 +370,9 @@ fun FindEventFormScreen(
                           else -> MaterialTheme.colorScheme.surfaceVariant
                         },
                     onClick = { requestLocationPermission() },
-                    modifier = Modifier.align(Alignment.CenterHorizontally))
+                    modifier =
+                        Modifier.align(Alignment.CenterHorizontally)
+                            .testTag("request_location_permission_button"))
                 Spacer(Modifier.height(16.dp))
 
                 Text(

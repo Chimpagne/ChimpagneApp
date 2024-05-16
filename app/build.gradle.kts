@@ -129,6 +129,8 @@ dependencies {
 
     // For testing the locationSelector
     implementation(libs.mockito.core)
+    testImplementation(libs.mockito.core)
+    androidTestImplementation(libs.mockito.android)
     implementation(libs.mockito.inline)
 
 }
