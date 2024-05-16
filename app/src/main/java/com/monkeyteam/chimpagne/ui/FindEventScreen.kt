@@ -302,7 +302,7 @@ fun FindEventFormScreen(
                       findViewModel.updateLocationSearchRadius(it.toDouble() * 1000)
                     },
                     valueRange = 1f..30f,
-                    modifier = Modifier.fillMaxWidth())
+                    modifier = Modifier.fillMaxWidth().testTag("find_slider"))
 
                 Spacer(Modifier.height(32.dp))
 

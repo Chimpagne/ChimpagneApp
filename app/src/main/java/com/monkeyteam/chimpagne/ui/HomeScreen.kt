@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -143,6 +144,22 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center) {
 
+            Column(
+            ) {
+                Text(
+                    text = "Events near you",
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+                LazyColumn() {
+                    items(closestEventsState.value) { event ->
+                        EventCard(event, onClick = {
+                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                        })
+                    }
+                }
+            }
+
             ChimpagneButton(
                     modifier = Modifier.testTag("open_events_button"),
                     onClick = {
@@ -205,22 +222,7 @@ fun HomeScreen(
             LaunchedEffect(Unit) {
                 permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
             }
-            Column(
-                    modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                        text = "Events near you",
-                        style = MaterialTheme.typography.headlineLarge,
-                        modifier = Modifier.padding(16.dp)
-                )
-                LazyColumn {
-                    items(closestEventsState.value) { event ->
-                        EventCard(event, onClick = {
-                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                        })
-                    }
-                }
-            }
+
             ChimpagneButton(
                     modifier = Modifier.testTag("discover_events_button"),
                     onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
