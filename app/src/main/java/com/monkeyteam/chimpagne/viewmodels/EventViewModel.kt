@@ -407,7 +407,7 @@ class EventViewModel(
         {})
   }
 
-  fun createAPollAtomically(
+  fun createPollAtomically(
       poll: ChimpagnePoll,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
@@ -424,7 +424,7 @@ class EventViewModel(
         { onFailure(it) })
   }
 
-  fun deleteAPollAtomically(
+  fun deletePollAtomically(
       pollId: ChimpagnePollId,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
@@ -441,7 +441,7 @@ class EventViewModel(
         { onFailure(it) })
   }
 
-  fun addVoteForPollAtomically(
+  fun castPollVoteAtomically(
       pollId: ChimpagnePollId,
       optionId: ChimpagnePollOptionId,
       onSuccess: () -> Unit = {},

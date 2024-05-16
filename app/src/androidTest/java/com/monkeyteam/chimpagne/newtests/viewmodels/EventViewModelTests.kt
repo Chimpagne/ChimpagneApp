@@ -392,7 +392,7 @@ class EventViewModelTests {
                     Pair("3", ChimpagnePollOption("3", "I wish not to answer"))),
             votes = emptyMap())
 
-    eventSearchVM.createAPollAtomically(
+    eventSearchVM.createPollAtomically(
         poll = poll, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
@@ -412,7 +412,7 @@ class EventViewModelTests {
     assertTrue(eventSearchVM2.uiState.value.polls.keys.contains(poll.id))
 
     database.accountManager.signInTo(TEST_ACCOUNTS[0])
-    eventSearchVM2.addVoteForPollAtomically(
+    eventSearchVM2.castPollVoteAtomically(
         pollId = poll.id,
         optionId = "1",
         onSuccess = { assertTrue(true) },
@@ -421,7 +421,7 @@ class EventViewModelTests {
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
-    eventSearchVM2.addVoteForPollAtomically(
+    eventSearchVM2.castPollVoteAtomically(
         pollId = poll.id,
         optionId = "1",
         onSuccess = { assertTrue(true) },
@@ -430,7 +430,7 @@ class EventViewModelTests {
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     database.accountManager.signInTo(TEST_ACCOUNTS[2])
-    eventSearchVM2.addVoteForPollAtomically(
+    eventSearchVM2.castPollVoteAtomically(
         pollId = poll.id,
         optionId = "2",
         onSuccess = { assertTrue(true) },
@@ -485,7 +485,7 @@ class EventViewModelTests {
     assertEquals(1, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["2"])
     assertEquals(0, eventSearchVM3.uiState.value.polls[poll.id]!!.getNumberOfVotesPerOption()["3"])
 
-    eventSearchVM3.deleteAPollAtomically(
+    eventSearchVM3.deletePollAtomically(
         pollId = poll.id, onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM3.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
