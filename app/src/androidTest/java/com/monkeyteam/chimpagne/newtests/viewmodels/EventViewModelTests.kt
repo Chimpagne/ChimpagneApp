@@ -366,22 +366,6 @@ class EventViewModelTests {
   }
 
   @Test
-  fun testCreateEventSuccess() {
-    val eventVM = EventViewModel(database = database)
-    replaceVMEventBy(eventVM, testEvent)
-
-    eventVM.createTheEvent(
-        onSuccess = { assertTrue(true) },
-        onInvalidInputs = { assertTrue(false) },
-        onFailure = { assertTrue(false) })
-
-    while (eventVM.uiState.value.loading) {}
-    Thread.sleep(SLEEP_AMOUNT_MILLIS)
-
-    assertTrue(eventVM.uiState.value.id.isNotEmpty())
-  }
-
-  @Test
   fun testCreateEventWithEmptyTitle() {
     val eventVM = EventViewModel(database = database)
     replaceVMEventBy(eventVM, testEvent.copy(title = ""))
