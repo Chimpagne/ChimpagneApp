@@ -63,47 +63,42 @@ fun getWeather(
                       "Failed to get weather for $location, because of unsuccessful response")
                   onFailure()
                 } else {
-                  val jsonString = response.body?.string()
-                  if (jsonString.isNullOrEmpty()) {
-                    Log.e("WeatherHelper", "Invalid JSON response")
+                  try {
+                    val jsonString = response.body?.string()
+                    val weatherResponse = JSONObject(jsonString!!)
+                    val forecastDay =
+                        weatherResponse
+                            .getJSONObject("forecast")
+                            .getJSONArray("forecastday")
+                            .getJSONObject(0)
+
+                    val weather =
+                        Weather(
+                            location = location,
+                            date = date,
+                            weatherDescription =
+                                forecastDay
+                                    .getJSONObject("day")
+                                    .getJSONObject("condition")
+                                    .getString("text"),
+                            weatherIcon =
+                                forecastDay
+                                    .getJSONObject("day")
+                                    .getJSONObject("condition")
+                                    .getString("icon"),
+                            temperatureLow =
+                                forecastDay.getJSONObject("day").getDouble("mintemp_c"),
+                            temperatureHigh =
+                                forecastDay.getJSONObject("day").getDouble("maxtemp_c"),
+                            maxWindSpeed =
+                                forecastDay.getJSONObject("day").getDouble("maxwind_kph"),
+                            windDirection =
+                                forecastDay.getJSONObject("day").optString("wind_dir", "NA"))
+
+                    onSuccess(weather)
+                  } catch (e: Exception) {
+                    Log.e("WeatherHelper", "Invalid JSON response", e)
                     onFailure()
-                  } else {
-                    try {
-                      val weatherResponse = JSONObject(jsonString)
-                      val forecastDay =
-                          weatherResponse
-                              .getJSONObject("forecast")
-                              .getJSONArray("forecastday")
-                              .getJSONObject(0)
-
-                      val weather =
-                          Weather(
-                              location = location,
-                              date = date,
-                              weatherDescription =
-                                  forecastDay
-                                      .getJSONObject("day")
-                                      .getJSONObject("condition")
-                                      .getString("text"),
-                              weatherIcon =
-                                  forecastDay
-                                      .getJSONObject("day")
-                                      .getJSONObject("condition")
-                                      .getString("icon"),
-                              temperatureLow =
-                                  forecastDay.getJSONObject("day").getDouble("mintemp_c"),
-                              temperatureHigh =
-                                  forecastDay.getJSONObject("day").getDouble("maxtemp_c"),
-                              maxWindSpeed =
-                                  forecastDay.getJSONObject("day").getDouble("maxwind_kph"),
-                              windDirection =
-                                  forecastDay.getJSONObject("day").optString("wind_dir", "NA"))
-
-                      onSuccess(weather)
-                    } catch (e: Exception) {
-                      Log.e("WeatherHelper", "Invalid JSON response", e)
-                      onFailure()
-                    }
                   }
                 }
               }
