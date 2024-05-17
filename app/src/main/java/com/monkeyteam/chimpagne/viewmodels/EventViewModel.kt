@@ -141,7 +141,6 @@ class EventViewModel(
               onSuccess(it)
             },
             {
-              Log.d("CREATE AN EVENT", "Error : ", it)
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
             })
