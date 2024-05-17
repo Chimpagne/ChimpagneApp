@@ -59,14 +59,17 @@ fun EventCreationScreen(
               }
             })
       }) { innerPadding ->
-        HorizontalPager(state = pagerState, modifier = Modifier.padding(innerPadding)) { page ->
-          when (page) {
-            0 -> FirstPanel(eventViewModel)
-            1 -> TagsAndPubPanel(eventViewModel)
-            2 -> SuppliesPanel(eventViewModel)
-            3 -> AdvancedLogisticsPanel(eventViewModel)
-            4 -> ChooseSocialsPanel(eventViewModel)
-          }
-        }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.padding(innerPadding),
+            beyondBoundsPageCount = 4) { page ->
+              when (page) {
+                0 -> FirstPanel(eventViewModel)
+                1 -> TagsAndPubPanel(eventViewModel)
+                2 -> SuppliesPanel(eventViewModel)
+                3 -> AdvancedLogisticsPanel(eventViewModel)
+                4 -> ChooseSocialsPanel(eventViewModel)
+              }
+            }
       }
 }

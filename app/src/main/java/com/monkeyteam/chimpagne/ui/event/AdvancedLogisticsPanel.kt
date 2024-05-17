@@ -1,7 +1,9 @@
 package com.monkeyteam.chimpagne.ui.event
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -34,45 +36,48 @@ fun AdvancedLogisticsPanel(eventViewModel: EventViewModel) {
 
   var parkingText by remember { mutableStateOf(uiState.parkingSpaces.toString()) }
   var bedsText by remember { mutableStateOf(uiState.beds.toString()) }
-  Column(modifier = Modifier.padding(16.dp)) {
-    Legend(
-        stringResource(id = R.string.event_creation_screen_logistics),
-        Icons.Rounded.Layers,
-        "logistics_title")
-    Spacer(modifier = Modifier.height(16.dp))
-    Legend(
-        stringResource(id = R.string.event_creation_screen_parking),
-        Icons.Rounded.DirectionsCar,
-        "parking_title")
-    OutlinedTextField(
-        value = parkingText,
-        onValueChange = {
-          parkingText = it
-          try {
-            eventViewModel.updateParkingSpaces(abs(parkingText.toInt()))
-          } catch (_: Exception) {
-            eventViewModel.updateParkingSpaces(0)
-          }
-        },
-        label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth().testTag("n_parking"))
+  Column(
+      modifier = Modifier.padding(16.dp).fillMaxHeight(), verticalArrangement = Arrangement.Top) {
+        Legend(
+            stringResource(id = R.string.event_creation_screen_logistics),
+            Icons.Rounded.Layers,
+            "logistics_title")
+        Spacer(modifier = Modifier.height(16.dp))
+        Legend(
+            stringResource(id = R.string.event_creation_screen_parking),
+            Icons.Rounded.DirectionsCar,
+            "parking_title")
+        OutlinedTextField(
+            value = parkingText,
+            onValueChange = {
+              parkingText = it
+              try {
+                eventViewModel.updateParkingSpaces(abs(parkingText.toInt()))
+              } catch (_: Exception) {
+                eventViewModel.updateParkingSpaces(0)
+              }
+            },
+            label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().testTag("n_parking"))
 
-    Spacer(modifier = Modifier.height(16.dp))
-    Legend(
-        stringResource(id = R.string.event_creation_screen_beds), Icons.Rounded.Bed, "beds_title")
-    OutlinedTextField(
-        value = bedsText,
-        onValueChange = {
-          bedsText = it
-          try {
-            eventViewModel.updateBeds(abs(bedsText.toInt()))
-          } catch (_: Exception) {
-            eventViewModel.updateBeds(0)
-          }
-        },
-        label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        modifier = Modifier.fillMaxWidth().testTag("n_beds"))
-  }
+        Spacer(modifier = Modifier.height(16.dp))
+        Legend(
+            stringResource(id = R.string.event_creation_screen_beds),
+            Icons.Rounded.Bed,
+            "beds_title")
+        OutlinedTextField(
+            value = bedsText,
+            onValueChange = {
+              bedsText = it
+              try {
+                eventViewModel.updateBeds(abs(bedsText.toInt()))
+              } catch (_: Exception) {
+                eventViewModel.updateBeds(0)
+              }
+            },
+            label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth().testTag("n_beds"))
+      }
 }
