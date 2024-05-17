@@ -43,7 +43,7 @@
     <string name="find_event_event_locate_me_button">Autour de moi</string>
     <string name="find_event_search_radius">Rayon de recherche</string>
     <string name="find_event_search_tag_query_label">Entrer un tag</string>
-    <string name="find_event_date_legend">Date de la soirée</string>
+    <string name="find_event_date_legend">Plage de recherche</string>
     <string name="find_event_join_event_button_text">Rejoindre</string>
     <string name="find_event_no_event_available">Pas de détail à afficher</string>
     <string name="find_event_near_me_toast">Localisation…</string>

@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -41,21 +39,16 @@ fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () 
   Card(
       modifier =
           modifier
-              .padding(horizontal = 12.dp, vertical = 8.dp)
-              .clip(RoundedCornerShape(12.dp))
-              .border(
-                  width = 3.dp,
-                  color = MaterialTheme.colorScheme.primary,
-                  shape = RoundedCornerShape(12.dp))
-              .shadow(4.dp)
+              .padding(horizontal = 20.dp, vertical = 16.dp)
               .fillMaxWidth()
               .clickable { onClick() }
               .aspectRatio(1.9f),
       shape = RoundedCornerShape(12.dp),
-      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+      elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
         Column(modifier = Modifier.fillMaxSize()) {
           Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-            ImageWithBlackFilterOverlay(event.image, false)
+            ImageWithBlackFilterOverlay(event.image, true)
             // Adding the status overlay on top of the image
             Row(
                 horizontalArrangement = Arrangement.End,

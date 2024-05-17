@@ -102,6 +102,7 @@ import kotlinx.coroutines.launch
 object FindEventScreens {
   const val FORM = 0
   const val MAP = 1
+  const val DETAIL = 2
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -116,6 +117,7 @@ fun MainFindEventScreen(
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
 
+  var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
   var toast: Toast? by remember { mutableStateOf(null) }
 
   val showToast: (String) -> Unit = { message ->
@@ -133,6 +135,11 @@ fun MainFindEventScreen(
     findViewModel.setLoading(false)
   }
 
+  val goToDetail: (ChimpagneEvent) -> Unit = { event ->
+    currentEvent = event
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.DETAIL) }
+  }
+
   val displayResult: () -> Unit = {
     coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.MAP) }
   }
@@ -147,13 +154,14 @@ fun MainFindEventScreen(
     }
   }
 
-  HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 1) { page
+  HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 2) { page
     ->
     when (page) {
       FindEventScreens.FORM ->
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
-          FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
+          FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
+      FindEventScreens.DETAIL -> null
     }
   }
 }
@@ -425,6 +433,7 @@ fun FindEventFormScreen(
 fun FindEventMapScreen(
     onBackIconClicked: () -> Unit,
     findViewModel: FindEventsViewModel,
+    onEventClick: (ChimpagneEvent) -> Unit,
     accountViewModel: AccountViewModel,
     navObject: NavigationActions
 ) {
@@ -471,7 +480,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { DetailScreenListSheet(events = currentEvents, onJoinClick, context) },
+      sheetContent = { DetailScreenListSheet(events = currentEvents, onEventClick, context) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {

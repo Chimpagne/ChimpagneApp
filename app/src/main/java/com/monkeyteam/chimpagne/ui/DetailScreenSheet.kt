@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.ui
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
+import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
@@ -97,26 +97,18 @@ fun DetailScreenSheet(
   }
 }
 
-
 @Composable
 fun DetailScreenListSheet(
     events: List<ChimpagneEvent>,
     onJoinClick: (ChimpagneEvent) -> Unit = {},
     context: Context? = null
 ) {
-    if (events.size == 1) {
-        DetailScreenSheet(event = events.first(), onJoinClick, context)
-    } else {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(events) { event ->
-                EventCard(
-                    event = event,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    onClick = {},
-                )
-            }
-        }
+  LazyColumn(modifier = Modifier.fillMaxSize()) {
+    items(events) { event ->
+      EventCard(
+          event = event,
+          onClick = {},
+      )
     }
+  }
 }
