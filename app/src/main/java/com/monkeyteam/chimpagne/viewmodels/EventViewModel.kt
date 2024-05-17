@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
+import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
+import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
@@ -64,7 +67,8 @@ class EventViewModel(
                         beds = it.beds,
                         ownerId = it.ownerId,
                         image = it.image,
-                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks))
+                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
+                        polls = it.polls)
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
@@ -107,7 +111,8 @@ class EventViewModel(
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
         image = "",
-        socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks))
+        socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
+        polls = _uiState.value.polls)
   }
 
   fun createTheEvent(
@@ -428,6 +433,65 @@ class EventViewModel(
         {})
   }
 
+  fun createPollAtomically(
+      poll: ChimpagnePoll,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.createPoll(
+        _uiState.value.id,
+        poll,
+        {
+          _uiState.value =
+              _uiState.value.copy(polls = _uiState.value.polls + (poll.id to poll), loading = false)
+          onSuccess()
+        },
+        { onFailure(it) })
+  }
+
+  fun deletePollAtomically(
+      pollId: ChimpagnePollId,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.deletePoll(
+        _uiState.value.id,
+        pollId,
+        {
+          _uiState.value =
+              _uiState.value.copy(polls = _uiState.value.polls - (pollId), loading = false)
+          onSuccess()
+        },
+        { onFailure(it) })
+  }
+
+  fun castPollVoteAtomically(
+      pollId: ChimpagnePollId,
+      optionIndex: ChimpagnePollOptionListIndex,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    _uiState.value = _uiState.value.copy(loading = true)
+    eventManager.atomic.castPollVote(
+        _uiState.value.id,
+        pollId,
+        accountManager.currentUserAccount!!.firebaseAuthUID,
+        optionIndex,
+        {
+          val newVotes =
+              _uiState.value.polls[pollId]!!.votes +
+                  (accountManager.currentUserAccount!!.firebaseAuthUID to optionIndex)
+          val newPoll = _uiState.value.polls[pollId]!!.copy(votes = newVotes)
+          _uiState.value =
+              _uiState.value.copy(
+                  polls = _uiState.value.polls + (pollId to newPoll), loading = false)
+          onSuccess()
+        },
+        { onFailure(it) })
+  }
+
   data class EventUIState(
       val id: String = "",
       val title: String = "",
@@ -443,6 +507,7 @@ class EventViewModel(
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
       val image: String = "",
+      val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",

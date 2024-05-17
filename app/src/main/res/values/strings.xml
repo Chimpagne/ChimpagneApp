@@ -113,6 +113,7 @@
     <string name="chimpagne_add">Add</string>
     <string name="chimpagne_delete">Delete</string>
     <string name="chimpagne_you">You</string>
+    <string name="chimpagne_ok">OK</string>
 
     <!--    Supplies    -->
     <string name="supplies_screen_title">Supplies to bring</string>
@@ -148,4 +149,6 @@
 
     <string name="title_should_not_be_empty">The event title should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
+    <!-- DateRangeSelector -->
+    <string name="select_date_range_for_query">Select a date range for the query</string>
 </resources>
