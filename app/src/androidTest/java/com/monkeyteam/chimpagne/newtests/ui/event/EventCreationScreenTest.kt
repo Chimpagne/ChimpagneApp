@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import android.icu.util.Calendar
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -22,6 +21,7 @@ import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import junit.framework.TestCase
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -249,5 +249,43 @@ class EventCreationScreenTest {
     }
 
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
+  }
+
+  @Test
+  fun defaultStartAndEndTest() {
+    val eventUIState = EventViewModel.EventUIState()
+    // Get the current time
+    val currentTime = Calendar.getInstance()
+
+    // Create expected start and end times
+    val expectedStartTime =
+        Calendar.getInstance().apply {
+          time = currentTime.time
+          add(Calendar.HOUR_OF_DAY, 1)
+        }
+    val expectedEndTime =
+        Calendar.getInstance().apply {
+          time = currentTime.time
+          add(Calendar.HOUR_OF_DAY, 2)
+        }
+
+    // Define a tolerance value in milliseconds (e.g., 10 second)
+    val toleranceMillis = 10000L
+
+    // Assert that the start time is approximately 1 hour after the current time
+    assertApproximatelyEqual(expectedStartTime, eventUIState.startsAtCalendarDate, toleranceMillis)
+
+    // Assert that the end time is approximately 2 hours after the current time
+    assertApproximatelyEqual(expectedEndTime, eventUIState.endsAtCalendarDate, toleranceMillis)
+  }
+
+  private fun assertApproximatelyEqual(
+      expected: Calendar,
+      actual: java.util.Calendar,
+      toleranceMillis: Long
+  ) {
+    val diffMillis = kotlin.math.abs(expected.timeInMillis - actual.timeInMillis)
+    TestCase.assertTrue(
+        "Expected: $expected, Actual: $actual, Diff: $diffMillis ms", diffMillis <= toleranceMillis)
   }
 }

@@ -499,8 +499,10 @@ class EventViewModel(
       val tags: List<String> = emptyList(),
       val guests: Map<String, Boolean> = emptyMap(),
       val staffs: Map<String, Boolean> = emptyMap(),
-      val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-      val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val startsAtCalendarDate: Calendar =
+          Calendar.getInstance().apply { add(Calendar.HOUR_OF_DAY, 1) },
+      val endsAtCalendarDate: Calendar =
+          Calendar.getInstance().apply { add(Calendar.HOUR_OF_DAY, 2) },
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
