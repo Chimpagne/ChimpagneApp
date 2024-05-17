@@ -29,20 +29,20 @@ fun onlyPublicFilter(): Filter {
   return Filter.equalTo("public", true)
 }
 
-fun happensOnThisDateFilter(calendar: Calendar): Filter {
+fun happensInDateRangeFilter(startDate: Calendar, endDate: Calendar): Filter {
   val startTimestampValidity =
       buildTimestamp(
-          calendar.get(Calendar.DATE),
-          calendar.get(Calendar.MONTH),
-          calendar.get(Calendar.YEAR),
+          startDate.get(Calendar.DATE),
+          startDate.get(Calendar.MONTH),
+          startDate.get(Calendar.YEAR),
           0,
           0)
 
   val endTimestampValidity =
       buildTimestamp(
-          calendar.get(Calendar.DATE),
-          calendar.get(Calendar.MONTH),
-          calendar.get(Calendar.YEAR),
+          endDate.get(Calendar.DATE),
+          endDate.get(Calendar.MONTH),
+          endDate.get(Calendar.YEAR),
           23,
           59)
 

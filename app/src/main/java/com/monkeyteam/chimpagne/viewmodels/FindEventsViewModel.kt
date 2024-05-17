@@ -10,7 +10,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
-import com.monkeyteam.chimpagne.model.database.happensOnThisDateFilter
+import com.monkeyteam.chimpagne.model.database.happensInDateRangeFilter
 import com.monkeyteam.chimpagne.model.database.onlyPublicFilter
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
@@ -32,7 +32,9 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     viewModelScope.launch {
       try {
         var filter =
-            Filter.and(onlyPublicFilter(), happensOnThisDateFilter(_uiState.value.selectedDate))
+            Filter.and(
+                onlyPublicFilter(),
+                happensInDateRangeFilter(_uiState.value.startDate, _uiState.value.endDate))
         if (_uiState.value.selectedTags.isNotEmpty())
             filter = Filter.and(filter, containsTagsFilter(_uiState.value.selectedTags))
 
@@ -145,8 +147,8 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     _uiState.value = _uiState.value.copy(selectedTags = newTagList.distinct())
   }
 
-  fun updateSelectedDate(newQuery: Calendar) {
-    _uiState.value = _uiState.value.copy(selectedDate = newQuery)
+  fun updateDateRange(startDate: Calendar, endDate: Calendar) {
+    _uiState.value = _uiState.value.copy(startDate = startDate, endDate = endDate)
   }
 
   fun joinEvent(
@@ -171,7 +173,8 @@ data class FindEventsUIState(
     val selectedLocation: Location? = null,
     val radiusAroundLocationInM: Double = 1000.0,
     val selectedTags: List<String> = emptyList(),
-    val selectedDate: Calendar = Calendar.getInstance(),
+    val startDate: Calendar = Calendar.getInstance(),
+    val endDate: Calendar = Calendar.getInstance(),
     val loading: Boolean = false
 )
 

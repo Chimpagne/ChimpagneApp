@@ -112,6 +112,7 @@
     <string name="chimpagne_add">Ajouter</string>
     <string name="chimpagne_delete">Supprimer</string>
     <string name="chimpagne_you">Vous</string>
+    <string name="chimpagne_ok">OK</string>
 
     <!--    Supplies    -->
     <string name="supplies_screen_title">Liste de fournitures</string>
@@ -140,5 +141,8 @@
     <string name="public_string">Public</string>
     <string name="private_string">Privé</string>
 
+
+    <!-- DateRangeSelector -->
+    <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>
 
 </resources>
