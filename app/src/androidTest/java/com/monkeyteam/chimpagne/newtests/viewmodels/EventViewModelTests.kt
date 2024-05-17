@@ -560,7 +560,7 @@ class EventViewModelTests {
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
   }
-    // This passes on my machine...
+  // This passes on my machine...
   @Test
   fun testInvalidTitle() {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
