@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -32,9 +33,11 @@ import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
 
+@RunWith(AndroidJUnit4::class)
 class FindEventScreenTest {
 
   val database = Database()
@@ -42,7 +45,7 @@ class FindEventScreenTest {
 
   var accountManager = database.accountManager
 
-  val anAccount = TEST_ACCOUNTS[1]
+  private val anAccount = TEST_ACCOUNTS[1]
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -53,344 +56,343 @@ class FindEventScreenTest {
           android.Manifest.permission.ACCESS_COARSE_LOCATION,
           android.Manifest.permission.CAMERA)
 
+  lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+  lateinit var locationManager: LocationManager
+
   @Before
   fun init() {
     initializeTestDatabase()
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+  }
 
-    lateinit var locationManager: LocationManager
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun requestLocationPermissionTest() {
+    val locationManager = mock(LocationManager::class.java)
+    `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true)
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun requestLocationPermissionTest() {
-      val locationManager = mock(LocationManager::class.java)
-      `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true)
-
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
-        FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
-      }
-
-      // Perform the action that checks GPS status
-      composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
-
-      // Assertions or further actions can be added here
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun requestLocationPermissionFalseTest() {
-      val locationManager = mock(LocationManager::class.java)
-      `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(false)
+    // Perform the action that checks GPS status
+    composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
-        FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
-      }
+    // Assertions or further actions can be added here
+  }
 
-      // Perform the action that checks GPS status
-      composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun requestLocationPermissionFalseTest() {
+    val locationManager = mock(LocationManager::class.java)
+    `when`(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(false)
 
-      // Assertions or further actions can be added here
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      FindEventFormScreen(navActions, FindEventsViewModel(database = Database()), {}, {}, {})
     }
 
-    @Test
-    fun testQRCodeScanner() {
+    // Perform the action that checks GPS status
+    composeTestRule.onNodeWithTag("request_location_permission_button").performClick()
 
-      composeTestRule.setContent { QRCodeScanner({}, {}) }
+    // Assertions or further actions can be added here
+  }
 
-      composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
-      composeTestRule.onNodeWithTag("camera_preview").assertIsDisplayed()
-      composeTestRule.onNodeWithTag("close_button").performClick()
+  @Test
+  fun testQRCodeScanner() {
+
+    composeTestRule.setContent { QRCodeScanner({}, {}) }
+
+    composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("camera_preview").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("close_button").performClick()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testGoBackFunctionality() {
+    val database = Database()
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+
+    var navController: NavHostController? = null
+
+    composeTestRule.setContent {
+      navController = rememberNavController()
+      val navActions = NavigationActions(navController!!)
+
+      FindEventMapScreen(
+          { navController!!.popBackStack() }, findViewModel, accountViewModel, navActions)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testGoBackFunctionality() {
-      val database = Database()
-      val findViewModel = FindEventsViewModel(database)
-      val accountViewModel = AccountViewModel(database)
+    // Simulate the goBack action by clicking the back icon
+    composeTestRule.onNodeWithTag("go_back").performClick()
+    assertTrue(navController!!.previousBackStackEntry == null)
+  }
 
-      var navController: NavHostController? = null
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testJoinEventFunctionalityNotLoggedInUser() {
+    val database = Database()
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+    val sampleEvent =
+        ChimpagneEvent(id = "sample123", title = "Sample Event", description = "Sample Description")
+    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
 
-      composeTestRule.setContent {
-        navController = rememberNavController()
-        val navActions = NavigationActions(navController!!)
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-        FindEventMapScreen(
-            { navController!!.popBackStack() }, findViewModel, accountViewModel, navActions)
-      }
-
-      // Simulate the goBack action by clicking the back icon
-      composeTestRule.onNodeWithTag("go_back").performClick()
-      assertTrue(navController!!.previousBackStackEntry == null)
+      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testJoinEventFunctionalityNotLoggedInUser() {
-      val database = Database()
-      val findViewModel = FindEventsViewModel(database)
-      val accountViewModel = AccountViewModel(database)
-      val sampleEvent =
-          ChimpagneEvent(
-              id = "sample123", title = "Sample Event", description = "Sample Description")
-      findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
+    composeTestRule.onNodeWithTag("join_button").performClick()
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    // Should be false because the user is not logged in (guest) so it will not trigger the
+    // joinEvent function hence no uiState will load anything
+    assertFalse(findViewModel.uiState.value.loading)
+  }
 
-        FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
-      }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testJoinEventFunctionalityAlreadyGuest() {
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
 
-      composeTestRule.onNodeWithTag("join_button").performClick()
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
 
-      // Should be false because the user is not logged in (guest) so it will not trigger the
-      // joinEvent function hence no uiState will load anything
-      assertFalse(findViewModel.uiState.value.loading)
+    val joinedEvent = TEST_EVENTS[2]
+    findViewModel.setResultEvents(mapOf(joinedEvent.id to joinedEvent))
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testJoinEventFunctionalityAlreadyGuest() {
-      val myAccount = TEST_ACCOUNTS[0]
-      accountManager.signInTo(myAccount)
+    composeTestRule.onNodeWithTag("join_button").performClick()
 
-      val findViewModel = FindEventsViewModel(database)
-      val accountViewModel = AccountViewModel(database)
-      accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-      while (accountViewModel.uiState.value.loading) {}
+    assertTrue(joinedEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
+  }
 
-      val joinedEvent = TEST_EVENTS[2]
-      findViewModel.setResultEvents(mapOf(joinedEvent.id to joinedEvent))
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testJoinEventFunctionalityAlreadyStaff() {
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(anAccount)
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
 
-        FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
-      }
+    val staffEvent = TEST_EVENTS[4]
+    findViewModel.setResultEvents(mapOf(staffEvent.id to staffEvent))
 
-      composeTestRule.onNodeWithTag("join_button").performClick()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-      assertTrue(joinedEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
+      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testJoinEventFunctionalityAlreadyStaff() {
-      val myAccount = TEST_ACCOUNTS[0]
-      accountManager.signInTo(anAccount)
+    composeTestRule.onNodeWithTag("join_button").performClick()
 
-      val findViewModel = FindEventsViewModel(database)
-      val accountViewModel = AccountViewModel(database)
-      accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-      while (accountViewModel.uiState.value.loading) {}
+    assertTrue(staffEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.STAFF)
+  }
 
-      val staffEvent = TEST_EVENTS[4]
-      findViewModel.setResultEvents(mapOf(staffEvent.id to staffEvent))
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testJoinEventFunctionalityAlreadyOwner() {
+    val myAccount = TEST_ACCOUNTS[1]
+    accountManager.signInTo(myAccount)
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    val findViewModel = FindEventsViewModel(database)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
 
-        FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
-      }
+    val ownerEvent = TEST_EVENTS[2]
+    findViewModel.setResultEvents(mapOf(ownerEvent.id to ownerEvent))
 
-      composeTestRule.onNodeWithTag("join_button").performClick()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-      assertTrue(staffEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.STAFF)
+      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testJoinEventFunctionalityAlreadyOwner() {
-      val myAccount = TEST_ACCOUNTS[1]
-      accountManager.signInTo(myAccount)
+    composeTestRule.onNodeWithTag("join_button").performClick()
 
-      val findViewModel = FindEventsViewModel(database)
-      val accountViewModel = AccountViewModel(database)
-      accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-      while (accountViewModel.uiState.value.loading) {}
+    assertTrue(ownerEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
+  }
 
-      val ownerEvent = TEST_EVENTS[2]
-      findViewModel.setResultEvents(mapOf(ownerEvent.id to ownerEvent))
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayTitle() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
-
-        FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
-      }
-
-      composeTestRule.onNodeWithTag("join_button").performClick()
-
-      assertTrue(ownerEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun displayTitle() {
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
+  }
 
-        MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
-      }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayLocationIcon() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-      composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun displayLocationIcon() {
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    composeTestRule.onNodeWithContentDescription("Location").assertIsDisplayed()
+  }
 
-        MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
-      }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayLocationInput() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-      composeTestRule.onNodeWithContentDescription("Location").assertIsDisplayed()
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun displayLocationInput() {
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    composeTestRule.onNodeWithTag("input_location").assertIsDisplayed()
+  }
 
-        MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
-      }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displaySearchButton() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
 
-      composeTestRule.onNodeWithTag("input_location").assertIsDisplayed()
+      MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun displaySearchButton() {
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("button_search").performClick()
+  }
 
-        MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
-      }
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun displayMapScreen() {
 
-      composeTestRule.onNodeWithTag("button_search").assertIsDisplayed()
-      composeTestRule.onNodeWithTag("button_search").performClick()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventMapScreen({}, FindEventsViewModel(database = database), accountViewModel, navActions)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun displayMapScreen() {
+    composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
+  }
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+  @Test
+  fun testEventDetailSheetDisplay() {
+    val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
 
-        FindEventMapScreen(
-            {}, FindEventsViewModel(database = database), accountViewModel, navActions)
-      }
+    composeTestRule.setContent { DetailScreenSheet(event = sampleEvent) }
 
-      composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
+    // Assert that event details are displayed correctly
+    composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()
+    composeTestRule.onNodeWithText(sampleEvent.description).assertIsDisplayed()
+    // Add more assertions as needed for other event details
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun findEventFormScreen_DisplayedCorrectly() {
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {}, {})
     }
 
-    @Test
-    fun testEventDetailSheetDisplay() {
-      val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
+    // Check if the location selector is displayed
+    composeTestRule.onNodeWithTag("input_location").assertExists()
 
-      composeTestRule.setContent { DetailScreenSheet(event = sampleEvent) }
+    // Check if the date selector is displayed
+    composeTestRule.onNodeWithTag("sel_date").assertExists()
 
-      // Assert that event details are displayed correctly
-      composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()
-      composeTestRule.onNodeWithText(sampleEvent.description).assertIsDisplayed()
-      // Add more assertions as needed for other event details
+    composeTestRule
+        .onNodeWithTag("input_location", useUnmergedTree = true)
+        .assertIsDisplayed()
+        .assertIsEnabled()
+
+    // Simulate clicking the search button
+    composeTestRule.onNodeWithTag("button_search").performClick()
+  }
+
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun findEventFormScreen_DisplayQR() {
+
+    val fvm = FindEventsViewModel(database = database)
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+
+      FindEventFormScreen(navActions, fvm, {}, {}, {})
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun findEventFormScreen_DisplayedCorrectly() {
+    composeTestRule.waitForIdle()
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
+    composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
+    composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
 
-        FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {}, {})
-      }
+    composeTestRule.waitForIdle()
 
-      // Check if the location selector is displayed
-      composeTestRule.onNodeWithTag("input_location").assertExists()
+    composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("close_button").performClick()
+  }
 
-      // Check if the date selector is displayed
-      composeTestRule.onNodeWithTag("sel_date").assertExists()
-
-      composeTestRule
-          .onNodeWithTag("input_location", useUnmergedTree = true)
-          .assertIsDisplayed()
-          .assertIsEnabled()
-
-      // Simulate clicking the search button
-      composeTestRule.onNodeWithTag("button_search").performClick()
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testNavigationBackFunctionality() {
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {}, {})
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun findEventFormScreen_DisplayQR() {
+    composeTestRule.onNodeWithContentDescription("back").performClick()
+  }
 
-      val fvm = FindEventsViewModel(database = database)
+  @OptIn(ExperimentalMaterial3Api::class)
+  @Test
+  fun testMainFindEventScreen() {
+    val findViewModel = FindEventsViewModel(database)
 
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
-
-        FindEventFormScreen(navActions, fvm, {}, {}, {})
-      }
-
-      composeTestRule.waitForIdle()
-
-      composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
-      composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
-
-      composeTestRule.waitForIdle()
-
-      composeTestRule.onNodeWithTag("qr_code_scanner").assertIsDisplayed()
-      composeTestRule.onNodeWithTag("close_button").performClick()
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navigationActions = NavigationActions(navController)
+      MainFindEventScreen(
+          navObject = navigationActions, findViewModel = findViewModel, accountViewModel)
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testNavigationBackFunctionality() {
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
-        FindEventFormScreen(navActions, FindEventsViewModel(database = database), {}, {}, {})
-      }
+    // Assert that initially, the FindEventFormScreen is displayed
+    composeTestRule.onNodeWithTag("find_event_form_screen").assertExists()
 
-      composeTestRule.onNodeWithContentDescription("back").performClick()
-    }
-
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Test
-    fun testMainFindEventScreen() {
-      val findViewModel = FindEventsViewModel(database)
-
-      composeTestRule.setContent {
-        val navController = rememberNavController()
-        val navigationActions = NavigationActions(navController)
-        MainFindEventScreen(
-            navObject = navigationActions, findViewModel = findViewModel, accountViewModel)
-      }
-
-      // Assert that initially, the FindEventFormScreen is displayed
-      composeTestRule.onNodeWithTag("find_event_form_screen").assertExists()
-
-      composeTestRule.onNodeWithTag("button_search").performClick()
-      composeTestRule.waitForIdle()
-      composeTestRule.onNodeWithTag("map_screen").assertExists()
-    }
+    composeTestRule.onNodeWithTag("button_search").performClick()
+    composeTestRule.waitForIdle()
+    composeTestRule.onNodeWithTag("map_screen").assertExists()
   }
 }
