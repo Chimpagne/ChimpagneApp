@@ -29,6 +29,8 @@ class HomescreenTest {
       HomeScreen(navActions, accountViewModel)
     }
 
+    composeTestRule.waitForIdle()
+
     composeTestRule.onNodeWithTag("open_events_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("discover_events_button").assertIsDisplayed()
     composeTestRule.onNodeWithTag("organize_event_button").assertIsDisplayed()
