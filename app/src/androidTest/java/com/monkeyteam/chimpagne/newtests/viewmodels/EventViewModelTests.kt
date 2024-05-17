@@ -375,7 +375,7 @@ class EventViewModelTests {
 
     eventVM.createTheEvent(
         onSuccess = { assertTrue(false) },
-        onInvalidInputs = { assertEquals("Title should not be empty", it) },
+        onInvalidInputs = { assertEquals(EventInputValidity.INVALID_TITLE, it) },
         onFailure = { assertTrue(false) })
 
     while (eventVM.uiState.value.loading) {}
@@ -425,7 +425,7 @@ class EventViewModelTests {
 
     eventVM.createTheEvent(
         onSuccess = { assertTrue(false) },
-        onInvalidInputs = { assertEquals("Invalid dates", it) },
+        onInvalidInputs = { assertEquals(EventInputValidity.INVALID_DATES, it) },
         onFailure = { assertTrue(false) })
 
     while (eventVM.uiState.value.loading) {}
