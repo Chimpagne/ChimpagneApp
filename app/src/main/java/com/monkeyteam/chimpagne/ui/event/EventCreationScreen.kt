@@ -30,6 +30,11 @@ fun EventCreationScreen(
   val pagerState = rememberPagerState(initialPage = initialPage) { 5 }
   val context = LocalContext.current
   val uiState by eventViewModel.uiState.collectAsState()
+
+  fun showToast(message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+  }
+
   Scaffold(
       topBar = {
         PanelTopBar(
@@ -48,14 +53,10 @@ fun EventCreationScreen(
                       var translatedString = context.getString(R.string.title_should_not_be_empty)
                       if (it == "Invalid dates")
                           translatedString = context.getString(R.string.invalid_dates)
-                      Toast.makeText(context, translatedString, Toast.LENGTH_SHORT).show()
+                      showToast(translatedString)
                     },
                     onSuccess = {
-                      Toast.makeText(
-                              context,
-                              context.getString(R.string.event_creation_screen_toast_finish),
-                              Toast.LENGTH_SHORT)
-                          .show()
+                      showToast(context.getString(R.string.event_creation_screen_toast_finish))
                       navObject.goBack()
                     })
               }
