@@ -566,6 +566,7 @@ class EventViewModelTests {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     val result =
         EventViewModel.eventInputValidityToString(EventInputValidity.INVALID_TITLE, context)
+    print(result)
     assertEquals(context.getString(R.string.title_should_not_be_empty), result)
   }
 
