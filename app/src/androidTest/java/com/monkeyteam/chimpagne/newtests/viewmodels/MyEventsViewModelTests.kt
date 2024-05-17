@@ -23,25 +23,25 @@ class MyEventsViewModelTests {
   fun initTests() {
     initializeTestDatabase()
   }
-  // Also commented for now until I can fix it
-  //  @Test
-  //  fun fetchingGuestEventsWithCreatedAndJoinedEvents() {
-  //    database.accountManager.signInTo(testAccount1)
-  //
-  //    val eventVM = MyEventsViewModel(database, { assertTrue(true) }, { assertTrue(false) })
-  //
-  //    while (eventVM.uiState.value.loading) {}
-  //    Thread.sleep(SLEEP_AMOUNT_MILLIS)
-  //
-  //    assertTrue(eventVM.uiState.value.createdEvents.size == 1)
-  //    assertTrue(
-  //        eventVM.uiState.value.createdEvents[createdEventForAccount1.id]!!.id ==
-  //            createdEventForAccount1.id)
-  //    assertTrue(eventVM.uiState.value.joinedEvents.size == 1)
-  //    assertTrue(
-  //        eventVM.uiState.value.joinedEvents[joinedEventForAccount1.id]!!.id ==
-  //            joinedEventForAccount1.id)
-  //  }
+
+  @Test
+  fun fetchingGuestEventsWithCreatedAndJoinedEvents() {
+    database.accountManager.signInTo(testAccount1)
+
+    val eventVM = MyEventsViewModel(database, { assertTrue(true) }, { assertTrue(false) })
+
+    while (eventVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventVM.uiState.value.createdEvents.size == 1)
+    assertTrue(
+        eventVM.uiState.value.createdEvents[createdEventForAccount1.id]!!.id ==
+            createdEventForAccount1.id)
+    assertTrue(eventVM.uiState.value.joinedEvents.size == 1)
+    assertTrue(
+        eventVM.uiState.value.joinedEvents[joinedEventForAccount1.id]!!.id ==
+            joinedEventForAccount1.id)
+  }
 
   @Test
   fun fetchingGuestEventsWithNoEvents() {
