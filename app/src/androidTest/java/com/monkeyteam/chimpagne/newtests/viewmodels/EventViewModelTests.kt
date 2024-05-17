@@ -446,6 +446,7 @@ class EventViewModelTests {
 
     assertTrue(eventVM.uiState.value.id.isEmpty())
   }
+
   @Test
   fun pollFunctionalityTest() {
     initializeTestDatabase()
