@@ -120,19 +120,18 @@ class EventViewModel(
       onInvalidInputs: (String) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      if (_uiState.value.title.isEmpty() ||
-          _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
-          uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
+    if (_uiState.value.title.isEmpty() ||
+        _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
+        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
 
-        if (_uiState.value.title.isEmpty()) {
-          onInvalidInputs("Title should not be empty")
-        } else {
-          onInvalidInputs("Invalid dates")
-        }
+      if (_uiState.value.title.isEmpty()) {
+        onInvalidInputs("Title should not be empty")
       } else {
-
+        onInvalidInputs("Invalid dates")
+      }
+    } else {
+      _uiState.value = _uiState.value.copy(loading = true)
+      viewModelScope.launch {
         eventManager.createEvent(
             buildChimpagneEvent(),
             {
