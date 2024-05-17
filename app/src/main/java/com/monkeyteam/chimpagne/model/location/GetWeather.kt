@@ -79,6 +79,7 @@ fun getWeather(
                       val weather =
                           Weather(
                               location = location,
+                              date = date,
                               weatherDescription =
                                   forecastDay
                                       .getJSONObject("day")
