@@ -113,7 +113,7 @@ fun MainFindEventScreen(
     findViewModel: FindEventsViewModel,
     accountViewModel: AccountViewModel
 ) {
-  val pagerState = rememberPagerState { 2 }
+  val pagerState = rememberPagerState { 3 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
 
@@ -161,7 +161,8 @@ fun MainFindEventScreen(
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
-      FindEventScreens.DETAIL -> null
+      FindEventScreens.DETAIL ->
+          FindEventDetailScreen(displayResult, findViewModel, accountViewModel, showToast, currentEvent)
     }
   }
 }
@@ -430,6 +431,32 @@ fun FindEventFormScreen(
 
 @ExperimentalMaterial3Api
 @Composable
+fun FindEventDetailScreen(
+    goBackToMap: () -> Unit,
+    findViewModel: FindEventsViewModel,
+    accountViewModel: AccountViewModel,
+    showToast: (String) -> Unit,
+    event: ChimpagneEvent?
+) {
+
+  val uiState by findViewModel.uiState.collectAsState()
+  val context = LocalContext.current
+  val coroutineScope = rememberCoroutineScope()
+
+  val onJoinClick: (ChimpagneEvent) -> Unit = {
+    if (event != null) {
+      showToast("Joining ${event.title}")
+      findViewModel.joinEvent(event.id, { showToast("OK") }, { showToast("FAILURE") })
+    } else {
+      showToast("Event not found")
+    }
+  }
+
+    DetailScreenSheet(goBackToMap, event, onJoinClick, context)
+}
+
+@ExperimentalMaterial3Api
+@Composable
 fun FindEventMapScreen(
     onBackIconClicked: () -> Unit,
     findViewModel: FindEventsViewModel,
@@ -440,7 +467,6 @@ fun FindEventMapScreen(
 
   val uiState by findViewModel.uiState.collectAsState()
 
-  val context = LocalContext.current
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
@@ -470,14 +496,6 @@ fun FindEventMapScreen(
     }
   }
 
-  val onJoinClick: (ChimpagneEvent) -> Unit = { event ->
-    Toast.makeText(context, "Joining ${event.title}", Toast.LENGTH_SHORT).show()
-    findViewModel.joinEvent(
-        event.id,
-        { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
-        { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
-  }
-
   val closeBottomSheet: () -> Unit = {
     scope.launch { scaffoldState.bottomSheetState.partialExpand() }
   }
@@ -485,7 +503,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { DetailScreenListSheet(events = currentEvents, onEventClick, context) },
+      sheetContent = { DetailScreenListSheet(events = currentEvents, onEventClick) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen")) {
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {

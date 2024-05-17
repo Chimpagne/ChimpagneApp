@@ -60,7 +60,7 @@ fun EventCreationScreen(
               }
             })
       }) { innerPadding ->
-        HorizontalPager(state = pagerState, modifier = Modifier.padding(innerPadding)) { page ->
+        HorizontalPager(state = pagerState, modifier = Modifier.padding(innerPadding), beyondBoundsPageCount = 4) { page ->
           when (page) {
             0 -> FirstPanel(eventViewModel)
             1 -> TagsAndPubPanel(eventViewModel)

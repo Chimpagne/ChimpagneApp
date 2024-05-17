@@ -180,6 +180,7 @@ class MainActivity : ComponentActivity() {
                   viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
               val event = eventViewModel.buildChimpagneEvent()
               DetailScreenSheet(
+                    goBack = { navActions.goBack() },
                   event = event,
                   onJoinClick = {
                     navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
