@@ -1,9 +1,11 @@
 package com.monkeyteam.chimpagne.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
@@ -23,6 +25,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+enum class EventInputValidity {
+  INVALID_TITLE,
+  INVALID_DATES
+}
+
 class EventViewModel(
     private var eventID: String? = null,
     database: Database,
@@ -39,6 +46,15 @@ class EventViewModel(
 
   init {
     fetchEvent(onSuccess, onFailure)
+  }
+
+  companion object {
+    fun eventInputValidityToString(e: EventInputValidity, context: Context): String {
+      return when (e) {
+        EventInputValidity.INVALID_TITLE -> context.getString(R.string.title_should_not_be_empty)
+        EventInputValidity.INVALID_DATES -> context.getString(R.string.invalid_dates)
+      }
+    }
   }
 
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
@@ -117,7 +133,7 @@ class EventViewModel(
 
   fun createTheEvent(
       onSuccess: (id: String) -> Unit = {},
-      onInvalidInputs: (String) -> Unit = {},
+      onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
     if (_uiState.value.title.isEmpty() ||
@@ -125,9 +141,9 @@ class EventViewModel(
         uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
 
       if (_uiState.value.title.isEmpty()) {
-        onInvalidInputs("Title should not be empty")
+        onInvalidInputs(EventInputValidity.INVALID_TITLE)
       } else {
-        onInvalidInputs("Invalid dates")
+        onInvalidInputs(EventInputValidity.INVALID_DATES)
       }
     } else {
       _uiState.value = _uiState.value.copy(loading = true)

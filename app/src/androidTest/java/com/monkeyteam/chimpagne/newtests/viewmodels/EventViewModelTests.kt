@@ -2,6 +2,8 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
@@ -12,6 +14,7 @@ import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.viewmodels.EventInputValidity
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -556,5 +559,21 @@ class EventViewModelTests {
     assertEquals(false, eventSearchVM3.uiState.value.polls.containsKey(poll.id))
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
+  }
+
+  @Test
+  fun testInvalidTitle() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val result =
+        EventViewModel.eventInputValidityToString(EventInputValidity.INVALID_TITLE, context)
+    assertEquals(context.getString(R.string.title_should_not_be_empty), result)
+  }
+
+  @Test
+  fun testInvalidDates() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val result =
+        EventViewModel.eventInputValidityToString(EventInputValidity.INVALID_DATES, context)
+    assertEquals(context.getString(R.string.invalid_dates), result)
   }
 }

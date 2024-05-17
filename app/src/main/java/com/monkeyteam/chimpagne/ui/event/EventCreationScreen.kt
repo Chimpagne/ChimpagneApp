@@ -50,10 +50,7 @@ fun EventCreationScreen(
               if (!uiState.loading) {
                 eventViewModel.createTheEvent(
                     onInvalidInputs = {
-                      var translatedString = context.getString(R.string.title_should_not_be_empty)
-                      if (it == "Invalid dates")
-                          translatedString = context.getString(R.string.invalid_dates)
-                      showToast(translatedString)
+                      showToast(EventViewModel.eventInputValidityToString(it, context))
                     },
                     onSuccess = {
                       showToast(context.getString(R.string.event_creation_screen_toast_finish))
