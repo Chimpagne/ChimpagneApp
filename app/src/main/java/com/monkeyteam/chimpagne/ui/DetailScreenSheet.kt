@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,8 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -103,12 +112,42 @@ fun DetailScreenListSheet(
     onJoinClick: (ChimpagneEvent) -> Unit = {},
     context: Context? = null
 ) {
-  LazyColumn(modifier = Modifier.fillMaxSize()) {
-    items(events) { event ->
-      EventCard(
-          event = event,
-          onClick = {},
-      )
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val maxSheetHeight = screenHeight * 0.65f
+
+    // State to keep track of the LazyColumn scroll position
+    val lazyListState = rememberLazyListState()
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+
+            override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                val isAtTop = lazyListState.firstVisibleItemIndex == 0 && lazyListState.firstVisibleItemScrollOffset == 0
+                val isAtBottom = lazyListState.layoutInfo.visibleItemsInfo.isNotEmpty() &&
+                        lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == lazyListState.layoutInfo.totalItemsCount - 1 &&
+                        (lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.offset?.let { it + lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.size!! }
+                            ?: 0) <= lazyListState.layoutInfo.viewportEndOffset
+
+                return if ((isAtTop && available.y > 0) || (isAtBottom && available.y < 0)) {
+                    available
+                } else {
+                    Velocity.Zero
+                }
+            }
+        }
     }
-  }
+
+    LazyColumn(
+        modifier = Modifier
+            .heightIn(max = maxSheetHeight)
+            .fillMaxWidth()
+            .nestedScroll(nestedScrollConnection), // Add nested scroll modifier
+        state = lazyListState // Attach LazyListState to track scroll position
+    ) {
+        items(events) { event ->
+            EventCard(
+                event = event,
+                onClick = { onJoinClick(event) }, // Use the provided onJoinClick callback
+            )
+        }
+    }
 }

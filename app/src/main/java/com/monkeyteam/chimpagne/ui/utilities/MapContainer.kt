@@ -1,24 +1,15 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.Cluster
@@ -39,7 +30,7 @@ fun getZoomLevel(radius: Double): Float {
   return (16 - ln(scale) / ln(2.0)).toFloat()
 }
 
-@OptIn(MapsComposeExperimentalApi::class)
+@OptIn(MapsComposeExperimentalApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
@@ -48,6 +39,7 @@ fun MapContainer(
     events: Map<String, ChimpagneEvent>,
     radius: Double,
     startingPosition: Location?,
+    closeBottomSheet: () -> Unit = {},
 ) {
 
   LaunchedEffect(events, radius, startingPosition) {
@@ -66,6 +58,7 @@ fun MapContainer(
     GoogleMap(
         cameraPositionState = cameraPositionState,
         modifier = Modifier.testTag("ggle_maps").fillMaxSize(),
+        onMapClick = { closeBottomSheet() },
         uiSettings =
             MapUiSettings(
                 zoomControlsEnabled = false,
@@ -88,10 +81,10 @@ fun MapContainer(
           ChimpagneClustering(
               items = markersData,
               onClusterClick = {
-                  onMarkerClick(it)
-                  true
+                onMarkerClick(it)
+                true
               },
-              onClusterItemClick = {markerData ->
+              onClusterItemClick = { markerData ->
                 onMarkerClick(SingletonCluster(markerData))
                 true
               })
@@ -102,7 +95,7 @@ fun MapContainer(
         modifier = Modifier.fillMaxSize().testTag("progressBar"),
         contentAlignment = Alignment.Center) {
           CircularProgressIndicator() // You can customize this part as needed
-    }
+        }
   }
 }
 
@@ -122,5 +115,4 @@ data class MarkerData(val id: String, val name: String, val location: Location) 
   override fun getZIndex(): Float {
     return 1f
   }
-
 }

@@ -452,8 +452,9 @@ fun FindEventMapScreen(
   val onMarkerClick: (Cluster<MarkerData>) -> Unit = { markers ->
     coroutineScope.launch {
       currentEvents = markers.items.mapNotNull { marker -> uiState.events[marker.id] }
+      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markers.position)) }
       launch {
-        cameraPositionState.animate(CameraUpdateFactory.newLatLng(markers.position))
+        scaffoldState.bottomSheetState.partialExpand()
         scaffoldState.bottomSheetState.expand()
       }
     }
@@ -477,13 +478,16 @@ fun FindEventMapScreen(
         { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
   }
 
+  val closeBottomSheet: () -> Unit = {
+    scope.launch { scaffoldState.bottomSheetState.partialExpand() }
+  }
+
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
       sheetContent = { DetailScreenListSheet(events = currentEvents, onEventClick, context) },
       scaffoldState = scaffoldState,
-      modifier = Modifier.testTag("map_screen"),
-      sheetPeekHeight = 0.dp) {
+      modifier = Modifier.testTag("map_screen")) {
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
           MapContainer(
               cameraPositionState = cameraPositionState,
@@ -491,7 +495,8 @@ fun FindEventMapScreen(
               isMapInitialized = true,
               events = uiState.events,
               radius = uiState.radiusAroundLocationInM,
-              startingPosition = uiState.selectedLocation)
+              startingPosition = uiState.selectedLocation,
+              closeBottomSheet = closeBottomSheet)
 
           IconButton(
               modifier =
