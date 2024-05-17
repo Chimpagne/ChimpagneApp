@@ -442,15 +442,14 @@ fun FindEventMapScreen(
   val onMarkerClick: (Cluster<MarkerData>) -> Unit = { markers ->
     coroutineScope.launch {
       currentEvents = markers.items.mapNotNull { marker -> uiState.events[marker.id] }
-      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markers.position)) }
-      launch { scaffoldState.bottomSheetState.expand() }
+      launch {
+        cameraPositionState.animate(CameraUpdateFactory.newLatLng(markers.position))
+        scaffoldState.bottomSheetState.expand()
+      }
     }
   }
 
-  LaunchedEffect(uiState.events.size) {
-    currentEvents = uiState.events.values.toList()
-    scaffoldState.bottomSheetState.expand()
-  }
+  LaunchedEffect(uiState.events.size) { currentEvents = uiState.events.values.toList() }
 
   val goBack = {
     scope.launch {
@@ -471,13 +470,7 @@ fun FindEventMapScreen(
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = {
-        if (currentEvents.size == 1) {
-          DetailScreenSheet(event = currentEvents.first(), onJoinClick, context)
-        } else {
-          // Optionally handle multiple events or display an empty state here
-        }
-      },
+      sheetContent = { DetailScreenListSheet(events = currentEvents, onJoinClick, context) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {

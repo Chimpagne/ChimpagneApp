@@ -169,7 +169,7 @@ fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () 
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
         Column(modifier = Modifier.fillMaxSize()) {
           Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-            ImageWithBlackFilterOverlay(event.image, false)
+            ImageWithBlackFilterOverlay(event.image, true)
             // Adding the status overlay on top of the image
             Row(
                 horizontalArrangement = Arrangement.End,

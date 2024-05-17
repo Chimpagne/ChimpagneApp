@@ -123,23 +123,4 @@ data class MarkerData(val id: String, val name: String, val location: Location) 
     return 1f
   }
 
-  fun getMarkerId(): String {
-    return id
-  }
-}
-
-@Composable
-fun IconAsClusterContentItem(data: MarkerData) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Text(
-        text = if (data.name.length > 16) data.name.substring(0, 13) + "..." else data.name,
-        color = MaterialTheme.colorScheme.tertiary,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp)
-    Icon(
-        modifier = Modifier.size(32.dp),
-        imageVector = Icons.Rounded.LocationOn,
-        contentDescription = "custum icon for cluster item",
-        tint = Color.Red)
-  }
 }
