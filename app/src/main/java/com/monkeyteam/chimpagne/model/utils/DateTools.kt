@@ -26,11 +26,19 @@ fun buildCalendar(timestamp: Timestamp): Calendar {
 fun buildCalendar(day: Int, month: Int, year: Int, hour: Int, minute: Int): Calendar {
   val calendar = Calendar.getInstance()
   calendar.set(year, month, day, hour, minute, 0)
+  calendar.set(Calendar.MILLISECOND, 0)
   return calendar
 }
 
 fun buildTimestamp(day: Int, month: Int, year: Int, hour: Int, minute: Int): Timestamp {
   return buildTimestamp(buildCalendar(day, month, year, hour, minute))
+}
+
+fun setCalendarToMidnight(calendar: Calendar) {
+  calendar.set(Calendar.HOUR_OF_DAY, 0)
+  calendar.set(Calendar.MINUTE, 0)
+  calendar.set(Calendar.SECOND, 0)
+  calendar.set(Calendar.MILLISECOND, 0)
 }
 
 @Composable

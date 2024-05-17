@@ -32,6 +32,8 @@
     <string name="event_creation_screen_number_parking">Number of parking places</string>
     <string name="event_creation_screen_number_beds">Number of beds</string>
     <string name="event_creation_screen_beds">Beds</string>
+    <string name="event_creation_screen_supplies">Supplies</string>
+    <string name="event_creation_screen_add_supplies">Add supplies</string>
     <string name="accountEditScreenButton">Edit Account</string>
     <string name="find_event_page_title">Find Event</string>
     <string name="find_event_search_button_text">Search</string>
@@ -65,17 +67,19 @@
     <string name="date_tools_at">at</string>
     <string name="close">Close</string>
     <string name="event_details_screen_number_of_guests">guests joined</string>
+    <string name="event_details_screen_organized_by">Organized by</string>
     <string name="event_details_screen_leave_button">Leave this Event</string>
     <string name="event_details_screen_report_problem">Report a Problem</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
-    <string name="event_details_screen_edit_button">Edit this event</string>
+    <string name="event_details_screen_edit_button">Edit Event</string>
     <string name="event_details_screen_manage_staff_button">Manage staff</string>
     <string name="event_details_screen_chat_button">Chat</string>
     <string name="event_details_screen_location_button">Location</string>
-    <string name="event_details_screen_voting_button">Polls and voting</string>
+    <string name="event_details_screen_bed_reservation">Accommodation</string>
+    <string name="event_details_screen_parking">Parking</string>
+    <string name="event_details_screen_voting_button">Polls &amp; voting</string>
+    <string name="event_details_screen_supplies_button">Supplies</string>
     <string name="event_details_screen_car_pooling_button">Car pooling</string>
-    <string name="chimpagne_cancel">Cancel</string>
-    <string name="chimpagne_add">Add</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
@@ -90,6 +94,12 @@
     <string name="join_event_staff">You are already a Staff Member for this Event</string>
     <string name="join_event_guest">You are already a Guest at this Event</string>
     <string name="join_event_owner">You are the Owner of this Event</string>
+
+    <string name="find_event_location_set">Location set</string>
+    <string name="find_event_location_not_found">Location not found</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="find_event_event_locate_searching">Locating…</string>
+
     <string name="share_event_button">Share</string>
     <string name="calendar_failed">Event can\'t be added to calendar</string>
     <string name="add_event_to_calendar_prefix">Do you want to add the event \"</string>
@@ -100,16 +110,37 @@
     <string name="manage_staff_screen_guest_list_name">Guest List:</string>
     <string name="manage_staff_screen_empty_guest_list">There are no guests in this event:</string>
 
-    <!--  Supplies  -->
-    <string name="event_creation_screen_supplies">Supplies</string>
-    <string name="event_creation_screen_add_supplies">Add supplies</string>
-    <string name="event_details_screen_supplies_button">Supplies</string>
+
+    <!-- Chimpagne -->
+    <string name="chimpagne_cancel">Cancel</string>
+    <string name="chimpagne_edit">Edit</string>
+    <string name="chimpagne_save">Save</string>
+    <string name="chimpagne_confirm">Confirm</string>
+    <string name="chimpagne_add">Add</string>
+    <string name="chimpagne_delete">Delete</string>
+    <string name="chimpagne_you">You</string>
+    <string name="chimpagne_ok">OK</string>
+
+    <!--    Supplies    -->
+    <string name="supplies_screen_title">Supplies to bring</string>
+    <string name="supplies_dialog_description">Enter the supply details</string>
+    <string name="supplies_edit_dialog_title">Edit the supply</string>
+    <string name="supplies_add_dialog_title">Add a supply</string>
     <string name="supplies_description">Description</string>
     <string name="supplies_quantity">Quantity</string>
     <string name="supplies_unit">Unit</string>
-
-    <string name="supplies_add_dialog_title">Add a supply</string>
-    <string name="supplies_dialog_description">Enter the supply details</string>
+    <string name="supplies_assign_myself">Assign myself</string>
+    <string name="supplies_unassign_myself">Remove myself</string>
+    <string name="supplies_supply_not_assigned">Supply not assigned !</string>
+    <string name="supplies_supply_assigned_to">Supply already assigned to</string>
+    <string name="supplies_not_assigned_to">Supply not assigned to</string>
+    <string name="supplies_supply_assigned_to_you">Supplies assigned to you</string>
+    <string name="supplies_not_assigned_to_anyone">Supplies not assigned to anyone</string>
+    <string name="supplies_already_assigned">Supplies already assigned</string>
+    <string name="supplies_empty">No supply created</string>
+    <string name="supplies_delete">Delete this supply ?</string>
+    <string name="supplies_delete_description">This action is irreversible !</string>
+    <string name="supplies_nb_assigned">assigned</string>
 
     <!-- DeepLinks -->
     <string name="deep_link_url_event" translatable="false">https://www.manigo.ch/events/?uid=</string>
@@ -119,4 +150,10 @@
     <!-- AccountCreation -->
     <string name="account_created_toast">Account created</string>
     <string name="acount_creation_failed_toast">Account creation failed</string>
+    <string name="public_string">Public</string>
+    <string name="private_string">Private</string>
+
+    <!-- DateRangeSelector -->
+    <string name="select_date_range_for_query">Select a date range for the query</string>
+
 </resources>

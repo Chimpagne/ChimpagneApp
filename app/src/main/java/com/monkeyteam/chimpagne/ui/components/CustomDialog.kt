@@ -20,11 +20,11 @@ import androidx.compose.ui.window.Dialog
 
 @Composable
 fun CustomDialog(
-    title: String,
-    description: String,
     onDismissRequest: () -> Unit,
     buttonDataList: List<ButtonData>,
     modifier: Modifier = Modifier,
+    title: String? = null,
+    description: String? = null,
     content: @Composable () -> Unit = {}
 ) {
   Dialog(onDismissRequest = onDismissRequest) {
@@ -36,27 +36,31 @@ fun CustomDialog(
           modifier = Modifier.fillMaxWidth().padding(16.dp),
           verticalArrangement = Arrangement.Center,
           horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                title,
-                modifier = Modifier.fillMaxWidth(),
-                style =
-                    TextStyle(
-                        fontSize = 24.sp,
-                        lineHeight = 32.sp,
-                        fontWeight = FontWeight(400),
-                        color = AlertDialogDefaults.titleContentColor,
-                    ))
-            Text(
-                description,
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 7.dp),
-                style =
-                    TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(400),
-                        color = AlertDialogDefaults.textContentColor,
-                        letterSpacing = 0.25.sp,
-                    ))
+            if (title != null) {
+              Text(
+                  title,
+                  modifier = Modifier.fillMaxWidth(),
+                  style =
+                      TextStyle(
+                          fontSize = 24.sp,
+                          lineHeight = 32.sp,
+                          fontWeight = FontWeight(400),
+                          color = AlertDialogDefaults.titleContentColor,
+                      ))
+            }
+            if (description != null) {
+              Text(
+                  description,
+                  modifier = Modifier.fillMaxWidth().padding(0.dp, 7.dp),
+                  style =
+                      TextStyle(
+                          fontSize = 16.sp,
+                          lineHeight = 20.sp,
+                          fontWeight = FontWeight(400),
+                          color = AlertDialogDefaults.textContentColor,
+                          letterSpacing = 0.25.sp,
+                      ))
+            }
             content()
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
               buttonDataList.forEach {
