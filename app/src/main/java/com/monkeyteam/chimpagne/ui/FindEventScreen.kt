@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui
 
-import DateSelector
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -83,6 +82,7 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
+import com.monkeyteam.chimpagne.ui.components.DateRangeSelector
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
@@ -379,7 +379,7 @@ fun FindEventFormScreen(
                       findViewModel.updateLocationSearchRadius(it.toDouble() * 1000)
                     },
                     valueRange = 1f..30f,
-                    modifier = Modifier.fillMaxWidth())
+                    modifier = Modifier.fillMaxWidth().testTag("find_slider"))
 
                 Spacer(Modifier.height(32.dp))
 
@@ -405,10 +405,11 @@ fun FindEventFormScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                DateSelector(
-                    uiState.selectedDate,
-                    findViewModel::updateSelectedDate,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"))
+                DateRangeSelector(
+                    startDate = uiState.startDate,
+                    endDate = uiState.endDate,
+                    modifier = Modifier.align(Alignment.CenterHorizontally).testTag("sel_date"),
+                    selectDateRange = findViewModel::updateDateRange)
 
                 if (tagFieldActive) {
                   Spacer(modifier = Modifier.height(250.dp))

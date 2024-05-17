@@ -57,8 +57,8 @@ class FindEventViewModelTests {
     assert(findEventVM.uiState.value.selectedTags.size == tags.size)
     assert(findEventVM.uiState.value.selectedTags.toSet() == tags.toSet())
 
-    findEventVM.updateSelectedDate(date)
-    assert(findEventVM.uiState.value.selectedDate == date)
+    findEventVM.updateDateRange(date, date)
+    assert(findEventVM.uiState.value.startDate == date)
 
     findEventVM.setLoading(true)
     assert(findEventVM.uiState.value.loading)
@@ -81,7 +81,7 @@ class FindEventViewModelTests {
 
     eventFinderVM.updateSelectedLocation(testEvent1.location)
     eventFinderVM.updateLocationSearchRadius(1.0)
-    eventFinderVM.updateSelectedDate(testEvent1.endsAt())
+    eventFinderVM.updateDateRange(testEvent1.endsAt(), testEvent1.endsAt())
 
     eventFinderVM.fetchEvents(
         {
@@ -141,7 +141,7 @@ class FindEventViewModelTests {
     assertTrue(eventFinderVM.uiState.value.events.containsKey(eventID2))
     assertFalse(eventFinderVM.uiState.value.events.containsKey(eventID3))
 
-    eventFinderVM.updateSelectedDate(testEvent1.startsAt())
+    eventFinderVM.updateDateRange(testEvent1.startsAt(), testEvent1.startsAt())
 
     eventFinderVM.fetchEvents(
         {
