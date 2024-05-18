@@ -86,6 +86,7 @@
     <string name="whatsapp_group_invite_link">Lien d\'invitation au groupe Whatsapp</string>
     <string name="discord_group_invite_link">Lien d\'invitation au groupe Discord</string>
     <string name="links_to_social_media">Ajouter vos groupes de médias sociaux</string>
+    <string name="spotify_playlist_link">Lien de la playlist Spotify</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
 

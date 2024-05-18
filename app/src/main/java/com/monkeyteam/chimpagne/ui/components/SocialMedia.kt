@@ -37,6 +37,14 @@ val SupportedSocialMedia =
             iconResource = R.drawable.whatsapp,
             testTag = "whatsapp_input",
         ),
+        SocialMedia(
+            platformName = "spotify",
+            platformUrls = listOf("https://open.spotify.com/"),
+            chosenGroupUrl = "",
+            labelResource = R.string.spotify_playlist_link,
+            iconResource = R.drawable.spotify,
+            testTag = "spotify_input",
+        ),
     )
 
 fun convertSMLinksToSM(socialMediaLinks: Map<String, String>): Map<String, SocialMedia> {
