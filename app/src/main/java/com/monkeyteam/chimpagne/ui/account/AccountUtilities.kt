@@ -40,13 +40,11 @@ import coil.compose.AsyncImage
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
-import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
 fun TextInputField(
@@ -70,9 +68,7 @@ fun SaveChangesButton(
     iconId: Int = R.drawable.ic_logout,
     contentDescription: String? = "Save icon",
 ) {
-  Button(onClick = onClick, modifier = Modifier
-    .width(210.dp)
-    .height(50.dp)) {
+  Button(onClick = onClick, modifier = Modifier.width(210.dp).height(50.dp)) {
     Icon(painter = painterResource(id = iconId), contentDescription = contentDescription)
     Spacer(modifier = Modifier.width(8.dp))
     Text(stringResource(id = text), modifier = Modifier.testTag("saveChangesButton"))
@@ -83,11 +79,10 @@ fun SaveChangesButton(
 fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}, isEnabled: Boolean = true) {
   Box(
       modifier =
-      Modifier
-        .size(100.dp)
-        .border(1.dp, Color.Black, CircleShape)
-        .clickable(enabled = isEnabled) { onClick() }
-        .clip(CircleShape)) {
+          Modifier.size(100.dp)
+              .border(1.dp, Color.Black, CircleShape)
+              .clickable(enabled = isEnabled) { onClick() }
+              .clip(CircleShape)) {
         AsyncImage(
             model = imageUri ?: R.drawable.ic_placeholder_profile,
             contentDescription = "Profile Picture",
@@ -96,74 +91,75 @@ fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}, isEnabled: Boolean = 
       }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
-@Composable
-fun AccountChangeBody(
-  accountViewModel: AccountViewModel,
-  editMode: Boolean = false,
-  onSubmit: () -> Unit
-) {
-  Scaffold(
-      topBar = {
-        TopAppBar(
-            title = {
-              Row(
-                  modifier = Modifier.fillMaxWidth(),
-                  verticalAlignment = Alignment.CenterVertically,
-                  horizontalArrangement = Arrangement.Center) {
-                    Text(
-                        text = if (!editMode) stringResource(id = R.string.account_creation_screen_button) else stringResource(id = R.string.accountEditScreenButton),
-                        style = ChimpagneTypography.titleLarge,
-                        modifier = Modifier.testTag("accountCreationLabel"))
-                  }
-            },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = md_theme_light_primary, // Purple
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.White),
-            navigationIcon = {
-              if (editMode) {
-                GoBackButton(navigationActions = )
-                IconButton(onClick = { navObject.goBack() }) {
-                  Icon(
-                      painter = painterResource(id = R.drawable.go_back),
-                      contentDescription = "Back")
-                }
-              }
-            })
-      }) { paddingValues ->
-        Column(
-            modifier = Modifier
-              .padding(paddingValues)
-              .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-              Spacer(modifier = Modifier.height(10.dp))
-              ProfileImage(imageUri = selectedImageUri, onClick = onPickImage)
-              TextInputField(
-                  modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("firstNameTextField"),
-                  label = firstNameLabel,
-                  value = firstName,
-                  onValueChange = firstNameChange)
-              TextInputField(
-                  modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("lastNameTextField"),
-                  label = lastNameLabel,
-                  value = lastName,
-                  onValueChange = lastNameChange)
-              LocationSelector(selectedLocation = location, updateSelectedLocation = locationChange)
-              Spacer(modifier = Modifier.height(10.dp))
-              SaveChangesButton(
-                  onClick = commitOnClick,
-                  text = commitButtontext,
-                  iconId = commitButtonIcon,
-                  contentDescription = "Logout icon")
-            }
-      }
-}
+//@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+//@Composable
+//fun AccountChangeBody(
+//  editMode: Boolean = false
+//
+//    selectedImageUri: Uri?,
+//    onPickImage: () -> Unit,
+//    firstName: String,
+//    firstNameChange: (String) -> Unit,
+//    lastName: String,
+//    lastNameChange: (String) -> Unit,
+//    location: Location,
+//    locationChange: (Location) -> Unit,
+//    commitOnClick: () -> Unit = {},
+//) {
+//  Scaffold(
+//      topBar = {
+//        TopAppBar(
+//            title = {
+//              Row(
+//                  modifier = Modifier.fillMaxWidth(),
+//                  verticalAlignment = Alignment.CenterVertically,
+//                  horizontalArrangement = Arrangement.Center) {
+//                    Text(
+//                        text = stringResource(id = topBarText),
+//                        style = ChimpagneTypography.titleLarge,
+//                        modifier = Modifier.testTag("accountCreationLabel"))
+//                  }
+//            },
+//            colors =
+//                TopAppBarDefaults.topAppBarColors(
+//                    containerColor = md_theme_light_primary, // Purple
+//                    titleContentColor = Color.White,
+//                    actionIconContentColor = Color.White),
+//            navigationIcon = {
+//              if (hasBackButton) {
+//                IconButton(onClick = { navObject.goBack() }) {
+//                  Icon(
+//                      painter = painterResource(id = R.drawable.go_back),
+//                      contentDescription = "Back")
+//                }
+//              }
+//            })
+//      }) { paddingValues ->
+//        Column(
+//            modifier = Modifier.padding(paddingValues).padding(16.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally) {
+//              Spacer(modifier = Modifier.height(10.dp))
+//              ProfileImage(imageUri = selectedImageUri, onClick = onPickImage)
+//              TextInputField(
+//                  modifier = Modifier.fillMaxWidth().testTag("firstNameTextField"),
+//                  label = firstNameLabel,
+//                  value = firstName,
+//                  onValueChange = firstNameChange)
+//              TextInputField(
+//                  modifier = Modifier.fillMaxWidth().testTag("lastNameTextField"),
+//                  label = lastNameLabel,
+//                  value = lastName,
+//                  onValueChange = lastNameChange)
+//              LocationSelector(selectedLocation = location, updateSelectedLocation = locationChange)
+//              Spacer(modifier = Modifier.height(10.dp))
+//              SaveChangesButton(
+//                  onClick = commitOnClick,
+//                  text = commitButtontext,
+//                  iconId = commitButtonIcon,
+//                  contentDescription = "Logout icon")
+//            }
+//      }
+//}
 
 fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
   return if (account.firstName == "") {

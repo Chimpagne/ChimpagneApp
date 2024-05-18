@@ -38,6 +38,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountSettingsScreen(
+  navObject: NavigationActions,
     accountViewModel: AccountViewModel,
     logout: () -> Unit = {}
 ) {
