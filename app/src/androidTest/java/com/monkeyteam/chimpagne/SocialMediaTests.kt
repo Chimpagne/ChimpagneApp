@@ -37,7 +37,7 @@ class SocialMediaTests {
   fun AllThreeDisplayed() {
     val mapSocialMedia = SupportedSocialMedia.associateBy { it.platformName }
     val filledInSocialMedia =
-        mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+        mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrls[0]) }
     composeTestRule.setContent {
       SocialButtonRow(context = context, socialMediaLinks = filledInSocialMedia)
     }
@@ -53,7 +53,7 @@ class SocialMediaTests {
     val telegramMap =
         mapOf(socialMediaMap["telegram"]!!.platformName to socialMediaMap["telegram"]!!)
     val withValueMap =
-        telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+        telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrls[0]) }
     composeTestRule.setContent {
       SocialButtonRow(context = context, socialMediaLinks = withValueMap)
     }
