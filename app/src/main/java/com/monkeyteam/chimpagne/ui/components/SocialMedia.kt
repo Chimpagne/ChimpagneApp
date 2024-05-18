@@ -15,11 +15,7 @@ val SupportedSocialMedia =
     listOf(
         SocialMedia(
             platformName = "discord",
-            platformUrls =
-                List(2) {
-                  "https://discord.gg/"
-                  "https://discord.com/invite/"
-                },
+            platformUrls = listOf("https://discord.gg/", "https://discord.com/invite/"),
             chosenGroupUrl = "",
             labelResource = R.string.discord_group_invite_link,
             iconResource = R.drawable.discord,
@@ -27,7 +23,7 @@ val SupportedSocialMedia =
         ),
         SocialMedia(
             platformName = "telegram",
-            platformUrls = List(1) { "https://t.me/" },
+            platformUrls = listOf("https://t.me/"),
             chosenGroupUrl = "",
             labelResource = R.string.telegram_group_invite_link,
             iconResource = R.drawable.telegram,
@@ -35,7 +31,7 @@ val SupportedSocialMedia =
         ),
         SocialMedia(
             platformName = "whatsapp",
-            platformUrls = List(1) { "https://chat.whatsapp.com/" },
+            platformUrls = listOf("https://chat.whatsapp.com/"),
             chosenGroupUrl = "",
             labelResource = R.string.whatsapp_group_invite_link,
             iconResource = R.drawable.whatsapp,
