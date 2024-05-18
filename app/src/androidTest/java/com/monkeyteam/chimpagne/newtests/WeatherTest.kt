@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.newtests
 
+import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.location.GetWeatherConstants
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.getWeather
@@ -16,6 +17,7 @@ import org.junit.Test
 class WeatherTest {
   private lateinit var server: MockWebServer
   private val apiKey = "test_api_key"
+  val context = InstrumentationRegistry.getInstrumentation().targetContext
 
   @Before
   fun setUp() {
@@ -75,7 +77,7 @@ class WeatherTest {
           Assert.fail("Expected successful response")
           latch.countDown()
         },
-        apiKey)
+        context)
 
     Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
@@ -91,7 +93,7 @@ class WeatherTest {
         LocalDate.now(),
         { Assert.fail("Expected failure response") },
         { latch.countDown() },
-        apiKey)
+        context)
 
     Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
@@ -108,7 +110,7 @@ class WeatherTest {
         LocalDate.now(),
         { Assert.fail("Expected failure due to invalid JSON") },
         { latch.countDown() },
-        apiKey)
+        context)
 
     Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
@@ -125,7 +127,7 @@ class WeatherTest {
         LocalDate.now(),
         { Assert.fail("Expected failure due to empty JSON") },
         { latch.countDown() },
-        apiKey)
+        context)
 
     Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
@@ -141,7 +143,7 @@ class WeatherTest {
         LocalDate.now(),
         { Assert.fail("Expected network failure response") },
         { latch.countDown() },
-        apiKey)
+        context)
 
     Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
