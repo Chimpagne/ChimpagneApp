@@ -1,5 +1,7 @@
 package com.monkeyteam.chimpagne.model.location
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import java.io.IOException
 import java.time.LocalDate
@@ -24,8 +26,21 @@ fun getWeather(
     date: LocalDate,
     onSuccess: (Weather) -> Unit,
     onFailure: () -> Unit,
-    apiKey: String
+    context: Context
 ) {
+  val apiKey =
+      try {
+        val applicationInfo =
+            context.packageManager.getApplicationInfo(
+                context.packageName, PackageManager.GET_META_DATA)
+        applicationInfo.metaData.getString(
+            "com.monkeyteam.chimpagne.model.location.WEATHER_API_KEY")
+      } catch (e: Exception) {
+        Log.e("WeatherHelper", "Failed to get API key", e)
+        onFailure()
+        return
+      }
+
   val okHttpClient = OkHttpClient()
 
   val freeWeatherApiUrl =

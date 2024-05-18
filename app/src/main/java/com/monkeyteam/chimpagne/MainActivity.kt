@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne
 
 import AccountSettings
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -57,9 +56,6 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       ChimpagneTheme {
-          val applicationInfo = this.packageManager.getApplicationInfo(this.packageName, PackageManager.GET_META_DATA)
-          val WeatherApiKey = applicationInfo.metaData.getString("com.monkeyteam.chimpagne.model.location.WEATHER_API_KEY")
-
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
