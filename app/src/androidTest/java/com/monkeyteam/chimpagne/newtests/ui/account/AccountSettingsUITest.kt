@@ -1,6 +1,6 @@
 package com.monkeyteam.chimpagne.newtests.ui.account
 
-import AccountSettings
+import AccountSettingsScreen
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -25,7 +25,7 @@ class AccountSettingsUITest {
 
     composeTestRule.setContent {
       val navObject = NavigationActions(rememberNavController())
-      AccountSettings(navObject, AccountViewModel(database = database))
+      AccountSettingsScreen(navObject, AccountViewModel(database = database))
     }
 
     val preferredLanguageIsEnglish = true

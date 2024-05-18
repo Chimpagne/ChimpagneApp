@@ -1,7 +1,6 @@
-package com.monkeyteam.chimpagne.ui.utilities
+package com.monkeyteam.chimpagne.ui.account
 
 import android.content.Context
-import android.graphics.drawable.Icon
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.border
@@ -41,11 +40,13 @@ import coil.compose.AsyncImage
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
 fun TextInputField(
@@ -69,7 +70,9 @@ fun SaveChangesButton(
     iconId: Int = R.drawable.ic_logout,
     contentDescription: String? = "Save icon",
 ) {
-  Button(onClick = onClick, modifier = Modifier.width(210.dp).height(50.dp)) {
+  Button(onClick = onClick, modifier = Modifier
+    .width(210.dp)
+    .height(50.dp)) {
     Icon(painter = painterResource(id = iconId), contentDescription = contentDescription)
     Spacer(modifier = Modifier.width(8.dp))
     Text(stringResource(id = text), modifier = Modifier.testTag("saveChangesButton"))
@@ -80,10 +83,11 @@ fun SaveChangesButton(
 fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}, isEnabled: Boolean = true) {
   Box(
       modifier =
-          Modifier.size(100.dp)
-              .border(1.dp, Color.Black, CircleShape)
-              .clickable(enabled = isEnabled) { onClick() }
-              .clip(CircleShape)) {
+      Modifier
+        .size(100.dp)
+        .border(1.dp, Color.Black, CircleShape)
+        .clickable(enabled = isEnabled) { onClick() }
+        .clip(CircleShape)) {
         AsyncImage(
             model = imageUri ?: R.drawable.ic_placeholder_profile,
             contentDescription = "Profile Picture",
@@ -95,23 +99,9 @@ fun ProfileImage(imageUri: Uri?, onClick: () -> Unit = {}, isEnabled: Boolean = 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AccountChangeBody(
-    topBarText: Int,
-    hasBackButton: Boolean,
-    selectedImageUri: Uri?,
-    onPickImage: () -> Unit,
-    firstName: String,
-    firstNameLabel: Int,
-    firstNameChange: (String) -> Unit,
-    lastName: String,
-    lastNameLabel: Int,
-    lastNameChange: (String) -> Unit,
-    location: Location,
-    locationLabel: Int,
-    locationChange: (Location) -> Unit,
-    commitButtontext: Int,
-    commitButtonIcon: Int,
-    commitOnClick: () -> Unit = {},
-    navObject: NavigationActions,
+  accountViewModel: AccountViewModel,
+  editMode: Boolean = false,
+  onSubmit: () -> Unit
 ) {
   Scaffold(
       topBar = {
@@ -122,7 +112,7 @@ fun AccountChangeBody(
                   verticalAlignment = Alignment.CenterVertically,
                   horizontalArrangement = Arrangement.Center) {
                     Text(
-                        text = stringResource(id = topBarText),
+                        text = if (!editMode) stringResource(id = R.string.account_creation_screen_button) else stringResource(id = R.string.accountEditScreenButton),
                         style = ChimpagneTypography.titleLarge,
                         modifier = Modifier.testTag("accountCreationLabel"))
                   }
@@ -133,7 +123,8 @@ fun AccountChangeBody(
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.White),
             navigationIcon = {
-              if (hasBackButton) {
+              if (editMode) {
+                GoBackButton(navigationActions = )
                 IconButton(onClick = { navObject.goBack() }) {
                   Icon(
                       painter = painterResource(id = R.drawable.go_back),
@@ -143,17 +134,23 @@ fun AccountChangeBody(
             })
       }) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).padding(16.dp),
+            modifier = Modifier
+              .padding(paddingValues)
+              .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(modifier = Modifier.height(10.dp))
               ProfileImage(imageUri = selectedImageUri, onClick = onPickImage)
               TextInputField(
-                  modifier = Modifier.fillMaxWidth().testTag("firstNameTextField"),
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("firstNameTextField"),
                   label = firstNameLabel,
                   value = firstName,
                   onValueChange = firstNameChange)
               TextInputField(
-                  modifier = Modifier.fillMaxWidth().testTag("lastNameTextField"),
+                  modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("lastNameTextField"),
                   label = lastNameLabel,
                   value = lastName,
                   onValueChange = lastNameChange)

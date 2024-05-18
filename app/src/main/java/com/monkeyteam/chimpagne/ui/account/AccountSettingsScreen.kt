@@ -32,13 +32,12 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.md_theme_light_primary
-import com.monkeyteam.chimpagne.ui.utilities.ProfileImage
+import com.monkeyteam.chimpagne.ui.account.ProfileImage
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountSettings(
-    navObject: NavigationActions,
+fun AccountSettingsScreen(
     accountViewModel: AccountViewModel,
     logout: () -> Unit = {}
 ) {

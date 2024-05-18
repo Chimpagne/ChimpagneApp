@@ -1,6 +1,6 @@
 package com.monkeyteam.chimpagne
 
-import AccountSettings
+import AccountSettingsScreen
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,7 +23,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
-import com.monkeyteam.chimpagne.ui.AccountEdit
+import com.monkeyteam.chimpagne.ui.account.AccountEditScreen
 import com.monkeyteam.chimpagne.ui.DetailScreenSheet
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
@@ -36,7 +36,7 @@ import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.AccountCreation
+import com.monkeyteam.chimpagne.ui.theme.AccountCreationScreen
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -106,18 +106,18 @@ class MainActivity : ComponentActivity() {
               val onFailureAccountCreationScreen = {
                 navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
               }
-              AccountCreation(
+              AccountCreationScreen(
                   navObject = navActions,
                   accountViewModel = accountViewModel,
                   onSuccess = onSuccessAccountCreationScreen,
                   onFailure = onFailureAccountCreationScreen)
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
-              AccountSettings(
+              AccountSettingsScreen(
                   navObject = navActions, accountViewModel = accountViewModel, logout = logout)
             }
             composable(Route.ACCOUNT_EDIT_SCREEN) {
-              AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
+              AccountEditScreen(navObject = navActions, accountViewModel = accountViewModel)
             }
 
             composable(Route.LOADING) { SpinnerView() }

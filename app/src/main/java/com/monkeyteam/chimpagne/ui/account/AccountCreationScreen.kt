@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui
+package com.monkeyteam.chimpagne.ui.theme
 
 import android.net.Uri
 import android.util.Log
@@ -6,26 +6,26 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getString
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.utilities.AccountChangeBody
-import com.monkeyteam.chimpagne.ui.utilities.checkNotEmpty
+import com.monkeyteam.chimpagne.ui.account.AccountChangeBody
+import com.monkeyteam.chimpagne.ui.account.checkNotEmpty
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel) {
+fun AccountCreationScreen(
+    accountViewModel: AccountViewModel,
+    onSuccess: () -> Unit = {},
+    onFailure: () -> Unit = {}
+) {
 
-  LaunchedEffect(Unit) { accountViewModel.copyRealToTemp() }
   val accountViewModelState by accountViewModel.uiState.collectAsState()
-
   val context = LocalContext.current
 
   val pickProfilePicture =
@@ -33,16 +33,16 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
           contract = ActivityResultContracts.PickVisualMedia(),
           onResult = { uri: Uri? ->
             if (uri != null) {
-              Log.d("AccountEdit", "Profile picture URI: $uri")
+              Log.d("AccountCreation", "Profile picture URI: $uri")
               accountViewModel.updateProfilePicture(uri)
             } else {
-              Log.d("AccountEdit", "Profile picture URI is null")
+              Log.d("AccountCreation", "Profile picture URI is null")
             }
           })
 
   AccountChangeBody(
-      topBarText = R.string.accountEditScreenButton,
-      hasBackButton = true,
+      topBarText = R.string.account_creation_screen_button,
+      hasBackButton = false,
       selectedImageUri = accountViewModelState.tempProfilePicture,
       onPickImage = { pickProfilePicture.launch(PickVisualMediaRequest()) },
       firstName = accountViewModelState.tempAccount.firstName,
@@ -54,25 +54,31 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       location = accountViewModelState.tempAccount.location,
       locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
-      commitButtontext = R.string.save_changes,
-      commitButtonIcon = R.drawable.edit_pen,
+      commitButtontext = R.string.account_creation_screen_button,
+      commitButtonIcon = R.drawable.ic_logout,
       commitOnClick = {
         if (checkNotEmpty(accountViewModelState.tempAccount, context)) {
           navObject.navigateTo(Route.LOADING)
           accountViewModel.submitUpdatedAccount(
               onSuccess = {
-                // Delete last location of navobject
-                navObject.popBackStack()
-                navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-                Toast.makeText(context, "Account updated", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        getString(context, R.string.account_created_toast),
+                        Toast.LENGTH_SHORT)
+                    .show()
+                onSuccess()
               },
               onFailure = {
-                navObject.popBackStack()
-                navObject.navigateTo(Route.HOME_SCREEN)
-                Toast.makeText(context, "Failed to update account", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                        context,
+                        getString(context, R.string.acount_creation_failed_toast),
+                        Toast.LENGTH_SHORT)
+                    .show()
+                onFailure()
               })
         } else {
-          Log.d("AccountEdit", "Account update failed")
+          Log.d("AccountCreation", "Account creation failed")
+          onFailure()
         }
       },
       navObject = navObject)
