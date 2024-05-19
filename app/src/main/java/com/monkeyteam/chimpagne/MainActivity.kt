@@ -35,6 +35,7 @@ import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
@@ -51,41 +52,19 @@ class MainActivity : ComponentActivity() {
   val database = Database(PUBLIC_TABLES)
   private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
-  @OptIn(ExperimentalMaterial3Api::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
       ChimpagneTheme {
         val navController = rememberNavController()
-        val navActions = NavigationActions(navController)
 
-        val login: (failureRoute: String) -> Unit = { successRoute ->
-          if (FirebaseAuth.getInstance().currentUser != null) {
-            accountViewModel.loginToChimpagneAccount(
-                FirebaseAuth.getInstance().currentUser?.uid!!,
-                { account ->
-                  if (account == null) {
-                    Log.e("MainActivity", "Account is not in database")
-                    navActions.clearAndNavigateTo(successRoute)
-                  } else {
-                    Log.d("MainActivity", "Account is in database")
-                    navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-                  }
-                },
-                { Log.e("MainActivity", "Failed to check if account is in database: $it") })
-          } else {
-            navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-          }
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+          NavigationGraph(
+            navController = navController,
+            accountViewModel = accountViewModel,
+            database = database
+          )
         }
-
-        val logout: () -> Unit = {
-          AuthUI.getInstance().signOut(this)
-          accountViewModel.logoutFromChimpagneAccount()
-          navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-        }
-
-
-
       }
     }
   }
