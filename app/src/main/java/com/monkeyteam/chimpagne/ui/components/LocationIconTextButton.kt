@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.MyLocation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.location.LocationState
@@ -41,5 +42,10 @@ fun LocationIconTextButton(
         else -> MaterialTheme.colorScheme.surfaceVariant
       }
 
-  IconTextButton(text = text, icon = icon, color = color, onClick = onClick, modifier = modifier)
+  IconTextButton(
+      text = text,
+      icon = icon,
+      color = color,
+      onClick = onClick,
+      modifier = modifier.testTag("request_location_permission_button"))
 }

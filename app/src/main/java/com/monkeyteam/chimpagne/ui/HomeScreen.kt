@@ -95,7 +95,7 @@ fun HomeScreen(
   val context = LocalContext.current
   val uiState by accountViewModel.uiState.collectAsState()
   var showPromptLogin by remember { mutableStateOf(false) }
-  var locationState by remember { mutableStateOf<LocationState>(LocationState.Idle) }
+  var enableGPSButtonState by remember { mutableStateOf<LocationState>(LocationState.Idle) }
 
   val database = Database(PUBLIC_TABLES)
   val findViewModel = FindEventsViewModel(database)
@@ -111,9 +111,7 @@ fun HomeScreen(
       n: Int,
       myLocation: Location
   ): List<ChimpagneEvent> {
-    if (li.size <= n) {
-      return li
-    }
+    if (li.size <= n) return li
 
     val sortedEvents =
         eventsNearMe.sortedBy { event ->
@@ -144,45 +142,39 @@ fun HomeScreen(
         chimpagneAccountUID)
   }
 
-  val getLocation = {
-    locationState = LocationState.Searching
+  fun getGPS() {
+    enableGPSButtonState = LocationState.Searching
     fusedLocationProviderClient
         .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
         .addOnSuccessListener { location ->
           location?.let {
             findViewModel.updateSelectedLocation(Location("mylocation", it.latitude, it.longitude))
-            locationState = LocationState.Set(it)
+            enableGPSButtonState = LocationState.Set(it)
             updateFeed()
           }
         }
         .addOnFailureListener {
-          locationState = LocationState.Error("Unable to get location: ${it.message}")
+          enableGPSButtonState = LocationState.Error("Unable to get location: ${it.message}")
         }
   }
   val startForResult =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.StartIntentSenderForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) getLocation()
+            if (result.resultCode == Activity.RESULT_OK) getGPS()
           }
 
   val checkAndRequestGPS = {
-    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-
-      Log.d("FindEventFormScreen", "GPS asked to be turned on")
-
-      // GPS is not enabled, proceed to ask user to enable it
-      val locationRequest =
-          LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
-      val builder =
-          LocationSettingsRequest.Builder().addLocationRequest(locationRequest).setAlwaysShow(true)
+    val locManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+      val locReq = LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
+      val builder = LocationSettingsRequest.Builder().addLocationRequest(locReq).setAlwaysShow(true)
 
       val client: SettingsClient = LocationServices.getSettingsClient(context)
-      val task = client.checkLocationSettings(builder.build())
+      val checkLocationTask = client.checkLocationSettings(builder.build())
 
-      task.addOnSuccessListener { getLocation() }
+      checkLocationTask.addOnSuccessListener { getGPS() }
 
-      task.addOnFailureListener { exception ->
+      checkLocationTask.addOnFailureListener { exception ->
         if (exception is ResolvableApiException) {
           try {
             startForResult.launch(IntentSenderRequest.Builder(exception.resolution).build())
@@ -190,8 +182,7 @@ fun HomeScreen(
         }
       }
     } else {
-      Log.d("FindEventFormScreen", "GPS already turned on")
-      getLocation()
+      getGPS()
     }
   }
   val locationPermissionRequest =
@@ -202,7 +193,7 @@ fun HomeScreen(
           // Permissions granted, now check if GPS is enabled and request enabling if necessary.
           checkAndRequestGPS()
         } else {
-          locationState = LocationState.Error("Location permission denied")
+          enableGPSButtonState = LocationState.Error("Location permission denied")
         }
       }
 
@@ -263,7 +254,7 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier.fillMaxWidth()) {
                               LocationIconTextButton(
-                                  locationState = locationState,
+                                  locationState = enableGPSButtonState,
                                   onClick = { requestLocationPermission() })
                             }
                       }
