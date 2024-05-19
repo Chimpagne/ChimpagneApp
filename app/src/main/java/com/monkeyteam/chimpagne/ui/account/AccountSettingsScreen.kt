@@ -57,9 +57,7 @@ fun AccountSettingsScreen(
         }
       }) { paddingValues ->
         Column(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(paddingValues),
+            modifier = Modifier.fillMaxWidth().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneSpacer()
@@ -86,7 +84,6 @@ fun AccountSettingsScreen(
 
               ChimpagneSpacer()
               IconTextButton(
-                  // TODO
                   onClick = onLogout,
                   text = stringResource(id = R.string.account_logout),
                   icon = Icons.AutoMirrored.Default.Logout)
