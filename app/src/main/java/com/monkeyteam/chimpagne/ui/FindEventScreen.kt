@@ -79,6 +79,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.ui.components.DateRangeSelector
@@ -87,11 +88,13 @@ import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
 import com.monkeyteam.chimpagne.ui.theme.CustomOrange
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
+import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -429,12 +432,22 @@ fun FindEventMapScreen(
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
+  val accountUIState by accountViewModel.uiState.collectAsState()
+  var showPromptLogin by remember { mutableStateOf(false) }
 
   val context = LocalContext.current
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
+
+  val stringResJoining = stringResource(id = R.string.joining_toast)
+  val stringResFailiure = stringResource(id = R.string.join_event_failiure)
+  val stringResSuccess = stringResource(id = R.string.join_event_success)
+
+  val stringResStaff = stringResource(id = R.string.join_event_staff)
+  val stringResGuest = stringResource(id = R.string.join_event_guest)
+  val stringResOwner = stringResource(id = R.string.join_event_owner)
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
@@ -464,12 +477,42 @@ fun FindEventMapScreen(
   }
 
   val onJoinClick: () -> Unit = {
-    if (currentEvent != null) {
-      Toast.makeText(context, "Joining ${currentEvent?.title}", Toast.LENGTH_SHORT).show()
-      findViewModel.joinEvent(
-          currentEvent!!.id,
-          { Toast.makeText(context, "OK", Toast.LENGTH_SHORT).show() },
-          { Toast.makeText(context, "FAILURE", Toast.LENGTH_SHORT).show() })
+    when {
+      // Check if the user is not logged in
+      !accountViewModel.isUserLoggedIn() -> {
+        // Redirect user to login screen
+        showPromptLogin = true
+      }
+
+      // The user has not yet joined the event
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.NOT_IN_EVENT -> {
+        currentEvent?.let { event ->
+          Toast.makeText(context, "$stringResJoining ${currentEvent?.title}", Toast.LENGTH_SHORT)
+              .show()
+
+          findViewModel.joinEvent(
+              event.id,
+              { Toast.makeText(context, stringResSuccess, Toast.LENGTH_SHORT).show() },
+              { Toast.makeText(context, stringResFailiure, Toast.LENGTH_SHORT).show() })
+
+          navObject.clearAndNavigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id})", false)
+        }
+      }
+
+      // The user has already joined the event, or is a staff for the event,or is the organizer
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.STAFF -> {
+        Toast.makeText(context, stringResStaff, Toast.LENGTH_SHORT).show()
+      }
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.OWNER -> {
+        Toast.makeText(context, stringResOwner, Toast.LENGTH_SHORT).show()
+      }
+      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.GUEST -> {
+        Toast.makeText(context, stringResGuest, Toast.LENGTH_SHORT).show()
+      }
     }
   }
 
@@ -480,6 +523,10 @@ fun FindEventMapScreen(
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
+        if (showPromptLogin) {
+          PromptLogin(context, navObject)
+          showPromptLogin = false
+        }
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
           MapContainer(
               cameraPositionState = cameraPositionState,

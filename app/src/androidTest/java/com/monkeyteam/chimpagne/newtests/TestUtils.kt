@@ -88,7 +88,19 @@ val TEST_EVENTS =
             staffs = emptyMap(),
             startsAtTimestamp = buildTimestamp(1, 7, 2024, 0, 0),
             endsAtTimestamp = buildTimestamp(2, 7, 2024, 0, 0),
-            ownerId = "PRINCE"))
+            ownerId = "PRINCE"),
+        ChimpagneEvent(
+            id = "FOURTH_EVENT",
+            title = "Watch 4TH event",
+            description = "The 2 towers again",
+            location = Location("Blonay"),
+            public = true,
+            tags = listOf("4thEvent"),
+            guests = emptyMap(),
+            staffs = mapOf(Pair("PRINCE", true)),
+            startsAtTimestamp = buildTimestamp(1, 7, 2024, 0, 0),
+            endsAtTimestamp = buildTimestamp(2, 7, 2024, 0, 0),
+            ownerId = "JUAN"))
 
 val TEST_ACCOUNTS =
     listOf(
@@ -97,7 +109,8 @@ val TEST_ACCOUNTS =
             firstName = "Monkey",
             lastName = "Prince",
             location = Location("The jungle"),
-            joinedEvents = mapOf(Pair("LOTR", true), Pair("THIRD_EVENT", true))),
+            joinedEvents =
+                mapOf(Pair("LOTR", true), Pair("THIRD_EVENT", true), Pair("FOURTH_EVENT", true))),
         ChimpagneAccount(
             firebaseAuthUID = "JUAN",
             firstName = "Juan",

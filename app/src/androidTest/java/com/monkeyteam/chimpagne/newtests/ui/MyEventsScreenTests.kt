@@ -1,9 +1,11 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -91,8 +93,8 @@ class MyEventsScreenTests {
       MyEventsScreen(navActions, myEventVM)
     }
 
-    composeTestRule.onNodeWithTag("a created event").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("a joined event").assertIsDisplayed()
+    composeTestRule.onAllNodesWithTag("a created event").onFirst().assertIsDisplayed()
+    composeTestRule.onAllNodesWithTag("a joined event").onFirst().assertIsDisplayed()
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
