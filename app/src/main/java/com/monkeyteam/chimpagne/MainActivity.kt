@@ -59,10 +59,6 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val navActions = NavigationActions(navController)
 
-        val continueAsGuest: (Boolean) -> Unit = {
-          navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-        }
-
         val login: (failureRoute: String) -> Unit = { successRoute ->
           if (FirebaseAuth.getInstance().currentUser != null) {
             accountViewModel.loginToChimpagneAccount(
@@ -88,139 +84,8 @@ class MainActivity : ComponentActivity() {
           navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
         }
 
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          NavHost(navController = navController, startDestination = Route.LOADING_LOGIN) {
-            composable(Route.LOADING_LOGIN) {
-              SpinnerView()
-              login(Route.LOGIN_SCREEN)
-            }
-            composable(Route.LOGIN_SCREEN) {
-              LoginScreen(
-                  onSuccessfulLogin = { uid -> login(Route.ACCOUNT_CREATION_SCREEN) },
-                  onContinueAsGuest = { continueAsGuest(false) })
-            }
-            composable(Route.ACCOUNT_CREATION_SCREEN) {
-              val onSuccessAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-              }
-              val onFailureAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-              }
-              AccountCreation(
-                  navObject = navActions,
-                  accountViewModel = accountViewModel,
-                  onSuccess = onSuccessAccountCreationScreen,
-                  onFailure = onFailureAccountCreationScreen)
-            }
-            composable(Route.ACCOUNT_SETTINGS_SCREEN) {
-              AccountSettings(
-                  navObject = navActions, accountViewModel = accountViewModel, logout = logout)
-            }
-            composable(Route.ACCOUNT_EDIT_SCREEN) {
-              AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
-            }
 
-            composable(Route.LOADING) { SpinnerView() }
-            composable(Route.HOME_SCREEN) { HomeScreen(navObject = navActions, accountViewModel) }
-            composable(Route.FIND_AN_EVENT_SCREEN) {
-              MainFindEventScreen(
-                  navObject = navActions,
-                  findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
-                  accountViewModel)
-            }
-            composable(Route.EVENT_CREATION_SCREEN) {
-              EventCreationScreen(
-                  navObject = navActions,
-                  eventViewModel =
-                      viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
-            }
-            composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
-              val eventID = backStackEntry.arguments?.getString("EventID")
-              EditEventScreen(
-                  initialPage = 0,
-                  navObject = navActions,
-                  eventViewModel = EventViewModel(eventID, database, {}, {}))
-            }
-            composable(Route.MY_EVENTS_SCREEN) {
-              val myEventsViewModel: MyEventsViewModel =
-                  viewModel(factory = MyEventsViewModelFactory(database))
-              myEventsViewModel.fetchMyEvents()
-              MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
-            }
-            composable(
-                route = Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}",
-                deepLinks =
-                    listOf(
-                        navDeepLink {
-                          uriPattern = getString(R.string.deep_link_url_event) + "{EventID}"
-                          action = Intent.ACTION_VIEW
-                        }),
-                arguments =
-                    listOf(
-                        navArgument("EventID") { type = NavType.StringType },
-                    )) { backStackEntry ->
-                  val deeplinkHandled = intent?.action != Intent.ACTION_VIEW
-                  if (!deeplinkHandled) {
-                    if (FirebaseAuth.getInstance().currentUser != null) {
-                      accountViewModel.loginToChimpagneAccount(
-                          FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
-                    }
-                  }
-                  ViewDetailEventScreen(
-                      navObject = navActions,
-                      eventViewModel =
-                          viewModel(
-                              factory =
-                                  EventViewModel.EventViewModelFactory(
-                                      backStackEntry.arguments?.getString("EventID"), database)),
-                      accountViewModel = accountViewModel)
-                }
-            composable(Route.JOIN_EVENT_SCREEN) {
-              val eventViewModel: EventViewModel =
-                  viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
-              val event = eventViewModel.buildChimpagneEvent()
-              DetailScreenSheet(
-                  event = event,
-                  onJoinClick = {
-                    navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
-                  })
-            }
-            composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
-              val eventViewModel: EventViewModel =
-                  viewModel(
-                      factory =
-                          EventViewModel.EventViewModelFactory(
-                              backStackEntry.arguments?.getString("EventID"), database))
-              eventViewModel.fetchEvent({
-                accountViewModel.fetchAccounts(
-                    listOf(eventViewModel.uiState.value.ownerId) +
-                        eventViewModel.uiState.value.staffs.keys.toList() +
-                        eventViewModel.uiState.value.guests.keys.toList())
-              })
-              ManageStaffScreen(
-                  navObject = navActions,
-                  eventViewModel = eventViewModel,
-                  accountViewModel = accountViewModel)
-            }
-            composable(Route.SUPPLIES_SCREEN + "/{EventID}") { backStackEntry ->
-              val eventViewModel: EventViewModel =
-                  viewModel(
-                      factory =
-                          EventViewModel.EventViewModelFactory(
-                              backStackEntry.arguments?.getString("EventID"), database))
-              eventViewModel.fetchEvent({
-                accountViewModel.fetchAccounts(
-                    listOf(eventViewModel.uiState.value.ownerId) +
-                        eventViewModel.uiState.value.staffs.keys.toList() +
-                        eventViewModel.uiState.value.guests.keys.toList())
-              })
-              SuppliesScreen(
-                  navObject = navActions,
-                  eventViewModel = eventViewModel,
-                  accountViewModel = accountViewModel)
-            }
-          }
-        }
+
       }
     }
   }

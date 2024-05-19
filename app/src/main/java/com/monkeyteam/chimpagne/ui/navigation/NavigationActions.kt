@@ -16,7 +16,7 @@ object Route {
   const val MY_EVENTS_SCREEN = "myEvents"
   const val VIEW_DETAIL_EVENT_SCREEN = "viewDetailEventScreen"
   const val ONLINE_EVENT_VIEW = "onlineEventView"
-  const val LOADING_LOGIN = "loadingLogin"
+  const val LOADING_APP = "loadingLogin"
   const val MANAGE_STAFF_SCREEN = "manageStaffScreen"
   const val SUPPLIES_SCREEN = "SuppliesScreen"
 }
