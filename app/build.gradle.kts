@@ -132,6 +132,7 @@ dependencies {
     testImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockito.android)
     implementation(libs.mockito.inline)
+    testImplementation("org.json:json:20140107")
 
 }
 
