@@ -132,15 +132,16 @@
     <string name="private_string">Privé</string>
 
     <!-- Account -->
-    <string name="account_creation_screen_title">Create your account</string>
-    <string name="account_creation_button">Create my account !</string>
-    <string name="account_creation_failed">Account creation failed</string>
-    <string name="account_edit_screen_title">Edit your account</string>
-    <string name="account_edit_button">Save changes</string>
-    <string name="account_edit_failed">Account edit failed</string>
-    <string name="account_settings_screen_title">Account settings</string>
-    <string name="account_first_name">First Name</string>
-    <string name="account_last_name">Last Name</string>
+    <string name="account_creation_screen_title">Création de compte</string>
+    <string name="account_creation_button">Créer mon compte</string>
+    <string name="account_creation_failed">Erreur lors de la création du compte</string>
+    <string name="account_edit_screen_title">Édition de compte</string>
+    <string name="account_edit_button">Sauvegarder</string>
+    <string name="account_edit_failed">Erreur lors de l\'édition du compte</string>
+    <string name="account_settings_screen_title">Paramètres de compte</string>
+    <string name="account_first_name">Prénom</string>
+    <string name="account_last_name">Nom</string>
+    <string name="account_logout">Se déconnecter</string>
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>

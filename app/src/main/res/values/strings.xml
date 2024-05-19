@@ -139,7 +139,7 @@
 
     <!-- Account -->
     <string name="account_creation_screen_title">Create your account</string>
-    <string name="account_creation_button">Create my account !</string>
+    <string name="account_creation_button">Create my account</string>
     <string name="account_creation_failed">Account creation failed</string>
     <string name="account_edit_screen_title">Edit your account</string>
     <string name="account_edit_button">Save changes</string>
@@ -147,6 +147,7 @@
     <string name="account_settings_screen_title">Account settings</string>
     <string name="account_first_name">First Name</string>
     <string name="account_last_name">Last Name</string>
+    <string name="account_logout">Log out</string>
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>

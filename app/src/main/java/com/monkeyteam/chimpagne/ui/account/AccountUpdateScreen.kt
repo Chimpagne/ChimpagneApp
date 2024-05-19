@@ -144,9 +144,6 @@ fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
   } else if (account.lastName == "") {
     Toast.makeText(context, "Last name cannot be empty", Toast.LENGTH_SHORT).show()
     false
-  } else if (account.location.name == "") {
-    Toast.makeText(context, "Location cannot be empty", Toast.LENGTH_SHORT).show()
-    false
   } else {
     true
   }
