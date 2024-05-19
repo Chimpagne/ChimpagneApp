@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -33,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -42,6 +44,7 @@ import com.google.android.gms.location.LocationServices
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.EventCard
@@ -81,10 +84,9 @@ fun HomeScreen(
   val uiState by accountViewModel.uiState.collectAsState()
   var showPromptLogin by remember { mutableStateOf(false) }
 
-  val database = Database()
+  val database = Database(PUBLIC_TABLES)
   val findViewModel = FindEventsViewModel(database)
   val eventsNearMe = mutableListOf<ChimpagneEvent>()
-  var closestEvents = listOf<ChimpagneEvent>()
   val closestEventsState = remember { mutableStateOf(listOf<ChimpagneEvent>()) }
   fun getClosestNEvent(
       li: List<ChimpagneEvent>,
@@ -139,16 +141,28 @@ fun HomeScreen(
                           .background(MaterialTheme.colorScheme.surface)) {
                     item {
                       Text(
-                          text = "Events near you",
+                          text = context.getString(R.string.events_near_you),
                           style = MaterialTheme.typography.headlineLarge,
                           modifier = Modifier.padding(16.dp))
                     }
-                    items(closestEventsState.value) { event ->
-                      EventCard(
-                          event,
-                          onClick = {
-                            navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                          })
+
+                    if (closestEventsState.value.isEmpty()) {
+                      item {
+                        Text(
+                            text = context.getString(R.string.turn_gps_on),
+                            style =
+                                MaterialTheme.typography.headlineLarge.copy(
+                                    color = Color.LightGray),
+                            modifier = Modifier.padding(16.dp))
+                      }
+                    } else {
+                      items(closestEventsState.value) { event ->
+                        EventCard(
+                            event,
+                            onClick = {
+                              navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                            })
+                      }
                     }
                   }
 
@@ -175,9 +189,21 @@ fun HomeScreen(
                         rememberLauncherForActivityResult(
                             contract = ActivityResultContracts.RequestPermission()) { isGranted ->
                               if (isGranted) {
+                                findViewModel.updateSelectedLocation(
+                                    Location("initialLocation", 0.0, 0.0))
                                 locationViewModel.startLocationUpdates(context) { lat, lng ->
                                   findViewModel.updateSelectedLocation(
                                       Location("mylocation", lat, lng))
+                                  var chimpagneAccountUID = ""
+                                  if (accountViewModel.isUserLoggedIn()) {
+                                    if (accountViewModel.uiState.value.currentUserUID != null) {
+                                      chimpagneAccountUID =
+                                          accountViewModel.uiState.value.currentUserUID!!
+                                      Toast.makeText(
+                                              context, chimpagneAccountUID, Toast.LENGTH_SHORT)
+                                          .show()
+                                    }
+                                  }
 
                                   findViewModel.fetchAroundLocation(
                                       onSuccess = {
@@ -190,7 +216,8 @@ fun HomeScreen(
                                               getClosestNEvent(eventsNearMe, N_CLOSEST, it)
                                         }
                                       },
-                                      onFailure = { Log.e("err", "Failure fetchAroundLocation") })
+                                      onFailure = { Log.e("err", it.toString()) },
+                                      chimpagneAccountUID)
                                 }
                               }
                             }

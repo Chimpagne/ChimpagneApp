@@ -146,5 +146,7 @@
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>
+    <string name="events_near_you">Evénements proches de vous</string>
+    <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
 
 </resources>

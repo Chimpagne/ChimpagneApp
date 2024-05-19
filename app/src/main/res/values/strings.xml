@@ -151,4 +151,6 @@
     <string name="invalid_dates">Invalid dates</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
+    <string name="events_near_you">Events near you</string>
+    <string name="turn_gps_on">Turn on your GPS to see events near you</string>
 </resources>

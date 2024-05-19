@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.model.location
 
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
+import kotlin.math.abs
 
 data class Location(
     val name: String,
@@ -49,6 +50,6 @@ data class Location(
 
     val c = 2 * kotlin.math.atan2(kotlin.math.sqrt(a), kotlin.math.sqrt(1 - a))
 
-    return earthRadius * c
+    return abs(earthRadius * c)
   }
 }
