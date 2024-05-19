@@ -30,7 +30,7 @@ import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
-import com.monkeyteam.chimpagne.ui.account.AccountChangeScreen
+import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
@@ -99,24 +99,24 @@ class MainActivity : ComponentActivity() {
                   onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
-              val onSuccessAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-              }
-              val onFailureAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-              }
-              AccountChangeScreen(navObject = navActions, accountViewModel = accountViewModel, onSuccess = onSuccessAccountCreationScreen, onFailure = onFailureAccountCreationScreen)
+              AccountUpdateScreen(
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() },
+                  onSubmit = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) })
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
               AccountSettingsScreen(
-                  navObject = navActions, accountViewModel = accountViewModel, logout = logout)
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() },
+                  onLogout = logout,
+                  onEditRequest = { navActions.navigateTo(Route.ACCOUNT_EDIT_SCREEN) })
             }
             composable(Route.ACCOUNT_EDIT_SCREEN) {
-              AccountChangeScreen(navObject = navActions, accountViewModel = accountViewModel, onSuccess = {
-                navActions.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
-              }, onFailure = {
-
-              }, editMode = true)
+              AccountUpdateScreen(
+                  accountViewModel = accountViewModel,
+                  onSubmit = { navActions.goBack() },
+                  editMode = true,
+                  onGoBack = { navActions.goBack() })
             }
 
             composable(Route.LOADING) { SpinnerView() }
