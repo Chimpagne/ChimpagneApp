@@ -195,7 +195,7 @@ class MainActivity : ComponentActivity() {
                               backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent({
                 accountViewModel.fetchAccounts(
-                    listOf(eventViewModel.uiState.value.owner.firebaseAuthUID) +
+                    listOf(eventViewModel.uiState.value.ownerId) +
                         eventViewModel.uiState.value.staffs.keys.toList() +
                         eventViewModel.uiState.value.guests.keys.toList())
               })
@@ -212,7 +212,7 @@ class MainActivity : ComponentActivity() {
                               backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent({
                 accountViewModel.fetchAccounts(
-                    listOf(eventViewModel.uiState.value.owner.firebaseAuthUID) +
+                    listOf(eventViewModel.uiState.value.ownerId) +
                         eventViewModel.uiState.value.staffs.keys.toList() +
                         eventViewModel.uiState.value.guests.keys.toList())
               })

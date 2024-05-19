@@ -143,7 +143,7 @@ fun ViewDetailEventScreen(
                 item { ChimpagneDivider() }
                 item { EventDescription(uiState.description, true) }
                 item { ChimpagneDivider() }
-                item { OrganiserView(uiState.owner, accountViewModel) }
+                item { OrganiserView(uiState.ownerId, accountViewModel) }
                 item {
                   // MAP WILL BE ADDED HERE
                 }

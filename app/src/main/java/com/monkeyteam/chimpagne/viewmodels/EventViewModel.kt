@@ -16,7 +16,6 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.toPartialAccount
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.SocialMedia
 import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
@@ -83,7 +82,7 @@ class EventViewModel(
                         supplies = it.supplies,
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
-                        owner = it.owner,
+                        ownerId = it.ownerId,
                         imageUrl = it.imageUrl,
                         socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
                         polls = it.polls)
@@ -107,7 +106,7 @@ class EventViewModel(
     } else {
       _uiState.value =
           EventUIState(
-              owner = accountManager.currentUserAccount?.toPartialAccount() ?: ChimpagneAccount(),
+              ownerId = accountManager.currentUserAccount?.firebaseAuthUID ?: "",
               currentUserRole = ChimpagneRole.OWNER)
     }
   }
@@ -124,7 +123,7 @@ class EventViewModel(
         staffs = _uiState.value.staffs,
         startsAt = _uiState.value.startsAtCalendarDate,
         endsAt = _uiState.value.endsAtCalendarDate,
-        owner = uiState.value.owner,
+        ownerId = uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
@@ -528,7 +527,7 @@ class EventViewModel(
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
-      val owner: ChimpagneAccount = ChimpagneAccount(),
+      val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
       val loading: Boolean = true,
       val socialMediaLinks: Map<String, SocialMedia> =

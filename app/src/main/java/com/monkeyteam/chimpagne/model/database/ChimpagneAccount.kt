@@ -11,8 +11,3 @@ data class ChimpagneAccount(
     val location: Location = Location(),
     val joinedEvents: Map<ChimpagneEventId, Boolean> = hashMapOf()
 )
-
-fun ChimpagneAccount.toPartialAccount(): ChimpagneAccount {
-  return ChimpagneAccount(
-      firebaseAuthUID = this.firebaseAuthUID, firstName = this.firstName, lastName = this.lastName)
-}

@@ -21,7 +21,7 @@ data class ChimpagneEvent(
     val staffs: Map<ChimpagneAccountUID, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now(),
-    val owner: ChimpagneAccount = ChimpagneAccount(),
+    val ownerId: ChimpagneAccountUID = "",
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
@@ -48,14 +48,14 @@ data class ChimpagneEvent(
   }
 
   fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
-    if (owner.firebaseAuthUID == userUID) return ChimpagneRole.OWNER
+    if (ownerId == userUID) return ChimpagneRole.OWNER
     if (staffs[userUID] == true) return ChimpagneRole.STAFF
     if (guests[userUID] == true) return ChimpagneRole.GUEST
     return ChimpagneRole.NOT_IN_EVENT
   }
 
   fun userSet(): Set<ChimpagneAccountUID> {
-    return setOf(owner.firebaseAuthUID) + staffList() + guestList()
+    return setOf(ownerId) + staffList() + guestList()
   }
 
   constructor(
@@ -69,7 +69,7 @@ data class ChimpagneEvent(
       staffs: Map<ChimpagneAccountUID, Boolean>,
       startsAt: Calendar,
       endsAt: Calendar,
-      owner: ChimpagneAccount,
+      ownerId: String,
       supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       parkingSpaces: Int,
       beds: Int,
@@ -87,7 +87,7 @@ data class ChimpagneEvent(
       staffs,
       buildTimestamp(startsAt),
       buildTimestamp(endsAt),
-      owner,
+      ownerId,
       supplies,
       parkingSpaces,
       beds,

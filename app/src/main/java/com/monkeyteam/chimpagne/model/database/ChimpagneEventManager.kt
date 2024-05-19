@@ -124,7 +124,7 @@ class ChimpagneEventManager(
           val event = it.toObject<ChimpagneEvent>()
           if (event != null) {
             val users =
-                listOf(event.owner.firebaseAuthUID) +
+                listOf(event.ownerId) +
                     event.staffs.keys.toList() +
                     event.guests.keys.toList()
             users.forEach { userUID ->

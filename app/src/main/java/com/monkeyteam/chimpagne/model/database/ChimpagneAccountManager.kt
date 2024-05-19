@@ -264,7 +264,7 @@ class ChimpagneAccountManager(
             if (event.endsAtTimestamp < Timestamp.now()) {
               pastEvents.add(event)
             } else {
-              if (event.owner.firebaseAuthUID ==
+              if (event.ownerId ==
                   database.accountManager.currentUserAccount!!.firebaseAuthUID) {
                 createdEvents.add(event)
               } else {

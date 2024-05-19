@@ -156,7 +156,7 @@ fun DetailScreenSheet(
                   item { ChimpagneDivider() }
                   item { EventDescription(event.description, true) }
                   item { ChimpagneDivider() }
-                  item { OrganiserView(event.owner, accountViewModel) }
+                  item { OrganiserView(event.ownerId, accountViewModel) }
                 }
           } else {
             Box(

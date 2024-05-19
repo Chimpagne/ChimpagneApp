@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
-import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -34,14 +34,13 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
-fun OrganiserView(owner: ChimpagneAccount, accountViewModel: AccountViewModel) {
+fun OrganiserView(ownerId: ChimpagneAccountUID, accountViewModel: AccountViewModel) {
 
   val profilePictureUriState = remember { mutableStateOf<Uri?>(null) }
 
-  LaunchedEffect(owner.firebaseAuthUID) {
-    accountViewModel.getProfilePictureUri(owner.firebaseAuthUID) { uri ->
-      profilePictureUriState.value = uri
-    }
+  LaunchedEffect(ownerId) {
+    accountViewModel.fetchAccounts(listOf(ownerId))
+    accountViewModel.getProfilePictureUri(ownerId) { uri -> profilePictureUriState.value = uri }
   }
 
   val context = LocalContext.current
@@ -86,7 +85,9 @@ fun OrganiserView(owner: ChimpagneAccount, accountViewModel: AccountViewModel) {
         } ?: CircularProgressIndicator()
       }
       Text(
-          text = "${owner.firstName} ${owner.lastName}",
+          text =
+              (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.firstName ?: "") + " " +
+                  (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.lastName ?: ""),
           fontSize = 14.sp,
           fontFamily = ChimpagneFontFamily,
           color = MaterialTheme.colorScheme.onPrimaryContainer,
