@@ -1,10 +1,12 @@
 package com.monkeyteam.chimpagne.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
@@ -24,6 +26,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+enum class EventInputValidity {
+  INVALID_TITLE,
+  INVALID_DATES
+}
+
 class EventViewModel(
     private var eventID: String? = null,
     database: Database,
@@ -40,6 +47,15 @@ class EventViewModel(
 
   init {
     fetchEvent(onSuccess, onFailure)
+  }
+
+  companion object {
+    fun eventInputValidityToString(e: EventInputValidity, context: Context): String {
+      return when (e) {
+        EventInputValidity.INVALID_TITLE -> context.getString(R.string.title_should_not_be_empty)
+        EventInputValidity.INVALID_DATES -> context.getString(R.string.invalid_dates)
+      }
+    }
   }
 
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
@@ -116,22 +132,36 @@ class EventViewModel(
         polls = _uiState.value.polls)
   }
 
-  fun createTheEvent(onSuccess: (id: String) -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.createEvent(
-          buildChimpagneEvent(),
-          {
-            _uiState.value = _uiState.value.copy(id = it)
-            eventID = _uiState.value.id
-            _uiState.value = _uiState.value.copy(loading = false)
-            onSuccess(it)
-          },
-          {
-            Log.d("CREATE AN EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
+  fun createTheEvent(
+      onSuccess: (id: String) -> Unit = {},
+      onInvalidInputs: (EventInputValidity) -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    if (_uiState.value.title.isEmpty() ||
+        _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
+        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
+
+      if (_uiState.value.title.isEmpty()) {
+        onInvalidInputs(EventInputValidity.INVALID_TITLE)
+      } else {
+        onInvalidInputs(EventInputValidity.INVALID_DATES)
+      }
+    } else {
+      _uiState.value = _uiState.value.copy(loading = true)
+      viewModelScope.launch {
+        eventManager.createEvent(
+            buildChimpagneEvent(),
+            {
+              _uiState.value = _uiState.value.copy(id = it)
+              eventID = _uiState.value.id
+              _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess(it)
+            },
+            {
+              _uiState.value = _uiState.value.copy(loading = false)
+              onFailure(it)
+            })
+      }
     }
   }
 
@@ -486,8 +516,10 @@ class EventViewModel(
       val tags: List<String> = emptyList(),
       val guests: Map<String, Boolean> = emptyMap(),
       val staffs: Map<String, Boolean> = emptyMap(),
-      val startsAtCalendarDate: Calendar = Calendar.getInstance(),
-      val endsAtCalendarDate: Calendar = Calendar.getInstance(),
+      val startsAtCalendarDate: Calendar =
+          Calendar.getInstance().apply { add(Calendar.HOUR_OF_DAY, 1) },
+      val endsAtCalendarDate: Calendar =
+          Calendar.getInstance().apply { add(Calendar.HOUR_OF_DAY, 2) },
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
