@@ -2,10 +2,14 @@ package com.monkeyteam.chimpagne.newtests.ui.account
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,12 +24,25 @@ class AccountUpdateScreenUITest {
   @Test
   fun testAccountUpdateScreen() {
 
+    val accountViewModel = AccountViewModel(database = database)
+
+    var goBackPressed = false
     composeTestRule.setContent {
-      AccountUpdateScreen(AccountViewModel(database = database), {}, {})
+      AccountUpdateScreen(accountViewModel, { goBackPressed = true }, {})
     }
 
-    composeTestRule.onNodeWithTag("accountCreationLabel").assertExists()
-    composeTestRule.onNodeWithTag("firstNameTextField").assertExists()
-    composeTestRule.onNodeWithTag("lastNameTextField").assertExists()
+    composeTestRule.onNodeWithTag("profile_icon").assertExists()
+    composeTestRule.onNodeWithTag("first_name_label", useUnmergedTree = true).assertExists()
+    composeTestRule.onNodeWithTag("last_name_label", useUnmergedTree = true).assertExists()
+
+    assertEquals("", accountViewModel.uiState.value.tempAccount.firstName)
+    assertEquals("", accountViewModel.uiState.value.tempAccount.lastName)
+    composeTestRule.onNodeWithTag("first_name_field").performTextInput("Monkey")
+    composeTestRule.onNodeWithTag("last_name_field").performTextInput("Prince")
+    assertEquals("Monkey", accountViewModel.uiState.value.tempAccount.firstName)
+    assertEquals("Prince", accountViewModel.uiState.value.tempAccount.lastName)
+
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
+    assertTrue(goBackPressed)
   }
 }

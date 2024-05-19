@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.getString
@@ -46,7 +47,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 fun AccountUpdateScreen(
     accountViewModel: AccountViewModel,
     onGoBack: () -> Unit,
-    onSubmit: () -> Unit,
+    onAccountUpdated: () -> Unit,
     editMode: Boolean = false
 ) {
   val context = LocalContext.current
@@ -87,28 +88,37 @@ fun AccountUpdateScreen(
             navigationIcon = { GoBackButton(onClick = onGoBack) })
       }) { paddingValues ->
         Column(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(paddingValues),
+            modifier = Modifier.fillMaxWidth().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneSpacer()
               ProfileIcon(
                   uri = accountViewModelState.tempProfilePicture,
                   onClick = { pickProfilePicture.launch(PickVisualMediaRequest()) },
-                  size = 200.dp)
+                  size = 200.dp,
+                  modifier = Modifier.testTag("profile_icon"))
               ChimpagneSpacer()
               OutlinedTextField(
                   value = accountViewModelState.tempAccount.firstName,
                   onValueChange = accountViewModel::updateFirstName,
-                  label = { Text(stringResource(id = R.string.account_first_name)) },
-                  maxLines = 1)
+                  label = {
+                    Text(
+                        stringResource(id = R.string.account_first_name),
+                        Modifier.testTag("first_name_label"))
+                  },
+                  maxLines = 1,
+                  modifier = Modifier.testTag("first_name_field"))
               ChimpagneSpacer()
               OutlinedTextField(
                   value = accountViewModelState.tempAccount.lastName,
                   onValueChange = accountViewModel::updateLastName,
-                  label = { Text(stringResource(id = R.string.account_last_name)) },
-                  maxLines = 1)
+                  label = {
+                    Text(
+                        stringResource(id = R.string.account_last_name),
+                        Modifier.testTag("last_name_label"))
+                  },
+                  maxLines = 1,
+                  modifier = Modifier.testTag("last_name_field"))
               ChimpagneSpacer()
 
               IconTextButton(
@@ -122,7 +132,7 @@ fun AccountUpdateScreen(
                     if (checkNotEmpty(accountViewModelState.tempAccount, context)) {
                       loading = true
                       accountViewModel.submitUpdatedAccount(
-                          onSuccess = onSubmit,
+                          onSuccess = onAccountUpdated,
                           onFailure = {
                             Toast.makeText(
                                     context,
@@ -141,10 +151,14 @@ fun AccountUpdateScreen(
 
 fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
   return if (account.firstName == "") {
-    Toast.makeText(context, getString(context, R.string.account_first_name_empty), Toast.LENGTH_SHORT).show()
+    Toast.makeText(
+            context, getString(context, R.string.account_first_name_empty), Toast.LENGTH_SHORT)
+        .show()
     false
   } else if (account.lastName == "") {
-    Toast.makeText(context, getString(context, R.string.account_last_name_empty), Toast.LENGTH_SHORT).show()
+    Toast.makeText(
+            context, getString(context, R.string.account_last_name_empty), Toast.LENGTH_SHORT)
+        .show()
     false
   } else {
     true

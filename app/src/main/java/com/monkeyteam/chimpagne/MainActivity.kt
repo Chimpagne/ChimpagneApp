@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
               AccountUpdateScreen(
                   accountViewModel = accountViewModel,
                   onGoBack = { navActions.goBack() },
-                  onSubmit = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) })
+                  onAccountUpdated = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) })
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
               AccountSettingsScreen(
@@ -114,7 +114,7 @@ class MainActivity : ComponentActivity() {
             composable(Route.ACCOUNT_EDIT_SCREEN) {
               AccountUpdateScreen(
                   accountViewModel = accountViewModel,
-                  onSubmit = { navActions.goBack() },
+                  onAccountUpdated = { navActions.goBack() },
                   editMode = true,
                   onGoBack = { navActions.goBack() })
             }

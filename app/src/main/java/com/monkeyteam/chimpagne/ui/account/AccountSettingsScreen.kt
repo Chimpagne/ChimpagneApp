@@ -52,14 +52,13 @@ fun AccountSettingsScreen(
         )
       },
       floatingActionButton = {
-        FloatingActionButton(onClick = onEditRequest, modifier = Modifier.testTag("edit_account_button")) {
-          Icon(Icons.Default.Edit, contentDescription = "Edit account")
-        }
+        FloatingActionButton(
+            onClick = onEditRequest, modifier = Modifier.testTag("edit_account_button")) {
+              Icon(Icons.Default.Edit, contentDescription = "Edit account")
+            }
       }) { paddingValues ->
         Column(
-            modifier = Modifier
-              .fillMaxWidth()
-              .padding(paddingValues),
+            modifier = Modifier.fillMaxWidth().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneSpacer()
@@ -89,8 +88,7 @@ fun AccountSettingsScreen(
                   onClick = onLogout,
                   text = stringResource(id = R.string.account_logout),
                   icon = Icons.AutoMirrored.Default.Logout,
-                modifier = Modifier.testTag("account_settings_logout_button")
-              )
+                  modifier = Modifier.testTag("account_settings_logout_button"))
             }
       }
 }

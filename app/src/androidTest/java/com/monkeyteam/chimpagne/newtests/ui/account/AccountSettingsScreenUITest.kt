@@ -27,13 +27,11 @@ class AccountSettingsScreenUITest {
     var editRequested = false
     var logoutPressed = false
     composeTestRule.setContent {
-      AccountSettingsScreen(AccountViewModel(database = database), {
-                                                                   goBackPressed = true
-      }, {
-         editRequested = true
-      }, {
-        logoutPressed = true
-      })
+      AccountSettingsScreen(
+          AccountViewModel(database = database),
+          { goBackPressed = true },
+          { editRequested = true },
+          { logoutPressed = true })
     }
 
     composeTestRule.onNodeWithTag("account_settings_first_name").assertIsDisplayed()
