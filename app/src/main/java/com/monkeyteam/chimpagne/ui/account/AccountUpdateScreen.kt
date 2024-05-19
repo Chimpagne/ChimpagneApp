@@ -87,7 +87,9 @@ fun AccountUpdateScreen(
             navigationIcon = { GoBackButton(onClick = onGoBack) })
       }) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxWidth().padding(paddingValues),
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneSpacer()
@@ -139,10 +141,10 @@ fun AccountUpdateScreen(
 
 fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
   return if (account.firstName == "") {
-    Toast.makeText(context, "First name cannot be empty", Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, getString(context, R.string.account_first_name_empty), Toast.LENGTH_SHORT).show()
     false
   } else if (account.lastName == "") {
-    Toast.makeText(context, "Last name cannot be empty", Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, getString(context, R.string.account_last_name_empty), Toast.LENGTH_SHORT).show()
     false
   } else {
     true

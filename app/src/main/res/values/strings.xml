@@ -144,6 +144,8 @@
     <string name="account_edit_screen_title">Edit your account</string>
     <string name="account_edit_button">Save changes</string>
     <string name="account_edit_failed">Account edit failed</string>
+    <string name="account_first_name_empty">First name cannot be empty !</string>
+    <string name="account_last_name_empty">Last name cannot be empty !</string>
     <string name="account_settings_screen_title">Account settings</string>
     <string name="account_first_name">First Name</string>
     <string name="account_last_name">Last Name</string>

@@ -121,7 +121,7 @@ fun GoBackButton(navigationActions: NavigationActions) {
 
 @Composable
 fun GoBackButton(onClick: () -> Unit) {
-  IconButton(onClick = onClick) {
+  IconButton(onClick = onClick, modifier = Modifier.testTag("go_back_button")) {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "Go Back",

@@ -138,6 +138,8 @@
     <string name="account_edit_screen_title">Édition de compte</string>
     <string name="account_edit_button">Sauvegarder</string>
     <string name="account_edit_failed">Erreur lors de l\'édition du compte</string>
+    <string name="account_first_name_empty">Veuillez entrer un prénom !</string>
+    <string name="account_last_name_empty">Veuillez entrer un nom !</string>
     <string name="account_settings_screen_title">Paramètres de compte</string>
     <string name="account_first_name">Prénom</string>
     <string name="account_last_name">Nom</string>

@@ -52,12 +52,14 @@ fun AccountSettingsScreen(
         )
       },
       floatingActionButton = {
-        FloatingActionButton(onClick = onEditRequest, modifier = Modifier.testTag("edit_account")) {
+        FloatingActionButton(onClick = onEditRequest, modifier = Modifier.testTag("edit_account_button")) {
           Icon(Icons.Default.Edit, contentDescription = "Edit account")
         }
       }) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxWidth().padding(paddingValues),
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
               ChimpagneSpacer()
@@ -72,21 +74,23 @@ fun AccountSettingsScreen(
 
               Row {
                 SettingItem(
-                    label = "First Name",
+                    label = stringResource(id = R.string.account_first_name),
                     value = accountViewModelState.currentUserAccount?.firstName ?: "",
-                    modifier = Modifier.testTag("firstNameTextField"))
+                    modifier = Modifier.testTag("account_settings_first_name"))
                 ChimpagneSpacer()
                 SettingItem(
-                    label = "Last Name",
+                    label = stringResource(id = R.string.account_last_name),
                     value = accountViewModelState.currentUserAccount?.lastName ?: "",
-                    modifier = Modifier.testTag("lastNameTextField"))
+                    modifier = Modifier.testTag("account_settings_last_name"))
               }
 
               ChimpagneSpacer()
               IconTextButton(
                   onClick = onLogout,
                   text = stringResource(id = R.string.account_logout),
-                  icon = Icons.AutoMirrored.Default.Logout)
+                  icon = Icons.AutoMirrored.Default.Logout,
+                modifier = Modifier.testTag("account_settings_logout_button")
+              )
             }
       }
 }
