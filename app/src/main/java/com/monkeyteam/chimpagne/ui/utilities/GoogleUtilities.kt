@@ -67,7 +67,3 @@ fun GoogleAuthentication(
         }
       }
 }
-
-fun getFireBaseUser(): FirebaseUser? {
-  return FirebaseAuth.getInstance().currentUser
-}

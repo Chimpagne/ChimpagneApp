@@ -110,6 +110,7 @@ dependencies {
     //For mockk
     androidTestImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.mockito.kotlin)
 
     debugImplementation(libs.androidx.ui.tooling)
@@ -132,7 +133,6 @@ dependencies {
     testImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockito.android)
     implementation(libs.mockito.inline)
-
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {

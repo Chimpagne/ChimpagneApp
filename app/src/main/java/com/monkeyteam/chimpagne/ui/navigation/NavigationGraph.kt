@@ -40,24 +40,28 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationGraph(navController: NavHostController, accountViewModel: AccountViewModel, database: Database) {
+fun NavigationGraph(
+    navController: NavHostController,
+    accountViewModel: AccountViewModel,
+    database: Database
+) {
   val navActions = NavigationActions(navController)
   val context = LocalContext.current
 
   val login: () -> Unit = {
     if (FirebaseAuth.getInstance().currentUser != null) {
       accountViewModel.loginToChimpagneAccount(
-        FirebaseAuth.getInstance().currentUser?.uid!!,
-        { account ->
-          if (account == null) {
-            Log.e("MainActivity", "Account is not in database")
-            navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
-          } else {
-            Log.d("MainActivity", "Account is in database")
-            navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-          }
-        },
-        { Log.e("MainActivity", "Failed to check if account is in database: $it") })
+          FirebaseAuth.getInstance().currentUser?.uid!!,
+          { account ->
+            if (account == null) {
+              Log.e("MainActivity", "Account is not in database")
+              navActions.clearAndNavigateTo(Route.ACCOUNT_CREATION_SCREEN)
+            } else {
+              Log.d("MainActivity", "Account is in database")
+              navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+            }
+          },
+          { Log.e("MainActivity", "Failed to check if account is in database: $it") })
     } else {
       navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
     }
@@ -77,27 +81,20 @@ fun NavigationGraph(navController: NavHostController, accountViewModel: AccountV
 
     composable(Route.LOGIN_SCREEN) {
       LoginScreen(
-        onSuccessfulLogin = { login() },
-        onContinueAsGuest = {
-          navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-        })
+          onSuccessfulLogin = { login() },
+          onContinueAsGuest = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) })
     }
 
     composable(Route.ACCOUNT_CREATION_SCREEN) {
       AccountCreation(
-        navObject = navActions,
-        accountViewModel = accountViewModel,
-        onSuccess = {
-          navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-        },
-        onFailure = {
-          navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-        })
+          navObject = navActions,
+          accountViewModel = accountViewModel,
+          onSuccess = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) },
+          onFailure = { navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true) })
     }
 
     composable(Route.ACCOUNT_SETTINGS_SCREEN) {
-      AccountSettings(
-        navObject = navActions, accountViewModel = accountViewModel, logout = logout)
+      AccountSettings(navObject = navActions, accountViewModel = accountViewModel, logout = logout)
     }
     composable(Route.ACCOUNT_EDIT_SCREEN) {
       AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
@@ -110,105 +107,101 @@ fun NavigationGraph(navController: NavHostController, accountViewModel: AccountV
 
     composable(Route.FIND_AN_EVENT_SCREEN) {
       MainFindEventScreen(
-        navObject = navActions,
-        findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
-        accountViewModel)
+          navObject = navActions,
+          findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
+          accountViewModel)
     }
 
     composable(Route.EVENT_CREATION_SCREEN) {
       EventCreationScreen(
-        navObject = navActions,
-        eventViewModel =
-        viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
+          navObject = navActions,
+          eventViewModel =
+              viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
     composable(Route.EDIT_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
       val eventID = backStackEntry.arguments?.getString("EventID")
       EditEventScreen(
-        initialPage = 0,
-        navObject = navActions,
-        eventViewModel = EventViewModel(eventID, database, {}, {}))
+          initialPage = 0,
+          navObject = navActions,
+          eventViewModel = EventViewModel(eventID, database, {}, {}))
     }
 
     composable(Route.MY_EVENTS_SCREEN) {
       val myEventsViewModel: MyEventsViewModel =
-        viewModel(factory = MyEventsViewModelFactory(database))
+          viewModel(factory = MyEventsViewModelFactory(database))
       myEventsViewModel.fetchMyEvents()
       MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
     }
 
     composable(
-      route = Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}",
-      deepLinks =
-      listOf(
-        navDeepLink {
-          uriPattern = getString(context, R.string.deep_link_url_event) + "{EventID}"
-          action = Intent.ACTION_VIEW
-        }),
-      arguments =
-      listOf(
-        navArgument("EventID") { type = NavType.StringType },
-      )) { backStackEntry ->
-      val deeplinkHandled = (context as Activity).intent?.action != Intent.ACTION_VIEW
-      if (!deeplinkHandled) {
-        if (FirebaseAuth.getInstance().currentUser != null) {
-          accountViewModel.loginToChimpagneAccount(
-            FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
+        route = Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}",
+        deepLinks =
+            listOf(
+                navDeepLink {
+                  uriPattern = getString(context, R.string.deep_link_url_event) + "{EventID}"
+                  action = Intent.ACTION_VIEW
+                }),
+        arguments =
+            listOf(
+                navArgument("EventID") { type = NavType.StringType },
+            )) { backStackEntry ->
+          val deeplinkHandled = (context as Activity).intent?.action != Intent.ACTION_VIEW
+          if (!deeplinkHandled) {
+            if (FirebaseAuth.getInstance().currentUser != null) {
+              accountViewModel.loginToChimpagneAccount(
+                  FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
+            }
+          }
+          ViewDetailEventScreen(
+              navObject = navActions,
+              eventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModel.EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database)),
+              accountViewModel = accountViewModel)
         }
-      }
-      ViewDetailEventScreen(
-        navObject = navActions,
-        eventViewModel =
-        viewModel(
-          factory =
-          EventViewModel.EventViewModelFactory(
-            backStackEntry.arguments?.getString("EventID"), database)),
-        accountViewModel = accountViewModel)
-    }
 
     composable(Route.JOIN_EVENT_SCREEN) {
       val eventViewModel: EventViewModel =
-        viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
+          viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
       val event = eventViewModel.buildChimpagneEvent()
       DetailScreenSheet(
-        event = event,
-        onJoinClick = {
-          navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
-        })
+          event = event,
+          onJoinClick = {
+            navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
+          })
     }
 
     composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
       val eventViewModel: EventViewModel =
-        viewModel(
-          factory =
-          EventViewModel.EventViewModelFactory(
-            backStackEntry.arguments?.getString("EventID"), database))
+          viewModel(
+              factory =
+                  EventViewModel.EventViewModelFactory(
+                      backStackEntry.arguments?.getString("EventID"), database))
       eventViewModel.fetchEvent({
-        accountViewModel.fetchAccounts(
-          eventViewModel.buildChimpagneEvent().userSet().toList()
-        )
+        accountViewModel.fetchAccounts(eventViewModel.buildChimpagneEvent().userSet().toList())
       })
       ManageStaffScreen(
-        navObject = navActions,
-        eventViewModel = eventViewModel,
-        accountViewModel = accountViewModel)
+          navObject = navActions,
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel)
     }
 
     composable(Route.SUPPLIES_SCREEN + "/{EventID}") { backStackEntry ->
       val eventViewModel: EventViewModel =
-        viewModel(
-          factory =
-          EventViewModel.EventViewModelFactory(
-            backStackEntry.arguments?.getString("EventID"), database))
+          viewModel(
+              factory =
+                  EventViewModel.EventViewModelFactory(
+                      backStackEntry.arguments?.getString("EventID"), database))
       eventViewModel.fetchEvent({
-        accountViewModel.fetchAccounts(
-          eventViewModel.buildChimpagneEvent().userSet().toList()
-        )
+        accountViewModel.fetchAccounts(eventViewModel.buildChimpagneEvent().userSet().toList())
       })
       SuppliesScreen(
-        navObject = navActions,
-        eventViewModel = eventViewModel,
-        accountViewModel = accountViewModel)
+          navObject = navActions,
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel)
     }
   }
 }
