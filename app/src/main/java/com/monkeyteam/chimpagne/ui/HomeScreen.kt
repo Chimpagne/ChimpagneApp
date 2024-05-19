@@ -2,15 +2,20 @@ package com.monkeyteam.chimpagne.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -39,14 +44,22 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.CurrentLocationRequest
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.EventCard
+import com.monkeyteam.chimpagne.ui.components.LocationIconTextButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -70,7 +83,7 @@ class LocationViewModel(myContext: Context) {
   }
 }
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -78,15 +91,21 @@ fun HomeScreen(
     accountViewModel: AccountViewModel,
     locationViewModel: LocationViewModel = LocationViewModel(myContext = LocalContext.current)
 ) {
-
+  val N_CLOSEST = 4
   val context = LocalContext.current
   val uiState by accountViewModel.uiState.collectAsState()
   var showPromptLogin by remember { mutableStateOf(false) }
+  var locationState by remember { mutableStateOf<LocationState>(LocationState.Idle) }
 
   val database = Database(PUBLIC_TABLES)
   val findViewModel = FindEventsViewModel(database)
   val eventsNearMe = mutableListOf<ChimpagneEvent>()
+
   val closestEventsState = remember { mutableStateOf(listOf<ChimpagneEvent>()) }
+
+  val fusedLocationProviderClient = remember {
+    LocationServices.getFusedLocationProviderClient(context)
+  }
   fun getClosestNEvent(
       li: List<ChimpagneEvent>,
       n: Int,
@@ -104,6 +123,88 @@ fun HomeScreen(
 
     return sortedEvents.take(n)
   }
+
+  fun updateFeed() {
+    var chimpagneAccountUID = ""
+    if (accountViewModel.isUserLoggedIn()) {
+      if (accountViewModel.uiState.value.currentUserUID != null) {
+        chimpagneAccountUID = accountViewModel.uiState.value.currentUserUID!!
+      }
+    }
+
+    findViewModel.fetchAroundLocation(
+        onSuccess = {
+          findViewModel.uiState.value.events.forEach { (_, u) -> eventsNearMe.add(u) }
+
+          findViewModel.uiState.value.selectedLocation?.let {
+            closestEventsState.value = getClosestNEvent(eventsNearMe, N_CLOSEST, it)
+          }
+        },
+        onFailure = { Log.e("err", it.toString()) },
+        chimpagneAccountUID)
+  }
+
+  val getLocation = {
+    locationState = LocationState.Searching
+    fusedLocationProviderClient
+        .getCurrentLocation(CurrentLocationRequest.Builder().build(), null)
+        .addOnSuccessListener { location ->
+          location?.let {
+            findViewModel.updateSelectedLocation(Location("mylocation", it.latitude, it.longitude))
+            locationState = LocationState.Set(it)
+            updateFeed()
+          }
+        }
+        .addOnFailureListener {
+          locationState = LocationState.Error("Unable to get location: ${it.message}")
+        }
+  }
+  val startForResult =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) getLocation()
+          }
+
+  val checkAndRequestGPS = {
+    val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+      Log.d("FindEventFormScreen", "GPS asked to be turned on")
+
+      // GPS is not enabled, proceed to ask user to enable it
+      val locationRequest =
+          LocationRequest.create().apply { priority = Priority.PRIORITY_HIGH_ACCURACY }
+      val builder =
+          LocationSettingsRequest.Builder().addLocationRequest(locationRequest).setAlwaysShow(true)
+
+      val client: SettingsClient = LocationServices.getSettingsClient(context)
+      val task = client.checkLocationSettings(builder.build())
+
+      task.addOnSuccessListener { getLocation() }
+
+      task.addOnFailureListener { exception ->
+        if (exception is ResolvableApiException) {
+          try {
+            startForResult.launch(IntentSenderRequest.Builder(exception.resolution).build())
+          } catch (_: IntentSender.SendIntentException) {}
+        }
+      }
+    } else {
+      Log.d("FindEventFormScreen", "GPS already turned on")
+      getLocation()
+    }
+  }
+  val locationPermissionRequest =
+      rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+          permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+          // Permissions granted, now check if GPS is enabled and request enabling if necessary.
+          checkAndRequestGPS()
+        } else {
+          locationState = LocationState.Error("Location permission denied")
+        }
+      }
 
   Scaffold(
       topBar = {
@@ -125,7 +226,6 @@ fun HomeScreen(
           PromptLogin(context, navObject)
           showPromptLogin = false
         }
-        val N_CLOSEST = 4
 
         Box(
             modifier =
@@ -153,6 +253,19 @@ fun HomeScreen(
                                 MaterialTheme.typography.headlineLarge.copy(
                                     color = Color.LightGray),
                             modifier = Modifier.padding(16.dp))
+                        val requestLocationPermission = {
+                          locationPermissionRequest.launch(
+                              arrayOf(
+                                  Manifest.permission.ACCESS_FINE_LOCATION,
+                                  Manifest.permission.ACCESS_COARSE_LOCATION))
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()) {
+                              LocationIconTextButton(
+                                  locationState = locationState,
+                                  onClick = { requestLocationPermission() })
+                            }
                       }
                     } else {
                       items(closestEventsState.value) { event ->
@@ -193,27 +306,7 @@ fun HomeScreen(
                                 locationViewModel.startLocationUpdates(context) { lat, lng ->
                                   findViewModel.updateSelectedLocation(
                                       Location("mylocation", lat, lng))
-                                  var chimpagneAccountUID = ""
-                                  if (accountViewModel.isUserLoggedIn()) {
-                                    if (accountViewModel.uiState.value.currentUserUID != null) {
-                                      chimpagneAccountUID =
-                                          accountViewModel.uiState.value.currentUserUID!!
-                                    }
-                                  }
-
-                                  findViewModel.fetchAroundLocation(
-                                      onSuccess = {
-                                        findViewModel.uiState.value.events.forEach { (_, u) ->
-                                          eventsNearMe.add(u)
-                                        }
-
-                                        findViewModel.uiState.value.selectedLocation?.let {
-                                          closestEventsState.value =
-                                              getClosestNEvent(eventsNearMe, N_CLOSEST, it)
-                                        }
-                                      },
-                                      onFailure = { Log.e("err", it.toString()) },
-                                      chimpagneAccountUID)
+                                  updateFeed()
                                 }
                               }
                             }
