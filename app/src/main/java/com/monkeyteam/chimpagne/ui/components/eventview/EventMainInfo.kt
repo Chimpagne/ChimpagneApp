@@ -27,8 +27,10 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -101,17 +103,22 @@ fun EventMainInfo(event: ChimpagneEvent) {
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
               Box(
                   modifier =
-                      Modifier.shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+                      Modifier.shadow(elevation = 4.dp, shape = RoundedCornerShape(50))
                           .clip(RoundedCornerShape(50))
                           .background(MaterialTheme.colorScheme.primaryContainer)
                           .padding(horizontal = 24.dp, vertical = 12.dp)) {
-                    Text(
-                        text =
-                            "${event.guests.count()} ${stringResource(id = R.string.event_details_screen_number_of_guests)}",
-                        fontFamily = ChimpagneFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.testTag("number of guests"))
+                  Text(
+                      text = buildAnnotatedString {
+                          withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                              append("${event.guests.count()} ")
+                          }
+                          append(stringResource(id = R.string.event_details_screen_number_of_guests))
+                      },
+                      fontFamily = ChimpagneFontFamily,
+                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                      modifier = Modifier.testTag("number of guests")
+                  )
+
                   }
               Spacer(modifier = Modifier.width(8.dp))
               IconButton(

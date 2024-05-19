@@ -68,7 +68,7 @@
     <string name="event_details_screen_number_of_guests">guests joined</string>
     <string name="event_details_screen_organized_by">Organized by</string>
     <string name="event_details_screen_leave_button">Leave this Event</string>
-    <string name="event_details_screen_report_problem">Report a Problem</string>
+    <string name="event_details_screen_report_problem">Report</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit Event</string>
     <string name="event_details_screen_manage_staff_button">Manage staff</string>
@@ -151,4 +151,6 @@
     <string name="invalid_dates">Invalid dates</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
+
+    <string name="event_description_is_empty">No description</string>
 </resources>

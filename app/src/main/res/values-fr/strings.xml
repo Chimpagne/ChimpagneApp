@@ -67,7 +67,7 @@
     <string name="date_tools_at">à</string>
     <string name="event_details_screen_number_of_guests">personnes ont rejoint</string>
     <string name="event_details_screen_organized_by">Organisé par</string>
-    <string name="event_details_screen_report_problem">Signaler un Problème</string>
+    <string name="event_details_screen_report_problem">Signaler</string>
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
     <string name="event_details_screen_edit_button">Éditer l\'Evénement</string>
@@ -146,5 +146,6 @@
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>
+    <string name="event_description_is_empty">Pas de décription</string>
 
 </resources>

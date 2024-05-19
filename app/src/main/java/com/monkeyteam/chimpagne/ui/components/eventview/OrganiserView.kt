@@ -2,13 +2,17 @@ package com.monkeyteam.chimpagne.ui.components.eventview
 
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,40 +48,59 @@ fun OrganiserView(owner: ChimpagneAccount, accountViewModel: AccountViewModel) {
 
   val context = LocalContext.current
 
-  Row(
-      verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-        profilePictureUriState.value?.let { uri ->
-          ProfileIcon(
-              uri = profilePictureUriState.value,
-              onClick = {
-                Toast.makeText(
-                        context,
-                        "This function will be implemented in a future version",
-                        Toast.LENGTH_SHORT)
-                    .show()
-              })
-        } ?: run { CircularProgressIndicator() }
+  Column(horizontalAlignment = Alignment.CenterHorizontally) {
+      Row(
+          verticalAlignment = Alignment.CenterVertically,
+          modifier = Modifier
+              .fillMaxWidth()
+      ) {
+          Text(
+              text = stringResource(id = R.string.event_details_screen_organized_by),
+              fontSize = 16.sp,
+              style = ChimpagneTypography.titleLarge,
+              color = MaterialTheme.colorScheme.onPrimaryContainer,
+              modifier = Modifier.padding(start = 16.dp)
+          )
 
-        Text(
-            text =
-                "${stringResource(id = R.string.event_details_screen_organized_by)}\n ${owner.firstName} ${owner.lastName}",
-            fontSize = 14.sp,
-            fontFamily = ChimpagneFontFamily,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = Modifier.padding(start = 20.dp, end = 20.dp))
-        Spacer(modifier = Modifier.height(8.dp))
-        ChimpagneButton(
-            text = stringResource(id = R.string.event_details_screen_report_problem),
-            icon = Icons.Default.Warning,
-            textStyle = ChimpagneTypography.displaySmall,
-            onClick = {
-              Toast.makeText(
+          Spacer(modifier = Modifier.weight(2f))
+
+          ChimpagneButton(
+              text = stringResource(id = R.string.event_details_screen_report_problem),
+              icon = Icons.Default.Flag,
+              textStyle = ChimpagneTypography.bodyMedium,
+              onClick = {
+                  Toast.makeText(
                       context,
                       "This function will be implemented in a future version",
-                      Toast.LENGTH_SHORT)
-                  .show()
-            },
-            modifier = Modifier.testTag("reportProblem"))
+                      Toast.LENGTH_SHORT
+                  ).show()
+              },
+              modifier = Modifier.testTag("reportProblem")
+          )
       }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 8.dp)) {
+          Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+            profilePictureUriState.value?.let { uri ->
+              ProfileIcon(
+                  uri = uri,
+                  onClick = {
+                    Toast.makeText(
+                            context,
+                            "This function will be implemented in a future version",
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  })
+            } ?: CircularProgressIndicator()
+          }
+          Text(
+              text = "${owner.firstName} ${owner.lastName}",
+              fontSize = 14.sp,
+              fontFamily = ChimpagneFontFamily,
+              color = MaterialTheme.colorScheme.onPrimaryContainer,
+              modifier = Modifier.padding(start = 16.dp))
+        }
+  }
 }

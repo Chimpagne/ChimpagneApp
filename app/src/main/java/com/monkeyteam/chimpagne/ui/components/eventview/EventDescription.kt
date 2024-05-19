@@ -17,8 +17,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
@@ -32,8 +34,8 @@ fun EventDescription(description: String, collapsable: Boolean) {
               .clickable { expandedDescription = !expandedDescription }
               .padding(horizontal = 16.dp)) {
         Text(
-            text = description,
-            style = ChimpagneTypography.bodyMedium,
+            text = description.ifEmpty { stringResource(R.string.event_description_is_empty) },
+            style = ChimpagneTypography.titleSmall,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
             maxLines = maxLines,
             textAlign = TextAlign.Center,

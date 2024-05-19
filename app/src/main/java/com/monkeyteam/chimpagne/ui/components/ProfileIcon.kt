@@ -25,7 +25,7 @@ fun ProfileIcon(uri: Uri?, onClick: () -> Unit) {
     Image(
         painter = painter,
         contentDescription = "Profile",
-        modifier = Modifier.size(40.dp).clip(CircleShape),
+        modifier = Modifier.size(48.dp).clip(CircleShape),
         contentScale = ContentScale.Crop)
   }
 }
