@@ -43,7 +43,8 @@ class AccountUpdateScreenUITest {
     var goBackPressed = false
     var accountModified = false
     composeTestRule.setContent {
-      AccountUpdateScreen(accountViewModel, { goBackPressed = true }, { accountModified = true }, editMode = true)
+      AccountUpdateScreen(
+          accountViewModel, { goBackPressed = true }, { accountModified = true }, editMode = true)
     }
 
     composeTestRule.onNodeWithTag("profile_icon").assertExists()
