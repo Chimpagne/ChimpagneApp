@@ -24,20 +24,10 @@ class AccountSettingsUITest {
   fun testSettingsCorrect() {
 
     composeTestRule.setContent {
-      val navObject = NavigationActions(rememberNavController())
-      AccountSettingsScreen(navObject, AccountViewModel(database = database))
+      AccountSettingsScreen(AccountViewModel(database = database), {}, {}, {})
     }
 
-    val preferredLanguageIsEnglish = true
-
-    if (preferredLanguageIsEnglish) {
-      composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
-      composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Last Name")
-      composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Location")
-    } else {
-      composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("Prénom")
-      composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Nom de famille")
-      composeTestRule.onNodeWithTag("locationTextField").assertTextContains("Ville")
-    }
+    composeTestRule.onNodeWithTag("firstNameTextField").assertTextContains("First Name")
+    composeTestRule.onNodeWithTag("lastNameTextField").assertTextContains("Last Name")
   }
 }

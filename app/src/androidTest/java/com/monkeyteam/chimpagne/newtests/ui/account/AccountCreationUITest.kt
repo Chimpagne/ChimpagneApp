@@ -5,8 +5,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.theme.AccountCreationScreen
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import org.junit.Rule
 import org.junit.Test
@@ -24,7 +24,7 @@ class AccountCreationUITest {
 
     composeTestRule.setContent {
       val navObject = NavigationActions(rememberNavController())
-      AccountCreationScreen(navObject, AccountViewModel(database = database))
+      AccountUpdateScreen(AccountViewModel(database = database), {}, {})
     }
 
     composeTestRule.onNodeWithTag("accountCreationLabel").assertExists()

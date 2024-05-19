@@ -5,7 +5,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.ui.account.AccountEditScreen
+import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import org.junit.Rule
@@ -23,8 +23,7 @@ class AccountEditUITest {
   fun testLanguageChangeWorks() {
 
     composeTestRule.setContent {
-      val navObject = NavigationActions(rememberNavController())
-      AccountEditScreen(navObject, AccountViewModel(database = database))
+      AccountUpdateScreen(AccountViewModel(database = database), {} , {}, editMode = true)
     }
 
     composeTestRule.onNodeWithTag("accountCreationLabel").assertExists()

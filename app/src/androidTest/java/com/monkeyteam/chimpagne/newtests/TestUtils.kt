@@ -96,19 +96,16 @@ val TEST_ACCOUNTS =
             firebaseAuthUID = "PRINCE",
             firstName = "Monkey",
             lastName = "Prince",
-            location = Location("The jungle"),
             joinedEvents = mapOf(Pair("LOTR", true), Pair("THIRD_EVENT", true))),
         ChimpagneAccount(
             firebaseAuthUID = "JUAN",
             firstName = "Juan",
             lastName = "Litalien",
-            location = Location("Italy"),
             joinedEvents = emptyMap()), /* THIS MUST BE EMPTY*/
         ChimpagneAccount(
             firebaseAuthUID = "THEREALKING",
             firstName = "Nat",
             lastName = "Lambert",
-            location = Location("Waterloo"),
             joinedEvents = emptyMap()))
 
 val TEST_PROFILE_PICTURES =
