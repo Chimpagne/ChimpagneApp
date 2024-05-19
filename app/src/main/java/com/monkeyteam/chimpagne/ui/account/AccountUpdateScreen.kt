@@ -128,6 +128,7 @@ fun AccountUpdateScreen(
                               if (editMode) R.string.account_edit_button
                               else R.string.account_creation_button),
                   icon = Icons.Default.Save,
+                  modifier = Modifier.testTag("submit_button"),
                   onClick = {
                     if (checkNotEmpty(accountViewModelState.tempAccount, context)) {
                       loading = true

@@ -9,6 +9,7 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -27,13 +28,17 @@ class AccountUpdateScreenUITest {
     val accountViewModel = AccountViewModel(database = database)
 
     var goBackPressed = false
+    var accountModified = false
     composeTestRule.setContent {
-      AccountUpdateScreen(accountViewModel, { goBackPressed = true }, {})
+      AccountUpdateScreen(accountViewModel, { goBackPressed = true }, { accountModified = true })
     }
 
     composeTestRule.onNodeWithTag("profile_icon").assertExists()
     composeTestRule.onNodeWithTag("first_name_label", useUnmergedTree = true).assertExists()
     composeTestRule.onNodeWithTag("last_name_label", useUnmergedTree = true).assertExists()
+
+    composeTestRule.onNodeWithTag("submit_button").performClick()
+    assertFalse(accountModified)
 
     assertEquals("", accountViewModel.uiState.value.tempAccount.firstName)
     assertEquals("", accountViewModel.uiState.value.tempAccount.lastName)
