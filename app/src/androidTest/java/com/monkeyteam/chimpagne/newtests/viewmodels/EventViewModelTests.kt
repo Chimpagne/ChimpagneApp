@@ -2,14 +2,19 @@ package com.monkeyteam.chimpagne.newtests.viewmodels
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.viewmodels.EventInputValidity
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -364,6 +369,72 @@ class EventViewModelTests {
   }
 
   @Test
+  fun testCreateEventWithEmptyTitle() {
+    val eventVM = EventViewModel(database = database)
+    replaceVMEventBy(eventVM, testEvent.copy(title = ""))
+
+    eventVM.createTheEvent(
+        onSuccess = { assertTrue(false) },
+        onInvalidInputs = { assertEquals(EventInputValidity.INVALID_TITLE, it) },
+        onFailure = { assertTrue(false) })
+
+    while (eventVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventVM.uiState.value.id.isEmpty())
+  }
+
+  private fun replaceVMEventBy2(eventVM: EventViewModel, event: ChimpagneEvent) {
+    eventVM.updateEventTitle(event.title)
+    eventVM.updateEventDescription(event.description)
+    eventVM.updateEventLocation(event.location)
+    eventVM.updateEventPublicity(event.public)
+    eventVM.updateEventTags(event.tags)
+    eventVM.updateEventStartCalendarDate(event.startsAt())
+    eventVM.updateEventEndCalendarDate(event.endsAt())
+    eventVM.updateEventSupplies(event.supplies)
+    eventVM.updateParkingSpaces(event.parkingSpaces)
+    eventVM.updateBeds(event.beds)
+  }
+
+  @Test
+  fun testCreateEventWithEqualDates() {
+    val invalidEvent =
+        ChimpagneEvent(
+            id = "FIRST_EVENT",
+            title = "First event",
+            description = "a random description",
+            location = Location("EPFL", 46.519124, 6.567593),
+            public = true,
+            tags = listOf("vegan", "monkeys"),
+            guests = emptyMap(),
+            staffs = emptyMap(),
+            startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
+            endsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
+            ownerId = "JUAN",
+            supplies =
+                mapOf(
+                    "1" to ChimpagneSupply("1", "d", 1, "g"),
+                    "2" to ChimpagneSupply("2", "ff", 2, "d"),
+                    "3" to ChimpagneSupply("3", "ee", 3, "e")),
+            parkingSpaces = 1,
+            beds = 2)
+
+    val eventVM = EventViewModel(database = database)
+    replaceVMEventBy(eventVM, invalidEvent)
+
+    eventVM.createTheEvent(
+        onSuccess = { assertTrue(false) },
+        onInvalidInputs = { assertEquals(EventInputValidity.INVALID_DATES, it) },
+        onFailure = { assertTrue(false) })
+
+    while (eventVM.uiState.value.loading) {}
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    assertTrue(eventVM.uiState.value.id.isEmpty())
+  }
+
+  @Test
   fun pollFunctionalityTest() {
     initializeTestDatabase()
 
@@ -488,5 +559,22 @@ class EventViewModelTests {
     assertEquals(false, eventSearchVM3.uiState.value.polls.containsKey(poll.id))
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
+  }
+  // This passes on my machine...
+  @Test
+  fun testInvalidTitle() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val result =
+        EventViewModel.eventInputValidityToString(EventInputValidity.INVALID_TITLE, context)
+    print(result)
+    assertEquals(context.getString(R.string.title_should_not_be_empty), result)
+  }
+
+  @Test
+  fun testInvalidDates() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val result =
+        EventViewModel.eventInputValidityToString(EventInputValidity.INVALID_DATES, context)
+    assertEquals(context.getString(R.string.invalid_dates), result)
   }
 }

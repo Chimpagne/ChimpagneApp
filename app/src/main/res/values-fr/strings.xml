@@ -21,7 +21,7 @@
     <string name="event_creation_screen_event_made_public">Cet événement a été rendu publique !</string>
     <string name="event_creation_screen_make_event_public">Rendre cet événement publique</string>
     <string name="event_creation_screen_public_legend">Visibilité De l\'événement</string>
-    <string name="event_creation_screen_logistics">Logistique avancée</string>
+    <string name="event_creation_screen_logistics">Aménagements</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
@@ -142,6 +142,9 @@
     <string name="account_first_name">Prénom</string>
     <string name="account_last_name">Nom</string>
     <string name="account_logout">Se déconnecter</string>
+
+    <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
+    <string name="invalid_dates">Dates invalides</string>
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>

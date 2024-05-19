@@ -1,8 +1,10 @@
 package com.monkeyteam.chimpagne.ui.event
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,32 +35,35 @@ fun TagsAndPubPanel(eventViewModel: EventViewModel) {
 
   var tagFieldActive by remember { mutableStateOf(true) }
 
-  Column(modifier = Modifier.padding(16.dp)) {
-    Legend(
-        stringResource(id = R.string.event_creation_screen_tags_legend), Icons.Rounded.Tag, "Tags")
+  Column(
+      modifier = Modifier.fillMaxHeight().padding(16.dp), verticalArrangement = Arrangement.Top) {
+        Legend(
+            stringResource(id = R.string.event_creation_screen_tags_legend),
+            Icons.Rounded.Tag,
+            "Tags")
 
-    TagField(
-        uiState.tags,
-        eventViewModel::updateEventTags,
-        { tagFieldActive = it },
-        Modifier.fillMaxWidth().testTag("tag_field"))
+        TagField(
+            uiState.tags,
+            eventViewModel::updateEventTags,
+            { tagFieldActive = it },
+            Modifier.fillMaxWidth().testTag("tag_field"))
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Legend(
-        stringResource(id = R.string.event_creation_screen_public_legend),
-        Icons.Rounded.Public,
-        "Public")
+        Legend(
+            stringResource(id = R.string.event_creation_screen_public_legend),
+            Icons.Rounded.Public,
+            "Public")
 
-    Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
-      Checkbox(
-          checked = uiState.public,
-          onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.public) })
-      if (uiState.public)
-          Text(stringResource(id = R.string.event_creation_screen_event_made_public))
-      else Text(stringResource(id = R.string.event_creation_screen_make_event_public))
-    }
-  }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Checkbox(
+              checked = uiState.public,
+              onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.public) })
+          if (uiState.public)
+              Text(stringResource(id = R.string.event_creation_screen_event_made_public))
+          else Text(stringResource(id = R.string.event_creation_screen_make_event_public))
+        }
+      }
 }

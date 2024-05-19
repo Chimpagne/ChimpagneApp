@@ -21,7 +21,7 @@
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
     <string name="event_creation_screen_public_legend">Event Publicity</string>
-    <string name="event_creation_screen_logistics">Advanced Logistics</string>
+    <string name="event_creation_screen_logistics">Accommodations</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Number of parking places</string>
     <string name="event_creation_screen_number_beds">Number of beds</string>
@@ -149,7 +149,8 @@
     <string name="account_last_name">Last Name</string>
     <string name="account_logout">Log out</string>
 
+    <string name="title_should_not_be_empty">The event title should not be empty</string>
+    <string name="invalid_dates">Invalid dates</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
-
 </resources>
