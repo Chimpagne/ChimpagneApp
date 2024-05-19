@@ -166,8 +166,8 @@ class MainActivity : ComponentActivity() {
                           FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
                     }
                   }
-                  ViewDetailEventScreen(
-                      navObject = navActions,
+                  DetailScreenSheet(
+                      goBack = navActions.goBack(),
                       eventViewModel =
                           viewModel(
                               factory =
