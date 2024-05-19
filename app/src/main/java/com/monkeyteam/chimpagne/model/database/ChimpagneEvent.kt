@@ -21,11 +21,11 @@ data class ChimpagneEvent(
     val staffs: Map<ChimpagneAccountUID, Boolean> = hashMapOf(),
     val startsAtTimestamp: Timestamp = Timestamp.now(),
     val endsAtTimestamp: Timestamp = Timestamp.now(),
-    val ownerId: ChimpagneAccountUID = "",
+    val owner: ChimpagneAccount = ChimpagneAccount(),
     val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
     val parkingSpaces: Int = 0,
     val beds: Int = 0,
-    val image: String = "", // TODO: Add image
+    val imageUrl: String = "", // TODO: Add image
     val socialMediaLinks: Map<String, String> =
         SupportedSocialMedia.associateBy { it.platformName }.mapValues { it.value.chosenGroupUrl },
     val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap()
@@ -48,14 +48,14 @@ data class ChimpagneEvent(
   }
 
   fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
-    if (ownerId == userUID) return ChimpagneRole.OWNER
+    if (owner.firebaseAuthUID == userUID) return ChimpagneRole.OWNER
     if (staffs[userUID] == true) return ChimpagneRole.STAFF
     if (guests[userUID] == true) return ChimpagneRole.GUEST
     return ChimpagneRole.NOT_IN_EVENT
   }
 
   fun userSet(): Set<ChimpagneAccountUID> {
-    return setOf(ownerId) + staffList() + guestList()
+    return setOf(owner.firebaseAuthUID) + staffList() + guestList()
   }
 
   constructor(
@@ -69,11 +69,11 @@ data class ChimpagneEvent(
       staffs: Map<ChimpagneAccountUID, Boolean>,
       startsAt: Calendar,
       endsAt: Calendar,
-      ownerId: ChimpagneAccountUID,
+      ownerAccount: ChimpagneAccount,
       supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       parkingSpaces: Int,
       beds: Int,
-      image: String,
+      imageUrl: String,
       socialMediaLinks: Map<String, String>,
       polls: Map<ChimpagnePollId, ChimpagnePoll>
   ) : this(
@@ -87,11 +87,11 @@ data class ChimpagneEvent(
       staffs,
       buildTimestamp(startsAt),
       buildTimestamp(endsAt),
-      ownerId,
+      ownerAccount,
       supplies,
       parkingSpaces,
       beds,
-      image,
+      imageUrl,
       socialMediaLinks,
       polls)
 }

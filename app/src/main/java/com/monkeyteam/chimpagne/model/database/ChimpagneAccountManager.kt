@@ -55,11 +55,12 @@ class ChimpagneAccountManager(
    *   if there is no account associated with the given id
    * @param onFailure(exception) Called in case of... failure
    */
-  fun getAccount(
+  private fun getAccount(
       uid: ChimpagneAccountUID,
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+
     accounts
         .document(uid)
         .get()
@@ -72,6 +73,7 @@ class ChimpagneAccountManager(
       onSuccess: (ChimpagneAccount?, Uri?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+
     getAccount(
         uid,
         { account ->
@@ -258,7 +260,7 @@ class ChimpagneAccountManager(
             if (event.endsAtTimestamp < Timestamp.now()) {
               pastEvents.add(event)
             } else {
-              if (event.ownerId == database.accountManager.currentUserAccount!!.firebaseAuthUID) {
+              if (event.owner.firebaseAuthUID == database.accountManager.currentUserAccount!!.firebaseAuthUID) {
                 createdEvents.add(event)
               } else {
                 joinedEvents.add(event)

@@ -107,7 +107,7 @@ class FindEventScreenTest {
       val navActions = NavigationActions(navController!!)
 
       FindEventMapScreen(
-          { navController!!.popBackStack() }, findViewModel, accountViewModel, navActions)
+          { navController!!.popBackStack() }, findViewModel, {}, accountViewModel, navActions)
     }
 
     // Simulate the goBack action by clicking the back icon
@@ -129,7 +129,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+      FindEventMapScreen({}, findViewModel, {}, accountViewModel, navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -198,7 +198,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, FindEventsViewModel(database = database), accountViewModel, navActions)
+      FindEventMapScreen({}, FindEventsViewModel(database = database), {}, accountViewModel, navActions)
     }
 
     composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()

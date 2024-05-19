@@ -452,7 +452,7 @@ fun FindEventDetailScreen(
     }
   }
 
-    DetailScreenSheet(goBackToMap, event, onJoinClick, context)
+    DetailScreenSheet(goBackToMap, event, onJoinClick)
 }
 
 @ExperimentalMaterial3Api

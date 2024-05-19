@@ -2,6 +2,9 @@ package com.monkeyteam.chimpagne.ui
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,14 +20,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Login
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.rounded.Login
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,22 +47,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
+import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
+import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
+import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.EventCard
+import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 
@@ -62,9 +85,13 @@ import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 fun DetailScreenSheet(
     goBack: () -> Unit = {},
     event: ChimpagneEvent?,
-    onJoinClick: (ChimpagneEvent) -> Unit = {},
-    context: Context? = null
+    onJoinClick: (ChimpagneEvent) -> Unit = {}
 ) {
+
+
+    val clipboardManager = LocalClipboardManager.current
+
+    val context = LocalContext.current
 
     var showQRDialog by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
@@ -125,7 +152,7 @@ fun DetailScreenSheet(
                 if (showQRDialog) {
                     QRCodeDialog(eventId = event.id, onDismiss = { showQRDialog = false })
                 }
-                if (showDialog && context != null) {
+                if (showDialog) {
                     popUpCalendar(
                         onAccept = {
                             createCalendarIntent(event)?.let { context.startActivity(it) }
@@ -137,34 +164,192 @@ fun DetailScreenSheet(
                         event = event)
                 }
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     item {
-                        Text(
-                            text = event.title,
-                            style = ChimpagneTypography.headlineMedium,
-                            modifier = Modifier.padding(bottom = 8.dp))
-
-                        Text(
-                            text = event.startsAt().time.toString(),
-                            style = ChimpagneTypography.bodyMedium,
-                            modifier = Modifier.padding(bottom = 8.dp))
-
-                        Text(
-                            text = event.endsAt().time.toString(),
-                            style = ChimpagneTypography.bodyMedium,
-                            modifier = Modifier.padding(bottom = 8.dp))
-
-                        Text(
-                            text = event.description,
-                            style = ChimpagneTypography.bodySmall,
-                            modifier = Modifier.padding(bottom = 8.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceEvenly) {
-                            event.tags.forEach { tag -> SimpleTagChip(tag) }
+                        Box(
+                            modifier = Modifier
+                                .height(200.dp)
+                                .fillMaxWidth()
+                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            ImageWithBlackFilterOverlay(event.imageUrl)
                         }
+                    }
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .horizontalScroll(rememberScrollState())
+                                .testTag("tag list")
+                        ) {
+                            event.tags.forEach { tag ->
+                                Box(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                        .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
+                                        .clip(RoundedCornerShape(50))
+                                        .background(MaterialTheme.colorScheme.primaryContainer)
+                                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                                ) {
+                                    SimpleTagChip(tag)
+                                }
+                            }
+                        }
+                    }
+                    item {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.LightGray
+                        )
+                    }
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 40.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().testTag("event date"),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = stringResource(id = R.string.date_tools_from),
+                                        fontFamily = ChimpagneFontFamily,
+                                        fontSize = 16.sp,
+                                        color = Color.Gray
+                                    )
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = simpleDateFormat(event.startsAtTimestamp),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = simpleTimeFormat(event.startsAtTimestamp),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                                CalendarButton(
+                                    event = event,
+                                    contextMainActivity = context
+                                )
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        text = stringResource(id = R.string.date_tools_until),
+                                        fontFamily = ChimpagneFontFamily,
+                                        fontSize = 16.sp,
+                                        color = Color.Gray
+                                    )
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = simpleDateFormat(event.endsAtTimestamp),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = simpleTimeFormat(event.endsAtTimestamp),
+                                            fontFamily = ChimpagneFontFamily,
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
+                                        .clip(RoundedCornerShape(50))
+                                        .background(MaterialTheme.colorScheme.primaryContainer)
+                                        .padding(horizontal = 24.dp, vertical = 12.dp)
+                                ) {
+                                    Text(
+                                        text = "${event.guests.count()} ${stringResource(id = R.string.event_details_screen_number_of_guests)}",
+                                        fontFamily = ChimpagneFontFamily,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        modifier = Modifier.testTag("number of guests")
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                IconButton(
+                                    onClick = {
+                                        val annotatedString = buildAnnotatedString {
+                                            append(ContextCompat.getString(context, R.string.deep_link_url_event) + event.id)
+                                        }
+                                        clipboardManager.setText(annotatedString)
+                                    },
+                                    modifier = Modifier.size(36.dp).testTag("share")
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Share,
+                                        contentDescription = "Share Event",
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+                            }
+                        }
+                    }
+                    item {
+                        Spacer(Modifier.height(8.dp))
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.LightGray
+                        )
+                    }
+                    item {
+                        var expandedDescription by remember { mutableStateOf(false) }
+                        val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("description")
+                                .clickable { expandedDescription = !expandedDescription }
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            Text(
+                                text = event.description,
+                                fontSize = 16.sp,
+                                fontFamily = ChimpagneFontFamily,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                maxLines = maxLines,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Icon(
+                                imageVector = if (expandedDescription) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                                contentDescription = if (expandedDescription) "Collapse" else "Expand",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                    item {
+                        HorizontalDivider(
+                            modifier = Modifier.padding(vertical = 16.dp),
+                            thickness = 1.dp,
+                            color = Color.LightGray
+                        )
                     }
                 }
             } else {

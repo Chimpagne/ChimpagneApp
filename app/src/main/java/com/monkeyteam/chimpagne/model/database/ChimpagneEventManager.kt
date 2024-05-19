@@ -92,7 +92,7 @@ class ChimpagneEventManager(
 
     val eventId = events.document().id
     updateEvent(
-        event.copy(id = eventId),
+        event.copy(id = eventId, owner = database.accountManager.currentUserAccount!!),
         {
           database.accountManager.joinEvent(
               eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
@@ -122,7 +122,7 @@ class ChimpagneEventManager(
           val event = it.toObject<ChimpagneEvent>()
           if (event != null) {
             val users =
-                listOf(event.ownerId) + event.staffs.keys.toList() + event.guests.keys.toList()
+                listOf(event.owner.firebaseAuthUID) + event.staffs.keys.toList() + event.guests.keys.toList()
             users.forEach { userUID ->
               database.accountManager.atomic.leaveEvent(userUID, id, {}, {})
             }

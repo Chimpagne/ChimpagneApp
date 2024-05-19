@@ -1,5 +1,7 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
@@ -20,7 +24,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 fun TagChip(tag: String, onRemove: () -> Unit) {
   Surface(
       modifier = Modifier.padding(end = 8.dp),
-      shape = RoundedCornerShape(52.dp),
+      shape = RoundedCornerShape(100),
       color = MaterialTheme.colorScheme.primary,
       contentColor = MaterialTheme.colorScheme.onPrimary) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -45,10 +49,15 @@ fun SimpleTagChip(tag: String) {
 }
 
 @Composable
-fun SmallSimpleTagChip(tag: String) {
-  Text(
-      text = "#$tag",
-      style = ChimpagneTypography.bodyMedium,
-      color = MaterialTheme.colorScheme.primary,
-      modifier = Modifier.padding(end = 8.dp))
+fun EventTagChip(tag: String) {
+    Box(
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .shadow(elevation = 4.dp, shape = RoundedCornerShape(50))
+            .clip(RoundedCornerShape(50))
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        SimpleTagChip(tag)
+    }
 }

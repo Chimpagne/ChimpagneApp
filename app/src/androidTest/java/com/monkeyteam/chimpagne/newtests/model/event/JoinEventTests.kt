@@ -36,7 +36,7 @@ class JoinEventTests {
 
     var eventId = ""
     eventManager.createEvent(
-        ChimpagneEvent(title = "Banana Land", ownerId = anAccount.firebaseAuthUID),
+        ChimpagneEvent(title = "Banana Land", owner = anAccount),
         { eventId = it },
         { assertTrue(false) })
     while (eventId == "") {}
@@ -45,7 +45,7 @@ class JoinEventTests {
     while (e == null) {}
     var event = e!!
 
-    assertEquals(anAccount.firebaseAuthUID, event.ownerId)
+    assertEquals(anAccount.firebaseAuthUID, event.owner.firebaseAuthUID)
     assertEquals(ChimpagneRole.OWNER, event.getRole(anAccount.firebaseAuthUID))
     assertEquals(ChimpagneRole.NOT_IN_EVENT, event.getRole(anotherAccount.firebaseAuthUID))
 
@@ -64,7 +64,7 @@ class JoinEventTests {
     while (e == null) {}
     event = e!!
 
-    assertEquals(anAccount.firebaseAuthUID, event.ownerId)
+    assertEquals(anAccount.firebaseAuthUID, event.owner.firebaseAuthUID)
     assertEquals(ChimpagneRole.OWNER, event.getRole(anAccount.firebaseAuthUID))
     assertEquals(ChimpagneRole.GUEST, event.getRole(anotherAccount.firebaseAuthUID))
 
@@ -78,7 +78,7 @@ class JoinEventTests {
     while (e == null) {}
     event = e!!
 
-    assertEquals(anAccount.firebaseAuthUID, event.ownerId)
+    assertEquals(anAccount.firebaseAuthUID, event.owner.firebaseAuthUID)
     assertEquals(ChimpagneRole.OWNER, event.getRole(anAccount.firebaseAuthUID))
     assertTrue(ChimpagneRole.GUEST != event.getRole(anotherAccount.firebaseAuthUID))
     assertEquals(ChimpagneRole.STAFF, event.getRole(anotherAccount.firebaseAuthUID))
@@ -114,7 +114,7 @@ class JoinEventTests {
     while (e == null) {}
     event = e!!
 
-    assertEquals(anAccount.firebaseAuthUID, event.ownerId)
+    assertEquals(anAccount.firebaseAuthUID, event.owner.firebaseAuthUID)
     assertEquals(ChimpagneRole.OWNER, event.getRole(anAccount.firebaseAuthUID))
     assertTrue(ChimpagneRole.STAFF != event.getRole(anotherAccount.firebaseAuthUID))
     assertEquals(ChimpagneRole.GUEST, event.getRole(anotherAccount.firebaseAuthUID))
