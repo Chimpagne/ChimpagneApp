@@ -179,6 +179,12 @@ fun HomeScreen(
                                   findViewModel.updateSelectedLocation(
                                       Location("mylocation", lat, lng))
 
+                                  var accountUID = ""
+                                  uiState.currentUserUID.let {
+                                    if (it != null) {
+                                      accountUID = it
+                                    }
+                                  }
                                   findViewModel.fetchAroundLocation(
                                       onSuccess = {
                                         findViewModel.uiState.value.events.forEach { (_, u) ->
@@ -190,7 +196,8 @@ fun HomeScreen(
                                               getClosestNEvent(eventsNearMe, N_CLOSEST, it)
                                         }
                                       },
-                                      onFailure = { Log.e("err", "Failure fetchAroundLocation") })
+                                      onFailure = { Log.e("err", "Failure fetchAroundLocation") },
+                                      accountUID = accountUID)
                                 }
                               }
                             }

@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.model.database
 
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import java.util.Calendar
@@ -15,6 +16,15 @@ fun startsBeforeFilter(timestamp: Timestamp): Filter {
 
 fun startsAfterFilter(timestamp: Timestamp): Filter {
   return Filter.greaterThan("startsAtTimestamp", timestamp)
+}
+
+fun notJoinedFilter(chimpagneAccountUID: ChimpagneAccountUID): Filter {
+  if (chimpagneAccountUID != "") {
+    return Filter.notEqualTo(FieldPath.of("guests", chimpagneAccountUID), true)
+  } else {
+    // If we have no accountUID, don't filter
+    return Filter.equalTo(FieldPath.of("title"), FieldPath.of("title"))
+  }
 }
 
 fun endsBeforeFilter(timestamp: Timestamp): Filter {

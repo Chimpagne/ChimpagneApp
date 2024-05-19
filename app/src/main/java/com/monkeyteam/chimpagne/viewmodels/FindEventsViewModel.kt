@@ -4,14 +4,18 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Filter
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.containsTagsFilter
 import com.monkeyteam.chimpagne.model.database.happensInDateRangeFilter
+import com.monkeyteam.chimpagne.model.database.notJoinedFilter
 import com.monkeyteam.chimpagne.model.database.onlyPublicFilter
+import com.monkeyteam.chimpagne.model.database.startsAfterFilter
 import com.monkeyteam.chimpagne.model.location.Location
 import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,7 +75,11 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
-  fun fetchAroundLocation(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun fetchAroundLocation(
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {},
+      accountUID: ChimpagneAccountUID = ""
+  ) {
     eventManager.getAllEventsByFilterAroundLocation(
         _uiState.value.selectedLocation!!,
         Double.MAX_VALUE,
@@ -92,7 +100,12 @@ class FindEventsViewModel(database: Database) : ViewModel() {
           Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
           setLoading(false)
           onFailure(it)
-        })
+        },
+        filter =
+            Filter.and(
+                onlyPublicFilter(),
+                startsAfterFilter(Timestamp.now()),
+                notJoinedFilter(accountUID)))
   }
 
   fun fetchEvent(
