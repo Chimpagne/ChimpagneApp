@@ -59,7 +59,6 @@ fun EventCreationScreen(
               }
             })
       }) { innerPadding ->
-
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.padding(innerPadding),

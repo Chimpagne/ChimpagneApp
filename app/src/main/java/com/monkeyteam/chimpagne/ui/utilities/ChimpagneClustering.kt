@@ -113,11 +113,14 @@ class CustomClusterRenderer<T : ClusterItem>(
   }
 }
 
-
 class SingletonCluster(private val marker: MarkerData) : Cluster<MarkerData> {
-    override fun getItems(): Collection<MarkerData> = listOf(marker)
-    override fun getSize(): Int {return 1}
-    override fun getPosition(): LatLng {
-        return LatLng(marker.location.latitude, marker.location.longitude)
-    }
+  override fun getItems(): Collection<MarkerData> = listOf(marker)
+
+  override fun getSize(): Int {
+    return 1
+  }
+
+  override fun getPosition(): LatLng {
+    return LatLng(marker.location.latitude, marker.location.longitude)
+  }
 }

@@ -95,7 +95,7 @@ fun MapContainer(
         modifier = Modifier.fillMaxSize().testTag("progressBar"),
         contentAlignment = Alignment.Center) {
           CircularProgressIndicator() // You can customize this part as needed
-        }
+    }
   }
 }
 

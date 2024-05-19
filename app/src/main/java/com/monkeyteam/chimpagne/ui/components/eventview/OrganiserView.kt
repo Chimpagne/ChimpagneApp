@@ -26,27 +26,25 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
-fun OrganiserView(
-    owner : ChimpagneAccount
-) {
+fun OrganiserView(owner: ChimpagneAccount) {
 
-    val context = LocalContext.current
+  val context = LocalContext.current
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+  Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         ProfileIcon(
             uri = owner.imageUri,
             onClick = {
-                Toast.makeText(
-                    context,
-                    "This function will be implemented in a future version",
-                    Toast.LENGTH_SHORT)
-                    .show()
+              Toast.makeText(
+                      context,
+                      "This function will be implemented in a future version",
+                      Toast.LENGTH_SHORT)
+                  .show()
             })
         Text(
             text =
-            "${stringResource(id = R.string.event_details_screen_organized_by)}\n ${owner.firstName} ${owner.lastName}",
+                "${stringResource(id = R.string.event_details_screen_organized_by)}\n ${owner.firstName} ${owner.lastName}",
             fontSize = 14.sp,
             fontFamily = ChimpagneFontFamily,
             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -57,12 +55,12 @@ fun OrganiserView(
             icon = Icons.Default.Warning,
             textStyle = ChimpagneTypography.displaySmall,
             onClick = {
-                Toast.makeText(
-                    context,
-                    "This function will be implemented in a future version",
-                    Toast.LENGTH_SHORT)
-                    .show()
+              Toast.makeText(
+                      context,
+                      "This function will be implemented in a future version",
+                      Toast.LENGTH_SHORT)
+                  .show()
             },
             modifier = Modifier.testTag("reportProblem"))
-    }
+      }
 }

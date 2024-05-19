@@ -162,7 +162,8 @@ fun MainFindEventScreen(
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
       FindEventScreens.DETAIL ->
-          FindEventDetailScreen(displayResult, findViewModel, accountViewModel, showToast, currentEvent)
+          FindEventDetailScreen(
+              displayResult, findViewModel, accountViewModel, showToast, currentEvent)
     }
   }
 }
@@ -452,7 +453,7 @@ fun FindEventDetailScreen(
     }
   }
 
-    DetailScreenSheet(goBackToMap, event, onJoinClick)
+  DetailScreenSheet(goBackToMap, event, onJoinClick)
 }
 
 @ExperimentalMaterial3Api

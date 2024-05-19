@@ -9,9 +9,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ChimpagneDivider() {
-    HorizontalDivider(
-        modifier = Modifier.padding(vertical = 16.dp),
-        thickness = 1.dp,
-        color = Color.LightGray
-    )
+  HorizontalDivider(
+      modifier = Modifier.padding(vertical = 16.dp), thickness = 1.dp, color = Color.LightGray)
 }

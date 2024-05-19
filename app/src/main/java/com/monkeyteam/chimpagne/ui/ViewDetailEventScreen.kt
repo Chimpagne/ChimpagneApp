@@ -7,10 +7,8 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -115,9 +113,7 @@ fun ViewDetailEventScreen(
                 Icon(
                     imageVector = Icons.Rounded.QrCodeScanner,
                     contentDescription = "Scan QR",
-                    modifier = Modifier
-                        .size(36.dp)
-                        .testTag("scan QR"))
+                    modifier = Modifier.size(36.dp).testTag("scan QR"))
               }
             })
       }) { innerPadding ->
@@ -130,18 +126,15 @@ fun ViewDetailEventScreen(
         }
         LazyColumn(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background),
+                Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.Top) {
               item { ImageCard(uiState.imageUrl) }
               item {
                 Row(
                     modifier =
-                    Modifier
-                        .horizontalScroll(rememberScrollState())
-                        .testTag("tag list")) {
+                        Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
                       uiState.tags.forEach { tag -> EventTagChip(tag) }
                     }
               }
@@ -283,17 +276,14 @@ fun ViewDetailEventScreen(
 
 @Composable
 fun IconRow(icons: List<IconInfo>) {
-  Row(modifier = Modifier
-      .horizontalScroll(rememberScrollState())
-      .padding(16.dp)) {
+  Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp)) {
     icons.forEach { iconInfo ->
       Column(
           horizontalAlignment = Alignment.CenterHorizontally,
           modifier =
-          Modifier
-              .padding(horizontal = 16.dp)
-              .clickable(onClick = iconInfo.onClick)
-              .testTag(iconInfo.testTag)) {
+              Modifier.padding(horizontal = 16.dp)
+                  .clickable(onClick = iconInfo.onClick)
+                  .testTag(iconInfo.testTag)) {
             Icon(
                 imageVector = iconInfo.icon,
                 contentDescription = iconInfo.description,

@@ -12,18 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 
-
 @Composable
 fun ImageCard(imageUrl: String) {
-    Card(
-        modifier =
-        Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .aspectRatio(1.9f),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
+  Card(
+      modifier = Modifier.padding(16.dp).fillMaxWidth().aspectRatio(1.9f),
+      shape = RoundedCornerShape(12.dp),
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+      elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
         ImageWithBlackFilterOverlay(imageUrl)
-    }
+      }
 }

@@ -40,114 +40,94 @@ import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
 @Composable
-fun EventMainInfo(
-    event: ChimpagneEvent
-) {
+fun EventMainInfo(event: ChimpagneEvent) {
 
-    val context = LocalContext.current
-    val clipboardManager = LocalClipboardManager.current
+  val context = LocalContext.current
+  val clipboardManager = LocalClipboardManager.current
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 40.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+  Column(
+      modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             modifier = Modifier.fillMaxWidth().testTag("event date"),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            horizontalArrangement = Arrangement.SpaceBetween) {
+              Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = stringResource(id = R.string.date_tools_from),
                     fontFamily = ChimpagneFontFamily,
                     fontSize = 16.sp,
-                    color = Color.Gray
-                )
+                    color = Color.Gray)
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = simpleDateFormat(event.startsAtTimestamp),
-                        fontFamily = ChimpagneFontFamily,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = simpleTimeFormat(event.startsAtTimestamp),
-                        fontFamily = ChimpagneFontFamily,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
+                  Text(
+                      text = simpleDateFormat(event.startsAtTimestamp),
+                      fontFamily = ChimpagneFontFamily,
+                      fontSize = 16.sp,
+                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                      fontWeight = FontWeight.Bold)
+                  Text(
+                      text = simpleTimeFormat(event.startsAtTimestamp),
+                      fontFamily = ChimpagneFontFamily,
+                      fontSize = 16.sp,
+                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                      fontWeight = FontWeight.Bold)
                 }
-            }
-            CalendarButton(
-                event = event,
-                contextMainActivity = context
-            )
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+              }
+              CalendarButton(event = event, contextMainActivity = context)
+              Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = stringResource(id = R.string.date_tools_until),
                     fontFamily = ChimpagneFontFamily,
                     fontSize = 16.sp,
-                    color = Color.Gray
-                )
+                    color = Color.Gray)
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = simpleDateFormat(event.endsAtTimestamp),
-                        fontFamily = ChimpagneFontFamily,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = simpleTimeFormat(event.endsAtTimestamp),
-                        fontFamily = ChimpagneFontFamily,
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
-                    )
+                  Text(
+                      text = simpleDateFormat(event.endsAtTimestamp),
+                      fontFamily = ChimpagneFontFamily,
+                      fontSize = 16.sp,
+                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                      fontWeight = FontWeight.Bold)
+                  Text(
+                      text = simpleTimeFormat(event.endsAtTimestamp),
+                      fontFamily = ChimpagneFontFamily,
+                      fontSize = 16.sp,
+                      color = MaterialTheme.colorScheme.onPrimaryContainer,
+                      fontWeight = FontWeight.Bold)
                 }
+              }
             }
-        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
-                    .clip(RoundedCornerShape(50))
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(horizontal = 24.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = "${event.guests.count()} ${stringResource(id = R.string.event_details_screen_number_of_guests)}",
-                    fontFamily = ChimpagneFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.testTag("number of guests")
-                )
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            IconButton(
-                onClick = {
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+              Box(
+                  modifier =
+                      Modifier.shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp))
+                          .clip(RoundedCornerShape(50))
+                          .background(MaterialTheme.colorScheme.primaryContainer)
+                          .padding(horizontal = 24.dp, vertical = 12.dp)) {
+                    Text(
+                        text =
+                            "${event.guests.count()} ${stringResource(id = R.string.event_details_screen_number_of_guests)}",
+                        fontFamily = ChimpagneFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.testTag("number of guests"))
+                  }
+              Spacer(modifier = Modifier.width(8.dp))
+              IconButton(
+                  onClick = {
                     val annotatedString = buildAnnotatedString {
-                        append(ContextCompat.getString(context, R.string.deep_link_url_event) + event.id)
+                      append(
+                          ContextCompat.getString(context, R.string.deep_link_url_event) + event.id)
                     }
                     clipboardManager.setText(annotatedString)
-                },
-                modifier = Modifier.size(36.dp).testTag("share")
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Share,
-                    contentDescription = "Share Event",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                  },
+                  modifier = Modifier.size(36.dp).testTag("share")) {
+                    Icon(
+                        imageVector = Icons.Rounded.Share,
+                        contentDescription = "Share Event",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                  }
             }
-        }
-    }
+      }
 }

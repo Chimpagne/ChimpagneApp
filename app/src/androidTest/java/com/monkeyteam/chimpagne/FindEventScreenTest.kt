@@ -198,7 +198,8 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, FindEventsViewModel(database = database), {}, accountViewModel, navActions)
+      FindEventMapScreen(
+          {}, FindEventsViewModel(database = database), {}, accountViewModel, navActions)
     }
 
     composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()

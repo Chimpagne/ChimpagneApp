@@ -27,9 +27,10 @@ fun EventDescription(description: String, collapsable: Boolean) {
   val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
   Row(
       modifier =
-          Modifier.fillMaxWidth().testTag("description").clickable {
-            expandedDescription = !expandedDescription
-          }.padding(horizontal = 16.dp)) {
+          Modifier.fillMaxWidth()
+              .testTag("description")
+              .clickable { expandedDescription = !expandedDescription }
+              .padding(horizontal = 16.dp)) {
         Text(
             text = description,
             style = ChimpagneTypography.bodyMedium,

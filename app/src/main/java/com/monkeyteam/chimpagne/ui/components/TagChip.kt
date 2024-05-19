@@ -50,14 +50,13 @@ fun SimpleTagChip(tag: String) {
 
 @Composable
 fun EventTagChip(tag: String) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(50))
-            .clip(RoundedCornerShape(50))
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
+  Box(
+      modifier =
+          Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+              .shadow(elevation = 4.dp, shape = RoundedCornerShape(50))
+              .clip(RoundedCornerShape(50))
+              .background(MaterialTheme.colorScheme.primaryContainer)
+              .padding(horizontal = 16.dp, vertical = 8.dp)) {
         SimpleTagChip(tag)
-    }
+      }
 }
