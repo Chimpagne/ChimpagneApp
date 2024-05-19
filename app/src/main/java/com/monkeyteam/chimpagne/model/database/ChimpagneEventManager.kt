@@ -124,9 +124,7 @@ class ChimpagneEventManager(
           val event = it.toObject<ChimpagneEvent>()
           if (event != null) {
             val users =
-                listOf(event.ownerId) +
-                    event.staffs.keys.toList() +
-                    event.guests.keys.toList()
+                listOf(event.ownerId) + event.staffs.keys.toList() + event.guests.keys.toList()
             users.forEach { userUID ->
               database.accountManager.atomic.leaveEvent(userUID, id, {}, {})
             }

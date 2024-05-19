@@ -86,7 +86,8 @@ fun OrganiserView(ownerId: ChimpagneAccountUID, accountViewModel: AccountViewMod
       }
       Text(
           text =
-              (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.firstName ?: "") + " " +
+              (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.firstName ?: "") +
+                  " " +
                   (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.lastName ?: ""),
           fontSize = 14.sp,
           fontFamily = ChimpagneFontFamily,
