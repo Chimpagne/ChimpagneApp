@@ -440,10 +440,6 @@ fun FindEventDetailScreen(
     event: ChimpagneEvent?
 ) {
 
-  val uiState by findViewModel.uiState.collectAsState()
-  val context = LocalContext.current
-  val coroutineScope = rememberCoroutineScope()
-
   val onJoinClick: (ChimpagneEvent) -> Unit = {
     if (event != null) {
       showToast("Joining ${event.title}")
@@ -453,15 +449,15 @@ fun FindEventDetailScreen(
     }
   }
 
-  DetailScreenSheet(goBackToMap, event, onJoinClick)
+  DetailScreenSheet(goBackToMap, event, onJoinClick, accountViewModel)
 }
 
 @ExperimentalMaterial3Api
 @Composable
 fun FindEventMapScreen(
-    onBackIconClicked: () -> Unit,
+    onBackIconClicked: () -> Unit = {},
     findViewModel: FindEventsViewModel,
-    onEventClick: (ChimpagneEvent) -> Unit,
+    onEventClick: (ChimpagneEvent) -> Unit = {},
     accountViewModel: AccountViewModel,
     navObject: NavigationActions
 ) {

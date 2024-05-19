@@ -2,10 +2,8 @@ package com.monkeyteam.chimpagne.ui.components.eventview
 
 import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,58 +47,50 @@ fun OrganiserView(owner: ChimpagneAccount, accountViewModel: AccountViewModel) {
   val context = LocalContext.current
 
   Column(horizontalAlignment = Alignment.CenterHorizontally) {
-      Row(
-          verticalAlignment = Alignment.CenterVertically,
-          modifier = Modifier
-              .fillMaxWidth()
-      ) {
-          Text(
-              text = stringResource(id = R.string.event_details_screen_organized_by),
-              fontSize = 16.sp,
-              style = ChimpagneTypography.titleLarge,
-              color = MaterialTheme.colorScheme.onPrimaryContainer,
-              modifier = Modifier.padding(start = 16.dp)
-          )
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+      Text(
+          text = stringResource(id = R.string.event_details_screen_organized_by),
+          fontSize = 16.sp,
+          style = ChimpagneTypography.titleLarge,
+          color = MaterialTheme.colorScheme.onPrimaryContainer,
+          modifier = Modifier.padding(start = 16.dp))
 
-          Spacer(modifier = Modifier.weight(2f))
+      Spacer(modifier = Modifier.weight(2f))
 
-          ChimpagneButton(
-              text = stringResource(id = R.string.event_details_screen_report_problem),
-              icon = Icons.Default.Flag,
-              textStyle = ChimpagneTypography.bodyMedium,
+      ChimpagneButton(
+          text = stringResource(id = R.string.event_details_screen_report_problem),
+          icon = Icons.Default.Flag,
+          textStyle = ChimpagneTypography.bodyMedium,
+          onClick = {
+            Toast.makeText(
+                    context,
+                    "This function will be implemented in a future version",
+                    Toast.LENGTH_SHORT)
+                .show()
+          },
+          modifier = Modifier.testTag("reportProblem"))
+    }
+
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+      Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+        profilePictureUriState.value?.let { uri ->
+          ProfileIcon(
+              uri = uri,
               onClick = {
-                  Toast.makeText(
-                      context,
-                      "This function will be implemented in a future version",
-                      Toast.LENGTH_SHORT
-                  ).show()
-              },
-              modifier = Modifier.testTag("reportProblem")
-          )
+                Toast.makeText(
+                        context,
+                        "This function will be implemented in a future version",
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
+        } ?: CircularProgressIndicator()
       }
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = 8.dp)) {
-          Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-            profilePictureUriState.value?.let { uri ->
-              ProfileIcon(
-                  uri = uri,
-                  onClick = {
-                    Toast.makeText(
-                            context,
-                            "This function will be implemented in a future version",
-                            Toast.LENGTH_SHORT)
-                        .show()
-                  })
-            } ?: CircularProgressIndicator()
-          }
-          Text(
-              text = "${owner.firstName} ${owner.lastName}",
-              fontSize = 14.sp,
-              fontFamily = ChimpagneFontFamily,
-              color = MaterialTheme.colorScheme.onPrimaryContainer,
-              modifier = Modifier.padding(start = 16.dp))
-        }
+      Text(
+          text = "${owner.firstName} ${owner.lastName}",
+          fontSize = 14.sp,
+          fontFamily = ChimpagneFontFamily,
+          color = MaterialTheme.colorScheme.onPrimaryContainer,
+          modifier = Modifier.padding(start = 16.dp))
+    }
   }
 }

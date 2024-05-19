@@ -107,18 +107,19 @@ fun EventMainInfo(event: ChimpagneEvent) {
                           .clip(RoundedCornerShape(50))
                           .background(MaterialTheme.colorScheme.primaryContainer)
                           .padding(horizontal = 24.dp, vertical = 12.dp)) {
-                  Text(
-                      text = buildAnnotatedString {
-                          withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                              append("${event.guests.count()} ")
-                          }
-                          append(stringResource(id = R.string.event_details_screen_number_of_guests))
-                      },
-                      fontFamily = ChimpagneFontFamily,
-                      color = MaterialTheme.colorScheme.onPrimaryContainer,
-                      modifier = Modifier.testTag("number of guests")
-                  )
-
+                    Text(
+                        text =
+                            buildAnnotatedString {
+                              withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("${event.guests.count()} ")
+                              }
+                              append(
+                                  stringResource(
+                                      id = R.string.event_details_screen_number_of_guests))
+                            },
+                        fontFamily = ChimpagneFontFamily,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.testTag("number of guests"))
                   }
               Spacer(modifier = Modifier.width(8.dp))
               IconButton(

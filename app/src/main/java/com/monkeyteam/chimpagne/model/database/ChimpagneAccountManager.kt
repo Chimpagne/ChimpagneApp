@@ -162,15 +162,15 @@ class ChimpagneAccountManager(
   }
 
   fun fetchProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
-      if (uid.isEmpty())  {
-            onSuccess(null)
-      } else {
-          profilePictures
-              .child(uid)
-              .downloadUrl
-              .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
-              .addOnFailureListener { onSuccess(null) }
-      }
+    if (uid.isEmpty()) {
+      onSuccess(null)
+    } else {
+      profilePictures
+          .child(uid)
+          .downloadUrl
+          .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
+          .addOnFailureListener { onSuccess(null) }
+    }
   }
 
   private val eventManager = database.eventManager

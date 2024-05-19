@@ -129,7 +129,10 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, findViewModel, {}, accountViewModel, navActions)
+      FindEventMapScreen(
+          findViewModel = findViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -209,7 +212,9 @@ class FindEventScreenTest {
   fun testEventDetailSheetDisplay() {
     val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
 
-    composeTestRule.setContent { DetailScreenSheet(event = sampleEvent) }
+    composeTestRule.setContent {
+      DetailScreenSheet(event = sampleEvent, accountViewModel = accountViewModel)
+    }
 
     // Assert that event details are displayed correctly
     composeTestRule.onNodeWithText(sampleEvent.title).assertIsDisplayed()

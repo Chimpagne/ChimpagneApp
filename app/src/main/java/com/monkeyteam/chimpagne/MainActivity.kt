@@ -184,7 +184,8 @@ class MainActivity : ComponentActivity() {
                   event = event,
                   onJoinClick = {
                     navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
-                  })
+                  },
+                  accountViewModel = accountViewModel)
             }
             composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =

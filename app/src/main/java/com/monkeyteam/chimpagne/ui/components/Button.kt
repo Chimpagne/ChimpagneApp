@@ -86,7 +86,7 @@ fun ChimpagneButton(
 fun IconTextButton(
     text: String,
     icon: ImageVector,
-    textStyle: TextStyle = ChimpagneTypography.displayMedium,
+    textStyle: TextStyle = ChimpagneTypography.titleSmall,
     color: Color = MaterialTheme.colorScheme.surfaceVariant,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
