@@ -32,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -64,6 +63,7 @@ import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
+import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
@@ -79,8 +79,6 @@ fun ViewDetailEventScreen(
 
   var showDialog by remember { mutableStateOf(false) }
   var showPromptLogin by remember { mutableStateOf(false) }
-
-  LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   Scaffold(
       topBar = {
@@ -124,153 +122,160 @@ fun ViewDetailEventScreen(
           PromptLogin(context, navObject)
           showPromptLogin = false
         }
-        LazyColumn(
-            modifier =
-                Modifier.fillMaxSize()
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.Top) {
-              item { ImageCard(uiState.imageUrl) }
-              item {
-                Row(
-                    modifier =
-                        Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
-                      uiState.tags.forEach { tag -> EventTagChip(tag) }
-                    }
-              }
-              item { ChimpagneDivider() }
-              item { EventMainInfo(event = eventViewModel.buildChimpagneEvent()) }
-              item { ChimpagneDivider() }
-              item { EventDescription(uiState.description, true) }
-              item { ChimpagneDivider() }
-              item { OrganiserView(uiState.owner) }
-              item {
-                // MAP WILL BE ADDED HERE
-              }
-              item {
-                SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
-              }
-              item { ChimpagneDivider() }
-              item {
-                val iconList = mutableListOf<IconInfo>()
-                if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-                  iconList.add(
-                      IconInfo(
-                          icon = Icons.Rounded.Edit,
-                          description =
-                              stringResource(id = R.string.event_details_screen_edit_button),
-                          onClick = {
-                            navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
-                          },
-                          testTag = "edit"))
-                  iconList.add(
-                      IconInfo(
-                          icon = Icons.Rounded.PeopleAlt,
-                          description =
-                              stringResource(
-                                  id = R.string.event_details_screen_manage_staff_button),
-                          onClick = {
-                            navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
-                          },
-                          testTag = "manage staff"))
-                } else {
-                  iconList.add(
-                      IconInfo(
-                          icon = Icons.Rounded.RemoveCircleOutline,
-                          description =
-                              stringResource(id = R.string.event_details_screen_leave_button),
-                          onClick = {
-                            if (accountViewModel.isUserLoggedIn()) {
-                              eventViewModel.leaveTheEvent(
-                                  onSuccess = {
-                                    Toast.makeText(
-                                            context,
-                                            context.getString(
-                                                R.string.event_details_screen_leave_toast_success),
-                                            Toast.LENGTH_SHORT)
-                                        .show()
-                                    navObject.goBack()
-                                  })
-                            } else {
-                              showPromptLogin = true
-                            }
-                          },
-                          testTag = "leave"))
+        if (uiState.loading) {
+          SpinnerView()
+        } else {
+          LazyColumn(
+              modifier =
+                  Modifier.fillMaxSize()
+                      .padding(innerPadding)
+                      .background(MaterialTheme.colorScheme.background),
+              verticalArrangement = Arrangement.Top) {
+                item { ImageCard(uiState.imageUrl) }
+                item {
+                  Row(
+                      modifier =
+                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
+                        uiState.tags.forEach { tag -> EventTagChip(tag) }
+                      }
                 }
-                iconList.addAll(
-                    listOf(
+                item { ChimpagneDivider() }
+                item { EventMainInfo(event = eventViewModel.buildChimpagneEvent()) }
+                item { ChimpagneDivider() }
+                item { EventDescription(uiState.description, true) }
+                item { ChimpagneDivider() }
+                item { OrganiserView(uiState.owner, accountViewModel) }
+                item {
+                  // MAP WILL BE ADDED HERE
+                }
+                item {
+                  SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
+                }
+                item { ChimpagneDivider() }
+                item {
+                  val iconList = mutableListOf<IconInfo>()
+                  if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+                    iconList.add(
                         IconInfo(
-                            icon = Icons.Rounded.ChatBubbleOutline,
+                            icon = Icons.Rounded.Edit,
                             description =
-                                stringResource(id = R.string.event_details_screen_chat_button),
+                                stringResource(id = R.string.event_details_screen_edit_button),
                             onClick = {
-                              Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                  .show()
+                              navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
                             },
-                            testTag = "chat"),
+                            testTag = "edit"))
+                    iconList.add(
                         IconInfo(
-                            icon = Icons.Rounded.Backpack,
-                            description =
-                                stringResource(id = R.string.event_details_screen_supplies_button),
-                            onClick = {
-                              navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
-                            },
-                            testTag = "supplies"),
-                        IconInfo(
-                            icon = Icons.Rounded.DirectionsCar,
+                            icon = Icons.Rounded.PeopleAlt,
                             description =
                                 stringResource(
-                                    id = R.string.event_details_screen_car_pooling_button),
+                                    id = R.string.event_details_screen_manage_staff_button),
                             onClick = {
-                              Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                  .show()
+                              navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
                             },
-                            testTag = "car pooling"),
+                            testTag = "manage staff"))
+                  } else {
+                    iconList.add(
                         IconInfo(
-                            icon = Icons.Rounded.Poll,
+                            icon = Icons.Rounded.RemoveCircleOutline,
                             description =
-                                stringResource(id = R.string.event_details_screen_voting_button),
+                                stringResource(id = R.string.event_details_screen_leave_button),
                             onClick = {
-                              Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                  .show()
+                              if (accountViewModel.isUserLoggedIn()) {
+                                eventViewModel.leaveTheEvent(
+                                    onSuccess = {
+                                      Toast.makeText(
+                                              context,
+                                              context.getString(
+                                                  R.string
+                                                      .event_details_screen_leave_toast_success),
+                                              Toast.LENGTH_SHORT)
+                                          .show()
+                                      navObject.goBack()
+                                    })
+                              } else {
+                                showPromptLogin = true
+                              }
                             },
-                            testTag = "polls"),
-                        IconInfo(
-                            icon = Icons.Rounded.Home,
-                            description =
-                                stringResource(id = R.string.event_details_screen_bed_reservation),
-                            onClick = {
-                              Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                  .show()
-                            },
-                            testTag = "bed_reservation"),
-                        IconInfo(
-                            icon = Icons.Rounded.DirectionsCar,
-                            description =
-                                stringResource(id = R.string.event_details_screen_parking),
-                            onClick = {
-                              Toast.makeText(
-                                      context,
-                                      "This function will be implemented in a future version",
-                                      Toast.LENGTH_SHORT)
-                                  .show()
-                            },
-                            testTag = "parking")))
-                IconRow(icons = iconList)
+                            testTag = "leave"))
+                  }
+                  iconList.addAll(
+                      listOf(
+                          IconInfo(
+                              icon = Icons.Rounded.ChatBubbleOutline,
+                              description =
+                                  stringResource(id = R.string.event_details_screen_chat_button),
+                              onClick = {
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              },
+                              testTag = "chat"),
+                          IconInfo(
+                              icon = Icons.Rounded.Backpack,
+                              description =
+                                  stringResource(
+                                      id = R.string.event_details_screen_supplies_button),
+                              onClick = {
+                                navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
+                              },
+                              testTag = "supplies"),
+                          IconInfo(
+                              icon = Icons.Rounded.DirectionsCar,
+                              description =
+                                  stringResource(
+                                      id = R.string.event_details_screen_car_pooling_button),
+                              onClick = {
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              },
+                              testTag = "car pooling"),
+                          IconInfo(
+                              icon = Icons.Rounded.Poll,
+                              description =
+                                  stringResource(id = R.string.event_details_screen_voting_button),
+                              onClick = {
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              },
+                              testTag = "polls"),
+                          IconInfo(
+                              icon = Icons.Rounded.Home,
+                              description =
+                                  stringResource(
+                                      id = R.string.event_details_screen_bed_reservation),
+                              onClick = {
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              },
+                              testTag = "bed_reservation"),
+                          IconInfo(
+                              icon = Icons.Rounded.DirectionsCar,
+                              description =
+                                  stringResource(id = R.string.event_details_screen_parking),
+                              onClick = {
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              },
+                              testTag = "parking")))
+                  IconRow(icons = iconList)
+                }
               }
-            }
+        }
       }
 }
 

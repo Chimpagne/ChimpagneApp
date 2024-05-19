@@ -13,7 +13,7 @@
     <string name="event_creation_screen_name">Créer Un événement</string>
     <string name="event_creation_screen_previous">Précédent</string>
     <string name="event_creation_screen_next">Prochain</string>
-    <string name="event_creation_screen_create_event">Créer l\'événement</string>
+    <string name="event_creation_screen_create_event">Créer</string>
     <string name="event_creation_screen_toast_creating">Creation de l\'événement…</string>
     <string name="event_creation_screen_toast_finish">L\'événement a été créé !</string>
     <string name="event_creation_screen_title">Création de l\'événement</string>

@@ -79,7 +79,7 @@ class ChimpagneAccountManager(
         { account ->
           if (account == null) onSuccess(null, null)
           else
-              downloadProfilePicture(
+              fetchProfilePictureUri(
                   account.firebaseAuthUID,
               ) { uri ->
                 onSuccess(account, uri)
@@ -161,7 +161,7 @@ class ChimpagneAccountManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  private fun downloadProfilePicture(uid: String, onSuccess: (Uri?) -> Unit) {
+  fun fetchProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
     profilePictures
         .child(uid)
         .downloadUrl

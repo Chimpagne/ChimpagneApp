@@ -16,6 +16,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupplyId
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.database.toPartialAccount
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.components.SocialMedia
 import com.monkeyteam.chimpagne.ui.components.SupportedSocialMedia
@@ -106,7 +107,7 @@ class EventViewModel(
     } else {
       _uiState.value =
           EventUIState(
-              owner = accountManager.currentUserAccount ?: ChimpagneAccount(),
+              owner = accountManager.currentUserAccount?.toPartialAccount() ?: ChimpagneAccount(),
               currentUserRole = ChimpagneRole.OWNER)
     }
   }
@@ -123,7 +124,7 @@ class EventViewModel(
         staffs = _uiState.value.staffs,
         startsAt = _uiState.value.startsAtCalendarDate,
         endsAt = _uiState.value.endsAtCalendarDate,
-        ownerAccount = uiState.value.owner,
+        owner = uiState.value.owner,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
@@ -529,7 +530,7 @@ class EventViewModel(
       // unmodifiable by the UI
       val owner: ChimpagneAccount = ChimpagneAccount(),
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-      val loading: Boolean = false,
+      val loading: Boolean = true,
       val socialMediaLinks: Map<String, SocialMedia> =
           SupportedSocialMedia.associateBy { it.platformName }
   )

@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +9,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,24 +29,36 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
 @Composable
-fun OrganiserView(owner: ChimpagneAccount) {
+fun OrganiserView(owner: ChimpagneAccount, accountViewModel: AccountViewModel) {
+
+  val profilePictureUriState = remember { mutableStateOf<Uri?>(null) }
+
+  LaunchedEffect(owner.firebaseAuthUID) {
+    accountViewModel.getProfilePictureUri(owner.firebaseAuthUID) { uri ->
+      profilePictureUriState.value = uri
+    }
+  }
 
   val context = LocalContext.current
 
   Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-        ProfileIcon(
-            uri = owner.imageUri,
-            onClick = {
-              Toast.makeText(
-                      context,
-                      "This function will be implemented in a future version",
-                      Toast.LENGTH_SHORT)
-                  .show()
-            })
+        profilePictureUriState.value?.let { uri ->
+          ProfileIcon(
+              uri = profilePictureUriState.value,
+              onClick = {
+                Toast.makeText(
+                        context,
+                        "This function will be implemented in a future version",
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
+        } ?: run { CircularProgressIndicator() }
+
         Text(
             text =
                 "${stringResource(id = R.string.event_details_screen_organized_by)}\n ${owner.firstName} ${owner.lastName}",

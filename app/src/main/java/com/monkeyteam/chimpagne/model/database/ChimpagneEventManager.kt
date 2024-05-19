@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.model.database
 
+import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
@@ -91,8 +92,9 @@ class ChimpagneEventManager(
     }
 
     val eventId = events.document().id
+    Log.d("hehehehe", "createEvent: eventId: $eventId")
     updateEvent(
-        event.copy(id = eventId, owner = database.accountManager.currentUserAccount!!),
+        event.copy(id = eventId),
         {
           database.accountManager.joinEvent(
               eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
