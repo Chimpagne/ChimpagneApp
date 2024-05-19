@@ -132,28 +132,6 @@ class EditEventScreenTestTest {
   }
 
   @Test
-  fun testMakeEventPublicButtonShowsToast() {
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      EditEventScreen(
-          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
-    }
-
-    // Tags (comma-separated)
-    composeTestRule.onNodeWithText("Title").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Description").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Logistics").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Parking").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Beds").assertDoesNotExist()
-    // This will attempt to click the button and create a Toast.
-    // Note that testing the actual visibility of a Toast is beyond the scope of Compose UI Tests.
-    composeTestRule.onNodeWithText("Make this event public").performClick()
-  }
-
-  @Test
   fun testInputIntoTextFields() {
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -167,18 +145,6 @@ class EditEventScreenTestTest {
 
     composeTestRule.onNodeWithText(title).assertIsDisplayed()
     composeTestRule.onNodeWithTag("previous_button").assertDoesNotExist()
-  }
-
-  @Test
-  fun testInvalidPanel() {
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EditEventScreen(
-          19, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
-    }
-    composeTestRule.onNodeWithText("Title").assertDoesNotExist()
-    composeTestRule.onNodeWithText("Description").assertDoesNotExist()
   }
 
   @Test

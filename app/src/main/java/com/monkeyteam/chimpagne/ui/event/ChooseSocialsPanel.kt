@@ -25,20 +25,21 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
         uiState.socialMediaLinks.mapValues { mutableStateOf(it.value.platformName) }
       }
 
-  Column(modifier = Modifier.padding(16.dp)) {
-    Text(
-        stringResource(id = R.string.links_to_social_media),
-        style = ChimpagneTypography.headlineSmall,
-        modifier = Modifier.testTag("social_media_title"))
-    Spacer(modifier = Modifier.height(16.dp))
+  Column(
+      modifier = Modifier.padding(16.dp).fillMaxHeight(), verticalArrangement = Arrangement.Top) {
+        Text(
+            stringResource(id = R.string.links_to_social_media),
+            style = ChimpagneTypography.headlineSmall,
+            modifier = Modifier.testTag("social_media_title"))
+        Spacer(modifier = Modifier.height(16.dp))
 
-    for ((platform) in socialMediaStates) {
-      SocialMediaTextField(
-          socialMedia = uiState.socialMediaLinks[platform]!!,
-          updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) })
-      Spacer(modifier = Modifier.height(16.dp))
-    }
-  }
+        for ((platform) in socialMediaStates) {
+          SocialMediaTextField(
+              socialMedia = uiState.socialMediaLinks[platform]!!,
+              updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) })
+          Spacer(modifier = Modifier.height(16.dp))
+        }
+      }
 }
 
 @Composable
