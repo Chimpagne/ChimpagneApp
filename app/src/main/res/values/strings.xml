@@ -91,7 +91,7 @@
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
     <string name="join_event_failiure">Failed to Join the Event</string>
     <string name="join_event_success">Successfully joined the event</string>
-    <string name="join_event_staff">You are already a Staff Member for this Event</string>
+    <string name="join_event_staff">Already a Staff Member for this Event</string>
     <string name="join_event_guest">You are already a Guest at this Event</string>
     <string name="join_event_owner">You are the Owner of this Event</string>
 
