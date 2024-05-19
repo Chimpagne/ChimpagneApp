@@ -93,20 +93,25 @@ class ChimpagneAccountManager(
       onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
-        uids.associate { (it to accounts.document(it).get()) }
-    Tasks.whenAllComplete(tasks.values)
-        .addOnSuccessListener {
-          val results =
-              tasks
-                  .map {
-                    val account = it.value.result.toObject<ChimpagneAccount>()
-                    (it.key to account)
-                  }
-                  .toMap()
-          onSuccess(results)
-        }
-        .addOnFailureListener(onFailure)
+    try {
+      val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
+          uids.associateWith { uid -> accounts.document(uid).get() }
+
+      Tasks.whenAllComplete(tasks.values)
+          .addOnSuccessListener {
+            val results =
+                tasks
+                    .map {
+                      val account = it.value.result?.toObject<ChimpagneAccount>()
+                      (it.key to account)
+                    }
+                    .toMap()
+            onSuccess(results)
+          }
+          .addOnFailureListener(onFailure)
+    } catch (e: Exception) {
+      onFailure(e)
+    }
   }
 
   /** Puts the given account to Firebase and updates [currentUserAccount] accordingly */

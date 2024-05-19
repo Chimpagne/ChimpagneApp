@@ -51,8 +51,7 @@ class SuppliesScreenUITests {
         ownerAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
 
-    eventViewModel.fetchEvent(
-        onSuccess = { accountViewModel.fetchAccounts(listOf(event.owner.firebaseAuthUID)) })
+    eventViewModel.fetchEvent(onSuccess = { accountViewModel.fetchAccounts(listOf(event.ownerId)) })
 
     while (eventViewModel.uiState.value.loading && accountViewModel.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
@@ -101,8 +100,7 @@ class SuppliesScreenUITests {
         guestAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     composeTestRule.waitUntil(timeoutMillis = 5000) { !loading }
 
-    eventViewModel.fetchEvent(
-        onSuccess = { accountViewModel.fetchAccounts(listOf(event.owner.firebaseAuthUID)) })
+    eventViewModel.fetchEvent(onSuccess = { accountViewModel.fetchAccounts(listOf(event.ownerId)) })
 
     composeTestRule.waitUntil(timeoutMillis = 5000) {
       !eventViewModel.uiState.value.loading && !accountViewModel.uiState.value.loading
