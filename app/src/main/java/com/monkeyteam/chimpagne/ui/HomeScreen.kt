@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -199,9 +198,6 @@ fun HomeScreen(
                                     if (accountViewModel.uiState.value.currentUserUID != null) {
                                       chimpagneAccountUID =
                                           accountViewModel.uiState.value.currentUserUID!!
-                                      Toast.makeText(
-                                              context, chimpagneAccountUID, Toast.LENGTH_SHORT)
-                                          .show()
                                     }
                                   }
 
