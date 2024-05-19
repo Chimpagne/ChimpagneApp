@@ -44,7 +44,6 @@ class EventCreationEnd2End() {
   fun init() {
     initializeTestDatabase()
     mockkStatic(FirebaseAuth::class)
-    every { FirebaseAuth.getInstance() } returns mockk(relaxed = true)
     every { FirebaseAuth.getInstance().currentUser } returns mockk(relaxed = true)
     every { FirebaseAuth.getInstance().currentUser?.uid } returns test_account.firebaseAuthUID
   }
