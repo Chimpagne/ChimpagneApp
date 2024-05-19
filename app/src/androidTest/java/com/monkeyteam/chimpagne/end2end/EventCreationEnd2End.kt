@@ -69,6 +69,8 @@ class EventCreationEnd2End() {
     assertEquals(Route.HOME_SCREEN, navController.currentDestination?.route)
 
     composeTestRule.onNodeWithTag("open_events_button").performClick()
+
+    Thread.sleep(3000)
     composeTestRule.onNodeWithTag("a created event").performClick()
     assertTrue(
         navController.currentDestination!!.route!!.startsWith(Route.VIEW_DETAIL_EVENT_SCREEN))
