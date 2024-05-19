@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.monkeyteam.chimpagne.R
 
 @Composable

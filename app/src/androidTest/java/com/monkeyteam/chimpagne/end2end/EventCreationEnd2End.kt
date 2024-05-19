@@ -1,20 +1,16 @@
 package com.monkeyteam.chimpagne.end2end
 
 import android.Manifest
-import android.accounts.AccountManager
-import android.util.Log
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.google.firebase.auth.FirebaseAuth
-import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
@@ -31,7 +27,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @RunWith(AndroidJUnit4::class)
 class EventCreationEnd2End() {
   val database = Database()
@@ -41,8 +36,9 @@ class EventCreationEnd2End() {
 
   @get:Rule val composeTestRule = createComposeRule()
 
-  @get:Rule val mRuntimePermissionRule: GrantPermissionRule =
-    GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
+  @get:Rule
+  val mRuntimePermissionRule: GrantPermissionRule =
+      GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
   @Before
   fun init() {
@@ -59,7 +55,8 @@ class EventCreationEnd2End() {
 
     composeTestRule.setContent {
       navController = rememberNavController()
-      NavigationGraph(navController = navController, accountViewModel = accountViewModel, database = database)
+      NavigationGraph(
+          navController = navController, accountViewModel = accountViewModel, database = database)
     }
 
     Thread.sleep(3000)
@@ -70,12 +67,12 @@ class EventCreationEnd2End() {
 
     eventCreationTestPart(composeTestRule)
     Thread.sleep(3000)
-    assertEquals(Route.HOME_SCREEN, navController.currentDestination?.route )
+    assertEquals(Route.HOME_SCREEN, navController.currentDestination?.route)
 
     composeTestRule.onNodeWithTag("open_events_button").performClick()
     composeTestRule.onNodeWithTag("a created event").performClick()
-    assertTrue(navController.currentDestination!!.route!!.startsWith(Route.VIEW_DETAIL_EVENT_SCREEN))
-
+    assertTrue(
+        navController.currentDestination!!.route!!.startsWith(Route.VIEW_DETAIL_EVENT_SCREEN))
   }
 }
 
