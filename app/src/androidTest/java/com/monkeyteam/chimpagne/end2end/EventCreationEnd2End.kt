@@ -63,7 +63,7 @@ class EventCreationEnd2End() {
 
     assertEquals(test_account, accountViewModel.uiState.value.currentUserAccount)
     composeTestRule.onNodeWithTag("organize_event_button").performClick()
-    composeTestRule.onNodeWithTag("organize_event_button").performClick()
+    //    composeTestRule.onNodeWithTag("organize_event_button").performClick()
 
     composeTestRule.mainClock.advanceTimeBy(10000)
 
