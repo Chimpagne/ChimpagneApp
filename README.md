@@ -21,7 +21,7 @@ Tired of the party planning chaos? Chimpagne streamlines it all in one applicati
 - Organizing who can sleep on site with bed reservation 
 
 # Architecture diagram
-
+![alt text](image.png)
 ![alt text](MS2.PNG)
 
 # UI

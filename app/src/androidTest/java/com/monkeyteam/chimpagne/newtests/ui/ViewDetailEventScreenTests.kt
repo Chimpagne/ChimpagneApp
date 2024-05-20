@@ -19,6 +19,7 @@ import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
+import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -204,7 +205,17 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+
+      NavHost(
+          navController = navController,
+          startDestination = Route.VIEW_DETAIL_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
+            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
+              ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+            }
+            composable(Route.SUPPLIES_SCREEN + "/${eventVM.uiState.value.id}") {
+              SuppliesScreen(navObject = navActions, eventVM, accountViewModel)
+            }
+          }
     }
 
     composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()

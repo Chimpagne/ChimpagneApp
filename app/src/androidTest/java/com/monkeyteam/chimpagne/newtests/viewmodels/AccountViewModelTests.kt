@@ -90,6 +90,7 @@ class AccountViewModelTests {
   @Test
   fun testIsUserLoggedIn() {
     val accountViewModel = AccountViewModel(database = database)
+    while (accountViewModel.uiState.value.loading) {}
     assertFalse(accountViewModel.isUserLoggedIn())
   }
 
