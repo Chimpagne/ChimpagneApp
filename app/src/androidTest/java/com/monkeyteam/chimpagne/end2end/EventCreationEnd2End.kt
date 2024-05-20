@@ -58,14 +58,14 @@ class EventCreationEnd2End() {
     }
 
     Thread.sleep(10000)
-
-    composeTestRule.mainClock.advanceTimeBy(10000)
+    composeTestRule.mainClock.advanceTimeBy(1000000)
 
     assertEquals(test_account, accountViewModel.uiState.value.currentUserAccount)
     composeTestRule.onNodeWithTag("organize_event_button").performClick()
-    //    composeTestRule.onNodeWithTag("organize_event_button").performClick()
+    composeTestRule.onNodeWithTag("organize_event_button").performClick()
 
-    composeTestRule.mainClock.advanceTimeBy(10000)
+    Thread.sleep(10000)
+    composeTestRule.mainClock.advanceTimeBy(1000000)
 
     composeTestRule.onNodeWithTag("add_a_title").performTextInput("Banana Party")
     composeTestRule.onNodeWithTag("next_button").performClick()
@@ -75,12 +75,19 @@ class EventCreationEnd2End() {
     composeTestRule.onNodeWithTag("last_button").performClick()
 
     Thread.sleep(10000)
+    composeTestRule.mainClock.advanceTimeBy(1000000)
     assertEquals(Route.HOME_SCREEN, navController.currentDestination?.route)
 
+    Thread.sleep(10000)
+    composeTestRule.mainClock.advanceTimeBy(1000000)
     composeTestRule.onNodeWithTag("open_events_button").performClick()
 
     Thread.sleep(10000)
+    composeTestRule.mainClock.advanceTimeBy(1000000)
     composeTestRule.onNodeWithTag("a created event").performClick()
+
+    Thread.sleep(10000)
+    composeTestRule.mainClock.advanceTimeBy(1000000)
     assertTrue(
         navController.currentDestination!!.route!!.startsWith(Route.VIEW_DETAIL_EVENT_SCREEN))
   }
