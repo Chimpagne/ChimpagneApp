@@ -162,7 +162,7 @@ class EditEventScreenTestTest {
   }
 
   @Test
-  fun testSocialMediaPanelUI() {
+  fun testSociLalMediaPanelUI() {
     // Now we do this to go the correct screen
     composeTestRule.setContent {
       val navController = rememberNavController()

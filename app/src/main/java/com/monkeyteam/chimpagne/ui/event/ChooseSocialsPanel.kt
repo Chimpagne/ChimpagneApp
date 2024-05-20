@@ -66,6 +66,8 @@ private fun SocialMediaTextField(
   var currentChosenUrl by remember { mutableStateOf(socialMedia.chosenGroupUrl) }
 
   OutlinedTextField(
+      singleLine = true,
+      maxLines = 1,
       value = currentChosenUrl,
       onValueChange = { newUrl ->
         currentChosenUrl = newUrl
