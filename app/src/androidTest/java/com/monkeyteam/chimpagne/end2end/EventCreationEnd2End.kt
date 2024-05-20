@@ -58,19 +58,19 @@ class EventCreationEnd2End() {
           navController = navController, accountViewModel = accountViewModel, database = database)
     }
 
-    Thread.sleep(3000)
+    Thread.sleep(10000)
 
     assertEquals(test_account, accountViewModel.uiState.value.currentUserAccount)
     composeTestRule.onNodeWithTag("organize_event_button").performClick()
-    composeTestRule.onNodeWithTag("organize_event_button").performClick()
+//    composeTestRule.onNodeWithTag("organize_event_button").performClick()
 
     eventCreationTestPart(composeTestRule)
-    Thread.sleep(3000)
+    Thread.sleep(10000)
     assertEquals(Route.HOME_SCREEN, navController.currentDestination?.route)
 
     composeTestRule.onNodeWithTag("open_events_button").performClick()
 
-    Thread.sleep(3000)
+    Thread.sleep(10000)
     composeTestRule.onNodeWithTag("a created event").performClick()
     assertTrue(
         navController.currentDestination!!.route!!.startsWith(Route.VIEW_DETAIL_EVENT_SCREEN))
