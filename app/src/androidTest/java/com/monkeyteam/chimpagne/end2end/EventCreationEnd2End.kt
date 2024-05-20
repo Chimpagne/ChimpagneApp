@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.end2end
 
 import android.Manifest
-import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -60,11 +59,21 @@ class EventCreationEnd2End() {
 
     Thread.sleep(10000)
 
+    composeTestRule.mainClock.advanceTimeBy(10000)
+
     assertEquals(test_account, accountViewModel.uiState.value.currentUserAccount)
     composeTestRule.onNodeWithTag("organize_event_button").performClick()
-//    composeTestRule.onNodeWithTag("organize_event_button").performClick()
+    composeTestRule.onNodeWithTag("organize_event_button").performClick()
 
-    eventCreationTestPart(composeTestRule)
+    composeTestRule.mainClock.advanceTimeBy(10000)
+
+    composeTestRule.onNodeWithTag("add_a_title").performTextInput("Banana Party")
+    composeTestRule.onNodeWithTag("next_button").performClick()
+    composeTestRule.onNodeWithTag("next_button").performClick()
+    composeTestRule.onNodeWithTag("next_button").performClick()
+    composeTestRule.onNodeWithTag("next_button").performClick()
+    composeTestRule.onNodeWithTag("last_button").performClick()
+
     Thread.sleep(10000)
     assertEquals(Route.HOME_SCREEN, navController.currentDestination?.route)
 
@@ -75,13 +84,4 @@ class EventCreationEnd2End() {
     assertTrue(
         navController.currentDestination!!.route!!.startsWith(Route.VIEW_DETAIL_EVENT_SCREEN))
   }
-}
-
-fun eventCreationTestPart(composeTestRule: ComposeContentTestRule) {
-  composeTestRule.onNodeWithTag("add_a_title").performTextInput("Banana Party")
-  composeTestRule.onNodeWithTag("next_button").performClick()
-  composeTestRule.onNodeWithTag("next_button").performClick()
-  composeTestRule.onNodeWithTag("next_button").performClick()
-  composeTestRule.onNodeWithTag("next_button").performClick()
-  composeTestRule.onNodeWithTag("last_button").performClick()
 }
