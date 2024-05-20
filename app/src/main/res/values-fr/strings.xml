@@ -73,12 +73,10 @@
     <string name="event_details_screen_leave_toast_success">Quitter l\'événement a été un succès</string>
     <string name="event_details_screen_edit_button">Éditer l\'Evénement</string>
     <string name="event_details_screen_manage_staff_button">Gérer le personnel</string>
-    <string name="event_details_screen_chat_button">Discussion</string>
     <string name="event_details_screen_location_button">Localisation</string>
     <string name="event_details_screen_bed_reservation">Hébergement</string>
     <string name="event_details_screen_supplies_button">Fournitures</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
-    <string name="event_details_screen_car_pooling_button">Covoiturages</string>
     <string name="event_details_screen_parking">Parking</string>
     <string name="edit_event">Editer l\'événement</string>
     <string name="edit_event_toast_finish">L\'événement a été édité</string>

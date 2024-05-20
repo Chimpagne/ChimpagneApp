@@ -73,13 +73,11 @@
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit Event</string>
     <string name="event_details_screen_manage_staff_button">Manage staff</string>
-    <string name="event_details_screen_chat_button">Chat</string>
     <string name="event_details_screen_location_button">Location</string>
     <string name="event_details_screen_bed_reservation">Accommodation</string>
     <string name="event_details_screen_parking">Parking</string>
     <string name="event_details_screen_voting_button">Polls &amp; voting</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
-    <string name="event_details_screen_car_pooling_button">Car pooling</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>

@@ -238,23 +238,6 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
   }
 
-  @Test
-  fun testCarPoolingButton() {
-    val event = TEST_EVENTS[0]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
-    }
-
-    composeTestRule.onNodeWithTag("car pooling").assertHasClickAction().performClick()
-  }
-
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
   fun testManageStaffButton() {

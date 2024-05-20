@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Backpack
-import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Home
@@ -434,19 +433,6 @@ fun ViewDetailEventScreen(
                         iconList.addAll(
                             listOf(
                                 IconInfo(
-                                    icon = Icons.Rounded.ChatBubbleOutline,
-                                    description =
-                                        stringResource(
-                                            id = R.string.event_details_screen_chat_button),
-                                    onClick = {
-                                      Toast.makeText(
-                                              context,
-                                              "This function will be implemented in a future version",
-                                              Toast.LENGTH_SHORT)
-                                          .show()
-                                    },
-                                    testTag = "chat"),
-                                IconInfo(
                                     icon = Icons.Rounded.Backpack,
                                     description =
                                         stringResource(
@@ -455,19 +441,6 @@ fun ViewDetailEventScreen(
                                       navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
                                     },
                                     testTag = "supplies"),
-                                IconInfo(
-                                    icon = Icons.Rounded.DirectionsCar,
-                                    description =
-                                        stringResource(
-                                            id = R.string.event_details_screen_car_pooling_button),
-                                    onClick = {
-                                      Toast.makeText(
-                                              context,
-                                              "This function will be implemented in a future version",
-                                              Toast.LENGTH_SHORT)
-                                          .show()
-                                    },
-                                    testTag = "car pooling"),
                                 IconInfo(
                                     icon = Icons.Rounded.Poll,
                                     description =
