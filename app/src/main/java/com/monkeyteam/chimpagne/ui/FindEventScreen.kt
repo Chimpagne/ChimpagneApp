@@ -80,7 +80,6 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.ui.components.DateRangeSelector
@@ -89,13 +88,11 @@ import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
 import com.monkeyteam.chimpagne.ui.theme.CustomOrange
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
-import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -165,7 +162,8 @@ fun MainFindEventScreen(
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
       FindEventScreens.DETAIL ->
-          DetailScreenSheet(displayResult, currentEvent, findViewModel::joinEvent, accountViewModel, navObject)
+          DetailScreenSheet(
+              displayResult, currentEvent, findViewModel::joinEvent, accountViewModel, navObject)
     }
   }
 }
@@ -441,9 +439,7 @@ fun FindEventDetailScreen(
     showToast: (String) -> Unit,
     event: ChimpagneEvent?,
     navObject: NavigationActions
-) {
-
-}
+) {}
 
 @ExperimentalMaterial3Api
 @Composable
@@ -462,7 +458,6 @@ fun FindEventMapScreen(
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
   var currentEvents by remember { mutableStateOf<List<ChimpagneEvent>>(listOf()) }
-
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)

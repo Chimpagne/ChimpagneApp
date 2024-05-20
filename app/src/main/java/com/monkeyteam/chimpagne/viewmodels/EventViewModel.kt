@@ -200,13 +200,12 @@ class EventViewModel(
     }
   }
 
-
-    /**
-     * Join the event with the given [eventId]
-     * This is mandaotry to follow the same structure as the joinEvent in FindEventViewModel
-     * --> Call in DetailEventScreen
-     */
-    fun joinEvent(
+  /**
+   * Join the event with the given [eventId] This is mandaotry to follow the same structure as the
+   * joinEvent in FindEventViewModel
+   * --> Call in DetailEventScreen
+   */
+  fun joinEvent(
       eventId: ChimpagneEventId = _uiState.value.id,
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}

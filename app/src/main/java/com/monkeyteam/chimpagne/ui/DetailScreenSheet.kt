@@ -69,7 +69,6 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
-import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -122,10 +121,10 @@ fun DetailScreenSheet(
           joinEvent(
               it.id,
               {
-                  showToast(stringResSuccess)
+                showToast(stringResSuccess)
                 showDialog = true
               },
-              { showToast(stringResFailure)})
+              { showToast(stringResFailure) })
 
           navObject.clearAndNavigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${it.id})", false)
         }
@@ -134,15 +133,15 @@ fun DetailScreenSheet(
       // The user has already joined the event, or is a staff for the event,or is the organizer
       it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.STAFF -> {
-          showToast(stringResStaff)
+        showToast(stringResStaff)
       }
       it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.OWNER -> {
-          showToast(stringResOwner)
+        showToast(stringResOwner)
       }
       it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.GUEST -> {
-          showToast(stringResGuest)
+        showToast(stringResGuest)
       }
     }
   }
