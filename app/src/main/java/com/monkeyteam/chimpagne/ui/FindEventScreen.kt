@@ -8,6 +8,7 @@ import android.content.IntentSender
 import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -158,6 +159,20 @@ fun MainFindEventScreen(
     }
   }
 
+  BackHandler {
+    when (pagerState.currentPage) {
+      FindEventScreens.MAP -> {
+        goToForm()
+      }
+      FindEventScreens.DETAIL -> {
+        displayResult()
+      }
+      else -> {
+        navObject.goBack()
+      }
+    }
+  }
+
   HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 2) { page
     ->
     when (page) {
@@ -165,7 +180,8 @@ fun MainFindEventScreen(
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
-      FindEventScreens.DETAIL -> EventScreen(navObject, eventViewModel, accountViewModel)
+      FindEventScreens.DETAIL ->
+          EventScreen(navObject, eventViewModel, accountViewModel, pagerState)
     }
   }
 }

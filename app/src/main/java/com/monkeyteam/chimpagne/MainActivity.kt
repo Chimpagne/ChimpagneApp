@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
   val database = Database(PUBLIC_TABLES)
   private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
@@ -124,7 +125,8 @@ class MainActivity : ComponentActivity() {
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                   navObject = navActions,
-                  eventViewModel = viewModel(factory = EventViewModel.EventViewModelFactory(null, database)),
+                  eventViewModel =
+                      viewModel(factory = EventViewModel.EventViewModelFactory(null, database)),
                   findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
                   accountViewModel)
             }

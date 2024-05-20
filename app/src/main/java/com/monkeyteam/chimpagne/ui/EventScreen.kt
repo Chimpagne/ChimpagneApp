@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -41,6 +44,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,16 +77,19 @@ import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun EventScreen(
     navObject: NavigationActions,
     eventViewModel: EventViewModel,
-    accountViewModel: AccountViewModel
+    accountViewModel: AccountViewModel,
+    pagerState: PagerState = rememberPagerState(initialPage = FindEventScreens.FORM) { 3 }
 ) {
   val uiState by eventViewModel.uiState.collectAsState()
   val accountUIState by accountViewModel.uiState.collectAsState()
+  val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
 
   var showDialog by remember { mutableStateOf(false) }
@@ -143,7 +150,13 @@ fun EventScreen(
               IconButton(
                   onClick = {
                     if (accountViewModel.isUserLoggedIn()) {
-                      navObject.goBack()
+                      coroutineScope.launch {
+                        if (pagerState.currentPage == FindEventScreens.DETAIL) {
+                          pagerState.scrollToPage(FindEventScreens.MAP)
+                        } else {
+                          navObject.goBack()
+                        }
+                      }
                     } else {
                       showPromptLogin = true
                     }
@@ -330,26 +343,26 @@ fun EventScreen(
 
 @Composable
 fun IconRow(icons: List<IconInfo>) {
-    Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp)) {
-        icons.forEach { iconInfo ->
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier =
-                Modifier.padding(horizontal = 16.dp)
-                    .clickable(onClick = iconInfo.onClick)
-                    .testTag(iconInfo.testTag)) {
-                Icon(
-                    imageVector = iconInfo.icon,
-                    contentDescription = iconInfo.description,
-                    modifier = Modifier.size(40.dp))
-                Text(
-                    text = iconInfo.description,
-                    fontSize = 12.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 4.dp))
-            }
-        }
+  Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp)) {
+    icons.forEach { iconInfo ->
+      Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          modifier =
+              Modifier.padding(horizontal = 16.dp)
+                  .clickable(onClick = iconInfo.onClick)
+                  .testTag(iconInfo.testTag)) {
+            Icon(
+                imageVector = iconInfo.icon,
+                contentDescription = iconInfo.description,
+                modifier = Modifier.size(40.dp))
+            Text(
+                text = iconInfo.description,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 4.dp))
+          }
     }
+  }
 }
 
 data class IconInfo(

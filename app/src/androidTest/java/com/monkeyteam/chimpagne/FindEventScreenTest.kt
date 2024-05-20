@@ -183,7 +183,10 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
+      FindEventMapScreen(
+          findViewModel = findViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -209,7 +212,10 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
+      FindEventMapScreen(
+          findViewModel = findViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -235,7 +241,10 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
+      FindEventMapScreen(
+          findViewModel = findViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -267,13 +276,14 @@ class FindEventScreenTest {
 
       NavHost(navController = navController, startDestination = Route.FIND_AN_EVENT_SCREEN) {
         composable(Route.FIND_AN_EVENT_SCREEN) {
-          FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
+          FindEventMapScreen(
+              findViewModel = findViewModel,
+              accountViewModel = accountViewModel,
+              navObject = navActions)
         }
         composable(Route.EVENT_SCREEN + "/{eventId}") { backStackEntry ->
           val eventId = backStackEntry.arguments?.getString("eventId")
-          eventId?.let {
-            EventScreen(navActions, EventViewModel(it, database), accountViewModel)
-          }
+          eventId?.let { EventScreen(navActions, EventViewModel(it, database), accountViewModel) }
         }
       }
     }
@@ -356,7 +366,11 @@ class FindEventScreenTest {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      DetailScreenSheet(event = sampleEvent, joinEvent = FindEventsViewModel(database = database)::joinEvent, accountViewModel = accountViewModel, navObject = navActions)
+      DetailScreenSheet(
+          event = sampleEvent,
+          joinEvent = FindEventsViewModel(database = database)::joinEvent,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
 
     // Assert that event details are displayed correctly

@@ -16,8 +16,8 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
-import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.EventScreen
+import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -148,9 +148,7 @@ class ViewDetailEventScreenTests {
       navController = rememberNavController()
       val navActions = NavigationActions(navController!!)
       NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
-        composable(Route.EVENT_SCREEN) {
-          EventScreen(navActions, eventVM, accountViewModel)
-        }
+        composable(Route.EVENT_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
         composable(Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
           EditEventScreen(navObject = navActions, eventViewModel = eventVM)
         }
@@ -269,9 +267,7 @@ class ViewDetailEventScreenTests {
       val navActions = NavigationActions(navController!!)
 
       NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
-        composable(Route.EVENT_SCREEN) {
-          EventScreen(navActions, eventVM, accountViewModel)
-        }
+        composable(Route.EVENT_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
         composable(Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {
           ManageStaffScreen(
               navObject = navActions, eventViewModel = eventVM, accountViewModel = accountViewModel)

@@ -262,9 +262,7 @@ fun HomeScreen(
                       items(closestEventsState.value) { event ->
                         EventCard(
                             event,
-                            onClick = {
-                              navObject.navigateTo(Route.JOIN_EVENT_SCREEN + "/${event.id}")
-                            })
+                            onClick = { navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}") })
                       }
                     }
                   }
