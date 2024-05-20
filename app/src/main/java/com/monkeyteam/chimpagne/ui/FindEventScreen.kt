@@ -96,6 +96,7 @@ import com.monkeyteam.chimpagne.ui.utilities.MarkerData
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
@@ -110,9 +111,11 @@ object FindEventScreens {
 @Composable
 fun MainFindEventScreen(
     navObject: NavigationActions,
+    eventViewModel: EventViewModel,
     findViewModel: FindEventsViewModel,
     accountViewModel: AccountViewModel
 ) {
+
   val pagerState = rememberPagerState { 3 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -136,6 +139,7 @@ fun MainFindEventScreen(
   }
 
   val goToDetail: (ChimpagneEvent) -> Unit = { event ->
+    eventViewModel.updateUIStateWithEvent(event)
     currentEvent = event
     coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.DETAIL) }
   }
@@ -161,9 +165,7 @@ fun MainFindEventScreen(
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
           FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
-      FindEventScreens.DETAIL ->
-          DetailScreenSheet(
-              displayResult, currentEvent, findViewModel::joinEvent, accountViewModel, navObject)
+      FindEventScreens.DETAIL -> EventScreen(navObject, eventViewModel, accountViewModel)
     }
   }
 }
@@ -429,17 +431,6 @@ fun FindEventFormScreen(
         }
       }
 }
-
-@ExperimentalMaterial3Api
-@Composable
-fun FindEventDetailScreen(
-    goBackToMap: () -> Unit,
-    findViewModel: FindEventsViewModel,
-    accountViewModel: AccountViewModel,
-    showToast: (String) -> Unit,
-    event: ChimpagneEvent?,
-    navObject: NavigationActions
-) {}
 
 @ExperimentalMaterial3Api
 @Composable

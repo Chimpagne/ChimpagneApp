@@ -23,10 +23,10 @@ import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.DetailScreenSheet
+import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
@@ -183,7 +183,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+      FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -209,7 +209,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+      FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -235,7 +235,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+      FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -267,12 +267,12 @@ class FindEventScreenTest {
 
       NavHost(navController = navController, startDestination = Route.FIND_AN_EVENT_SCREEN) {
         composable(Route.FIND_AN_EVENT_SCREEN) {
-          FindEventMapScreen({}, findViewModel, accountViewModel, navActions)
+          FindEventMapScreen(findViewModel = findViewModel, accountViewModel = accountViewModel, navObject = navActions)
         }
-        composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/{eventId}") { backStackEntry ->
+        composable(Route.EVENT_SCREEN + "/{eventId}") { backStackEntry ->
           val eventId = backStackEntry.arguments?.getString("eventId")
           eventId?.let {
-            ViewDetailEventScreen(navActions, EventViewModel(it, database), accountViewModel)
+            EventScreen(navActions, EventViewModel(it, database), accountViewModel)
           }
         }
       }
@@ -354,7 +354,9 @@ class FindEventScreenTest {
     val sampleEvent = ChimpagneEvent(id = "houhouhou", title = "banana", description = "MONKEY")
 
     composeTestRule.setContent {
-      DetailScreenSheet(event = sampleEvent, accountViewModel = accountViewModel)
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      DetailScreenSheet(event = sampleEvent, joinEvent = FindEventsViewModel(database = database)::joinEvent, accountViewModel = accountViewModel, navObject = navActions)
     }
 
     // Assert that event details are displayed correctly

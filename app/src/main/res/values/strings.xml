@@ -55,7 +55,6 @@
     <string name="welcome_screen_title">Welcome to</string>
     <string name="continue_as_guest">Continue as Guest</string>
     <string name="login_to_continue">Please login/create an account to continue</string>
-    <string name="save_changes">Save changes</string>
     <string name="event_changes_saved">The event\'s changes have been saved</string>
     <string name="my_events_screen_name">My events</string>
     <string name="my_events_screen_created_event_list_name">Created events</string>

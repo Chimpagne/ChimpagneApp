@@ -54,7 +54,6 @@
     <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
-    <string name="save_changes">Sauvegarder les changements</string>
     <string name="event_changes_saved">Les changements de l\'événement ont été sauvegardé !</string>
     <string name="continue_as_guest">Continuer en tant qu\'invité</string>
     <string name="login_to_continue">"Veuillez vous connecter/créer un compte pour continuer."</string>

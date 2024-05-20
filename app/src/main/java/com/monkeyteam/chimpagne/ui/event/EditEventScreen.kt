@@ -40,7 +40,7 @@ fun EditEventScreen(
       bottomBar = {
         PanelBottomBar(
             pagerState = pagerState,
-            lastButtonText = stringResource(id = R.string.save_changes),
+            lastButtonText = stringResource(id = R.string.chimpagne_save),
             lastButtonOnClick = {
               if (!uiState.loading) {
                 eventViewModel.updateTheEvent(

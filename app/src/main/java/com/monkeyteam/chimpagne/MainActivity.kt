@@ -24,13 +24,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.AccountEdit
-import com.monkeyteam.chimpagne.ui.DetailScreenSheet
+import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
@@ -125,6 +124,7 @@ class MainActivity : ComponentActivity() {
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                   navObject = navActions,
+                  eventViewModel = viewModel(factory = EventViewModel.EventViewModelFactory(null, database)),
                   findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
                   accountViewModel)
             }
@@ -148,17 +148,15 @@ class MainActivity : ComponentActivity() {
               MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
             }
             composable(
-                route = Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}",
+                route = Route.EVENT_SCREEN + "/{EventID}",
                 deepLinks =
                     listOf(
                         navDeepLink {
                           uriPattern = getString(R.string.deep_link_url_event) + "{EventID}"
                           action = Intent.ACTION_VIEW
                         }),
-                arguments =
-                    listOf(
-                        navArgument("EventID") { type = NavType.StringType },
-                    )) { backStackEntry ->
+                arguments = listOf(navArgument("EventID") { type = NavType.StringType })) {
+                    backStackEntry ->
                   val deeplinkHandled = intent?.action != Intent.ACTION_VIEW
                   if (!deeplinkHandled) {
                     if (FirebaseAuth.getInstance().currentUser != null) {
@@ -166,7 +164,7 @@ class MainActivity : ComponentActivity() {
                           FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
                     }
                   }
-                  ViewDetailEventScreen(
+                  EventScreen(
                       navObject = navActions,
                       eventViewModel =
                           viewModel(
@@ -175,18 +173,6 @@ class MainActivity : ComponentActivity() {
                                       backStackEntry.arguments?.getString("EventID"), database)),
                       accountViewModel = accountViewModel)
                 }
-              composable(Route.JOIN_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
-                  val eventID = backStackEntry.arguments?.getString("EventID")
-                  val eventViewModel: EventViewModel =
-                      viewModel(factory = EventViewModel.EventViewModelFactory(eventID, database))
-                  val event = eventViewModel.buildChimpagneEvent()
-                  DetailScreenSheet(
-                      goBack = { navActions.goBack() },
-                      event = event,
-                      joinEvent = eventViewModel::joinEvent,
-                      accountViewModel = accountViewModel,
-                      navObject = navActions)
-              }
             composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =
                   viewModel(

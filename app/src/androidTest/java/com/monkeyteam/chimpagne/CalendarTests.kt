@@ -26,7 +26,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
@@ -99,7 +99,7 @@ class CalendarTests() {
       val navActions = NavigationActions(navController)
       val database = Database()
       val eventViewModel = EventViewModel(database = database)
-      ViewDetailEventScreen(
+      EventScreen(
           navObject = navActions, eventViewModel = eventViewModel, AccountViewModel(database))
     }
 

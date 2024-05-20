@@ -54,7 +54,7 @@ fun AccountEdit(navObject: NavigationActions, accountViewModel: AccountViewModel
       location = accountViewModelState.tempAccount.location,
       locationLabel = R.string.account_creation_screen_city,
       locationChange = accountViewModel::updateLocation,
-      commitButtontext = R.string.save_changes,
+      commitButtontext = R.string.chimpagne_save,
       commitButtonIcon = R.drawable.edit_pen,
       commitOnClick = {
         if (checkNotEmpty(accountViewModelState.tempAccount, context)) {

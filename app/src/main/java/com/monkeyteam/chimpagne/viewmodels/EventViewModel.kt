@@ -519,6 +519,28 @@ class EventViewModel(
         },
         { onFailure(it) })
   }
+    fun updateUIStateWithEvent(event: ChimpagneEvent) {
+        _uiState.value = EventUIState(
+            id = event.id,
+            title = event.title,
+            description = event.description,
+            location = event.location,
+            public = event.public,
+            tags = event.tags,
+            guests = event.guests,
+            staffs = event.staffs,
+            startsAtCalendarDate = event.startsAt(),
+            endsAtCalendarDate = event.endsAt(),
+            supplies = event.supplies,
+            parkingSpaces = event.parkingSpaces,
+            beds = event.beds,
+            ownerId = event.ownerId,
+            imageUrl = event.imageUrl,
+            socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+            polls = event.polls,
+            currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+        )
+    }
 
   data class EventUIState(
       val id: String = "",

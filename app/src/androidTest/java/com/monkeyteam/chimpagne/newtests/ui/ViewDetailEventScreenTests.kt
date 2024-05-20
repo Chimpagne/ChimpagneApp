@@ -17,7 +17,7 @@ import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -48,7 +48,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, EventViewModel(testEventId, database), accountViewModel)
+      EventScreen(navActions, EventViewModel(testEventId, database), accountViewModel)
     }
 
     composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
@@ -68,7 +68,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
@@ -89,7 +89,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("go back").assertHasClickAction()
@@ -108,7 +108,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("leave").assertHasClickAction()
@@ -125,7 +125,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("share").assertHasClickAction()
@@ -147,9 +147,9 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       navController = rememberNavController()
       val navActions = NavigationActions(navController!!)
-      NavHost(navController = navController!!, startDestination = Route.VIEW_DETAIL_EVENT_SCREEN) {
-        composable(Route.VIEW_DETAIL_EVENT_SCREEN) {
-          ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
+        composable(Route.EVENT_SCREEN) {
+          EventScreen(navActions, eventVM, accountViewModel)
         }
         composable(Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
           EditEventScreen(navObject = navActions, eventViewModel = eventVM)
@@ -171,7 +171,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction().performClick()
@@ -188,7 +188,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("parking").assertHasClickAction().performClick()
@@ -208,9 +208,9 @@ class ViewDetailEventScreenTests {
 
       NavHost(
           navController = navController,
-          startDestination = Route.VIEW_DETAIL_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
-            composable(Route.VIEW_DETAIL_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
-              ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+          startDestination = Route.EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
+            composable(Route.EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
+              EventScreen(navActions, eventVM, accountViewModel)
             }
             composable(Route.SUPPLIES_SCREEN + "/${eventVM.uiState.value.id}") {
               SuppliesScreen(navObject = navActions, eventVM, accountViewModel)
@@ -232,7 +232,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
@@ -249,7 +249,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
     composeTestRule.onNodeWithTag("car pooling").assertHasClickAction().performClick()
@@ -268,9 +268,9 @@ class ViewDetailEventScreenTests {
       navController = rememberNavController()
       val navActions = NavigationActions(navController!!)
 
-      NavHost(navController = navController!!, startDestination = Route.VIEW_DETAIL_EVENT_SCREEN) {
-        composable(Route.VIEW_DETAIL_EVENT_SCREEN) {
-          ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+      NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
+        composable(Route.EVENT_SCREEN) {
+          EventScreen(navActions, eventVM, accountViewModel)
         }
         composable(Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {
           ManageStaffScreen(
