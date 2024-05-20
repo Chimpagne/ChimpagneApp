@@ -89,7 +89,6 @@ class CalendarTests() {
     composeTestRule.onNodeWithTag("calendarButton").assertExists().isDisplayed()
     composeTestRule.onNodeWithTag("rejectButton").assertIsNotDisplayed()
     composeTestRule.onNodeWithTag("acceptButton").assertIsNotDisplayed()
-
     composeTestRule.onNodeWithTag("calendarButton").performClick()
   }
 

@@ -25,13 +25,15 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
 fun EventDescription(description: String, collapsable: Boolean) {
-  var expandedDescription by remember { mutableStateOf(collapsable) }
+  var expandedDescription by remember { mutableStateOf(!collapsable) }
   val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
   Row(
       modifier =
           Modifier.fillMaxWidth()
               .testTag("description")
-              .clickable { expandedDescription = !expandedDescription }
+              .then(
+                  if (collapsable) Modifier.clickable { expandedDescription = !expandedDescription }
+                  else Modifier)
               .padding(horizontal = 16.dp)) {
         Text(
             text = description.ifEmpty { stringResource(R.string.event_description_is_empty) },

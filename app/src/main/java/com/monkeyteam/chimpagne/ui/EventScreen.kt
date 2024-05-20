@@ -133,6 +133,16 @@ fun EventScreen(
     }
   }
 
+  val goBack: () -> Unit = {
+    coroutineScope.launch {
+      if (pagerState.currentPage == FindEventScreens.DETAIL) {
+        pagerState.scrollToPage(FindEventScreens.MAP)
+      } else {
+        navObject.goBack()
+      }
+    }
+  }
+
   Scaffold(
       topBar = {
         TopAppBar(
@@ -147,22 +157,9 @@ fun EventScreen(
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
-              IconButton(
-                  onClick = {
-                    if (accountViewModel.isUserLoggedIn()) {
-                      coroutineScope.launch {
-                        if (pagerState.currentPage == FindEventScreens.DETAIL) {
-                          pagerState.scrollToPage(FindEventScreens.MAP)
-                        } else {
-                          navObject.goBack()
-                        }
-                      }
-                    } else {
-                      showPromptLogin = true
-                    }
-                  }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-                  }
+              IconButton(onClick = { goBack() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+              }
             },
             actions = {
               IconButton(onClick = { showQRDialog = true }) {
@@ -174,7 +171,7 @@ fun EventScreen(
             })
       },
       bottomBar = {
-        if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
+        if (uiState.id.isNotEmpty() && uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
           Button(
               onClick = { onJoinClick(eventViewModel.buildChimpagneEvent()) },
               modifier =
@@ -206,7 +203,7 @@ fun EventScreen(
               onReject = { showDialog = false },
               event = eventViewModel.buildChimpagneEvent())
         }
-        if (uiState.loading) {
+        if (uiState.id.isEmpty()) {
           SpinnerView()
         } else {
           LazyColumn(
@@ -226,7 +223,10 @@ fun EventScreen(
                 item { ChimpagneDivider() }
                 item { EventMainInfo(event = eventViewModel.buildChimpagneEvent()) }
                 item { ChimpagneDivider() }
-                item { EventDescription(uiState.description, true) }
+                item {
+                  EventDescription(
+                      uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
+                }
                 item { ChimpagneDivider() }
                 item { OrganiserView(uiState.ownerId, accountViewModel) }
                 if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
