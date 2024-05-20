@@ -144,7 +144,7 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
 }
 
 @Composable
-fun popUpCalendar(onAccept: @Composable () -> Unit, onReject: () -> Unit, event: ChimpagneEvent?) {
+fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEvent?) {
   val textQuestion =
       stringResource(id = R.string.add_event_to_calendar_prefix) +
           event?.title +

@@ -175,17 +175,18 @@ class MainActivity : ComponentActivity() {
                                       backStackEntry.arguments?.getString("EventID"), database)),
                       accountViewModel = accountViewModel)
                 }
-            composable(Route.JOIN_EVENT_SCREEN) {
-              val eventViewModel: EventViewModel =
-                  viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
-              val event = eventViewModel.buildChimpagneEvent()
-              DetailScreenSheet(
-                  goBack = { navActions.goBack() },
-                  event = event,
-                  joinEvent = eventViewModel::joinEvent,
-                  accountViewModel = accountViewModel,
-                  navObject = navActions)
-            }
+              composable(Route.JOIN_EVENT_SCREEN + "/{EventID}") { backStackEntry ->
+                  val eventID = backStackEntry.arguments?.getString("EventID")
+                  val eventViewModel: EventViewModel =
+                      viewModel(factory = EventViewModel.EventViewModelFactory(eventID, database))
+                  val event = eventViewModel.buildChimpagneEvent()
+                  DetailScreenSheet(
+                      goBack = { navActions.goBack() },
+                      event = event,
+                      joinEvent = eventViewModel::joinEvent,
+                      accountViewModel = accountViewModel,
+                      navObject = navActions)
+              }
             composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =
                   viewModel(

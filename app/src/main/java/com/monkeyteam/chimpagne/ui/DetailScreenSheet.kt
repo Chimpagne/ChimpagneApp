@@ -202,7 +202,7 @@ fun DetailScreenSheet(
               popUpCalendar(
                   onAccept = {
                     createCalendarIntent(event)?.let { context.startActivity(it) }
-                        ?: showToast(stringResource(R.string.calendar_failed))
+                        ?: showToast(context.getString(R.string.calendar_failed))
                     showDialog = false
                   },
                   onReject = { showDialog = false },

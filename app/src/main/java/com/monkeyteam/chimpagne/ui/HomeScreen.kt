@@ -263,7 +263,7 @@ fun HomeScreen(
                         EventCard(
                             event,
                             onClick = {
-                              navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                              navObject.navigateTo(Route.JOIN_EVENT_SCREEN + "/${event.id}")
                             })
                       }
                     }
