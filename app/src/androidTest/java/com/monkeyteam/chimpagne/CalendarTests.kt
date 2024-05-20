@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne
 
 import android.content.Intent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -92,6 +93,7 @@ class CalendarTests() {
     composeTestRule.onNodeWithTag("calendarButton").performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testCalendarButton() {
     composeTestRule.setContent {

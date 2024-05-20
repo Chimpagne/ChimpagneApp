@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -42,6 +43,7 @@ class ViewDetailEventScreenTests {
     initializeTestDatabase()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun qrCodeGeneration_displaysQRCode() {
     val testEventId = "12345"
@@ -57,6 +59,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("close_button").performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun generalTextTest() {
     val event = TEST_EVENTS[0]
@@ -78,6 +81,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testNavigationBackFunctionality() {
     val event = TEST_EVENTS[0]
@@ -96,6 +100,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("go back").performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testLeaveButton() {
     database.accountManager.signInTo(TEST_ACCOUNTS[0])
@@ -114,6 +119,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("leave").assertHasClickAction()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testShareButton() {
     val event = TEST_EVENTS[0]
@@ -132,6 +138,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("share").performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testEditButton() {
 
@@ -158,6 +165,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testBedButton() {
     val event = TEST_EVENTS[0]
@@ -175,6 +183,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction().performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testParkingButton() {
     val event = TEST_EVENTS[0]
@@ -192,6 +201,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("parking").assertHasClickAction().performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testSuppliesButton() {
     val event = TEST_EVENTS[0]
@@ -219,6 +229,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testPollsButton() {
     val event = TEST_EVENTS[0]
@@ -236,6 +247,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testCarPoolingButton() {
     val event = TEST_EVENTS[0]
@@ -253,7 +265,7 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("car pooling").assertHasClickAction().performClick()
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   @Test
   fun testManageStaffButton() {
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
