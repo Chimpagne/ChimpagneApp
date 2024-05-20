@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.GrantPermissionRule
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -21,6 +22,9 @@ import org.mockito.Mockito
 class HomescreenTest {
 
   @get:Rule val composeTestRule = createComposeRule()
+  @get:Rule
+  val permissionRule: GrantPermissionRule =
+      GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
   val database = Database()
 
   @Test

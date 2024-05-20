@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,8 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
+import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.EventTagChip
@@ -60,25 +63,88 @@ import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.eventview.ImageCard
 import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
+import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreenSheet(
     goBack: () -> Unit = {},
     event: ChimpagneEvent?,
-    onJoinClick: (ChimpagneEvent) -> Unit = {},
-    accountViewModel: AccountViewModel
+    joinEvent: (ChimpagneEventId, () -> Unit, (Exception) -> Unit) -> Unit,
+    accountViewModel: AccountViewModel,
+    navObject: NavigationActions
 ) {
-  val context = LocalContext.current
+
+  val accountUIState by accountViewModel.uiState.collectAsState()
+
+  var showPromptLogin by remember { mutableStateOf(false) }
 
   var showQRDialog by remember { mutableStateOf(false) }
   var showDialog by remember { mutableStateOf(false) }
-  val enhancedOnJoinClick: (ChimpagneEvent) -> Unit = {
-    onJoinClick(it)
-    showDialog = true
+
+  val context = LocalContext.current
+
+  var toast: Toast? by remember { mutableStateOf(null) }
+
+  val showToast: (String) -> Unit = { message ->
+    toast?.cancel()
+    toast = Toast.makeText(context, message, Toast.LENGTH_SHORT).apply { show() }
+  }
+
+  val stringResJoining = stringResource(id = R.string.joining_toast)
+  val stringResFailure = stringResource(id = R.string.join_event_failiure)
+  val stringResSuccess = stringResource(id = R.string.join_event_success)
+
+  val stringResStaff = stringResource(id = R.string.join_event_staff)
+  val stringResGuest = stringResource(id = R.string.join_event_guest)
+  val stringResOwner = stringResource(id = R.string.join_event_owner)
+
+  val onJoinClick: (ChimpagneEvent) -> Unit = {
+    when {
+      // Check if the user is not logged in
+      !accountViewModel.isUserLoggedIn() -> {
+        // Redirect user to login screen
+        showPromptLogin = true
+      }
+
+      // The user has not yet joined the event
+      it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.NOT_IN_EVENT -> {
+        it.let {
+          showToast("$stringResJoining ${it.title}")
+
+          joinEvent(
+              it.id,
+              {
+                  showToast(stringResSuccess)
+                showDialog = true
+              },
+              { showToast(stringResFailure)})
+
+          navObject.clearAndNavigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${it.id})", false)
+        }
+      }
+
+      // The user has already joined the event, or is a staff for the event,or is the organizer
+      it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.STAFF -> {
+          showToast(stringResStaff)
+      }
+      it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.OWNER -> {
+          showToast(stringResOwner)
+      }
+      it.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
+          ChimpagneRole.GUEST -> {
+          showToast(stringResGuest)
+      }
+    }
   }
 
   Scaffold(
@@ -112,7 +178,7 @@ fun DetailScreenSheet(
         Button(
             onClick = {
               if (event != null) {
-                enhancedOnJoinClick(event)
+                onJoinClick(event)
               }
             },
             modifier = Modifier.fillMaxWidth().padding(8.dp).height(56.dp).testTag("button_search"),
@@ -124,6 +190,10 @@ fun DetailScreenSheet(
                   style = ChimpagneTypography.bodyLarge)
             }
       }) { innerPadding ->
+        if (showPromptLogin) {
+          PromptLogin(context, navObject)
+          showPromptLogin = false
+        }
         Box(modifier = Modifier.padding(innerPadding).testTag("detail_screen").fillMaxSize()) {
           if (event != null && event.id.isNotBlank()) {
             if (showQRDialog) {
@@ -133,8 +203,7 @@ fun DetailScreenSheet(
               popUpCalendar(
                   onAccept = {
                     createCalendarIntent(event)?.let { context.startActivity(it) }
-                        ?: Toast.makeText(context, R.string.calendar_failed, Toast.LENGTH_SHORT)
-                            .show()
+                        ?: showToast(stringResource(R.string.calendar_failed))
                     showDialog = false
                   },
                   onReject = { showDialog = false },

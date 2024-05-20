@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
@@ -197,6 +198,20 @@ class EventViewModel(
             onFailure(it)
           })
     }
+  }
+
+
+    /**
+     * Join the event with the given [eventId]
+     * This is mandaotry to follow the same structure as the joinEvent in FindEventViewModel
+     * --> Call in DetailEventScreen
+     */
+    fun joinEvent(
+      eventId: ChimpagneEventId = _uiState.value.id,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    joinTheEvent(onSuccess, onFailure)
   }
 
   fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {

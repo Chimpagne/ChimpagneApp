@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.Database
@@ -128,7 +127,7 @@ class AccountViewModel(database: Database) : ViewModel() {
   }
 
   fun isUserLoggedIn(): Boolean {
-    return FirebaseAuth.getInstance().currentUser != null
+    return accountManager.currentUserAccount != null
   }
 
   fun fetchAccounts(accountUIDs: List<ChimpagneAccountUID>) {

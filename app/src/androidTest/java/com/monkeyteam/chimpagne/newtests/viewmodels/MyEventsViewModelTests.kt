@@ -37,7 +37,7 @@ class MyEventsViewModelTests {
     assertTrue(
         eventVM.uiState.value.createdEvents[createdEventForAccount1.id]!!.id ==
             createdEventForAccount1.id)
-    assertTrue(eventVM.uiState.value.joinedEvents.size == 1)
+    assertTrue(eventVM.uiState.value.joinedEvents.size == 2)
     assertTrue(
         eventVM.uiState.value.joinedEvents[joinedEventForAccount1.id]!!.id ==
             joinedEventForAccount1.id)

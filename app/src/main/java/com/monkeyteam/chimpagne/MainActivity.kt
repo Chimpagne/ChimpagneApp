@@ -166,8 +166,8 @@ class MainActivity : ComponentActivity() {
                           FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
                     }
                   }
-                  DetailScreenSheet(
-                      goBack = navActions.goBack(),
+                  ViewDetailEventScreen(
+                      navObject = navActions,
                       eventViewModel =
                           viewModel(
                               factory =
@@ -182,10 +182,9 @@ class MainActivity : ComponentActivity() {
               DetailScreenSheet(
                   goBack = { navActions.goBack() },
                   event = event,
-                  onJoinClick = {
-                    navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
-                  },
-                  accountViewModel = accountViewModel)
+                  joinEvent = eventViewModel::joinEvent,
+                  accountViewModel = accountViewModel,
+                  navObject = navActions)
             }
             composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =

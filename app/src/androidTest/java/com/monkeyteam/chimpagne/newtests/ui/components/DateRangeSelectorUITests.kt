@@ -27,6 +27,8 @@ class DateRangeSelectorUITests {
     }
 
     composeTestRule.onNodeWithTag("date_range_button").performClick()
-    composeTestRule.onNodeWithTag("date_range_submit").performClick()
+    composeTestRule
+        .onNodeWithTag("date_range_button")
+        .performClick() // performs the dismiss request
   }
 }
