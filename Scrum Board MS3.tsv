@@ -1,0 +1,69 @@
+Title	URL	Assignees	Status	Task Type	Nature	Priority	Estimated Time (h)
+Test NavGraph			Not started				
+Events should be ordered by date	https://github.com/Chimpagne/ChimpagneApp/issues/129	Athanaze	Not started				
+404 error if the profile picture isn't in the DB	https://github.com/Chimpagne/ChimpagneApp/issues/125	QuicheLorraine3600	Not started				
+Integrate the 3rd "Detailed event screen" that can be accessed from the "discover events" map		leagrieder	Not started				
+Weather Forecast Backend/API		Kuriv2001	In Development	User story "view my events"	Sprint Task	Should-have	6
+Add spotify link		Kuriv2001	In Development				
+add picture for events		Kuriv2001, leagrieder	Not started				
+Weather forecast UI/Figma		arnaudlvq	Not started	User story "view my events"	Sprint Task	Should-have	
+Video of app			Not started				
+Setup the firebase for offline mode		arnaudlvq	Not started				
+Add the map on the ViewDetailEventsScreen		arnaudlvq	Not started				
+end to end tests		juaniac	Not started	Backend	Sprint Task	Must-have	
+Supplies Screen		QuicheLorraine3600	Done in Sprint 7	User story "Groceries"			
+Sprint task: make the event details nicer		leagrieder	Done in Sprint 7	Frontend	Sprint Task	Should-have	8
+User story/Sprint Task "add link to socials for my event"		Kuriv2001	Done in Sprint 7	Frontend	Sprint Task	Should-have	7
+Outline PRD		Kuriv2001, leagrieder	Done in Sprint 8	Other	Sprint Task	Must-have	2
+Fit in deep links to main		Kuriv2001	Done in Sprint 8	User Story "Find an event"	Sprint Task	Must-have	8
+Refactor Social Links		Kuriv2001	Done in Sprint 8	User Story "Create an event"	Sprint Task	Should-have	3
+Add a start and an end date on the Discover Events Screen		QuicheLorraine3600	Done in Sprint 8				
+Scrum Master		juaniac	Done in Sprint 8				
+Locate Me Improvements		arnaudlvq	Done in Sprint 8	Frontend	Sprint Task	Should-have	5
+Calendar Intent		Kuriv2001	Done in Sprint 8	User story "complete info event"	Sprint Task	Should-have	6
+Create and edit event top bar	https://github.com/Chimpagne/ChimpagneApp/issues/166	juaniac	Done in Sprint 8	Frontend	Sprint Task	Must-have	4
+homescreen feed, use cards implemented by Arnaud		Athanaze	Done in Sprint 8	Frontend	Sprint Task	Should-have	6
+Sprint Task: make the event details nicer (part 2)			Done in Sprint 8				
+Product Owner		arnaudlvq	Done in Sprint 8				
+UX test		QuicheLorraine3600	Done in Sprint 8	Other			
+homescreen enable GPS button, using the component from FindEvent		Athanaze	Done in Sprint 8	Frontend	Sprint Task	Should-have	4
+Event creation bug fixes		Athanaze	Done in Sprint 8	Frontend	User Story	Must-have	5
+Sprint Task: Make the event details nicer (part 2)		leagrieder	Done in Sprint 8	Frontend	Sprint Task	Should-have	8
+Database + view model functionality for Polls		juaniac	Done in Sprint 8	Backend	Sprint Task	Should-have	6
+EventViewModelTests randomly not working	https://github.com/Chimpagne/ChimpagneApp/issues/157	juaniac	Done in Sprint 8	Frontend	Sprint Task	Must-have	1
+Sprint task: past events that the user joined		Athanaze	Done in Sprint 7	Frontend	Sprint Task	Must-have	2
+Being PO		juaniac	Done in Sprint 7				
+Assign yourself to a supply		QuicheLorraine3600	Done in Sprint 7	User story "Groceries"			
+Assign someone to a supply (staff only)		QuicheLorraine3600	Done in Sprint 7	User story "Groceries"			
+Being SM		leagrieder	Done in Sprint 7				
+Sprint task: basic recommendation feed		Athanaze	Done in Sprint 7	Frontend	Sprint Task	Should-have	8
+QR Code testing		arnaudlvq	Done in Sprint 7	Frontend	Sprint Task	Must-have	4
+Sprint task: make the my events ui nice		arnaudlvq	Done in Sprint 7	Frontend	Sprint Task	Must-have	4
+Manage staff list UI screen		juaniac	Done in Sprint 7	Frontend	Sprint Task	Must-have	9
+Make end to end test		Athanaze	In Development				
+Guests and staff can access and contribute to the poll		juaniac	In Development	Frontend	User Story	Must-have	
+Owner can create a poll		juaniac	In Development	Frontend	Sprint Task	Must-have	
+remove car pooling buttons		leagrieder	In Development				
+New navigation		QuicheLorraine3600	In Development				
+End to end test: event creation		QuicheLorraine3600	In Development			Must-have	
+Map: two points at the same exact location cannot be selected	https://github.com/Chimpagne/ChimpagneApp/issues/154	arnaudlvq	In Development	Frontend	Sprint Task	Must-have	15
+User story "polling for an event"		juaniac	Sprint Backlog	Frontend	User Story	Must-have	
+User Story "Weather forecast"			Sprint Backlog				
+User Story "Join event flow"			Product Backlog	Frontend	User Story	Must-have	2
+User story "join events"			Product Backlog		User Story		
+Big User Story "Student Event Organiser"			Product Backlog		User Story		
+User Story "Newcomer in a city"			Product Backlog		User Story		
+User Story "Family Member"			Product Backlog		User Story		
+User Story "Party Goer"			Product Backlog		User Story		
+user story "Public but locked event" - CHIMPAGNE PREMIUM			Product Backlog				
+offline mode for the whole app			Product Backlog				
+picture for the event			Product Backlog				
+spotify link for the whole event			Product Backlog				
+User Story: Quick Access to Events via Unique Codes		arnaudlvq	Product Backlog		User Story		
+User story "feed of events on my homescreen"		QuicheLorraine3600	Product Backlog				
+User story "complete info event"			Product Backlog		User Story		
+User Story "Manage staff list"		juaniac	Product Backlog				
+User Story "Assign supplies"		QuicheLorraine3600	Product Backlog				
+User story "Let friends join"		arnaudlvq, Kuriv2001	Product Backlog				
+User Story "Party Organiser"		Athanaze	Product Backlog		User Story		
+Make app work offline			Product Backlog				

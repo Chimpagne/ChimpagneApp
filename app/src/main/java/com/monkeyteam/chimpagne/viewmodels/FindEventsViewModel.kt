@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.Filter
+import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
@@ -71,12 +72,35 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
-  fun fetchAroundLocation(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun fetchAroundLocation(
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {},
+      chimpagneAccountUID: ChimpagneAccountUID,
+      radiusInM: Double = 100000.0,
+      nDaysInTheFuture: Int = 10
+  ) {
+    var filter =
+        Filter.and(
+            onlyPublicFilter(),
+            happensInDateRangeFilter(
+                Calendar.getInstance(),
+                Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, nDaysInTheFuture) }))
+
     eventManager.getAllEventsByFilterAroundLocation(
         _uiState.value.selectedLocation!!,
-        9999999999.0,
+        radiusInM,
         {
-          _uiState.value = _uiState.value.copy(events = it.associateBy { event -> event.id })
+
+          // We do the filtering this way, otherwise firebase yells at me
+          _uiState.value =
+              _uiState.value.copy(
+                  events =
+                      it.filterNot { event ->
+                            event.guestList().contains(chimpagneAccountUID) ||
+                                event.staffList().contains(chimpagneAccountUID) ||
+                                event.ownerId == chimpagneAccountUID
+                          }
+                          .associateBy { event -> event.id })
           if (it.isEmpty()) {
             Log.d("FETCHING EVENTS BY LOCATION QUERY", "No events found")
             setLoading(false)
@@ -92,7 +116,8 @@ class FindEventsViewModel(database: Database) : ViewModel() {
           Log.d("FETCHING EVENTS BY LOCATION QUERY", "Error : ", it)
           setLoading(false)
           onFailure(it)
-        })
+        },
+        filter = filter)
   }
 
   fun fetchEvent(
