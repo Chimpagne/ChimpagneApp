@@ -92,7 +92,7 @@ private fun SocialMediaTextField(
   }
 }
 
-private fun createFullUrl(platformUrls: List<String>, url: String): String {
+fun createFullUrl(platformUrls: List<String>, url: String): String {
   if (url.isEmpty()) return ""
 
   val matchingPlatformUrl = platformUrls.firstOrNull { url.startsWith(it) }
