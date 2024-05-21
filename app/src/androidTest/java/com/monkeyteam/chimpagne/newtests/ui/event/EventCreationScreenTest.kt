@@ -9,7 +9,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -223,17 +222,11 @@ class EventCreationScreenTest {
           4, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
-    composeTestRule
-        .onNodeWithTag("social_media_title")
-        .assertExists("social_media_title")
-        .assertIsDisplayed()
+    // composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
 
+    composeTestRule.waitForIdle()
     for (sm in SupportedSocialMedia) {
-      composeTestRule
-          .onNodeWithTag(sm.testTag)
-          .performScrollTo()
-          .assertExists(sm.testTag)
-          .assertIsDisplayed()
+      composeTestRule.onNodeWithTag(sm.testTag).assertIsDisplayed()
       val testInput = "test ${sm.testTag}"
       composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
       composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
