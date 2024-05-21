@@ -174,24 +174,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction().performClick()
-  }
-
-  @Test
-  fun testParkingButton() {
-    val event = TEST_EVENTS[0]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
-    }
-
-    composeTestRule.onNodeWithTag("parking").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("accommodation").assertHasClickAction().performClick()
   }
 
   @Test

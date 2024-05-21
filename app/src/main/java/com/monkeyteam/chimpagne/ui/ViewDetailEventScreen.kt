@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Backpack
-import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.PeopleAlt
@@ -458,7 +457,7 @@ fun ViewDetailEventScreen(
                                     icon = Icons.Rounded.Home,
                                     description =
                                         stringResource(
-                                            id = R.string.event_details_screen_bed_reservation),
+                                            id = R.string.event_details_screen_accommodation),
                                     onClick = {
                                       Toast.makeText(
                                               context,
@@ -466,19 +465,7 @@ fun ViewDetailEventScreen(
                                               Toast.LENGTH_SHORT)
                                           .show()
                                     },
-                                    testTag = "bed_reservation"),
-                                IconInfo(
-                                    icon = Icons.Rounded.DirectionsCar,
-                                    description =
-                                        stringResource(id = R.string.event_details_screen_parking),
-                                    onClick = {
-                                      Toast.makeText(
-                                              context,
-                                              "This function will be implemented in a future version",
-                                              Toast.LENGTH_SHORT)
-                                          .show()
-                                    },
-                                    testTag = "parking")))
+                                    testTag = "accommodation")))
 
                         IconRow(icons = iconList)
                       }
