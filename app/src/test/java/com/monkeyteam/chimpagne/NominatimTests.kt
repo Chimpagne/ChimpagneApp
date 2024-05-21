@@ -7,12 +7,11 @@ import java.util.concurrent.TimeUnit
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-class LocationTests {
+class NominatimTests {
 
   private lateinit var server: MockWebServer
 
@@ -44,14 +43,14 @@ class LocationTests {
     convertNameToLocations(
         "Berlin",
         { locations ->
-          assertTrue("Expected non-empty list of locations", locations.isNotEmpty())
-          assertEquals("Latitude should match", 52.5200, locations.first().latitude, 0.001)
-          assertEquals("Longitude should match", 13.4050, locations.first().longitude, 0.001)
+          Assert.assertTrue("Expected non-empty list of locations", locations.isNotEmpty())
+          Assert.assertEquals("Latitude should match", 52.5200, locations.first().latitude, 0.001)
+          Assert.assertEquals("Longitude should match", 13.4050, locations.first().longitude, 0.001)
           latch.countDown()
         },
         limit = 5)
 
-    assertTrue(
+    Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
   }
 
@@ -80,15 +79,16 @@ class LocationTests {
     convertNameToLocations(
         "Empire State",
         { locations ->
-          assertTrue(locations.isNotEmpty())
-          assertEquals("Wilshire Boulevard, 123, 90210, Beverly Hills, USA", locations.first().name)
-          assertEquals(34.069, locations.first().latitude, 0.001)
-          assertEquals(-118.406, locations.first().longitude, 0.001)
+          Assert.assertTrue(locations.isNotEmpty())
+          Assert.assertEquals(
+              "Wilshire Boulevard, 123, 90210, Beverly Hills, USA", locations.first().name)
+          Assert.assertEquals(34.069, locations.first().latitude, 0.001)
+          Assert.assertEquals(-118.406, locations.first().longitude, 0.001)
           latch.countDown()
         },
         1)
 
-    assertTrue(latch.await(2, TimeUnit.SECONDS))
+    Assert.assertTrue(latch.await(2, TimeUnit.SECONDS))
   }
 
   @Test
@@ -115,15 +115,15 @@ class LocationTests {
     convertNameToLocations(
         "EPFL",
         { locations ->
-          assertTrue("Expected non-empty list of locations", locations.isNotEmpty())
-          assertEquals("EPFL, Lausanne, 1015, Switzerland", locations.first().name)
-          assertEquals(46.519, locations.first().latitude, 0.001)
-          assertEquals(6.566, locations.first().longitude, 0.001)
+          Assert.assertTrue("Expected non-empty list of locations", locations.isNotEmpty())
+          Assert.assertEquals("EPFL, Lausanne, 1015, Switzerland", locations.first().name)
+          Assert.assertEquals(46.519, locations.first().latitude, 0.001)
+          Assert.assertEquals(6.566, locations.first().longitude, 0.001)
           latch.countDown()
         },
         limit = 5)
 
-    assertTrue(
+    Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
   }
 
@@ -135,12 +135,12 @@ class LocationTests {
     convertNameToLocations(
         "Invalid",
         { locations ->
-          assertTrue("Expected empty locations list on API failure", locations.isEmpty())
+          Assert.assertTrue("Expected empty locations list on API failure", locations.isEmpty())
           latch.countDown()
         },
         limit = 5)
 
-    assertTrue("Test timed out waiting for callback", latch.await(5, TimeUnit.SECONDS))
+    Assert.assertTrue("Test timed out waiting for callback", latch.await(5, TimeUnit.SECONDS))
   }
 
   @Test
@@ -151,14 +151,14 @@ class LocationTests {
     convertNameToLocations(
         "Shutdown",
         { locations ->
-          assertTrue(
+          Assert.assertTrue(
               "The locations list should be empty when there is a network failure",
               locations.isEmpty())
           latch.countDown()
         },
         5)
 
-    assertTrue(
+    Assert.assertTrue(
         "Callback was not invoked within the timeout period", latch.await(2, TimeUnit.SECONDS))
   }
 
@@ -171,12 +171,12 @@ class LocationTests {
     convertNameToLocations(
         "EmptyResponse",
         { locations ->
-          assertTrue("Expected an empty list of locations", locations.isEmpty())
+          Assert.assertTrue("Expected an empty list of locations", locations.isEmpty())
           latch.countDown()
         },
         limit = 5)
 
-    assertTrue(latch.await(2, TimeUnit.SECONDS))
+    Assert.assertTrue(latch.await(2, TimeUnit.SECONDS))
   }
 
   @Test
@@ -188,11 +188,12 @@ class LocationTests {
     convertNameToLocations(
         "InvalidJSON",
         { locations ->
-          assertTrue("Expected an empty list of locations due to invalid JSON", locations.isEmpty())
+          Assert.assertTrue(
+              "Expected an empty list of locations due to invalid JSON", locations.isEmpty())
           latch.countDown()
         },
         limit = 5)
 
-    assertTrue(latch.await(2, TimeUnit.SECONDS))
+    Assert.assertTrue(latch.await(2, TimeUnit.SECONDS))
   }
 }
