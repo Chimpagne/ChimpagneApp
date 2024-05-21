@@ -15,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 
 class WeatherTest {
+  // Using test api key
   private lateinit var server: MockWebServer
   private val apiKey = "test_api_key"
   val context = InstrumentationRegistry.getInstrumentation().targetContext
