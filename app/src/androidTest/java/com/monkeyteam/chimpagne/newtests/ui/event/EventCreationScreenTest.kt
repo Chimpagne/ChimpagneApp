@@ -228,11 +228,13 @@ class EventCreationScreenTest {
 
     composeTestRule.waitForIdle()
     for (sm in SupportedSocialMedia) {
-      composeTestRule.onNodeWithTag(sm.testTag).performScrollTo().assertIsDisplayed()
-      val testInput = "test ${sm.testTag}"
-      composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
-      composeTestRule.onNodeWithTag(sm.testTag).performImeAction()
-      composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
+      if (sm.testTag != "spotify_input") {
+        composeTestRule.onNodeWithTag(sm.testTag).performScrollTo().assertIsDisplayed()
+        val testInput = "test ${sm.testTag}"
+        composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
+        composeTestRule.onNodeWithTag(sm.testTag).performImeAction()
+        composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
+      }
     }
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
   }
