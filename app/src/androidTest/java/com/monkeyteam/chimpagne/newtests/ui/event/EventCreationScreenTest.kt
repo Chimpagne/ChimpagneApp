@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performImeAction
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -230,6 +231,7 @@ class EventCreationScreenTest {
       composeTestRule.onNodeWithTag(sm.testTag).performScrollTo().assertIsDisplayed()
       val testInput = "test ${sm.testTag}"
       composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
+      composeTestRule.onNodeWithTag(sm.testTag).performImeAction()
       composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
     }
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
