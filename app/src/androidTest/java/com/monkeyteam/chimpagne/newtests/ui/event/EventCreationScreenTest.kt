@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne
 
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -225,6 +226,8 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
 
     for (sm in SupportedSocialMedia) {
+      print("Testing ${sm.testTag}")
+      Log.d("TestSocial", "Testing ${sm.testTag}")
       composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertIsDisplayed()
       val testInput = "test ${sm.testTag}"
       composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
