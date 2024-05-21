@@ -82,7 +82,7 @@ fun AccountUpdateScreen(
                   stringResource(
                       id =
                           if (editMode) R.string.account_edit_screen_title
-                          else R.string.account_edit_screen_title))
+                          else R.string.account_creation_screen_title))
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = { GoBackButton(onClick = onGoBack) })
