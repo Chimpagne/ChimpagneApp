@@ -35,7 +35,7 @@
     <string name="event_creation_screen_add_supplies">Ajouter des fournitures</string>
     <string name="event_creation_screen_beds">Lits</string>
     <string name="close">Fermer</string>
-    <string name="find_event_page_title">Trouver un évènement</string>
+    <string name="find_event_page_title">Trouver un événement</string>
     <string name="find_event_search_button_text">Chercher</string>
     <string name="find_event_event_location_legend">Lieu</string>
     <string name="find_event_event_tags_legend">Ajouter des tags de recherche</string>
@@ -43,11 +43,11 @@
     <string name="find_event_event_locate_me_button">Autour de moi</string>
     <string name="find_event_search_radius">Rayon de recherche</string>
     <string name="find_event_search_tag_query_label">Entrer un tag</string>
-    <string name="find_event_date_legend">Date de la soirée</string>
+    <string name="find_event_date_legend">Date de l\'événement</string>
     <string name="find_event_join_event_button_text">Rejoindre</string>
-    <string name="find_event_no_event_available">Pas de détail à afficher</string>
-    <string name="find_event_near_me_toast">Localisation…</string>
-    <string name="find_event_no_result">Pas de résultat</string>
+    <string name="find_event_no_event_available">Pas de détails à afficher</string>
+    <string name="find_event_near_me_toast">Localisation en cours…</string>
+    <string name="find_event_no_result">Aucun résultats</string>
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
     <string name="joining_toast">En train de rejoindre</string>
     <string name="search_location">Rechercher un lieu</string>
@@ -55,7 +55,7 @@
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="save_changes">Sauvegarder les changements</string>
-    <string name="event_changes_saved">Les changements de l\'événement ont été sauvegardé !</string>
+    <string name="event_changes_saved">Les changements de l\'événement ont été sauvegardés !</string>
     <string name="continue_as_guest">Continuer en tant qu\'invité</string>
     <string name="login_to_continue">"Veuillez vous connecter/créer un compte pour continuer."</string>
     <string name="my_events_screen_name">Mes événements</string>
