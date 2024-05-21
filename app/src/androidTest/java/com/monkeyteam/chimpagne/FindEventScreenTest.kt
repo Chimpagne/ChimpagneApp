@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne
 
 import android.location.LocationManager
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
@@ -164,34 +165,46 @@ class FindEventScreenTest {
     assertFalse(findViewModel.uiState.value.loading)
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testJoinEventFunctionalityAlreadyGuest() {
     val myAccount = TEST_ACCOUNTS[0]
     accountManager.signInTo(myAccount)
 
-    val findViewModel = FindEventsViewModel(database)
+    // Ensure the event ID is correctly formatted
+    val eventViewModel = EventViewModel("FIRST_EVENT", database)
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {}
 
-    val joinedEvent = TEST_EVENTS[2]
-    findViewModel.setResultEvents(mapOf(joinedEvent.id to joinedEvent))
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(
-          findViewModel = findViewModel,
-          accountViewModel = accountViewModel,
-          navObject = navActions)
+      EventScreen(
+        eventViewModel = eventViewModel,
+        accountViewModel = accountViewModel,
+        navObject = navActions
+      )
+    }
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventViewModel.uiState.value.id.isEmpty()) {}
+    // Check if the button exists before performing a click
+    val joinButtonNode = composeTestRule.onNodeWithTag("join_button")
+    joinButtonNode.assertExists("Join button does not exist")
+
+    // Perform the click action on the button
+    joinButtonNode.performClick()
+
+    composeTestRule.waitUntil {
+      eventViewModel.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST
     }
 
-    composeTestRule.onNodeWithTag("join_button").performClick()
-
-    assertTrue(joinedEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
+    // Check the role after clicking the join button
+    assertTrue(eventViewModel.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
   }
+
+
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test

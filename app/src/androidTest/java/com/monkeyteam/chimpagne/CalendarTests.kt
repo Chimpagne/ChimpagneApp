@@ -30,6 +30,7 @@ import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -96,12 +97,7 @@ class CalendarTests() {
   @Test
   fun testCalendarButton() {
     composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      val database = Database()
-      val eventViewModel = EventViewModel(database = database)
-      EventScreen(
-          navObject = navActions, eventViewModel = eventViewModel, AccountViewModel(database))
+      EventMainInfo(ChimpagneEvent())
     }
 
     composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()

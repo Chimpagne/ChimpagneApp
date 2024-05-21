@@ -175,7 +175,7 @@ fun EventScreen(
           Button(
               onClick = { onJoinClick(eventViewModel.buildChimpagneEvent()) },
               modifier =
-                  Modifier.fillMaxWidth().padding(8.dp).height(56.dp).testTag("button_search"),
+                  Modifier.fillMaxWidth().padding(8.dp).height(56.dp).testTag("join_button"),
               shape = MaterialTheme.shapes.extraLarge) {
                 Icon(Icons.AutoMirrored.Rounded.Login, contentDescription = "join event")
                 Spacer(Modifier.width(8.dp))
