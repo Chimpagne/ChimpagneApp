@@ -134,6 +134,7 @@ dependencies {
     testImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockito.android)
     implementation(libs.mockito.inline)
+    testImplementation(libs.json)
 
 }
 
