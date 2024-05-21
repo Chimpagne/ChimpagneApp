@@ -223,10 +223,17 @@ class EventCreationScreenTest {
           4, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
 
-    composeTestRule.onNodeWithTag("social_media_title").assertIsDisplayed()
+    composeTestRule
+        .onNodeWithTag("social_media_title")
+        .assertExists("social_media_title")
+        .assertIsDisplayed()
 
     for (sm in SupportedSocialMedia) {
-      composeTestRule.onNodeWithTag(sm.testTag).performScrollTo().assertExists().assertIsDisplayed()
+      composeTestRule
+          .onNodeWithTag(sm.testTag)
+          .performScrollTo()
+          .assertExists(sm.testTag)
+          .assertIsDisplayed()
       val testInput = "test ${sm.testTag}"
       composeTestRule.onNodeWithTag(sm.testTag).performTextInput(testInput)
       composeTestRule.onNodeWithTag(sm.testTag).assertExists().assertTextContains(testInput)
