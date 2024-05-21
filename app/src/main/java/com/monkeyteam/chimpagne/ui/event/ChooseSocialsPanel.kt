@@ -2,13 +2,13 @@ package com.monkeyteam.chimpagne.ui.event
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -39,19 +39,22 @@ fun ChooseSocialsPanel(eventViewModel: EventViewModel) {
         uiState.socialMediaLinks.mapValues { mutableStateOf(it.value.platformName) }
       }
 
-  Column(
+  LazyColumn(
       modifier = Modifier.padding(16.dp).fillMaxHeight(), verticalArrangement = Arrangement.Top) {
-        Text(
-            stringResource(id = R.string.links_to_social_media),
-            style = ChimpagneTypography.headlineSmall,
-            modifier = Modifier.testTag("social_media_title"))
-        Spacer(modifier = Modifier.height(16.dp))
-
-        for ((platform) in socialMediaStates) {
-          SocialMediaTextField(
-              socialMedia = uiState.socialMediaLinks[platform]!!,
-              updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) })
+        item {
+          Text(
+              stringResource(id = R.string.links_to_social_media),
+              style = ChimpagneTypography.headlineSmall,
+              modifier = Modifier.testTag("social_media_title"))
           Spacer(modifier = Modifier.height(16.dp))
+        }
+        for ((platform) in socialMediaStates) {
+          item {
+            SocialMediaTextField(
+                socialMedia = uiState.socialMediaLinks[platform]!!,
+                updateSocialMediaLink = { eventViewModel.updateSocialMediaLink(it) })
+            Spacer(modifier = Modifier.height(16.dp))
+          }
         }
       }
 }
