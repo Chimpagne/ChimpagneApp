@@ -107,8 +107,7 @@ fun getWeather(
                                 forecastDay.getJSONObject("day").getDouble("maxtemp_c"),
                             maxWindSpeed =
                                 forecastDay.getJSONObject("day").getDouble("maxwind_kph"),
-                            windDirection =
-                                forecastDay.getJSONObject("day").optString("wind_dir", "NA"))
+                            windDirection = forecastDay.getJSONObject("day").optInt("wind_deg", -1))
 
                     onSuccess(weather)
                   } catch (e: Exception) {

@@ -48,7 +48,7 @@ class WeatherTest {
                             "mintemp_c": 10.0,
                             "maxtemp_c": 20.0,
                             "maxwind_kph": 15.0,
-                            "wind_dir": "N"
+                            "wind_deg": "34"
                         }
                     }]
                 }
@@ -70,7 +70,7 @@ class WeatherTest {
           Assert.assertEquals(10.0, weather.temperatureLow, 0.001)
           Assert.assertEquals(20.0, weather.temperatureHigh, 0.001)
           Assert.assertEquals(15.0, weather.maxWindSpeed, 0.001)
-          Assert.assertEquals("N", weather.windDirection)
+          Assert.assertEquals(34, weather.windDirection)
           latch.countDown()
         },
         {

@@ -10,5 +10,5 @@ data class Weather(
     val temperatureLow: Double = 0.0,
     val temperatureHigh: Double = 0.0,
     val maxWindSpeed: Double = 0.0,
-    val windDirection: String = ""
+    val windDirection: Int = -1
 )
