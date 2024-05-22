@@ -310,14 +310,15 @@ fun ViewDetailEventScreen(
                                             Modifier.clip(RoundedCornerShape(12.dp))
                                                 .background(
                                                     MaterialTheme.colorScheme.primaryContainer)
-                                                .padding(horizontal = 24.dp, vertical = 12.dp)) {
+                                                .padding(horizontal = 24.dp, vertical = 12.dp)
+                                                .testTag("number_of_guests")) {
                                           Text(
                                               text =
                                                   "${uiState.guests.count()} ${stringResource(id = R.string.event_details_screen_number_of_guests)}",
                                               fontFamily = ChimpagneFontFamily,
                                               fontWeight = FontWeight.Bold,
                                               color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                              modifier = Modifier.testTag("number_of_guests"))
+                                              modifier = Modifier)
                                         }
                                   }
                             }
@@ -332,10 +333,10 @@ fun ViewDetailEventScreen(
                         val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
                         Row(
                             modifier =
-                                Modifier.testTag("description")
-                                    .fillMaxWidth()
+                                Modifier.fillMaxWidth()
                                     .clickable { expandedDescription = !expandedDescription }
-                                    .padding(horizontal = 16.dp)) {
+                                    .padding(horizontal = 16.dp)
+                                    .testTag("description")) {
                               Text(
                                   text = uiState.description,
                                   fontSize = 16.sp,
