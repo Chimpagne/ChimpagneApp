@@ -104,6 +104,7 @@ class ViewDetailEventScreenTests {
       val navActions = NavigationActions(navController)
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
+    composeTestRule.waitForIdle()
 
     composeTestRule.onNodeWithTag("number_of_guests").assertIsDisplayed()
   }
@@ -138,6 +139,8 @@ class ViewDetailEventScreenTests {
       val navActions = NavigationActions(navController)
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
+    composeTestRule.waitForIdle()
+
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
   }
 
