@@ -317,7 +317,7 @@ fun ViewDetailEventScreen(
                                               fontFamily = ChimpagneFontFamily,
                                               fontWeight = FontWeight.Bold,
                                               color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                              modifier = Modifier.testTag("number of guests"))
+                                              modifier = Modifier.testTag("number_of_guests"))
                                         }
                                   }
                             }
@@ -332,8 +332,8 @@ fun ViewDetailEventScreen(
                         val maxLines = if (expandedDescription) Int.MAX_VALUE else 3
                         Row(
                             modifier =
-                                Modifier.fillMaxWidth()
-                                    .testTag("description")
+                                Modifier.testTag("description")
+                                    .fillMaxWidth()
                                     .clickable { expandedDescription = !expandedDescription }
                                     .padding(horizontal = 16.dp)) {
                               Text(

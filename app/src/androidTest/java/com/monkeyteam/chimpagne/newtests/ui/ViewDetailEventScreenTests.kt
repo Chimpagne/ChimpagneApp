@@ -58,7 +58,7 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
-  fun generalTextTest1() {
+  fun generalTextTestTitle() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -75,7 +75,7 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
-  fun generalTextTest2() {
+  fun generalTextTestTags() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -92,7 +92,7 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
-  fun generalTextTest3() {
+  fun generalTextTestGuests() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -105,11 +105,11 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("number_of_guests").assertIsDisplayed()
   }
 
   @Test
-  fun generalTextTest4() {
+  fun generalTextTestDate() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -126,7 +126,7 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
-  fun generalTextTest5() {
+  fun generalTextTestDescription() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
