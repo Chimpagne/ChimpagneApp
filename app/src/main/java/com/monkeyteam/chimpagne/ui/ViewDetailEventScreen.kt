@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.rounded.Backpack
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Home
@@ -68,15 +66,14 @@ import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.model.utils.simpleDateFormat
 import com.monkeyteam.chimpagne.model.utils.simpleTimeFormat
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
-import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
+import com.monkeyteam.chimpagne.ui.components.ReportProblemButton
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
-import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -130,12 +127,20 @@ fun ViewDetailEventScreen(
                   }
             },
             actions = {
-              IconButton(onClick = { showDialog = true }) {
-                Icon(
-                    imageVector = Icons.Rounded.QrCodeScanner,
-                    contentDescription = "Scan QR",
-                    modifier = Modifier.size(36.dp).testTag("scan QR"))
-              }
+              Box(
+                  modifier =
+                      Modifier.padding(end = 16.dp)
+                          .shadow(10.dp, RoundedCornerShape(12.dp))
+                          .clip(RoundedCornerShape(12.dp))
+                          .background(MaterialTheme.colorScheme.primaryContainer)
+                          .clickable { showDialog = true }
+                          .padding(8.dp)) {
+                    Icon(
+                        imageVector = Icons.Rounded.QrCodeScanner,
+                        contentDescription = "Scan QR",
+                        modifier = Modifier.size(36.dp).testTag("scan QR"),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                  }
             })
       }) { innerPadding ->
         if (showDialog) {
@@ -157,8 +162,7 @@ fun ViewDetailEventScreen(
                           Modifier.height(200.dp)
                               .fillMaxWidth()
                               .padding(horizontal = 16.dp, vertical = 8.dp)
-                              .shadow(elevation = 10.dp, shape = RoundedCornerShape(16.dp))
-                              .clip(RoundedCornerShape(16.dp))
+                              .clip(RoundedCornerShape(12.dp))
                               .background(MaterialTheme.colorScheme.primaryContainer),
                       contentAlignment = Alignment.Center) {
                         ImageWithBlackFilterOverlay(uiState.image)
@@ -176,10 +180,7 @@ fun ViewDetailEventScreen(
                                 Box(
                                     modifier =
                                         Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                                            .shadow(
-                                                elevation = 10.dp,
-                                                shape = RoundedCornerShape(16.dp))
-                                            .clip(RoundedCornerShape(50))
+                                            .clip(RoundedCornerShape(12.dp))
                                             .background(MaterialTheme.colorScheme.primaryContainer)
                                             .padding(horizontal = 16.dp, vertical = 8.dp)) {
                                       SimpleTagChip(tag)
@@ -195,7 +196,7 @@ fun ViewDetailEventScreen(
                             horizontalAlignment = Alignment.CenterHorizontally) {
                               Row(
                                   modifier = Modifier.fillMaxWidth().testTag("event date"),
-                                  horizontalArrangement = Arrangement.SpaceBetween) {
+                                  horizontalArrangement = Arrangement.SpaceEvenly) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                       Text(
                                           text = stringResource(id = R.string.date_tools_from),
@@ -221,78 +222,99 @@ fun ViewDetailEventScreen(
                                             fontWeight = FontWeight.Bold)
                                       }
                                     }
-                                    CalendarButton(
-                                        event = eventViewModel.buildChimpagneEvent(),
-                                        contextMainActivity = context)
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                      Text(
-                                          text = stringResource(id = R.string.date_tools_until),
-                                          fontFamily = ChimpagneFontFamily,
-                                          fontSize = 16.sp,
-                                          color = Color.Gray)
-                                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text(
-                                            text =
-                                                simpleDateFormat(
-                                                    buildTimestamp(uiState.endsAtCalendarDate)),
-                                            fontFamily = ChimpagneFontFamily,
-                                            fontSize = 16.sp,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            fontWeight = FontWeight.Bold)
-                                        Text(
-                                            text =
-                                                simpleTimeFormat(
-                                                    buildTimestamp(uiState.endsAtCalendarDate)),
-                                            fontFamily = ChimpagneFontFamily,
-                                            fontSize = 16.sp,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            fontWeight = FontWeight.Bold)
-                                      }
-                                    }
+
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                          CalendarButton(
+                                              event = eventViewModel.buildChimpagneEvent(),
+                                              contextMainActivity = context)
+                                          Box(
+                                              modifier =
+                                                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                                                      .clip(RoundedCornerShape(12.dp))
+                                                      .background(
+                                                          MaterialTheme.colorScheme
+                                                              .primaryContainer)
+                                                      .clickable {
+                                                        val annotatedString = buildAnnotatedString {
+                                                          append(
+                                                              getString(
+                                                                  context,
+                                                                  R.string.deep_link_url_event) +
+                                                                  uiState.id)
+                                                        }
+                                                        clipboardManager.setText(annotatedString)
+                                                      }
+                                                      .padding(8.dp)) {
+                                                Icon(
+                                                    imageVector = Icons.Rounded.Share,
+                                                    contentDescription = "Share Event",
+                                                    tint =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
+                                                    modifier =
+                                                        Modifier.size(36.dp).testTag("share"))
+                                              }
+                                        }
+
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier.padding(start = 8.dp)) {
+                                          Text(
+                                              text = stringResource(id = R.string.date_tools_until),
+                                              fontFamily = ChimpagneFontFamily,
+                                              fontSize = 16.sp,
+                                              color = Color.Gray)
+                                          Column(
+                                              horizontalAlignment = Alignment.CenterHorizontally) {
+                                                Text(
+                                                    text =
+                                                        simpleDateFormat(
+                                                            buildTimestamp(
+                                                                uiState.endsAtCalendarDate)),
+                                                    fontFamily = ChimpagneFontFamily,
+                                                    fontSize = 16.sp,
+                                                    color =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
+                                                    fontWeight = FontWeight.Bold)
+                                                Text(
+                                                    text =
+                                                        simpleTimeFormat(
+                                                            buildTimestamp(
+                                                                uiState.endsAtCalendarDate)),
+                                                    fontFamily = ChimpagneFontFamily,
+                                                    fontSize = 16.sp,
+                                                    color =
+                                                        MaterialTheme.colorScheme
+                                                            .onPrimaryContainer,
+                                                    fontWeight = FontWeight.Bold)
+                                              }
+                                        }
                                   }
+
                               Row(
                                   verticalAlignment = Alignment.CenterVertically,
                                   horizontalArrangement = Arrangement.Center,
                                   modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                                     Box(
                                         modifier =
-                                            Modifier.shadow(
-                                                    elevation = 10.dp,
-                                                    shape = RoundedCornerShape(16.dp))
-                                                .clip(RoundedCornerShape(50))
+                                            Modifier.clip(RoundedCornerShape(12.dp))
                                                 .background(
                                                     MaterialTheme.colorScheme.primaryContainer)
                                                 .padding(horizontal = 24.dp, vertical = 12.dp)) {
                                           Text(
                                               text =
-                                                  "${uiState.guests.count()} ${
-                                            stringResource(
-                                                id = R.string.event_details_screen_number_of_guests
-                                            )
-                                        }",
+                                                  "${uiState.guests.count()} ${stringResource(id = R.string.event_details_screen_number_of_guests)}",
                                               fontFamily = ChimpagneFontFamily,
                                               fontWeight = FontWeight.Bold,
                                               color = MaterialTheme.colorScheme.onPrimaryContainer,
                                               modifier = Modifier.testTag("number of guests"))
                                         }
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    IconButton(
-                                        onClick = {
-                                          val annotatedString = buildAnnotatedString {
-                                            append(
-                                                getString(context, R.string.deep_link_url_event) +
-                                                    uiState.id)
-                                          }
-                                          clipboardManager.setText(annotatedString)
-                                        },
-                                        modifier = Modifier.size(36.dp).testTag("share")) {
-                                          Icon(
-                                              imageVector = Icons.Rounded.Share,
-                                              contentDescription = "Share Event",
-                                              tint = MaterialTheme.colorScheme.onPrimaryContainer)
-                                        }
                                   }
                             }
+
                         Spacer(Modifier.height(8.dp))
                         HorizontalDivider(
                             modifier = Modifier.padding(vertical = 16.dp),
@@ -354,22 +376,16 @@ fun ViewDetailEventScreen(
 
                               Spacer(modifier = Modifier.height(8.dp))
 
-                              ChimpagneButton(
-                                  text =
-                                      stringResource(
-                                          id = R.string.event_details_screen_report_problem),
-                                  icon = Icons.Default.Warning,
-                                  textStyle = ChimpagneTypography.displaySmall,
-                                  onClick = {
-                                    Toast.makeText(
-                                            context,
-                                            "This function will be implemented in a future version",
-                                            Toast.LENGTH_SHORT)
-                                        .show()
-                                  },
-                                  modifier = Modifier.testTag("reportProblem"),
-                              )
+                              ReportProblemButton {
+                                Toast.makeText(
+                                        context,
+                                        "This function will be implemented in a future version",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              }
                             }
+
+                        Spacer(Modifier.height(16.dp))
 
                         // MAP WILL BE ADDED HERE
 
@@ -477,26 +493,38 @@ fun ViewDetailEventScreen(
 
 @Composable
 fun IconRow(icons: List<IconInfo>) {
-  Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp)) {
-    icons.forEach { iconInfo ->
-      Column(
-          horizontalAlignment = Alignment.CenterHorizontally,
-          modifier =
-              Modifier.padding(horizontal = 16.dp)
-                  .clickable(onClick = iconInfo.onClick)
-                  .testTag(iconInfo.testTag)) {
-            Icon(
-                imageVector = iconInfo.icon,
-                contentDescription = iconInfo.description,
-                modifier = Modifier.size(40.dp))
-            Text(
-                text = iconInfo.description,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp))
-          }
-    }
-  }
+  Row(
+      modifier =
+          Modifier.horizontalScroll(rememberScrollState())
+              .padding(horizontal = 16.dp, vertical = 8.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        icons.forEach { iconInfo ->
+          Box(
+              modifier =
+                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                      .clip(RoundedCornerShape(12.dp))
+                      .background(MaterialTheme.colorScheme.primaryContainer)
+                      .clickable(onClick = iconInfo.onClick)
+                      .padding(4.dp)
+                      .testTag(iconInfo.testTag)) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(8.dp)) {
+                      Icon(
+                          imageVector = iconInfo.icon,
+                          contentDescription = iconInfo.description,
+                          modifier = Modifier.size(40.dp),
+                          tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                      Text(
+                          text = iconInfo.description,
+                          fontSize = 12.sp,
+                          textAlign = TextAlign.Center,
+                          color = MaterialTheme.colorScheme.onPrimaryContainer,
+                          modifier = Modifier.padding(top = 4.dp))
+                    }
+              }
+        }
+      }
 }
 
 data class IconInfo(

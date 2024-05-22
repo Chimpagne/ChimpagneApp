@@ -42,12 +42,12 @@ fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () 
       modifier =
           modifier
               .padding(horizontal = 12.dp, vertical = 8.dp)
+              .shadow(elevation = 10.dp, shape = RoundedCornerShape(12.dp))
               .clip(RoundedCornerShape(12.dp))
               .border(
                   width = 3.dp,
                   color = MaterialTheme.colorScheme.primary,
                   shape = RoundedCornerShape(12.dp))
-              .shadow(4.dp)
               .fillMaxWidth()
               .clickable { onClick() }
               .aspectRatio(1.9f),
