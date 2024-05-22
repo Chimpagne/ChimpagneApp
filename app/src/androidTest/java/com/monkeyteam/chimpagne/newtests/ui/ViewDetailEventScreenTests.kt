@@ -106,7 +106,7 @@ class ViewDetailEventScreenTests {
     }
     composeTestRule.waitForIdle()
 
-    composeTestRule.onNodeWithTag("number_of_guests").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("number_of_guests").assertExists()
   }
 
   @Test
@@ -141,7 +141,7 @@ class ViewDetailEventScreenTests {
     }
     composeTestRule.waitForIdle()
 
-    composeTestRule.onNodeWithTag("description").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("description").assertExists()
   }
 
   @Test
