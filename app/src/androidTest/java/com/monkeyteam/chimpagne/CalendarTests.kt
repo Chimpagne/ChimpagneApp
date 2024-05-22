@@ -18,7 +18,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.Timestamp
@@ -27,14 +26,11 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
-import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import java.util.Calendar
 import org.junit.Rule
 import org.junit.Test
@@ -96,9 +92,7 @@ class CalendarTests() {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testCalendarButton() {
-    composeTestRule.setContent {
-      EventMainInfo(ChimpagneEvent())
-    }
+    composeTestRule.setContent { EventMainInfo(ChimpagneEvent()) }
 
     composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()
     composeTestRule.onNodeWithTag("calendarButton").performClick()

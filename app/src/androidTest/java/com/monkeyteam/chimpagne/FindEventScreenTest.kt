@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne
 
 import android.location.LocationManager
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertIsDisplayed
@@ -11,24 +10,19 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
-import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -129,8 +123,7 @@ class FindEventScreenTest {
       navController = rememberNavController()
       val navActions = NavigationActions(navController!!)
 
-      FindEventMapScreen(
-          { navController!!.popBackStack() }, findViewModel, {})
+      FindEventMapScreen({ navController!!.popBackStack() }, findViewModel, {})
     }
 
     // Simulate the goBack action by clicking the back icon
@@ -145,16 +138,14 @@ class FindEventScreenTest {
     val eventViewModel = EventViewModel("FOURTH_EVENT", database)
     val accountViewModel = AccountViewModel(database)
 
-
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
       EventScreen(
-        eventViewModel = eventViewModel,
-        accountViewModel = accountViewModel,
-        navObject = navActions
-      )
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
@@ -175,16 +166,14 @@ class FindEventScreenTest {
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
 
-
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
       EventScreen(
-        eventViewModel = eventViewModel,
-        accountViewModel = accountViewModel,
-        navObject = navActions
-      )
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
     while (accountViewModel.uiState.value.loading) {}
     while (eventViewModel.uiState.value.id.isEmpty()) {}
@@ -203,8 +192,6 @@ class FindEventScreenTest {
     assertTrue(eventViewModel.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.GUEST)
   }
 
-
-
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   @Test
   fun testJoinEventFunctionalityAlreadyStaff() {
@@ -216,16 +203,14 @@ class FindEventScreenTest {
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
 
-
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
       EventScreen(
-        eventViewModel = eventViewModel,
-        accountViewModel = accountViewModel,
-        navObject = navActions
-      )
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
     while (accountViewModel.uiState.value.loading) {}
     while (eventViewModel.uiState.value.id.isEmpty()) {}
@@ -244,16 +229,14 @@ class FindEventScreenTest {
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
 
-
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
       EventScreen(
-        eventViewModel = eventViewModel,
-        accountViewModel = accountViewModel,
-        navObject = navActions
-      )
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel,
+          navObject = navActions)
     }
     while (accountViewModel.uiState.value.loading) {}
     while (eventViewModel.uiState.value.id.isEmpty()) {}
@@ -338,8 +321,7 @@ class FindEventScreenTest {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(
-          {}, FindEventsViewModel(database = database), {})
+      FindEventMapScreen({}, FindEventsViewModel(database = database), {})
     }
 
     composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
@@ -426,5 +408,5 @@ class FindEventScreenTest {
     composeTestRule.onNodeWithTag("find_event_form_screen").assertExists()
 
     composeTestRule.onNodeWithTag("button_search").performClick()
-    }
+  }
 }

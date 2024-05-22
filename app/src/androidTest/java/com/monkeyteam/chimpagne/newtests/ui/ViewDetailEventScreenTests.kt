@@ -20,8 +20,6 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
-import com.monkeyteam.chimpagne.ui.event.EditEventScreen
-import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -76,8 +74,8 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("tag list").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("event_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("tag_list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
@@ -98,15 +96,15 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("go back").assertHasClickAction()
-    composeTestRule.onNodeWithTag("go back").performClick()
+    composeTestRule.onNodeWithTag("go_back").assertHasClickAction()
+    composeTestRule.onNodeWithTag("go_back").performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testLeaveButton() {
     database.accountManager.signInTo(TEST_ACCOUNTS[0])
-    val event = TEST_EVENTS[0]
+    val event = TEST_EVENTS[2]
 
     val eventVM = EventViewModel(event.id, database)
 
@@ -144,7 +142,7 @@ class ViewDetailEventScreenTests {
   @Test
   fun testEditButton() {
 
-    //Logging as owner of the event
+    // Logging as owner of the event
     val myAccount = TEST_ACCOUNTS[1]
     accountManager.signInTo(myAccount)
     val accountViewModel = AccountViewModel(database)
@@ -162,13 +160,14 @@ class ViewDetailEventScreenTests {
     while (accountViewModel.uiState.value.loading) {}
     while (eventVM.uiState.value.id.isEmpty()) {}
 
-    composeTestRule.onNodeWithTag("edit").performScrollTo().assertHasClickAction().performClick()
+    // Is displayed for the owner of the event
+    composeTestRule.onNodeWithTag("edit").performScrollTo().assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testBedButton() {
-    //Logging in a user to an event he joined to display the buttons
+    // Logging in a user to an event he joined to display the buttons
     val myAccount = TEST_ACCOUNTS[0]
     accountManager.signInTo(myAccount)
     val accountViewModel = AccountViewModel(database)
@@ -186,18 +185,22 @@ class ViewDetailEventScreenTests {
     while (accountViewModel.uiState.value.loading) {}
     while (eventVM.uiState.value.id.isEmpty()) {}
 
-    composeTestRule.onNodeWithTag("bed_reservation").performScrollTo().assertHasClickAction().performClick()
+    composeTestRule
+        .onNodeWithTag("bed_reservation")
+        .performScrollTo()
+        .assertHasClickAction()
+        .performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testParkingButton() {
-    //Logging in a user to an event he joined to display the buttons
-    val myAccount = TEST_ACCOUNTS[0]
+    // Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[1]
     accountManager.signInTo(myAccount)
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-    val event = TEST_EVENTS[4]
+    val event = TEST_EVENTS[1]
     val eventVM = EventViewModel(event.id, database)
     while (eventVM.uiState.value.loading) {}
 
@@ -216,12 +219,12 @@ class ViewDetailEventScreenTests {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testSuppliesButton() {
-    //Logging in a user to an event he joined to display the buttons
-    val myAccount = TEST_ACCOUNTS[0]
+    // Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[1]
     accountManager.signInTo(myAccount)
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-    val event = TEST_EVENTS[4]
+    val event = TEST_EVENTS[1]
     val eventVM = EventViewModel(event.id, database)
     while (eventVM.uiState.value.loading) {}
 
@@ -234,14 +237,14 @@ class ViewDetailEventScreenTests {
     while (accountViewModel.uiState.value.loading) {}
     while (eventVM.uiState.value.id.isEmpty()) {}
 
-    composeTestRule.onNodeWithTag("supplies").performScrollTo().assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("supplies").performScrollTo().assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testPollsButton() {
 
-    //Logging in a user to an event he joined to display the buttons
+    // Logging in a user to an event he joined to display the buttons
     val myAccount = TEST_ACCOUNTS[0]
     accountManager.signInTo(myAccount)
     val accountViewModel = AccountViewModel(database)
@@ -265,7 +268,7 @@ class ViewDetailEventScreenTests {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testCarPoolingButton() {
-    //Logging in a user to an event he joined to display the buttons
+    // Logging in a user to an event he joined to display the buttons
     val myAccount = TEST_ACCOUNTS[0]
     accountManager.signInTo(myAccount)
     val accountViewModel = AccountViewModel(database)
@@ -283,7 +286,11 @@ class ViewDetailEventScreenTests {
     while (accountViewModel.uiState.value.loading) {}
     while (eventVM.uiState.value.id.isEmpty()) {}
 
-    composeTestRule.onNodeWithTag("car pooling").performScrollTo().assertHasClickAction().performClick()
+    composeTestRule
+        .onNodeWithTag("car pooling")
+        .performScrollTo()
+        .assertHasClickAction()
+        .performClick()
   }
 
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

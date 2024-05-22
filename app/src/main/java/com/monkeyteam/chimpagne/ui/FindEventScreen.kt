@@ -178,8 +178,7 @@ fun MainFindEventScreen(
     when (page) {
       FindEventScreens.FORM ->
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
-      FindEventScreens.MAP ->
-          FindEventMapScreen(goToForm, findViewModel, goToDetail)
+      FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel, goToDetail)
       FindEventScreens.DETAIL ->
           EventScreen(navObject, eventViewModel, accountViewModel, pagerState)
     }

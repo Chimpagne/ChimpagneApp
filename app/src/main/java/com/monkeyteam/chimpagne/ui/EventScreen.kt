@@ -153,11 +153,11 @@ fun EventScreen(
                   textAlign = TextAlign.Center,
                   maxLines = 2,
                   overflow = TextOverflow.Ellipsis,
-                  modifier = Modifier.fillMaxWidth())
+                  modifier = Modifier.fillMaxWidth().testTag("event_title"))
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
-              IconButton(onClick = { goBack() }) {
+              IconButton(onClick = { goBack() }, modifier = Modifier.testTag("go_back")) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
               }
             },
@@ -174,8 +174,7 @@ fun EventScreen(
         if (uiState.id.isNotEmpty() && uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
           Button(
               onClick = { onJoinClick(eventViewModel.buildChimpagneEvent()) },
-              modifier =
-                  Modifier.fillMaxWidth().padding(8.dp).height(56.dp).testTag("join_button"),
+              modifier = Modifier.fillMaxWidth().padding(8.dp).height(56.dp).testTag("join_button"),
               shape = MaterialTheme.shapes.extraLarge) {
                 Icon(Icons.AutoMirrored.Rounded.Login, contentDescription = "join event")
                 Spacer(Modifier.width(8.dp))
@@ -216,7 +215,7 @@ fun EventScreen(
                 item {
                   Row(
                       modifier =
-                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
+                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag_list")) {
                         uiState.tags.forEach { tag -> EventTagChip(tag) }
                       }
                 }
