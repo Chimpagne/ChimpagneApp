@@ -179,7 +179,7 @@ fun MainFindEventScreen(
       FindEventScreens.FORM ->
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
       FindEventScreens.MAP ->
-          FindEventMapScreen(goToForm, findViewModel, goToDetail, accountViewModel, navObject)
+          FindEventMapScreen(goToForm, findViewModel, goToDetail)
       FindEventScreens.DETAIL ->
           EventScreen(navObject, eventViewModel, accountViewModel, pagerState)
     }
@@ -453,12 +453,9 @@ fun FindEventFormScreen(
 fun FindEventMapScreen(
     onBackIconClicked: () -> Unit = {},
     findViewModel: FindEventsViewModel,
-    onEventClick: (ChimpagneEvent) -> Unit = {},
-    accountViewModel: AccountViewModel,
-    navObject: NavigationActions
+    onEventClick: (ChimpagneEvent) -> Unit = {}
 ) {
 
-  val context = LocalContext.current
   val uiState by findViewModel.uiState.collectAsState()
 
   val scope = rememberCoroutineScope()

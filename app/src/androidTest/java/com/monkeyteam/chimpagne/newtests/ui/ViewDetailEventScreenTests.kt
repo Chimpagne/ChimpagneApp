@@ -8,6 +8,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,6 +36,7 @@ class ViewDetailEventScreenTests {
 
   val database = Database()
   val accountViewModel = AccountViewModel(database = database)
+  var accountManager = database.accountManager
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -142,36 +144,37 @@ class ViewDetailEventScreenTests {
   @Test
   fun testEditButton() {
 
-    database.accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    val event = TEST_EVENTS[0]
+    //Logging as owner of the event
+    val myAccount = TEST_ACCOUNTS[1]
+    accountManager.signInTo(myAccount)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    val event = TEST_EVENTS[1]
     val eventVM = EventViewModel(event.id, database)
-
-    var navController: NavHostController? = null
-
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
-      navController = rememberNavController()
-      val navActions = NavigationActions(navController!!)
-      NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
-        composable(Route.EVENT_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
-        composable(Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
-          EditEventScreen(navObject = navActions, eventViewModel = eventVM)
-        }
-      }
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventVM.uiState.value.id.isEmpty()) {}
+
+    composeTestRule.onNodeWithTag("edit").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testBedButton() {
-    val event = TEST_EVENTS[0]
-
+    //Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    val event = TEST_EVENTS[4]
     val eventVM = EventViewModel(event.id, database)
-
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
@@ -180,16 +183,22 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("bed_reservation").assertHasClickAction().performClick()
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventVM.uiState.value.id.isEmpty()) {}
+
+    composeTestRule.onNodeWithTag("bed_reservation").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testParkingButton() {
-    val event = TEST_EVENTS[0]
-
+    //Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    val event = TEST_EVENTS[4]
     val eventVM = EventViewModel(event.id, database)
-
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
@@ -198,44 +207,47 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("parking").assertHasClickAction().performClick()
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventVM.uiState.value.id.isEmpty()) {}
+
+    composeTestRule.onNodeWithTag("parking").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testSuppliesButton() {
-    val event = TEST_EVENTS[0]
-
+    //Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    val event = TEST_EVENTS[4]
     val eventVM = EventViewModel(event.id, database)
-
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-
-      NavHost(
-          navController = navController,
-          startDestination = Route.EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
-            composable(Route.EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
-              EventScreen(navActions, eventVM, accountViewModel)
-            }
-            composable(Route.SUPPLIES_SCREEN + "/${eventVM.uiState.value.id}") {
-              SuppliesScreen(navObject = navActions, eventVM, accountViewModel)
-            }
-          }
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventVM.uiState.value.id.isEmpty()) {}
+
+    composeTestRule.onNodeWithTag("supplies").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testPollsButton() {
-    val event = TEST_EVENTS[0]
 
+    //Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    val event = TEST_EVENTS[4]
     val eventVM = EventViewModel(event.id, database)
-
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
@@ -244,16 +256,22 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventVM.uiState.value.id.isEmpty()) {}
+
+    composeTestRule.onNodeWithTag("polls").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testCarPoolingButton() {
-    val event = TEST_EVENTS[0]
-
+    //Logging in a user to an event he joined to display the buttons
+    val myAccount = TEST_ACCOUNTS[0]
+    accountManager.signInTo(myAccount)
+    val accountViewModel = AccountViewModel(database)
+    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
+    val event = TEST_EVENTS[4]
     val eventVM = EventViewModel(event.id, database)
-
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
@@ -262,7 +280,10 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("car pooling").assertHasClickAction().performClick()
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventVM.uiState.value.id.isEmpty()) {}
+
+    composeTestRule.onNodeWithTag("car pooling").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)

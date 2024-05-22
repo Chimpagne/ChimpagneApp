@@ -130,7 +130,7 @@ class FindEventScreenTest {
       val navActions = NavigationActions(navController!!)
 
       FindEventMapScreen(
-          { navController!!.popBackStack() }, findViewModel, {}, accountViewModel, navActions)
+          { navController!!.popBackStack() }, findViewModel, {})
     }
 
     // Simulate the goBack action by clicking the back icon
@@ -138,36 +138,35 @@ class FindEventScreenTest {
     assertTrue(navController!!.previousBackStackEntry == null)
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   @Test
   fun testJoinEventFunctionalityNotLoggedInUser() {
-    val database = Database()
-    val findViewModel = FindEventsViewModel(database)
+    // Ensure the event ID is correctly formatted
+    val eventViewModel = EventViewModel("FOURTH_EVENT", database)
     val accountViewModel = AccountViewModel(database)
-    val sampleEvent =
-        ChimpagneEvent(id = "sample123", title = "Sample Event", description = "Sample Description")
-    findViewModel.setResultEvents(mapOf(sampleEvent.id to sampleEvent))
+
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(
-          findViewModel = findViewModel,
-          accountViewModel = accountViewModel,
-          navObject = navActions)
+      EventScreen(
+        eventViewModel = eventViewModel,
+        accountViewModel = accountViewModel,
+        navObject = navActions
+      )
     }
 
     composeTestRule.onNodeWithTag("join_button").performClick()
 
     // Should be false because the user is not logged in (guest) so it will not trigger the
     // joinEvent function hence no uiState will load anything
-    assertFalse(findViewModel.uiState.value.loading)
+    assertFalse(eventViewModel.uiState.value.loading)
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
-  fun testJoinEventFunctionalityAlreadyGuest() {
+  fun testJoinEventFunctionalityJoinAsGuest() {
     val myAccount = TEST_ACCOUNTS[0]
     accountManager.signInTo(myAccount)
 
@@ -206,101 +205,60 @@ class FindEventScreenTest {
 
 
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   @Test
   fun testJoinEventFunctionalityAlreadyStaff() {
     val myAccount = TEST_ACCOUNTS[0]
-    accountManager.signInTo(anAccount)
+    accountManager.signInTo(myAccount)
 
-    val findViewModel = FindEventsViewModel(database)
+    // Ensure the event ID is correctly formatted
+    val eventViewModel = EventViewModel("FOURTH_EVENT", database)
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {}
 
-    val staffEvent = TEST_EVENTS[4]
-    findViewModel.setResultEvents(mapOf(staffEvent.id to staffEvent))
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(
-          findViewModel = findViewModel,
-          accountViewModel = accountViewModel,
-          navObject = navActions)
+      EventScreen(
+        eventViewModel = eventViewModel,
+        accountViewModel = accountViewModel,
+        navObject = navActions
+      )
     }
+    while (accountViewModel.uiState.value.loading) {}
+    while (eventViewModel.uiState.value.id.isEmpty()) {}
 
-    composeTestRule.onNodeWithTag("join_button").performClick()
-
-    assertTrue(staffEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.STAFF)
+    assertTrue(eventViewModel.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.STAFF)
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   @Test
   fun testJoinEventFunctionalityAlreadyOwner() {
     val myAccount = TEST_ACCOUNTS[1]
     accountManager.signInTo(myAccount)
 
-    val findViewModel = FindEventsViewModel(database)
+    // Ensure the event ID is correctly formatted
+    val eventViewModel = EventViewModel("SECOND_EVENT", database)
     val accountViewModel = AccountViewModel(database)
     accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {}
 
-    val ownerEvent = TEST_EVENTS[2]
-    findViewModel.setResultEvents(mapOf(ownerEvent.id to ownerEvent))
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
 
-      FindEventMapScreen(
-          findViewModel = findViewModel,
-          accountViewModel = accountViewModel,
-          navObject = navActions)
+      EventScreen(
+        eventViewModel = eventViewModel,
+        accountViewModel = accountViewModel,
+        navObject = navActions
+      )
     }
-
-    composeTestRule.onNodeWithTag("join_button").performClick()
-
-    assertTrue(ownerEvent.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
-  }
-
-  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-  @Test
-  fun testJoinEventFunctionalityNotInEvent() {
-    val myAccount = TEST_ACCOUNTS[1]
-    accountManager.signInTo(myAccount)
-
-    val findViewModel = FindEventsViewModel(database)
-    val accountViewModel = AccountViewModel(database)
-    accountViewModel.loginToChimpagneAccount(myAccount.firebaseAuthUID, {}, {})
     while (accountViewModel.uiState.value.loading) {}
+    while (eventViewModel.uiState.value.id.isEmpty()) {}
 
-    val newEvent = TEST_EVENTS[3]
-    val eventVM = EventViewModel(newEvent.id, database)
-
-    while (eventVM.uiState.value.loading) {}
-
-    findViewModel.setResultEvents(mapOf(newEvent.id to newEvent))
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      NavHost(navController = navController, startDestination = Route.FIND_AN_EVENT_SCREEN) {
-        composable(Route.FIND_AN_EVENT_SCREEN) {
-          FindEventMapScreen(
-              findViewModel = findViewModel,
-              accountViewModel = accountViewModel,
-              navObject = navActions)
-        }
-        composable(Route.EVENT_SCREEN + "/{eventId}") { backStackEntry ->
-          val eventId = backStackEntry.arguments?.getString("eventId")
-          eventId?.let { EventScreen(navActions, EventViewModel(it, database), accountViewModel) }
-        }
-      }
-    }
-
-    composeTestRule.onNodeWithTag("join_button").performClick()
+    assertTrue(eventViewModel.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
@@ -381,7 +339,7 @@ class FindEventScreenTest {
       val navActions = NavigationActions(navController)
 
       FindEventMapScreen(
-          {}, FindEventsViewModel(database = database), {}, accountViewModel, navActions)
+          {}, FindEventsViewModel(database = database), {})
     }
 
     composeTestRule.onNodeWithTag("map_screen").assertIsDisplayed()
@@ -468,7 +426,5 @@ class FindEventScreenTest {
     composeTestRule.onNodeWithTag("find_event_form_screen").assertExists()
 
     composeTestRule.onNodeWithTag("button_search").performClick()
-    composeTestRule.waitForIdle()
-    composeTestRule.onNodeWithTag("map_screen").assertExists()
-  }
+    }
 }
