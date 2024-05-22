@@ -58,7 +58,7 @@ class ViewDetailEventScreenTests {
   }
 
   @Test
-  fun generalTextTest() {
+  fun generalTextTest1() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -72,15 +72,73 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
-    println("event title is displayed")
+  }
+
+  @Test
+  fun generalTextTest2() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+    }
+
     composeTestRule.onNodeWithTag("tag list").assertIsDisplayed()
-    println("tag list is displayed")
+  }
+
+  @Test
+  fun generalTextTest3() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+    }
+
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
-    println("num guests is displayed")
+  }
+
+  @Test
+  fun generalTextTest4() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+    }
+
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
-    println("event date is displayed")
+  }
+
+  @Test
+  fun generalTextTest5() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      ViewDetailEventScreen(navActions, eventVM, accountViewModel)
+    }
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
-    println("description is displayed")
   }
 
   @Test
