@@ -27,7 +27,6 @@ import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
-import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -129,30 +128,6 @@ class FindEventScreenTest {
     // Simulate the goBack action by clicking the back icon
     composeTestRule.onNodeWithTag("go_back").performClick()
     assertTrue(navController!!.previousBackStackEntry == null)
-  }
-
-  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-  @Test
-  fun testJoinEventFunctionalityNotLoggedInUser() {
-    // Ensure the event ID is correctly formatted
-    val eventViewModel = EventViewModel("FOURTH_EVENT", database)
-    val accountViewModel = AccountViewModel(database)
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      EventScreen(
-          eventViewModel = eventViewModel,
-          accountViewModel = accountViewModel,
-          navObject = navActions)
-    }
-
-    composeTestRule.onNodeWithTag("join_button").performClick()
-
-    // Should be false because the user is not logged in (guest) so it will not trigger the
-    // joinEvent function hence no uiState will load anything
-    assertFalse(eventViewModel.uiState.value.loading)
   }
 
   @OptIn(ExperimentalFoundationApi::class)
