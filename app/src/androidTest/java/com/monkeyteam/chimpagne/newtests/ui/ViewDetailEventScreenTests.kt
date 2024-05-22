@@ -1,18 +1,25 @@
 package com.monkeyteam.chimpagne.newtests.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventScreen
+import com.monkeyteam.chimpagne.ui.IconInfo
+import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -33,6 +40,38 @@ class ViewDetailEventScreenTests {
   @Before
   fun initTests() {
     initializeTestDatabase()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun testIconRow() {
+    // Sample IconInfo data for testing
+    val icons =
+        listOf(
+            IconInfo(
+                icon = Icons.Default.Home,
+                description = "Home",
+                onClick = {},
+                testTag = "home_icon"),
+            IconInfo(
+                icon = Icons.Default.Settings,
+                description = "Settings",
+                onClick = {},
+                testTag = "settings_icon"))
+
+    composeTestRule.setContent { IconRow(icons) }
+
+    // Check if both icons are displayed
+    composeTestRule.onNodeWithTag("home_icon").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("settings_icon").assertIsDisplayed()
+
+    // Check if text descriptions are displayed
+    composeTestRule.onNodeWithText("Home").assertIsDisplayed()
+    composeTestRule.onNodeWithText("Settings").assertIsDisplayed()
+
+    // Check if click actions work
+    composeTestRule.onNodeWithTag("home_icon").assertHasClickAction()
+    composeTestRule.onNodeWithTag("settings_icon").assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -71,6 +110,31 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun testUserIsInEvent() {
+    val event = TEST_EVENTS[2]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
+
+    composeTestRule.onNodeWithTag("share").assertHasClickAction()
+    composeTestRule.onNodeWithTag("share").performClick()
+
+    Thread.sleep(2000)
+    accountViewModel.logoutFromChimpagneAccount()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
