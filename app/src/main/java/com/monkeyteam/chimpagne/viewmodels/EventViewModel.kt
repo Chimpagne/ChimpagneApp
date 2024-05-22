@@ -60,6 +60,17 @@ class EventViewModel(
     }
   }
 
+  private fun validateEventInputs(): EventInputValidity? {
+    return when {
+      _uiState.value.title.isEmpty() -> EventInputValidity.INVALID_TITLE
+      _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
+          _uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ->
+          EventInputValidity.INVALID_DATES
+      hasInvalidSocialMediaLinks() -> EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS
+      else -> null
+    }
+  }
+
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
   fun fetchEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     if (eventID != null) {
@@ -148,17 +159,9 @@ class EventViewModel(
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
-    if (_uiState.value.title.isEmpty() ||
-        _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
-        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ||
-        hasInvalidSocialMediaLinks()) {
-      if (_uiState.value.title.isEmpty()) {
-        onInvalidInputs(EventInputValidity.INVALID_TITLE)
-      } else if (hasInvalidSocialMediaLinks()) {
-        onInvalidInputs(EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS)
-      } else {
-        onInvalidInputs(EventInputValidity.INVALID_DATES)
-      }
+    val invalidInput = validateEventInputs()
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
     } else {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
@@ -184,17 +187,10 @@ class EventViewModel(
       onInvalidInputs: (EventInputValidity) -> Unit = {}
   ) {
 
-    if (_uiState.value.title.isEmpty() ||
-        _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
-        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ||
-        hasInvalidSocialMediaLinks()) {
-      if (_uiState.value.title.isEmpty()) {
-        onInvalidInputs(EventInputValidity.INVALID_TITLE)
-      } else if (hasInvalidSocialMediaLinks()) {
-        onInvalidInputs(EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS)
-      } else {
-        onInvalidInputs(EventInputValidity.INVALID_DATES)
-      }
+    val invalidInput = validateEventInputs()
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
+      return
     } else {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
