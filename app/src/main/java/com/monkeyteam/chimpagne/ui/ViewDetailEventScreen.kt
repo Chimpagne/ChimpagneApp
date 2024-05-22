@@ -246,7 +246,7 @@ fun ViewDetailEventScreen(
                                                         }
                                                         clipboardManager.setText(annotatedString)
                                                       }
-                                                      .padding(8.dp)) {
+                                                      .padding(8.dp).testTag("share")) {
                                                 Icon(
                                                     imageVector = Icons.Rounded.Share,
                                                     contentDescription = "Share Event",
