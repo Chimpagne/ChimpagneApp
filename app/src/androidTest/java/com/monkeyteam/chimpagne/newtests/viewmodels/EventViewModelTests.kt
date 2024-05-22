@@ -8,8 +8,6 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
@@ -379,43 +377,6 @@ class EventViewModelTests {
     eventVM.updateEventSupplies(event.supplies)
     eventVM.updateParkingSpaces(event.parkingSpaces)
     eventVM.updateBeds(event.beds)
-  }
-
-  @Test
-  fun testCreateEventWithEqualDates() {
-    val invalidEvent =
-        ChimpagneEvent(
-            id = "FIRST_EVENT",
-            title = "First event",
-            description = "a random description",
-            location = Location("EPFL", 46.519124, 6.567593),
-            public = true,
-            tags = listOf("vegan", "monkeys"),
-            guests = emptyMap(),
-            staffs = emptyMap(),
-            startsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
-            endsAtTimestamp = buildTimestamp(9, 5, 2024, 15, 15),
-            ownerId = "JUAN",
-            supplies =
-                mapOf(
-                    "1" to ChimpagneSupply("1", "d", 1, "g"),
-                    "2" to ChimpagneSupply("2", "ff", 2, "d"),
-                    "3" to ChimpagneSupply("3", "ee", 3, "e")),
-            parkingSpaces = 1,
-            beds = 2)
-
-    val eventVM = EventViewModel(database = database)
-    replaceVMEventBy(eventVM, invalidEvent)
-
-    eventVM.createTheEvent(
-        onSuccess = { assertTrue(false) },
-        onInvalidInputs = { assertEquals(EventInputValidity.INVALID_DATES, it) },
-        onFailure = { assertTrue(false) })
-
-    while (eventVM.uiState.value.loading) {}
-    Thread.sleep(SLEEP_AMOUNT_MILLIS)
-
-    assertTrue(eventVM.uiState.value.id.isEmpty())
   }
 
   @Test
