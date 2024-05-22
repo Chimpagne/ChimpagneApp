@@ -540,7 +540,7 @@ fun FindEventMapScreen(
               modifier =
                   Modifier.padding(start = 12.dp, top = 12.dp)
                       .testTag("go_back")
-                      .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+                      .shadow(elevation = 10.dp, shape = RoundedCornerShape(12.dp))
                       .background(
                           color = MaterialTheme.colorScheme.surface,
                           shape = RoundedCornerShape(100))

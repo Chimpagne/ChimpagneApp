@@ -102,6 +102,8 @@ fun FirstPanel(eventViewModel: EventViewModel) {
             onDateSelected = eventViewModel::updateEventEndCalendarDate,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             selectTimeOfDay = true)
+
+        Spacer(modifier = Modifier.height(16.dp))
       }
     }
   }
