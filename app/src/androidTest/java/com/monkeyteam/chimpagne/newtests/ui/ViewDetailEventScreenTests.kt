@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
@@ -20,6 +21,7 @@ import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
+import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -110,6 +112,73 @@ class ViewDetailEventScreenTests {
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
     composeTestRule.onNodeWithTag("description").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun TestEventActions() {
+
+    val event = TEST_EVENTS[2]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventActions(
+          navObject = navActions,
+          eventViewModel = eventVM,
+          isUserLoggedIn = true,
+          showToast = {},
+          showPromptLogin = {})
+    }
+
+    // Checking the presence of icons and their click actions
+    composeTestRule
+        .onNodeWithTag("edit")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("manage staff")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("chat")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("supplies")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("car pooling")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("polls")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("bed_reservation")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("parking")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)

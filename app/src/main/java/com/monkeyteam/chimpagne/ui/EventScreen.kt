@@ -22,15 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Login
-import androidx.compose.material.icons.rounded.Backpack
-import androidx.compose.material.icons.rounded.ChatBubbleOutline
-import androidx.compose.material.icons.rounded.DirectionsCar
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.PeopleAlt
-import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.QrCodeScanner
-import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,15 +54,14 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.EventTagChip
-import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
 import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneDivider
+import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.eventview.ImageCard
 import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
@@ -232,107 +223,10 @@ fun EventScreen(
                   // Do nothing extra
                 } else {
                   item {
-                    SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
-                  }
-                  item { ChimpagneDivider() }
-                  item {
-                    val iconList = mutableListOf<IconInfo>()
-                    if (uiState.currentUserRole == ChimpagneRole.OWNER) {
-                      iconList.add(
-                          IconInfo(
-                              icon = Icons.Rounded.Edit,
-                              description =
-                                  stringResource(id = R.string.event_details_screen_edit_button),
-                              onClick = {
-                                navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}")
-                              },
-                              testTag = "edit"))
-                      iconList.add(
-                          IconInfo(
-                              icon = Icons.Rounded.PeopleAlt,
-                              description =
-                                  stringResource(
-                                      id = R.string.event_details_screen_manage_staff_button),
-                              onClick = {
-                                navObject.navigateTo(Route.MANAGE_STAFF_SCREEN + "/${uiState.id}")
-                              },
-                              testTag = "manage staff"))
-                    } else {
-                      iconList.add(
-                          IconInfo(
-                              icon = Icons.Rounded.RemoveCircleOutline,
-                              description =
-                                  stringResource(id = R.string.event_details_screen_leave_button),
-                              onClick = {
-                                if (accountViewModel.isUserLoggedIn()) {
-                                  eventViewModel.leaveTheEvent(
-                                      onSuccess = {
-                                        showToast(
-                                            context.getString(
-                                                R.string.event_details_screen_leave_toast_success))
-                                        navObject.goBack()
-                                      })
-                                } else {
-                                  showPromptLogin = true
-                                }
-                              },
-                              testTag = "leave"))
-                    }
-                    iconList.addAll(
-                        listOf(
-                            IconInfo(
-                                icon = Icons.Rounded.ChatBubbleOutline,
-                                description =
-                                    stringResource(id = R.string.event_details_screen_chat_button),
-                                onClick = {
-                                  showToast("This function will be implemented in a future version")
-                                },
-                                testTag = "chat"),
-                            IconInfo(
-                                icon = Icons.Rounded.Backpack,
-                                description =
-                                    stringResource(
-                                        id = R.string.event_details_screen_supplies_button),
-                                onClick = {
-                                  navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id)
-                                },
-                                testTag = "supplies"),
-                            IconInfo(
-                                icon = Icons.Rounded.DirectionsCar,
-                                description =
-                                    stringResource(
-                                        id = R.string.event_details_screen_car_pooling_button),
-                                onClick = {
-                                  showToast("This function will be implemented in a future version")
-                                },
-                                testTag = "car pooling"),
-                            IconInfo(
-                                icon = Icons.Rounded.Poll,
-                                description =
-                                    stringResource(
-                                        id = R.string.event_details_screen_voting_button),
-                                onClick = {
-                                  showToast("This function will be implemented in a future version")
-                                },
-                                testTag = "polls"),
-                            IconInfo(
-                                icon = Icons.Rounded.Home,
-                                description =
-                                    stringResource(
-                                        id = R.string.event_details_screen_bed_reservation),
-                                onClick = {
-                                  showToast("This function will be implemented in a future version")
-                                },
-                                testTag = "bed_reservation"),
-                            IconInfo(
-                                icon = Icons.Rounded.DirectionsCar,
-                                description =
-                                    stringResource(id = R.string.event_details_screen_parking),
-                                onClick = {
-                                  showToast("This function will be implemented in a future version")
-                                },
-                                testTag = "parking")))
-                    IconRow(icons = iconList)
+                    EventActions(
+                        navObject, eventViewModel, accountViewModel.isUserLoggedIn(), showToast) {
+                          showPromptLogin = it
+                        }
                   }
                 }
               }
