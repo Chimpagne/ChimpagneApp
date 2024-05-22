@@ -195,7 +195,7 @@ fun ViewDetailEventScreen(
                             modifier = Modifier.padding(horizontal = 40.dp).fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally) {
                               Row(
-                                  modifier = Modifier.fillMaxWidth().testTag("event date"),
+                                  modifier = Modifier.fillMaxWidth(),
                                   horizontalArrangement = Arrangement.SpaceEvenly) {
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                       Text(
@@ -203,24 +203,30 @@ fun ViewDetailEventScreen(
                                           fontFamily = ChimpagneFontFamily,
                                           fontSize = 16.sp,
                                           color = Color.Gray)
-                                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text(
-                                            text =
-                                                simpleDateFormat(
-                                                    buildTimestamp(uiState.startsAtCalendarDate)),
-                                            fontFamily = ChimpagneFontFamily,
-                                            fontSize = 16.sp,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            fontWeight = FontWeight.Bold)
-                                        Text(
-                                            text =
-                                                simpleTimeFormat(
-                                                    buildTimestamp(uiState.startsAtCalendarDate)),
-                                            fontFamily = ChimpagneFontFamily,
-                                            fontSize = 16.sp,
-                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                            fontWeight = FontWeight.Bold)
-                                      }
+                                      Column(
+                                          horizontalAlignment = Alignment.CenterHorizontally,
+                                          modifier = Modifier.testTag("event date")) {
+                                            Text(
+                                                text =
+                                                    simpleDateFormat(
+                                                        buildTimestamp(
+                                                            uiState.startsAtCalendarDate)),
+                                                fontFamily = ChimpagneFontFamily,
+                                                fontSize = 16.sp,
+                                                color =
+                                                    MaterialTheme.colorScheme.onPrimaryContainer,
+                                                fontWeight = FontWeight.Bold)
+                                            Text(
+                                                text =
+                                                    simpleTimeFormat(
+                                                        buildTimestamp(
+                                                            uiState.startsAtCalendarDate)),
+                                                fontFamily = ChimpagneFontFamily,
+                                                fontSize = 16.sp,
+                                                color =
+                                                    MaterialTheme.colorScheme.onPrimaryContainer,
+                                                fontWeight = FontWeight.Bold)
+                                          }
                                     }
 
                                     Row(
