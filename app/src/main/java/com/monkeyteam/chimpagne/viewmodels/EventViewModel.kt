@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 
 enum class EventInputValidity {
   INVALID_TITLE,
+    INVALID_SOCIAL_MEDIA_LINKS,
   INVALID_DATES
 }
 
@@ -52,6 +53,7 @@ class EventViewModel(
     fun eventInputValidityToString(e: EventInputValidity, context: Context): String {
       return when (e) {
         EventInputValidity.INVALID_TITLE -> context.getString(R.string.title_should_not_be_empty)
+        EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS -> context.getString(R.string.invalid_social_media_links)
         EventInputValidity.INVALID_DATES -> context.getString(R.string.invalid_dates)
       }
     }
@@ -131,6 +133,14 @@ class EventViewModel(
         polls = _uiState.value.polls)
   }
 
+    private fun isInvalidUrl(socialMedia: SocialMedia): Boolean {
+        return socialMedia.chosenGroupUrl.isNotEmpty() && socialMedia.platformUrls.none { socialMedia.chosenGroupUrl.startsWith(it) }
+    }
+
+    fun hasInvalidSocialMediaLinks(): Boolean {
+        return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
+    }
+
   fun createTheEvent(
       onSuccess: (id: String) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {},
@@ -138,11 +148,13 @@ class EventViewModel(
   ) {
     if (_uiState.value.title.isEmpty() ||
         _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
-        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
-
+        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ||
+        hasInvalidSocialMediaLinks()) {
       if (_uiState.value.title.isEmpty()) {
         onInvalidInputs(EventInputValidity.INVALID_TITLE)
-      } else {
+      } else if(hasInvalidSocialMediaLinks()) {
+            onInvalidInputs(EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS)
+      }else {
         onInvalidInputs(EventInputValidity.INVALID_DATES)
       }
     } else {

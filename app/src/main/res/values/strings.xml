@@ -156,6 +156,7 @@
 
     <string name="title_should_not_be_empty">The event title should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
+    <string name="invalid_social_media_links">Invalid social media links</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
     <string name="events_near_you">Events near you</string>

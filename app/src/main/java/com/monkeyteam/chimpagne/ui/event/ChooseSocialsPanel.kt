@@ -81,8 +81,7 @@ private fun SocialMediaTextField(
         hasError = (socialMedia.platformUrls.none { newUrl.startsWith(it) } && newUrl.isNotEmpty())
         updateSocialMediaLink(
             socialMedia.copy(
-                chosenGroupUrl =
-                    if (!hasError) createFullUrl(socialMedia.platformUrls, newUrl) else ""))
+                chosenGroupUrl = createFullUrl(socialMedia.platformUrls, newUrl)))
       },
       label = { Text(stringResource(id = socialMedia.labelResource)) },
       leadingIcon = {

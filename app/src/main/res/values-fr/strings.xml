@@ -150,6 +150,7 @@
 
     <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
     <string name="invalid_dates">Dates invalides</string>
+    <string name="invalid_social_media_links">Liens de médias sociaux invalides</string>
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>
