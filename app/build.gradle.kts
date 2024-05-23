@@ -104,6 +104,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation("com.google.firebase:firebase-database")
     androidTestImplementation(libs.androidx.uiautomator)
 
 

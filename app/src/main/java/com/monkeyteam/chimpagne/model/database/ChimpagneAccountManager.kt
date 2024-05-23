@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 
@@ -60,12 +61,15 @@ class ChimpagneAccountManager(
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-
     accounts
         .document(uid)
-        .get()
+        .get(Source.CACHE)
         .addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
-        .addOnFailureListener { onFailure(it) }
+        .addOnFailureListener { accounts
+            .document(uid)
+            .get()
+            .addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
+            .addOnFailureListener { onFailure(it) } }
   }
 
   fun getAccountWithProfilePicture(

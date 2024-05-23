@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne
 
 import AccountSettingsScreen
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -22,6 +23,10 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.MemoryCacheSettings
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
 import com.monkeyteam.chimpagne.ui.EventScreen
@@ -52,7 +57,11 @@ class MainActivity : ComponentActivity() {
 
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
+
     super.onCreate(savedInstanceState)
+
+
+
     setContent {
       ChimpagneTheme {
         val navController = rememberNavController()
@@ -62,24 +71,34 @@ class MainActivity : ComponentActivity() {
           navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
         }
 
-        val login: (failureRoute: String) -> Unit = { successRoute ->
-          if (FirebaseAuth.getInstance().currentUser != null) {
-            accountViewModel.loginToChimpagneAccount(
-                FirebaseAuth.getInstance().currentUser?.uid!!,
-                { account ->
-                  if (account == null) {
-                    Log.e("MainActivity", "Account is not in database")
-                    navActions.clearAndNavigateTo(successRoute)
-                  } else {
-                    Log.d("MainActivity", "Account is in database")
-                    navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-                  }
-                },
-                { Log.e("MainActivity", "Failed to check if account is in database: $it") })
-          } else {
-            navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+
+          val login: (failureRoute: String) -> Unit = { successRoute ->
+              if (FirebaseAuth.getInstance().currentUser != null) {
+                  accountViewModel.loginToChimpagneAccount(
+                      FirebaseAuth.getInstance().currentUser?.uid!!,
+                      { account ->
+                          if (account == null) {
+                              Log.e("MainActivity", "Account is not in database")
+                              navActions.clearAndNavigateTo(successRoute)
+                          } else {
+                              Log.d("MainActivity", "Account is in database")
+                              navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+                          }
+                      },
+                      { exception ->
+                          if (exception is FirebaseFirestoreException && exception.code == FirebaseFirestoreException.Code.UNAVAILABLE) {
+                              Log.e("MainActivity", "Firestore is offline")
+                              // Handle offline case
+                              navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
+                          } else {
+                              Log.e("MainActivity", "Failed to check if account is in database: $exception")
+                          }
+                      }
+                  )
+              } else {
+                  navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+              }
           }
-        }
 
         val logout: () -> Unit = {
           AuthUI.getInstance().signOut(this)
@@ -214,3 +233,5 @@ class MainActivity : ComponentActivity() {
     }
   }
 }
+
+
