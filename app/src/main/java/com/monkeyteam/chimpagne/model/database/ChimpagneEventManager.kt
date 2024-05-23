@@ -92,7 +92,6 @@ class ChimpagneEventManager(
     }
 
     val eventId = events.document().id
-    Log.d("hehehehe", "createEvent: eventId: $eventId")
     updateEvent(
         event.copy(id = eventId),
         {
