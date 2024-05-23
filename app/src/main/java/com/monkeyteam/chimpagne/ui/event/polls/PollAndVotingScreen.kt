@@ -1,4 +1,4 @@
-package com.monkeyteam.chimpagne.ui
+package com.monkeyteam.chimpagne.ui.event.polls
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -12,11 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Group
-import androidx.compose.material.icons.rounded.GroupAdd
-import androidx.compose.material.icons.rounded.GroupRemove
-import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -36,25 +32,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
+import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PollsAndVotingScreen(
-    navObject: NavigationActions,
-    eventViewModel: EventViewModel
+    eventViewModel: EventViewModel,
+    onGoBack: () -> Unit
 ) {
     val eventUIState by eventViewModel.uiState.collectAsState()
-    var displayCreatePopup by remember { mutableStateOf(false) }
-    var displayVotePopup by remember { mutableStateOf(false) }
+    var displayCreatePollPopup by remember { mutableStateOf(false) }
+    var displayViewPollPopup by remember { mutableStateOf(false) }
 
+    if(displayCreatePollPopup){
+        CreatePollDialog(
+            onPollCreate = {eventViewModel.createPollAtomically(poll = it)},
+            onPollCancel = {displayCreatePollPopup = false},
+            onDismissRequest = {displayCreatePollPopup = false}
+        )
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,7 +67,7 @@ fun PollsAndVotingScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navObject.goBack()
+                            onGoBack()
                         }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
                     }
@@ -76,14 +76,15 @@ fun PollsAndVotingScreen(
         floatingActionButton = {
             if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
                     .contains(eventUIState.currentUserRole)) {
-                FloatingActionButton(modifier = Modifier.size(70.dp), onClick = { displayCreatePopup = true }) {
-                    Icons.Rounded.Add
+                FloatingActionButton(modifier = Modifier.size(70.dp), onClick = { displayCreatePollPopup = true }) {
+                    Icon(Icons.Rounded.Add, "create poll button")
                 }
             }
         }) { innerPadding ->
         Column(
             modifier =
-            Modifier.fillMaxSize()
+            Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
                 .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.Start) {
@@ -99,11 +100,19 @@ fun PollsAndVotingScreen(
                     item {
                         Text(
                             text = "There were no polls created for this event",
-                            modifier = Modifier.padding(16.dp).testTag("empty poll list"))
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .testTag("empty poll list"))
                     }
                 } else {
                     items(eventUIState.polls.values.toList()) { poll ->
-
+                        ChimpagneButton(
+                            modifier = Modifier.testTag("a poll"),
+                            text = poll.title,
+                            onClick = {
+                                //TODO To be implemented in another PR//
+                            }
+                        )
                     }
                 }
             }

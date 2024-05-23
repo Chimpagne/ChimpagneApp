@@ -474,11 +474,7 @@ fun ViewDetailEventScreen(
                                         stringResource(
                                             id = R.string.event_details_screen_voting_button),
                                     onClick = {
-                                      Toast.makeText(
-                                              context,
-                                              "This function will be implemented in a future version",
-                                              Toast.LENGTH_SHORT)
-                                          .show()
+                                      navObject.navigateTo(Route.POLLS_SCREEN + "/" + uiState.id)
                                     },
                                     testTag = "polls"),
                                 IconInfo(
