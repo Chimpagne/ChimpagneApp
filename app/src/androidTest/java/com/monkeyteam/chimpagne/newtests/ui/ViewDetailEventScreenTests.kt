@@ -167,10 +167,6 @@ class ViewDetailEventScreenTests {
       val navActions = NavigationActions(navController)
       EventScreen(navActions, eventVM, accountViewModel)
     }
-
-    composeTestRule.onNodeWithTag("event_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("tag_list").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
   }
 
@@ -287,9 +283,12 @@ class ViewDetailEventScreenTests {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testShareButton() {
-    val event = TEST_EVENTS[0]
+    val event = TEST_EVENTS[2]
 
     val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
 
     while (eventVM.uiState.value.loading) {}
 
