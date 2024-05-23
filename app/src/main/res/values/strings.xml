@@ -160,4 +160,5 @@
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+    <string name="account_settings">Account settings</string>
 </resources>

@@ -155,5 +155,6 @@
     <string name="events_near_you">Evénements proches de vous</string>
     <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
     <string name="activate_gps">ACTIVER GPS</string>
+    <string name="account_settings">Paramètres du compte</string>
 
 </resources>
