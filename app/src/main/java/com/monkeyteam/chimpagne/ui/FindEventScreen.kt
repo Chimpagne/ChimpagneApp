@@ -50,7 +50,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -88,6 +87,7 @@ import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
@@ -312,9 +312,8 @@ fun FindEventFormScreen(
 
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
+        TopBar(
+            text = stringResource(id = R.string.find_event_page_title),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
