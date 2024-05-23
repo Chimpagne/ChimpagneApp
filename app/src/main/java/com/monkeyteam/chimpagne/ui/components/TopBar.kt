@@ -23,7 +23,7 @@ fun TopBar(
       title = {
         Text(
             text = text,
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(16.dp))
       },
       actions = actions,
