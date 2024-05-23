@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.UiComposable
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.clustering.ClusterManager
@@ -109,5 +110,17 @@ class CustomClusterRenderer<T : ClusterItem>(
 
   override fun shouldRenderAsCluster(cluster: Cluster<T>): Boolean {
     return cluster.size >= MIN_CLUSTERED_ITEMS
+  }
+}
+
+class SingletonCluster(private val marker: MarkerData) : Cluster<MarkerData> {
+  override fun getItems(): Collection<MarkerData> = listOf(marker)
+
+  override fun getSize(): Int {
+    return 1
+  }
+
+  override fun getPosition(): LatLng {
+    return LatLng(marker.location.latitude, marker.location.longitude)
   }
 }

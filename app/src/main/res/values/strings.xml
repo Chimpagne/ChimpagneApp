@@ -4,12 +4,6 @@
     <string name="homescreen_join_event">DISCOVER EVENTS</string>
     <string name="homescreen_organize_event">ORGANIZE AN EVENT</string>
     <string name="homescreen_open_my_events_toast">"Opening"</string>
-    <string name="account_creation_screen_create_account">Create your Account</string>
-    <string name="account_creation_screen_first_name">First Name</string>
-    <string name="account_creation_screen_last_name">Last Name</string>
-    <string name="account_creation_screen_city">Choose your City</string>
-    <string name="account_creation_screen_language">Language</string>
-    <string name="account_creation_screen_button">Create Account</string>
     <string name="event_creation_screen_name">Create An Event</string>
     <string name="event_creation_screen_previous">Previous</string>
     <string name="event_creation_screen_next">Next</string>
@@ -34,7 +28,6 @@
     <string name="event_creation_screen_beds">Beds</string>
     <string name="event_creation_screen_supplies">Supplies</string>
     <string name="event_creation_screen_add_supplies">Add supplies</string>
-    <string name="accountEditScreenButton">Edit Account</string>
     <string name="find_event_page_title">Find Event</string>
     <string name="find_event_search_button_text">Search</string>
     <string name="find_event_event_location_legend">Event Location</string>
@@ -43,7 +36,7 @@
     <string name="find_event_event_locate_me_button">Near me</string>
     <string name="find_event_search_radius">Search radius</string>
     <string name="find_event_search_tag_query_label">Enter a tag</string>
-    <string name="find_event_date_legend">Date of the event</string>
+    <string name="find_event_date_legend">Date range</string>
     <string name="find_event_join_event_button_text">Join Event</string>
     <string name="find_event_no_event_available">No event details available</string>
     <string name="find_event_near_me_toast">Locating you…</string>
@@ -55,7 +48,6 @@
     <string name="welcome_screen_title">Welcome to</string>
     <string name="continue_as_guest">Continue as Guest</string>
     <string name="login_to_continue">Please login/create an account to continue</string>
-    <string name="save_changes">Save changes</string>
     <string name="event_changes_saved">The event\'s changes have been saved</string>
     <string name="my_events_screen_name">My events</string>
     <string name="my_events_screen_created_event_list_name">Created events</string>
@@ -69,12 +61,11 @@
     <string name="event_details_screen_number_of_guests">guests joined</string>
     <string name="event_details_screen_organized_by">Organized by</string>
     <string name="event_details_screen_leave_button">Leave this Event</string>
-    <string name="event_details_screen_report_problem">Report a Problem</string>
+    <string name="event_details_screen_report_problem">Report</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit Event</string>
     <string name="event_details_screen_manage_staff_button">Manage staff</string>
     <string name="event_details_screen_location_button">Location</string>
-    <string name="event_details_screen_accommodation">Accommodation</string>
     <string name="event_details_screen_voting_button">Polls &amp; voting</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
     <string name="edit_event">Edit event</string>
@@ -83,6 +74,7 @@
     <string name="telegram_group_invite_link">Telegram group invite link</string>
     <string name="whatsapp_group_invite_link">Whatsapp group invite link</string>
     <string name="discord_group_invite_link">Discord group invite link</string>
+    <string name="spotify_playlist_link">Spotify playlist link</string>
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
@@ -144,17 +136,34 @@
     <string name="deep_link_url_event_host" translatable="false">www.manigo.ch</string>
     <string name="deep_link_url_event_prefix" translatable="false">/events</string>
 
-    <!-- AccountCreation -->
-    <string name="account_created_toast">Account created</string>
-    <string name="acount_creation_failed_toast">Account creation failed</string>
     <string name="public_string">Public</string>
     <string name="private_string">Private</string>
 
+    <!-- Account -->
+    <string name="account_creation_screen_title">Create your account</string>
+    <string name="account_creation_button">Create my account</string>
+    <string name="account_creation_failed">Account creation failed</string>
+    <string name="account_edit_screen_title">Edit your account</string>
+    <string name="account_edit_button">Save changes</string>
+    <string name="account_edit_failed">Account edit failed</string>
+    <string name="account_first_name_empty">First name cannot be empty !</string>
+    <string name="account_last_name_empty">Last name cannot be empty !</string>
+    <string name="account_settings_screen_title">Account settings</string>
+    <string name="account_first_name">First Name</string>
+    <string name="account_last_name">Last Name</string>
+    <string name="account_logout">Log out</string>
+
     <string name="title_should_not_be_empty">The event title should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
+    <string name="invalid_social_media_links">Invalid social media links</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
+
+
+    <string name="event_description_is_empty">No description</string>
+
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+
 </resources>

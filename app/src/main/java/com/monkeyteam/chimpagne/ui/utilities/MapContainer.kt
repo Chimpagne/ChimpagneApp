@@ -1,26 +1,18 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterItem
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.Circle
@@ -38,15 +30,16 @@ fun getZoomLevel(radius: Double): Float {
   return (16 - ln(scale) / ln(2.0)).toFloat()
 }
 
-@OptIn(MapsComposeExperimentalApi::class)
+@OptIn(MapsComposeExperimentalApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun MapContainer(
     cameraPositionState: CameraPositionState = rememberCameraPositionState(),
     isMapInitialized: Boolean = false,
-    onMarkerClick: (MarkerData) -> Unit,
+    onMarkerClick: (Cluster<MarkerData>) -> Unit,
     events: Map<String, ChimpagneEvent>,
     radius: Double,
     startingPosition: Location?,
+    closeBottomSheet: () -> Unit = {},
 ) {
 
   LaunchedEffect(events, radius, startingPosition) {
@@ -65,6 +58,7 @@ fun MapContainer(
     GoogleMap(
         cameraPositionState = cameraPositionState,
         modifier = Modifier.testTag("ggle_maps").fillMaxSize(),
+        onMapClick = { closeBottomSheet() },
         uiSettings =
             MapUiSettings(
                 zoomControlsEnabled = false,
@@ -87,11 +81,11 @@ fun MapContainer(
           ChimpagneClustering(
               items = markersData,
               onClusterClick = {
-                cameraPositionState.move(CameraUpdateFactory.zoomIn())
-                false
+                onMarkerClick(it)
+                true
               },
-              onClusterItemClick = { e ->
-                onMarkerClick(e)
+              onClusterItemClick = { markerData ->
+                onMarkerClick(SingletonCluster(markerData))
                 true
               })
         }
@@ -120,25 +114,5 @@ data class MarkerData(val id: String, val name: String, val location: Location) 
 
   override fun getZIndex(): Float {
     return 1f
-  }
-
-  fun getMarkerId(): String {
-    return id
-  }
-}
-
-@Composable
-fun IconAsClusterContentItem(data: MarkerData) {
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Text(
-        text = if (data.name.length > 16) data.name.substring(0, 13) + "..." else data.name,
-        color = MaterialTheme.colorScheme.tertiary,
-        fontWeight = FontWeight.Bold,
-        fontSize = 14.sp)
-    Icon(
-        modifier = Modifier.size(32.dp),
-        imageVector = Icons.Rounded.LocationOn,
-        contentDescription = "custum icon for cluster item",
-        tint = Color.Red)
   }
 }

@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne
 
 import android.content.Intent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,7 +18,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.firebase.Timestamp
@@ -26,13 +26,11 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
 import com.monkeyteam.chimpagne.ui.components.CalendarButton
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
+import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
-import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import java.util.Calendar
 import org.junit.Rule
 import org.junit.Test
@@ -88,20 +86,13 @@ class CalendarTests() {
     composeTestRule.onNodeWithTag("calendarButton").assertExists().isDisplayed()
     composeTestRule.onNodeWithTag("rejectButton").assertIsNotDisplayed()
     composeTestRule.onNodeWithTag("acceptButton").assertIsNotDisplayed()
-
     composeTestRule.onNodeWithTag("calendarButton").performClick()
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testCalendarButton() {
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      val database = Database()
-      val eventViewModel = EventViewModel(database = database)
-      ViewDetailEventScreen(
-          navObject = navActions, eventViewModel = eventViewModel, AccountViewModel(database))
-    }
+    composeTestRule.setContent { EventMainInfo(ChimpagneEvent()) }
 
     composeTestRule.onNodeWithTag("calendarButton").assertExists().assertIsDisplayed()
     composeTestRule.onNodeWithTag("calendarButton").performClick()

@@ -186,7 +186,7 @@ class ProfileIconTest {
   @Test
   fun profileIcon_click_performsAction() {
     var clicked = false
-    composeTestRule.setContent { ProfileIcon(uri = null) { clicked = true } }
+    composeTestRule.setContent { ProfileIcon(uri = null, onClick = { clicked = true }) }
     composeTestRule.onNodeWithContentDescription("Profile").performClick()
 
     assert(clicked)

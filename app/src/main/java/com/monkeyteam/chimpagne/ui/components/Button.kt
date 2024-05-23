@@ -97,6 +97,7 @@ fun ChimpagneButton(
 fun IconTextButton(
     text: String,
     icon: ImageVector,
+    textStyle: TextStyle = ChimpagneTypography.titleSmall,
     color: Color = MaterialTheme.colorScheme.surfaceVariant,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -111,13 +112,26 @@ fun IconTextButton(
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
-        Text(text.uppercase(Locale.ROOT))
+        Text(text.uppercase(Locale.ROOT), style = textStyle)
       }
 }
 
+@Deprecated(
+    "Use GoBackButton(onClick: () -> Unit) instead",
+    replaceWith = ReplaceWith("GoBackButton(onClick = onGoBack)"))
 @Composable
 fun GoBackButton(navigationActions: NavigationActions) {
   IconButton(onClick = { navigationActions.goBack() }) {
+    Icon(
+        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+        contentDescription = "Go Back",
+        tint = MaterialTheme.colorScheme.onSurface)
+  }
+}
+
+@Composable
+fun GoBackButton(onClick: () -> Unit) {
+  IconButton(onClick = onClick, modifier = Modifier.testTag("go_back_button")) {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "Go Back",
