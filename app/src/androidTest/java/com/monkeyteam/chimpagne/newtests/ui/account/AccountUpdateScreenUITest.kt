@@ -58,9 +58,9 @@ class AccountUpdateScreenUITest {
 
     assertEquals("", accountViewModel.uiState.value.tempAccount.firstName)
     assertEquals("", accountViewModel.uiState.value.tempAccount.lastName)
-    composeTestRule.onNodeWithTag("first_name_field").performTextInput("Monkey")
+    composeTestRule.onNodeWithTag("first_name_field").performTextInput("Monkeyy")
     composeTestRule.onNodeWithTag("last_name_field").performTextInput("Prince")
-    assertEquals("Monkey", accountViewModel.uiState.value.tempAccount.firstName)
+    assertEquals("Monkeyy", accountViewModel.uiState.value.tempAccount.firstName)
     assertEquals("Prince", accountViewModel.uiState.value.tempAccount.lastName)
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()

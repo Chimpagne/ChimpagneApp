@@ -247,9 +247,7 @@ class ViewDetailEventScreenTests {
       navController = rememberNavController()
       val navActions = NavigationActions(navController!!)
       NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
-        composable(Route.EVENT_SCREEN) {
-          EventScreen(navActions, eventVM, accountViewModel)
-        }
+        composable(Route.EVENT_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
         composable(Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
           EventScreen(navObject = navActions, eventViewModel = eventVM, accountViewModel)
         }
@@ -264,10 +262,10 @@ class ViewDetailEventScreenTests {
   fun testSuppliesButton() {
     val event = TEST_EVENTS[0]
 
-      accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-      accountManager.signInTo(TEST_ACCOUNTS[1])
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
 
-      while(accountViewModel.uiState.value.loading){}
+    while (accountViewModel.uiState.value.loading) {}
 
     val eventVM = EventViewModel(event.id, database)
 
@@ -281,7 +279,7 @@ class ViewDetailEventScreenTests {
           navController = navController,
           startDestination = Route.MY_EVENTS_SCREEN + "/${eventVM.uiState.value.id}") {
             composable(Route.MY_EVENTS_SCREEN + "/${eventVM.uiState.value.id}") {
-                EventScreen(navActions, eventVM, accountViewModel)
+              EventScreen(navActions, eventVM, accountViewModel)
             }
             composable(Route.SUPPLIES_SCREEN + "/${eventVM.uiState.value.id}") {
               EventScreen(navObject = navActions, eventVM, accountViewModel)
@@ -297,10 +295,10 @@ class ViewDetailEventScreenTests {
   fun testPollsButton() {
     val event = TEST_EVENTS[0]
 
-      accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-      accountManager.signInTo(TEST_ACCOUNTS[1])
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
 
-      while(accountViewModel.uiState.value.loading){}
+    while (accountViewModel.uiState.value.loading) {}
 
     val eventVM = EventViewModel(event.id, database)
 
@@ -329,9 +327,7 @@ class ViewDetailEventScreenTests {
       val navActions = NavigationActions(navController!!)
 
       NavHost(navController = navController!!, startDestination = Route.MY_EVENTS_SCREEN) {
-        composable(Route.MY_EVENTS_SCREEN) {
-          EventScreen(navActions, eventVM, accountViewModel)
-        }
+        composable(Route.MY_EVENTS_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
         composable(Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {
           ManageStaffScreen(
               navObject = navActions, eventViewModel = eventVM, accountViewModel = accountViewModel)
