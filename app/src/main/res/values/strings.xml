@@ -79,6 +79,7 @@
     <string name="telegram_group_invite_link">Telegram group invite link</string>
     <string name="whatsapp_group_invite_link">Whatsapp group invite link</string>
     <string name="discord_group_invite_link">Discord group invite link</string>
+    <string name="spotify_playlist_link">Spotify playlist link</string>
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
@@ -159,6 +160,7 @@
 
     <string name="title_should_not_be_empty">The event title should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
+    <string name="invalid_social_media_links">Invalid social media links</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
     <string name="events_near_you">Events near you</string>

@@ -4,7 +4,7 @@ import com.monkeyteam.chimpagne.R
 
 data class SocialMedia(
     val platformName: String = "",
-    val platformUrl: String = "",
+    val platformUrls: List<String> = emptyList(),
     val chosenGroupUrl: String = "",
     val labelResource: Int = 0,
     val iconResource: Int = 0,
@@ -15,7 +15,7 @@ val SupportedSocialMedia =
     listOf(
         SocialMedia(
             platformName = "discord",
-            platformUrl = "https://discord.gg/",
+            platformUrls = listOf("https://discord.gg/", "https://discord.com/invite/"),
             chosenGroupUrl = "",
             labelResource = R.string.discord_group_invite_link,
             iconResource = R.drawable.discord,
@@ -23,7 +23,7 @@ val SupportedSocialMedia =
         ),
         SocialMedia(
             platformName = "telegram",
-            platformUrl = "https://t.me/",
+            platformUrls = listOf("https://t.me/"),
             chosenGroupUrl = "",
             labelResource = R.string.telegram_group_invite_link,
             iconResource = R.drawable.telegram,
@@ -31,11 +31,19 @@ val SupportedSocialMedia =
         ),
         SocialMedia(
             platformName = "whatsapp",
-            platformUrl = "https://chat.whatsapp.com/",
+            platformUrls = listOf("https://chat.whatsapp.com/"),
             chosenGroupUrl = "",
             labelResource = R.string.whatsapp_group_invite_link,
             iconResource = R.drawable.whatsapp,
             testTag = "whatsapp_input",
+        ),
+        SocialMedia(
+            platformName = "spotify",
+            platformUrls = listOf("https://open.spotify.com/"),
+            chosenGroupUrl = "",
+            labelResource = R.string.spotify_playlist_link,
+            iconResource = R.drawable.spotify,
+            testTag = "spotify_input",
         ),
     )
 
