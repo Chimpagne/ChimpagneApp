@@ -3,10 +3,7 @@ package com.monkeyteam.chimpagne.ui.components.eventview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backpack
-import androidx.compose.material.icons.rounded.ChatBubbleOutline
-import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
@@ -75,35 +72,15 @@ fun EventActions(
     iconList.addAll(
         listOf(
             IconInfo(
-                icon = Icons.Rounded.ChatBubbleOutline,
-                description = stringResource(id = R.string.event_details_screen_chat_button),
-                onClick = { showToast("This function will be implemented in a future version") },
-                testTag = "chat"),
-            IconInfo(
                 icon = Icons.Rounded.Backpack,
                 description = stringResource(id = R.string.event_details_screen_supplies_button),
                 onClick = { navObject.navigateTo(Route.SUPPLIES_SCREEN + "/" + uiState.id) },
                 testTag = "supplies"),
             IconInfo(
-                icon = Icons.Rounded.DirectionsCar,
-                description = stringResource(id = R.string.event_details_screen_car_pooling_button),
-                onClick = { showToast("This function will be implemented in a future version") },
-                testTag = "car pooling"),
-            IconInfo(
                 icon = Icons.Rounded.Poll,
                 description = stringResource(id = R.string.event_details_screen_voting_button),
                 onClick = { showToast("This function will be implemented in a future version") },
-                testTag = "polls"),
-            IconInfo(
-                icon = Icons.Rounded.Home,
-                description = stringResource(id = R.string.event_details_screen_bed_reservation),
-                onClick = { showToast("This function will be implemented in a future version") },
-                testTag = "bed_reservation"),
-            IconInfo(
-                icon = Icons.Rounded.DirectionsCar,
-                description = stringResource(id = R.string.event_details_screen_parking),
-                onClick = { showToast("This function will be implemented in a future version") },
-                testTag = "parking")))
+                testTag = "polls")))
     IconRow(icons = iconList)
   }
 }

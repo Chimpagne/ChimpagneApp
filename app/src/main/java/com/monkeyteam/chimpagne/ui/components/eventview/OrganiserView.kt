@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,13 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
-import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
@@ -45,54 +41,41 @@ fun OrganiserView(ownerId: ChimpagneAccountUID, accountViewModel: AccountViewMod
 
   val context = LocalContext.current
 
-  Column(horizontalAlignment = Alignment.CenterHorizontally) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-      Text(
-          text = stringResource(id = R.string.event_details_screen_organized_by),
-          fontSize = 16.sp,
-          style = ChimpagneTypography.titleLarge,
-          color = MaterialTheme.colorScheme.onPrimaryContainer,
-          modifier = Modifier.padding(start = 16.dp))
+  Column(horizontalAlignment = Alignment.Start) {
+    Text(
+        text = stringResource(id = R.string.event_details_screen_organized_by),
+        fontSize = 16.sp,
+        style = ChimpagneTypography.titleLarge,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        modifier = Modifier.padding(start = 26.dp))
 
-      Spacer(modifier = Modifier.weight(2f))
+    Spacer(modifier = Modifier.weight(2f))
 
-      ChimpagneButton(
-          text = stringResource(id = R.string.event_details_screen_report_problem),
-          icon = Icons.Default.Flag,
-          textStyle = ChimpagneTypography.bodyMedium,
-          onClick = {
-            Toast.makeText(
-                    context,
-                    "This function will be implemented in a future version",
-                    Toast.LENGTH_SHORT)
-                .show()
-          },
-          modifier = Modifier.testTag("reportProblem"))
-    }
-
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
-      Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-        profilePictureUriState.value?.let { uri ->
-          ProfileIcon(
-              uri = uri,
-              onClick = {
-                Toast.makeText(
-                        context,
-                        "This function will be implemented in a future version",
-                        Toast.LENGTH_SHORT)
-                    .show()
-              })
-        } ?: CircularProgressIndicator()
-      }
-      Text(
-          text =
-              (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.firstName ?: "") +
-                  " " +
-                  (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.lastName ?: ""),
-          fontSize = 14.sp,
-          fontFamily = ChimpagneFontFamily,
-          color = MaterialTheme.colorScheme.onPrimaryContainer,
-          modifier = Modifier.padding(start = 16.dp))
-    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+          Box(modifier = Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+            profilePictureUriState.value?.let { uri ->
+              ProfileIcon(
+                  uri = uri,
+                  onClick = {
+                    Toast.makeText(
+                            context,
+                            "This function will be implemented in a future version",
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  })
+            } ?: CircularProgressIndicator()
+          }
+          Text(
+              text =
+                  (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.firstName ?: "") +
+                      " " +
+                      (accountViewModel.uiState.value.fetchedAccounts[ownerId]?.lastName ?: ""),
+              fontSize = 14.sp,
+              fontFamily = ChimpagneFontFamily,
+              color = MaterialTheme.colorScheme.onPrimaryContainer,
+              modifier = Modifier.padding(start = 16.dp))
+        }
   }
 }
