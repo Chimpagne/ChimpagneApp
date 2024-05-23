@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui.event
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -9,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -16,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -29,10 +32,19 @@ fun EventCreationScreen(
   // or by clicking the buttons on the bottom of the screen.
   val pagerState = rememberPagerState(initialPage = initialPage) { 5 }
   val context = LocalContext.current
+  val coroutineScope = rememberCoroutineScope()
   val uiState by eventViewModel.uiState.collectAsState()
 
   fun showToast(message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+  }
+
+  BackHandler {
+    if (pagerState.currentPage > 0) {
+      coroutineScope.launch { pagerState.scrollToPage(pagerState.currentPage - 1) }
+    } else {
+      navObject.goBack()
+    }
   }
 
   Scaffold(

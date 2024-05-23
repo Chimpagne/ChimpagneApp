@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -66,7 +65,7 @@ fun ChimpagneButton(
 ) {
   Button(
       onClick = onClick,
-      modifier = modifier.wrapContentWidth().padding(horizontal = 24.dp),
+      modifier = modifier.padding(horizontal = 12.dp),
       colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
       shape = shape,
       contentPadding = padding) {
@@ -76,7 +75,6 @@ fun ChimpagneButton(
         }
         Text(
             text = text,
-            modifier = Modifier.weight(1f),
             fontFamily = ChimpagneFontFamily,
             style = textStyle,
             textAlign = TextAlign.Center)
@@ -88,6 +86,7 @@ fun ChimpagneButton(
 fun IconTextButton(
     text: String,
     icon: ImageVector,
+    textStyle: TextStyle = ChimpagneTypography.titleSmall,
     color: Color = MaterialTheme.colorScheme.surfaceVariant,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -102,13 +101,26 @@ fun IconTextButton(
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
-        Text(text.uppercase(Locale.ROOT))
+        Text(text.uppercase(Locale.ROOT), style = textStyle)
       }
 }
 
+@Deprecated(
+    "Use GoBackButton(onClick: () -> Unit) instead",
+    replaceWith = ReplaceWith("GoBackButton(onClick = onGoBack)"))
 @Composable
 fun GoBackButton(navigationActions: NavigationActions) {
   IconButton(onClick = { navigationActions.goBack() }) {
+    Icon(
+        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+        contentDescription = "Go Back",
+        tint = MaterialTheme.colorScheme.onSurface)
+  }
+}
+
+@Composable
+fun GoBackButton(onClick: () -> Unit) {
+  IconButton(onClick = onClick, modifier = Modifier.testTag("go_back_button")) {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "Go Back",

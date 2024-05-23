@@ -30,6 +30,6 @@ fun ImageWithBlackFilterOverlay(imageString: String = "", overlay: Boolean = fal
           modifier = Modifier.fillMaxSize())
     }
     if (!overlay) return
-    Box(modifier = Modifier.matchParentSize().background(Color.Black.copy(alpha = 0.5f)))
+    Box(modifier = Modifier.matchParentSize().background(Color.Black.copy(alpha = 0.3f)))
   }
 }

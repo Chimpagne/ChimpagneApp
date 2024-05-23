@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.location.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -49,6 +48,10 @@ class AccountViewModel(database: Database) : ViewModel() {
     }
   }
 
+  fun getProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
+    accountManager.fetchProfilePictureUri(uid, onSuccess)
+  }
+
   fun logoutFromChimpagneAccount() {
     _uiState.value = AccountUIState()
     accountManager.signOut()
@@ -63,22 +66,23 @@ class AccountViewModel(database: Database) : ViewModel() {
 
     val newAccount =
         _uiState.value.tempAccount.copy(firebaseAuthUID = _uiState.value.currentUserUID!!)
-    val newProfilePictureUri =
+    val profilePictureToUpload =
         if (_uiState.value.tempProfilePicture != _uiState.value.currentUserProfilePicture)
             _uiState.value.tempProfilePicture
-        else null
+        else _uiState.value.currentUserProfilePicture
 
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.updateCurrentAccount(
           newAccount,
-          newProfilePictureUri,
+          profilePictureToUpload,
           {
             _uiState.value =
                 _uiState.value.copy(
                     currentUserAccount = newAccount,
                     tempAccount = ChimpagneAccount(),
-                    currentUserProfilePicture = newProfilePictureUri,
+                    currentUserProfilePicture =
+                        profilePictureToUpload ?: _uiState.value.currentUserProfilePicture,
                     tempProfilePicture = null,
                     loading = false)
             onSuccess()
@@ -110,11 +114,6 @@ class AccountViewModel(database: Database) : ViewModel() {
   fun updateLastName(lastName: String) {
     updateTempAccount(_uiState.value.tempAccount.copy(lastName = lastName))
     Log.e("AccountViewModel", "Updated last name to $lastName")
-  }
-
-  fun updateLocation(location: Location) {
-    updateTempAccount(_uiState.value.tempAccount.copy(location = location))
-    Log.d("AccountViewModel", "Updated location name to $location")
   }
 
   fun updateProfilePicture(uri: Uri) {
