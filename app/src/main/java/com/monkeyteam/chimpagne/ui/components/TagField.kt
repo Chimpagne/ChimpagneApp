@@ -37,7 +37,7 @@ fun TagField(
   val tagPredictions =
       remember(tagInput) {
         if (tagInput.isEmpty()) {
-          listOf() // Return an empty list if addressInput is empty
+          listOf() // Return an empty list if tagInput is empty
         } else {
           listOf(
                   "student",
@@ -49,7 +49,7 @@ fun TagField(
                   "bbq",
                   "soundboks",
                   "carnaval")
-              .filter { it.contains(tagInput, ignoreCase = true) }
+              .filter { it.contains(tagInput.replace(" ", "_"), ignoreCase = true) }
               .take(5)
         }
       }
@@ -65,7 +65,7 @@ fun TagField(
       query = tagInput,
       queryLabel = stringResource(id = R.string.find_event_search_tag_query_label),
       onQueryChanged = { updatedTag ->
-        tagInput = updatedTag
+        tagInput = updatedTag.replace(" ", "_")
         // Update addressPlaceItemPredictions based on the tagInput here
       },
       predictions = tagPredictions,
@@ -79,22 +79,23 @@ fun TagField(
         }
       },
       onDoneActionClick = {
-        if (tagInput.trim().isNotBlank()) {
-          updateSelectedTags(
-              (selectedTags.reversed() + tagInput.trim().lowercase(Locale.getDefault())).reversed())
+        val cleanedTag = tagInput.trim().replace(" ", "_").lowercase(Locale.getDefault())
+        if (cleanedTag.isNotBlank()) {
+          updateSelectedTags((selectedTags.reversed() + cleanedTag).reversed())
           tagInput = ""
         } else {
           view.clearFocus()
         }
       },
       onItemClick = { selectedTag ->
-        if (selectedTag.trim().isNotBlank()) {
-          updateSelectedTags(selectedTags + selectedTag.trim().lowercase(Locale.getDefault()))
+        val cleanedTag = selectedTag.trim().replace(" ", "_").lowercase(Locale.getDefault())
+        if (cleanedTag.isNotBlank()) {
+          updateSelectedTags(selectedTags + cleanedTag)
           tagInput = ""
         }
       },
       onFocusChanged = onSearchToggle) { tag ->
         // Define how the items need to be displayed
-        Text(tag, fontSize = 14.sp)
+        Text(tag.replace(" ", "_"), fontSize = 14.sp)
       }
 }
