@@ -10,18 +10,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
 
 @Composable
-fun ProfileIcon(uri: Uri?, onClick: () -> Unit) {
+fun ProfileIcon(
+    uri: Uri?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    size: Dp = 40.dp
+) {
   val painter =
       if (uri != null) {
         rememberAsyncImagePainter(model = uri)
       } else painterResource(id = R.drawable.default_user_profile_picture)
 
-  IconButton(onClick = onClick) {
+  IconButton(onClick = onClick, enabled = enabled, modifier = modifier.size(size)) {
     Image(
         painter = painter,
         contentDescription = "Profile",

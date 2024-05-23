@@ -4,12 +4,6 @@
     <string name="homescreen_join_event">TROUVER DES ÉVÉNEMENTS</string>
     <string name="homescreen_organize_event">ORGANISER UN ÉVÉNEMENT</string>
     <string name="homescreen_open_my_events_toast">"Ouverture"</string>
-    <string name="account_creation_screen_create_account">Créer votre compte</string>
-    <string name="account_creation_screen_first_name">Prénom</string>
-    <string name="account_creation_screen_last_name">Nom de famille</string>
-    <string name="account_creation_screen_city">Choisissez votre ville</string>
-    <string name="account_creation_screen_language">Langue</string>
-    <string name="account_creation_screen_button">Créer un compte</string>
     <string name="event_creation_screen_name">Créer Un événement</string>
     <string name="event_creation_screen_previous">Précédent</string>
     <string name="event_creation_screen_next">Prochain</string>
@@ -51,7 +45,6 @@
     <string name="find_event_location_not_selected">Sélectionnez un lieu</string>
     <string name="joining_toast">En train de rejoindre</string>
     <string name="search_location">Rechercher un lieu</string>
-    <string name="accountEditScreenButton">Modifier le compte</string>
     <string name="sign_in_with_google">Se connecter avec Google</string>
     <string name="welcome_screen_title">Bienvenue à</string>
     <string name="event_changes_saved">Les changements de l\'événement ont été sauvegardé !</string>
@@ -140,11 +133,22 @@
     <string name="supplies_delete_description">Cette action est irreversible !</string>
     <string name="supplies_nb_assigned">assignés</string>
 
-    <!-- AccountCreation -->
-    <string name="account_created_toast">Compte créé</string>
-    <string name="acount_creation_failed_toast">Création de compte échouée</string>
     <string name="public_string">Public</string>
     <string name="private_string">Privé</string>
+
+    <!-- Account -->
+    <string name="account_creation_screen_title">Création de compte</string>
+    <string name="account_creation_button">Créer mon compte</string>
+    <string name="account_creation_failed">Erreur lors de la création du compte</string>
+    <string name="account_edit_screen_title">Édition de compte</string>
+    <string name="account_edit_button">Sauvegarder</string>
+    <string name="account_edit_failed">Erreur lors de l\'édition du compte</string>
+    <string name="account_first_name_empty">Veuillez entrer un prénom !</string>
+    <string name="account_last_name_empty">Veuillez entrer un nom !</string>
+    <string name="account_settings_screen_title">Paramètres de compte</string>
+    <string name="account_first_name">Prénom</string>
+    <string name="account_last_name">Nom</string>
+    <string name="account_logout">Se déconnecter</string>
 
     <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
     <string name="invalid_dates">Dates invalides</string>

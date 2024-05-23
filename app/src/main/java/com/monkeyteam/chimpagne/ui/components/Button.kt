@@ -105,9 +105,22 @@ fun IconTextButton(
       }
 }
 
+@Deprecated(
+    "Use GoBackButton(onClick: () -> Unit) instead",
+    replaceWith = ReplaceWith("GoBackButton(onClick = onGoBack)"))
 @Composable
 fun GoBackButton(navigationActions: NavigationActions) {
   IconButton(onClick = { navigationActions.goBack() }) {
+    Icon(
+        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+        contentDescription = "Go Back",
+        tint = MaterialTheme.colorScheme.onSurface)
+  }
+}
+
+@Composable
+fun GoBackButton(onClick: () -> Unit) {
+  IconButton(onClick = onClick, modifier = Modifier.testTag("go_back_button")) {
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = "Go Back",

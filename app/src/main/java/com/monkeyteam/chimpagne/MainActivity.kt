@@ -1,6 +1,6 @@
 package com.monkeyteam.chimpagne
 
-import AccountSettings
+import AccountSettingsScreen
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -24,19 +24,18 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
-import com.monkeyteam.chimpagne.ui.AccountEdit
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
+import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -100,24 +99,24 @@ class MainActivity : ComponentActivity() {
                   onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
-              val onSuccessAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-              }
-              val onFailureAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-              }
-              AccountCreation(
-                  navObject = navActions,
+              AccountUpdateScreen(
                   accountViewModel = accountViewModel,
-                  onSuccess = onSuccessAccountCreationScreen,
-                  onFailure = onFailureAccountCreationScreen)
+                  onGoBack = { navActions.goBack() },
+                  onAccountUpdated = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) })
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
-              AccountSettings(
-                  navObject = navActions, accountViewModel = accountViewModel, logout = logout)
+              AccountSettingsScreen(
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() },
+                  onLogout = logout,
+                  onEditRequest = { navActions.navigateTo(Route.ACCOUNT_EDIT_SCREEN) })
             }
             composable(Route.ACCOUNT_EDIT_SCREEN) {
-              AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
+              AccountUpdateScreen(
+                  accountViewModel = accountViewModel,
+                  onAccountUpdated = { navActions.goBack() },
+                  editMode = true,
+                  onGoBack = { navActions.goBack() })
             }
 
             composable(Route.LOADING) { SpinnerView() }

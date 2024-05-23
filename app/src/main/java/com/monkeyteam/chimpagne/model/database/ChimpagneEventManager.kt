@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.model.database
 
-import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
