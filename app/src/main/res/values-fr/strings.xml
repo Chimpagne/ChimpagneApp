@@ -79,6 +79,7 @@
     <string name="whatsapp_group_invite_link">Lien d\'invitation au groupe Whatsapp</string>
     <string name="discord_group_invite_link">Lien d\'invitation au groupe Discord</string>
     <string name="links_to_social_media">Ajouter vos groupes de médias sociaux</string>
+    <string name="spotify_playlist_link">Lien de la playlist Spotify</string>
     <string name="my_events_screen_past_events_list_name">Evénement passés</string>
     <string name="my_events_screen_empty_past_events_list">Il n\'y a pas encore d\'Evénements passés</string>
     <string name="join_event_failiure">Une Erreur est parvenue</string>
@@ -152,6 +153,7 @@
 
     <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
     <string name="invalid_dates">Dates invalides</string>
+    <string name="invalid_social_media_links">Liens de médias sociaux invalides</string>
 
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Sélectionnez une période pour la recherche</string>

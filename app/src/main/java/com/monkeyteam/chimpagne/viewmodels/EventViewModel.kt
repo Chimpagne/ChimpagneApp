@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 
 enum class EventInputValidity {
   INVALID_TITLE,
+  INVALID_SOCIAL_MEDIA_LINKS,
   INVALID_DATES
 }
 
@@ -53,8 +54,21 @@ class EventViewModel(
     fun eventInputValidityToString(e: EventInputValidity, context: Context): String {
       return when (e) {
         EventInputValidity.INVALID_TITLE -> context.getString(R.string.title_should_not_be_empty)
+        EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS ->
+            context.getString(R.string.invalid_social_media_links)
         EventInputValidity.INVALID_DATES -> context.getString(R.string.invalid_dates)
       }
+    }
+  }
+
+  private fun validateEventInputs(): EventInputValidity? {
+    return when {
+      _uiState.value.title.isEmpty() -> EventInputValidity.INVALID_TITLE
+      _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
+          _uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ->
+          EventInputValidity.INVALID_DATES
+      hasInvalidSocialMediaLinks() -> EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS
+      else -> null
     }
   }
 
@@ -132,20 +146,23 @@ class EventViewModel(
         polls = _uiState.value.polls)
   }
 
+  private fun isInvalidUrl(socialMedia: SocialMedia): Boolean {
+    return socialMedia.chosenGroupUrl.isNotEmpty() &&
+        socialMedia.platformUrls.none { socialMedia.chosenGroupUrl.startsWith(it) }
+  }
+
+  fun hasInvalidSocialMediaLinks(): Boolean {
+    return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
+  }
+
   fun createTheEvent(
       onSuccess: (id: String) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
-    if (_uiState.value.title.isEmpty() ||
-        _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
-        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
-
-      if (_uiState.value.title.isEmpty()) {
-        onInvalidInputs(EventInputValidity.INVALID_TITLE)
-      } else {
-        onInvalidInputs(EventInputValidity.INVALID_DATES)
-      }
+    val invalidInput = validateEventInputs()
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
     } else {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
@@ -165,20 +182,31 @@ class EventViewModel(
     }
   }
 
-  fun updateTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.updateEvent(
-          buildChimpagneEvent(),
-          {
-            _uiState.value = _uiState.value.copy(loading = false)
-            onSuccess()
-          },
-          {
-            Log.d("UPDATE AN EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
+  fun updateTheEvent(
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {},
+      onInvalidInputs: (EventInputValidity) -> Unit = {}
+  ) {
+
+    val invalidInput = validateEventInputs()
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
+      return
+    } else {
+      _uiState.value = _uiState.value.copy(loading = true)
+      viewModelScope.launch {
+        eventManager.updateEvent(
+            buildChimpagneEvent(),
+            {
+              _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess()
+            },
+            {
+              Log.d("UPDATE AN EVENT", "Error : ", it)
+              _uiState.value = _uiState.value.copy(loading = false)
+              onFailure(it)
+            })
+      }
     }
   }
 

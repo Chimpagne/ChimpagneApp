@@ -34,10 +34,10 @@ class SocialMediaTests {
   }
 
   @Test
-  fun AllThreeDisplayed() {
+  fun AllFourDisplayed() {
     val mapSocialMedia = SupportedSocialMedia.associateBy { it.platformName }
     val filledInSocialMedia =
-        mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+        mapSocialMedia.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrls[0]) }
     composeTestRule.setContent {
       SocialButtonRow(context = context, socialMediaLinks = filledInSocialMedia)
     }
@@ -45,6 +45,7 @@ class SocialMediaTests {
     composeTestRule.onNodeWithTag("discord_input").assertExists().isDisplayed()
     composeTestRule.onNodeWithTag("whatsapp_input").assertExists().isDisplayed()
     composeTestRule.onNodeWithTag("telegram_input").assertExists().isDisplayed()
+    composeTestRule.onNodeWithTag("spotify_input").assertExists().isDisplayed()
   }
 
   @Test
@@ -53,7 +54,7 @@ class SocialMediaTests {
     val telegramMap =
         mapOf(socialMediaMap["telegram"]!!.platformName to socialMediaMap["telegram"]!!)
     val withValueMap =
-        telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrl) }
+        telegramMap.mapValues { it.value.copy(chosenGroupUrl = it.value.platformUrls[0]) }
     composeTestRule.setContent {
       SocialButtonRow(context = context, socialMediaLinks = withValueMap)
     }
@@ -68,5 +69,6 @@ class SocialMediaTests {
     composeTestRule.onNodeWithTag("discord_input").assertDoesNotExist()
     composeTestRule.onNodeWithTag("whatsapp_input").assertDoesNotExist()
     composeTestRule.onNodeWithTag("telegram_input").assertDoesNotExist()
+    composeTestRule.onNodeWithTag("spotify_input").assertDoesNotExist()
   }
 }
