@@ -161,4 +161,57 @@ class ChimpagneEventManager(
         }
         .addOnFailureListener { onFailure(it) }
   }
+
+  fun deleteAllRelatedEvents(
+      userUID: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    val ownerQuery = events.whereEqualTo("ownerId", userUID).get()
+    val guestQuery = events.whereArrayContains("guests.$userUID", true).get()
+    val staffQuery = events.whereArrayContains("staffs.$userUID", true).get()
+
+    Tasks.whenAllComplete(ownerQuery, guestQuery, staffQuery)
+        .addOnCompleteListener { tasks ->
+          if (tasks.isSuccessful) {
+            val ownerDocs = ownerQuery.result?.documents ?: emptyList()
+            val guestDocs = guestQuery.result?.documents ?: emptyList()
+            val staffDocs = staffQuery.result?.documents ?: emptyList()
+
+            val deleteTasks =
+                ownerDocs.map { document -> events.document(document.id).delete() }.toMutableList()
+
+            val updateTasks =
+                (guestDocs + staffDocs).map { document ->
+                  val event = document.toObject<ChimpagneEvent>()
+                  val updatedGuests = event!!.guests.toMutableMap()
+                  val updatedStaffs = event.staffs.toMutableMap()
+
+                  updatedGuests.remove(userUID)
+                  updatedStaffs.remove(userUID)
+
+                  events
+                      .document(document.id)
+                      .update(mapOf("guests" to updatedGuests, "staffs" to updatedStaffs))
+                }
+
+            val allTasks = deleteTasks + updateTasks
+
+            Tasks.whenAllComplete(allTasks)
+                .addOnCompleteListener {
+                  if (it.isSuccessful) {
+                    onSuccess()
+                  } else {
+                    val exception = it.exception ?: Exception("Unknown error occurred")
+                    onFailure(exception)
+                  }
+                }
+                .addOnFailureListener { exception -> onFailure(exception) }
+          } else {
+            val exception = tasks.exception ?: Exception("Unknown error occurred")
+            onFailure(exception)
+          }
+        }
+        .addOnFailureListener { exception -> onFailure(exception) }
+  }
 }

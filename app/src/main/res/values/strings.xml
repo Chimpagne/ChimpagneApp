@@ -83,6 +83,7 @@
     <string name="join_event_staff">Already a Staff Member for this Event</string>
     <string name="join_event_guest">You are already a Guest at this Event</string>
     <string name="join_event_owner">You are the Owner of this Event</string>
+    <string name="delete_account">Delete Account</string>
 
     <string name="find_event_location_set">Location set</string>
     <string name="find_event_location_not_found">Location not found</string>

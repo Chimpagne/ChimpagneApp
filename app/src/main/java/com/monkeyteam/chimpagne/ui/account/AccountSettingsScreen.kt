@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,7 +40,7 @@ fun AccountSettingsScreen(
     accountViewModel: AccountViewModel,
     onGoBack: () -> Unit,
     onEditRequest: () -> Unit,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
 ) {
   val accountViewModelState by accountViewModel.uiState.collectAsState()
 
@@ -61,6 +62,20 @@ fun AccountSettingsScreen(
             modifier = Modifier.fillMaxWidth().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
+              ChimpagneSpacer()
+
+              IconTextButton(
+                  text = stringResource(id = R.string.delete_account),
+                  icon = Icons.Default.Delete,
+                  onClick = {
+                    // First pop up if sure that hes going to delete his account and all the events
+                    // he created
+                    // TODO
+                    // Logout, remove events created and remove from joined
+                    accountViewModel.deleteAccount(onSuccess = onLogout,{})
+                  },
+                  modifier = Modifier.testTag("account_settings_delete_button"))
+
               ChimpagneSpacer()
 
               ProfileIcon(

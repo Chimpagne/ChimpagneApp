@@ -83,6 +83,7 @@
     <string name="join_event_staff">Vous êtes déjà un membre du Staff pour cet Evénement</string>
     <string name="join_event_guest">Vous êtes déjà inscrit à cet Evénement</string>
     <string name="join_event_owner">Vous êtes l\'Organisateur de cet Evénement</string>
+    <string name="delete_account">Supprimer le compte</string>
 
     <string name="find_event_location_set">Localisé</string>
     <string name="find_event_location_not_found">Localisation échouée</string>
