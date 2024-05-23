@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
@@ -48,10 +49,7 @@ fun AccountSettings(
         TopBar(
             text = context.getString(R.string.account_settings),
             navigationIcon = {
-              IconButton(onClick = { navObject.goBack() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.go_back), contentDescription = "Back")
-              }
+                GoBackButton(navigationActions = navObject)
             })
       },
       floatingActionButton = {
@@ -65,7 +63,9 @@ fun AccountSettings(
       floatingActionButtonPosition = FabPosition.End,
       containerColor = MaterialTheme.colorScheme.background) { paddingValues ->
         Column(
-            modifier = Modifier.padding(paddingValues).padding(16.dp),
+            modifier = Modifier
+                .padding(paddingValues)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(modifier = Modifier.height(10.dp))
               ProfileImage(
@@ -95,7 +95,9 @@ fun AccountSettings(
 
 @Composable
 fun SettingItem(label: String, value: String, modifierText: Modifier) {
-  Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+  Column(modifier = Modifier
+      .fillMaxWidth()
+      .padding(vertical = 4.dp)) {
     Text(
         modifier = modifierText,
         text = label,
