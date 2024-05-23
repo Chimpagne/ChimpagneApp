@@ -288,7 +288,7 @@ class FindEventScreenTest {
       MainFindEventScreen(navActions, FindEventsViewModel(database = database), accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("find_event_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

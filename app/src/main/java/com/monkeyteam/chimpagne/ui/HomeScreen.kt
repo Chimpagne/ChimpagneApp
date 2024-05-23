@@ -200,7 +200,7 @@ fun HomeScreen(
   Scaffold(
       topBar = {
         TopBar(
-            context = context,
+            text = context.getString(R.string.events_near_you),
             actions = {
               ProfileIcon(
                   uiState.currentUserProfilePicture,
