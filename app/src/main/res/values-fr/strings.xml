@@ -163,6 +163,9 @@
     <string name="events_near_you">Evénements proches de vous</string>
     <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
     <string name="activate_gps">ACTIVER GPS</string>
+    <string name="wind_speed">Vent</string>
+    <string name="noforecast_alreadyoccured">L\'évènement est passé, pas de prévision météo :)</string>
+    <string name="noforecast_eventtoofarinfuture">Apercu rapide de la météo 10 jours avant l\'évènement</string>
 
 
 </resources>
