@@ -40,7 +40,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -75,6 +74,7 @@ import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
 import com.monkeyteam.chimpagne.ui.components.SimpleTagChip
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -102,22 +102,8 @@ fun ViewDetailEventScreen(
   LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = {
-              Row(
-                  modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-                  verticalAlignment = Alignment.CenterVertically) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(
-                        text = uiState.title,
-                        fontSize = 30.sp,
-                        fontFamily = ChimpagneFontFamily,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.testTag("event title"))
-                    Spacer(modifier = Modifier.weight(1f))
-                  }
-            },
-            modifier = Modifier.shadow(4.dp),
+        TopBar(
+            text = uiState.title,
             navigationIcon = {
               IconButton(
                   onClick = {

@@ -9,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,9 +47,7 @@ fun AccountSettings(
 
         TopBar(
             text = context.getString(R.string.account_settings),
-            navigationIcon = {
-                GoBackButton(navigationActions = navObject)
-            })
+            navigationIcon = { GoBackButton(navigationActions = navObject) })
       },
       floatingActionButton = {
         FloatingActionButton(onClick = { navObject.navigateTo(Route.ACCOUNT_EDIT_SCREEN) }) {
@@ -63,9 +60,7 @@ fun AccountSettings(
       floatingActionButtonPosition = FabPosition.End,
       containerColor = MaterialTheme.colorScheme.background) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(16.dp),
+            modifier = Modifier.padding(paddingValues).padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
               Spacer(modifier = Modifier.height(10.dp))
               ProfileImage(
@@ -95,9 +90,7 @@ fun AccountSettings(
 
 @Composable
 fun SettingItem(label: String, value: String, modifierText: Modifier) {
-  Column(modifier = Modifier
-      .fillMaxWidth()
-      .padding(vertical = 4.dp)) {
+  Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
     Text(
         modifier = modifierText,
         text = label,

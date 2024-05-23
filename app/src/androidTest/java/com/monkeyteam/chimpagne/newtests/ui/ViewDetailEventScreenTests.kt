@@ -71,7 +71,7 @@ class ViewDetailEventScreenTests {
       ViewDetailEventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
     composeTestRule.onNodeWithTag("tag list").assertIsDisplayed()
     composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
