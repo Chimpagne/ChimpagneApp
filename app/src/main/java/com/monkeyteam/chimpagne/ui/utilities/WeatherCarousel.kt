@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -95,7 +96,7 @@ fun WeatherApp(event: ChimpagneEvent) {
     when {
       message != null -> TextMessage(message)
       weatherData != null -> WeatherCarousel(weatherData!!)
-      else -> CircularProgressIndicator()
+      else -> CircularProgressIndicator(modifier = Modifier.testTag("loading_indicator"))
     }
   }
 }
@@ -142,7 +143,7 @@ fun WeatherCard(weather: Weather) {
   val formattedDate = weather.date.format(formatter)
 
   Card(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp).testTag("weather card"),
       shape = MaterialTheme.shapes.medium) {
         Column(
             modifier = Modifier.padding(10.dp).fillMaxWidth(),
@@ -162,10 +163,12 @@ fun WeatherCard(weather: Weather) {
                     }
                     Column {
                       Text(
+                          modifier = Modifier.testTag("weather temp"),
                           text =
                               "Temp : ${weather.temperatureLow}°C -> ${weather.temperatureHigh}°C",
                           style = ChimpagneTypography.bodyMedium)
                       Text(
+                          modifier = Modifier.testTag("weather wind"),
                           text =
                               stringResource(R.string.wind_speed) +
                                   " : ${weather.maxWindSpeed} km/h",
@@ -180,7 +183,7 @@ fun WeatherCard(weather: Weather) {
 fun TextMessage(message: String?) {
   if (message != null) {
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        modifier = Modifier.padding(16.dp).fillMaxWidth().testTag("weather message"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
           Text(text = message, style = ChimpagneTypography.bodyMedium)
