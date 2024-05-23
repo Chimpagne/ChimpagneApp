@@ -48,6 +48,10 @@ class AccountViewModel(database: Database) : ViewModel() {
     }
   }
 
+  fun getProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
+    accountManager.fetchProfilePictureUri(uid, onSuccess)
+  }
+
   fun logoutFromChimpagneAccount() {
     _uiState.value = AccountUIState()
     accountManager.signOut()
@@ -65,7 +69,7 @@ class AccountViewModel(database: Database) : ViewModel() {
     val profilePictureToUpload =
         if (_uiState.value.tempProfilePicture != _uiState.value.currentUserProfilePicture)
             _uiState.value.tempProfilePicture
-        else null
+        else _uiState.value.currentUserProfilePicture
 
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {

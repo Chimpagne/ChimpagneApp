@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.HourglassBottom
 import androidx.compose.material.icons.rounded.Public
@@ -81,7 +80,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                 } else {
                   items(uiState.createdEvents.values.toList()) { event ->
                     EventCard(event = event, modifier = Modifier.testTag("a created event")) {
-                      navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                      navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
                     }
                   }
                 }
@@ -101,7 +100,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                 } else {
                   items(uiState.joinedEvents.values.toList()) { event ->
                     EventCard(event = event, modifier = Modifier.testTag("a joined event")) {
-                      navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                      navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
                     }
                   }
                 }
@@ -123,7 +122,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                 } else {
                   items(uiState.pastEvents.values.toList()) { event ->
                     EventCard(event = event, modifier = Modifier.testTag("past_event_card")) {
-                      navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
+                      navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
                     }
                   }
                 }

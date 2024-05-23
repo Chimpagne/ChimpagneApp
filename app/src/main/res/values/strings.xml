@@ -36,7 +36,7 @@
     <string name="find_event_event_locate_me_button">Near me</string>
     <string name="find_event_search_radius">Search radius</string>
     <string name="find_event_search_tag_query_label">Enter a tag</string>
-    <string name="find_event_date_legend">Date of the event</string>
+    <string name="find_event_date_legend">Date range</string>
     <string name="find_event_join_event_button_text">Join Event</string>
     <string name="find_event_no_event_available">No event details available</string>
     <string name="find_event_near_me_toast">Locating you…</string>
@@ -48,7 +48,6 @@
     <string name="welcome_screen_title">Welcome to</string>
     <string name="continue_as_guest">Continue as Guest</string>
     <string name="login_to_continue">Please login/create an account to continue</string>
-    <string name="save_changes">Save changes</string>
     <string name="event_changes_saved">The event\'s changes have been saved</string>
     <string name="my_events_screen_name">My events</string>
     <string name="my_events_screen_created_event_list_name">Created events</string>
@@ -62,7 +61,7 @@
     <string name="event_details_screen_number_of_guests">guests joined</string>
     <string name="event_details_screen_organized_by">Organized by</string>
     <string name="event_details_screen_leave_button">Leave this Event</string>
-    <string name="event_details_screen_report_problem">Report a Problem</string>
+    <string name="event_details_screen_report_problem">Report</string>
     <string name="event_details_screen_leave_toast_success">Leaving this event was successful</string>
     <string name="event_details_screen_edit_button">Edit Event</string>
     <string name="event_details_screen_manage_staff_button">Manage staff</string>
@@ -163,7 +162,12 @@
     <string name="invalid_social_media_links">Invalid social media links</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
+
+
+    <string name="event_description_is_empty">No description</string>
+
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+
 </resources>

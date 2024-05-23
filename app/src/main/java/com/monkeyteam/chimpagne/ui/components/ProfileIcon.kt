@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.ui.components
 
 import android.net.Uri
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.IconButton
@@ -33,7 +32,7 @@ fun ProfileIcon(
     Image(
         painter = painter,
         contentDescription = "Profile",
-        modifier = Modifier.fillMaxSize().clip(CircleShape),
+        modifier = Modifier.size(48.dp).clip(CircleShape),
         contentScale = ContentScale.Crop)
   }
 }

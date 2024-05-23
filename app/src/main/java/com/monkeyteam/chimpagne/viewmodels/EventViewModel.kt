@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
@@ -96,7 +97,7 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
-                        image = it.image,
+                        imageUrl = it.imageUrl,
                         socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
                         polls = it.polls)
                 _uiState.value =
@@ -136,11 +137,11 @@ class EventViewModel(
         staffs = _uiState.value.staffs,
         startsAt = _uiState.value.startsAtCalendarDate,
         endsAt = _uiState.value.endsAtCalendarDate,
-        ownerId = _uiState.value.ownerId,
+        ownerId = uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        image = "",
+        imageUrl = "",
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
         polls = _uiState.value.polls)
   }
@@ -225,6 +226,19 @@ class EventViewModel(
             onFailure(it)
           })
     }
+  }
+
+  /**
+   * Join the event with the given [eventId] This is mandaotry to follow the same structure as the
+   * joinEvent in FindEventViewModel
+   * --> Call in DetailEventScreen
+   */
+  fun joinEvent(
+      eventId: ChimpagneEventId = _uiState.value.id,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    joinTheEvent(onSuccess, onFailure)
   }
 
   fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -534,6 +548,29 @@ class EventViewModel(
         { onFailure(it) })
   }
 
+  fun updateUIStateWithEvent(event: ChimpagneEvent) {
+    _uiState.value =
+        EventUIState(
+            id = event.id,
+            title = event.title,
+            description = event.description,
+            location = event.location,
+            public = event.public,
+            tags = event.tags,
+            guests = event.guests,
+            staffs = event.staffs,
+            startsAtCalendarDate = event.startsAt(),
+            endsAtCalendarDate = event.endsAt(),
+            supplies = event.supplies,
+            parkingSpaces = event.parkingSpaces,
+            beds = event.beds,
+            ownerId = event.ownerId,
+            imageUrl = event.imageUrl,
+            socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+            polls = event.polls,
+            currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
+  }
+
   data class EventUIState(
       val id: String = "",
       val title: String = "",
@@ -550,13 +587,13 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
-      val image: String = "",
+      val imageUrl: String = "",
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-      val loading: Boolean = false,
+      val loading: Boolean = true,
       val socialMediaLinks: Map<String, SocialMedia> =
           SupportedSocialMedia.associateBy { it.platformName }
   )
