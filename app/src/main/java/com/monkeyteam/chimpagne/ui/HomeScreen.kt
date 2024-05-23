@@ -255,9 +255,7 @@ fun HomeScreen(
                       items(closestEventsState.value) { event ->
                         EventCard(
                             event,
-                            onClick = {
-                              navObject.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}")
-                            })
+                            onClick = { navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}") })
                       }
                     }
                   }
@@ -269,7 +267,7 @@ fun HomeScreen(
                   horizontalAlignment = Alignment.CenterHorizontally,
                   verticalArrangement = Arrangement.Center) {
                     ChimpagneButton(
-                        modifier = Modifier.testTag("open_events_button"),
+                        modifier = Modifier.fillMaxWidth().testTag("open_events_button"),
                         onClick = {
                           if (!accountViewModel.isUserLoggedIn()) {
                             showPromptLogin = true
@@ -299,13 +297,13 @@ fun HomeScreen(
                     }
 
                     ChimpagneButton(
-                        modifier = Modifier.testTag("discover_events_button"),
+                        modifier = Modifier.fillMaxWidth().testTag("discover_events_button"),
                         onClick = { navObject.navigateTo(Route.FIND_AN_EVENT_SCREEN) },
                         text = stringResource(R.string.homescreen_join_event),
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     ChimpagneButton(
-                        modifier = Modifier.testTag("organize_event_button"),
+                        modifier = Modifier.fillMaxWidth().testTag("organize_event_button"),
                         onClick = {
                           if (!accountViewModel.isUserLoggedIn()) {
                             showPromptLogin = true

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
+import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 
 enum class EventInputValidity {
   INVALID_TITLE,
+  INVALID_SOCIAL_MEDIA_LINKS,
   INVALID_DATES
 }
 
@@ -52,8 +54,21 @@ class EventViewModel(
     fun eventInputValidityToString(e: EventInputValidity, context: Context): String {
       return when (e) {
         EventInputValidity.INVALID_TITLE -> context.getString(R.string.title_should_not_be_empty)
+        EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS ->
+            context.getString(R.string.invalid_social_media_links)
         EventInputValidity.INVALID_DATES -> context.getString(R.string.invalid_dates)
       }
+    }
+  }
+
+  private fun validateEventInputs(): EventInputValidity? {
+    return when {
+      _uiState.value.title.isEmpty() -> EventInputValidity.INVALID_TITLE
+      _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
+          _uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ->
+          EventInputValidity.INVALID_DATES
+      hasInvalidSocialMediaLinks() -> EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS
+      else -> null
     }
   }
 
@@ -82,7 +97,7 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
-                        image = it.image,
+                        imageUrl = it.imageUrl,
                         socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
                         polls = it.polls)
                 _uiState.value =
@@ -122,13 +137,22 @@ class EventViewModel(
         staffs = _uiState.value.staffs,
         startsAt = _uiState.value.startsAtCalendarDate,
         endsAt = _uiState.value.endsAtCalendarDate,
-        ownerId = _uiState.value.ownerId,
+        ownerId = uiState.value.ownerId,
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        image = "",
+        imageUrl = "",
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
         polls = _uiState.value.polls)
+  }
+
+  private fun isInvalidUrl(socialMedia: SocialMedia): Boolean {
+    return socialMedia.chosenGroupUrl.isNotEmpty() &&
+        socialMedia.platformUrls.none { socialMedia.chosenGroupUrl.startsWith(it) }
+  }
+
+  fun hasInvalidSocialMediaLinks(): Boolean {
+    return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
   }
 
   fun createTheEvent(
@@ -136,15 +160,9 @@ class EventViewModel(
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
-    if (_uiState.value.title.isEmpty() ||
-        _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
-        uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate)) {
-
-      if (_uiState.value.title.isEmpty()) {
-        onInvalidInputs(EventInputValidity.INVALID_TITLE)
-      } else {
-        onInvalidInputs(EventInputValidity.INVALID_DATES)
-      }
+    val invalidInput = validateEventInputs()
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
     } else {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
@@ -164,20 +182,31 @@ class EventViewModel(
     }
   }
 
-  fun updateTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
-    _uiState.value = _uiState.value.copy(loading = true)
-    viewModelScope.launch {
-      eventManager.updateEvent(
-          buildChimpagneEvent(),
-          {
-            _uiState.value = _uiState.value.copy(loading = false)
-            onSuccess()
-          },
-          {
-            Log.d("UPDATE AN EVENT", "Error : ", it)
-            _uiState.value = _uiState.value.copy(loading = false)
-            onFailure(it)
-          })
+  fun updateTheEvent(
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {},
+      onInvalidInputs: (EventInputValidity) -> Unit = {}
+  ) {
+
+    val invalidInput = validateEventInputs()
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
+      return
+    } else {
+      _uiState.value = _uiState.value.copy(loading = true)
+      viewModelScope.launch {
+        eventManager.updateEvent(
+            buildChimpagneEvent(),
+            {
+              _uiState.value = _uiState.value.copy(loading = false)
+              onSuccess()
+            },
+            {
+              Log.d("UPDATE AN EVENT", "Error : ", it)
+              _uiState.value = _uiState.value.copy(loading = false)
+              onFailure(it)
+            })
+      }
     }
   }
 
@@ -197,6 +226,19 @@ class EventViewModel(
             onFailure(it)
           })
     }
+  }
+
+  /**
+   * Join the event with the given [eventId] This is mandaotry to follow the same structure as the
+   * joinEvent in FindEventViewModel
+   * --> Call in DetailEventScreen
+   */
+  fun joinEvent(
+      eventId: ChimpagneEventId = _uiState.value.id,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    joinTheEvent(onSuccess, onFailure)
   }
 
   fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
@@ -506,6 +548,29 @@ class EventViewModel(
         { onFailure(it) })
   }
 
+  fun updateUIStateWithEvent(event: ChimpagneEvent) {
+    _uiState.value =
+        EventUIState(
+            id = event.id,
+            title = event.title,
+            description = event.description,
+            location = event.location,
+            public = event.public,
+            tags = event.tags,
+            guests = event.guests,
+            staffs = event.staffs,
+            startsAtCalendarDate = event.startsAt(),
+            endsAtCalendarDate = event.endsAt(),
+            supplies = event.supplies,
+            parkingSpaces = event.parkingSpaces,
+            beds = event.beds,
+            ownerId = event.ownerId,
+            imageUrl = event.imageUrl,
+            socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+            polls = event.polls,
+            currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
+  }
+
   data class EventUIState(
       val id: String = "",
       val title: String = "",
@@ -522,13 +587,13 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
-      val image: String = "",
+      val imageUrl: String = "",
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-      val loading: Boolean = false,
+      val loading: Boolean = true,
       val socialMediaLinks: Map<String, SocialMedia> =
           SupportedSocialMedia.associateBy { it.platformName }
   )
