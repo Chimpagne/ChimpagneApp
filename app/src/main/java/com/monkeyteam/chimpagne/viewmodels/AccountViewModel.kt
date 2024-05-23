@@ -69,7 +69,7 @@ class AccountViewModel(database: Database) : ViewModel() {
     val profilePictureToUpload =
         if (_uiState.value.tempProfilePicture != _uiState.value.currentUserProfilePicture)
             _uiState.value.tempProfilePicture
-        else _uiState.value.currentUserProfilePicture
+        else null
 
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
