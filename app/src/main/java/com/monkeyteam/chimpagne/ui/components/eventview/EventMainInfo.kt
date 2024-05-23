@@ -93,7 +93,8 @@ fun EventMainInfo(event: ChimpagneEvent) {
             modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
               Box(
                   modifier =
-                      Modifier.clip(RoundedCornerShape(50))
+                      Modifier.testTag("number_of_guests")
+                          .clip(RoundedCornerShape(50))
                           .background(MaterialTheme.colorScheme.primaryContainer)
                           .padding(horizontal = 24.dp, vertical = 12.dp)) {
                     Text(
@@ -107,8 +108,7 @@ fun EventMainInfo(event: ChimpagneEvent) {
                                       id = R.string.event_details_screen_number_of_guests))
                             },
                         fontFamily = ChimpagneFontFamily,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        modifier = Modifier.testTag("number of guests"))
+                        color = MaterialTheme.colorScheme.onPrimaryContainer)
                   }
             }
       }

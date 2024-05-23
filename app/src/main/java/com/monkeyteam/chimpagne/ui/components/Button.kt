@@ -183,6 +183,7 @@ fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEv
           stringResource(id = R.string.add_event_to_calendar_suffix)
   val builder =
       AlertDialog(
+          modifier = Modifier,
           onDismissRequest = { onReject() },
           title = { Text("Add to Calendar") },
           text = { Text(textQuestion) },

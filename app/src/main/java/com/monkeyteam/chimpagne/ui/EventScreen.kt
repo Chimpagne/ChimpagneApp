@@ -147,7 +147,7 @@ fun EventScreen(
                   textAlign = TextAlign.Center,
                   maxLines = 2,
                   overflow = TextOverflow.Ellipsis,
-                  modifier = Modifier.fillMaxWidth().testTag("event_title"))
+                  modifier = Modifier.fillMaxWidth().testTag("event title"))
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
@@ -162,7 +162,7 @@ fun EventScreen(
                           .shadow(10.dp, RoundedCornerShape(12.dp))
                           .clip(RoundedCornerShape(12.dp))
                           .background(MaterialTheme.colorScheme.primaryContainer)
-                          .clickable { showDialog = true }
+                          .clickable { showQRDialog = true }
                           .padding(8.dp)) {
                     Icon(
                         imageVector = Icons.Rounded.QrCodeScanner,
@@ -217,7 +217,7 @@ fun EventScreen(
                 item {
                   Row(
                       modifier =
-                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag_list")) {
+                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
                         uiState.tags.forEach { tag -> EventTagChip(tag) }
                       }
                 }

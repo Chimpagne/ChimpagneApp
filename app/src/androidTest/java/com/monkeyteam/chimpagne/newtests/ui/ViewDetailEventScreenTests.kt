@@ -85,7 +85,8 @@ class ViewDetailEventScreenTests {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun qrCodeGeneration_displaysQRCode() {
-    val testEventId = "12345"
+    val testEventId = "1234"
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
@@ -94,7 +95,6 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
     composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
-
     composeTestRule.onNodeWithTag("close_button").performClick()
   }
 

@@ -92,7 +92,8 @@ fun OrganiserView(
 
         Box(
             modifier =
-                Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                Modifier.testTag("share")
+                    .shadow(10.dp, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .clickable {
@@ -108,7 +109,7 @@ fun OrganiserView(
                   imageVector = Icons.Rounded.Share,
                   contentDescription = "Share Event",
                   tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                  modifier = Modifier.size(36.dp).testTag("share"))
+                  modifier = Modifier.size(36.dp))
             }
       }
 }
