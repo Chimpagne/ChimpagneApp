@@ -39,7 +39,7 @@ fun CreatePollDialog(
 ){
     var title by remember { mutableStateOf("") }
     var query by remember { mutableStateOf("") }
-    val options: MutableMap<Int, String> = mutableMapOf(Pair(0, ""), Pair(1, ""))
+    val options: MutableList<String> = mutableListOf("", "")
 
      CustomDialog(
          title = "Create A Poll",
@@ -59,7 +59,7 @@ fun CreatePollDialog(
                              ChimpagnePoll(
                                  title = title,
                                  query = query,
-                                 options = options.values.toList()
+                                 options = options
                              )
                         )
                      }
@@ -86,17 +86,16 @@ fun CreatePollDialog(
              label = { Text("Poll query") }
          )
          LazyColumn {
-             items(options.toList()){optionPair ->
-                 val id = optionPair.first
-                 var optionString by remember { mutableStateOf(optionPair.second) }
+             items(options.indices.toList()){id ->
+                 var optionMutable by remember { mutableStateOf(options[id]) }
                  OutlinedTextField(
                      modifier = Modifier
                          .fillMaxWidth()
                          .padding(5.dp)
                          .testTag("poll_options" + id + "_field"),
-                     value = optionString,
+                     value = optionMutable,
                      onValueChange = {
-                         optionString = it
+                         optionMutable = it
                          options[id] = it
                                      },
                      trailingIcon = {
@@ -105,7 +104,9 @@ fun CreatePollDialog(
                             Icons.Rounded.RemoveCircle,
                              "remove_option",
                              Modifier.clickable {
-                                 options.remove(id)
+                                 options.removeLast()
+                                 Log.d("JUAN TEST", options.toString())
+                                 Log.d("JUAN TEST", options.size.toString())
                              }
                          )
                      }
@@ -120,7 +121,7 @@ fun CreatePollDialog(
                              Icons.Rounded.AddCircle,
                              "add_option",
                              Modifier.clickable {
-                                 options[options.size] = ""
+                                 options.add("")
                                  Log.d("JUAN TEST", options.toString())
                                  Log.d("JUAN TEST", options.size.toString())
                              }
