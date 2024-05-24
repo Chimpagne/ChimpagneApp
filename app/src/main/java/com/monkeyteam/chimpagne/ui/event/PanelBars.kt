@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import kotlinx.coroutines.launch
@@ -41,6 +43,13 @@ fun PanelTopBar(navObject: NavigationActions, title: String, modifier: Modifier 
       })
 }
 
+@Composable
+fun PanelBottomBarButtonText(text: String) {
+  Text(
+      text = text.uppercase(), fontSize = 20.sp // Adjust the size as needed
+      )
+}
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun PanelBottomBar(
@@ -52,30 +61,34 @@ fun PanelBottomBar(
   // throughout the panels
   val coroutineScope = rememberCoroutineScope()
 
-  Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-    if (pagerState.currentPage > 0) {
-      Button(
-          onClick = {
-            coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
-          },
-          modifier = Modifier.testTag("previous_button")) {
-            Text(stringResource(id = R.string.event_creation_screen_previous))
+  Row(
+      modifier = Modifier.fillMaxWidth().padding(24.dp),
+      horizontalArrangement = Arrangement.SpaceBetween) {
+        if (pagerState.currentPage > 0) {
+          Button(
+              onClick = {
+                coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+              },
+              modifier = Modifier.testTag("previous_button")) {
+                PanelBottomBarButtonText(
+                    text = stringResource(id = R.string.event_creation_screen_previous))
+              }
+        } else {
+          Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
+        }
+        if (pagerState.currentPage < pagerState.pageCount - 1) {
+          Button(
+              onClick = {
+                coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+              },
+              modifier = Modifier.testTag("next_button")) {
+                PanelBottomBarButtonText(
+                    text = stringResource(id = R.string.event_creation_screen_next))
+              }
+        } else {
+          Button(onClick = lastButtonOnClick, modifier = Modifier.testTag("last_button")) {
+            PanelBottomBarButtonText(text = lastButtonText)
           }
-    } else {
-      Spacer(modifier = Modifier.width(ButtonDefaults.MinWidth))
-    }
-    if (pagerState.currentPage < pagerState.pageCount - 1) {
-      Button(
-          onClick = {
-            coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
-          },
-          modifier = Modifier.testTag("next_button")) {
-            Text(stringResource(id = R.string.event_creation_screen_next))
-          }
-    } else {
-      Button(onClick = lastButtonOnClick, modifier = Modifier.testTag("last_button")) {
-        Text(lastButtonText)
+        }
       }
-    }
-  }
 }

@@ -30,6 +30,11 @@ fun EventCreationScreen(
   val pagerState = rememberPagerState(initialPage = initialPage) { 5 }
   val context = LocalContext.current
   val uiState by eventViewModel.uiState.collectAsState()
+
+  fun showToast(message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+  }
+
   Scaffold(
       topBar = {
         PanelTopBar(
@@ -43,31 +48,28 @@ fun EventCreationScreen(
             lastButtonText = stringResource(id = R.string.event_creation_screen_create_event),
             lastButtonOnClick = {
               if (!uiState.loading) {
-                Toast.makeText(
-                        context,
-                        context.getString(R.string.event_creation_screen_toast_creating),
-                        Toast.LENGTH_SHORT)
-                    .show()
                 eventViewModel.createTheEvent(
+                    onInvalidInputs = {
+                      showToast(EventViewModel.eventInputValidityToString(it, context))
+                    },
                     onSuccess = {
-                      Toast.makeText(
-                              context,
-                              context.getString(R.string.event_creation_screen_toast_finish),
-                              Toast.LENGTH_SHORT)
-                          .show()
+                      showToast(context.getString(R.string.event_creation_screen_toast_finish))
                       navObject.goBack()
                     })
               }
             })
       }) { innerPadding ->
-        HorizontalPager(state = pagerState, modifier = Modifier.padding(innerPadding)) { page ->
-          when (page) {
-            0 -> FirstPanel(eventViewModel)
-            1 -> TagsAndPubPanel(eventViewModel)
-            2 -> SuppliesPanel(eventViewModel)
-            3 -> AdvancedLogisticsPanel(eventViewModel)
-            4 -> ChooseSocialsPanel(eventViewModel)
-          }
-        }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.padding(innerPadding),
+            beyondBoundsPageCount = 4) { page ->
+              when (page) {
+                0 -> FirstPanel(eventViewModel)
+                1 -> TagsAndPubPanel(eventViewModel)
+                2 -> SuppliesPanel(eventViewModel)
+                3 -> AdvancedLogisticsPanel(eventViewModel)
+                4 -> ChooseSocialsPanel(eventViewModel)
+              }
+            }
       }
 }

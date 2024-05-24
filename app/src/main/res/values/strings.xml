@@ -27,7 +27,7 @@
     <string name="event_creation_screen_event_made_public">This event has been made public !</string>
     <string name="event_creation_screen_make_event_public">Make this event public</string>
     <string name="event_creation_screen_public_legend">Event Publicity</string>
-    <string name="event_creation_screen_logistics">Advanced Logistics</string>
+    <string name="event_creation_screen_logistics">Accommodations</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Number of parking places</string>
     <string name="event_creation_screen_number_beds">Number of beds</string>
@@ -49,6 +49,7 @@
     <string name="find_event_near_me_toast">Locating you…</string>
     <string name="find_event_no_result">No result</string>
     <string name="find_event_location_not_selected">No location selected</string>
+    <string name="joining_toast">Joining</string>
     <string name="search_location">Search for a location</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="welcome_screen_title">Welcome to</string>
@@ -88,6 +89,11 @@
     <string name="links_to_social_media">Add your social media groups</string>
     <string name="my_events_screen_past_events_list_name">Past events</string>
     <string name="my_events_screen_empty_past_events_list">There is not past events yet</string>
+    <string name="join_event_failiure">Failed to Join the Event</string>
+    <string name="join_event_success">Successfully joined the event</string>
+    <string name="join_event_staff">Already a Staff Member for this Event</string>
+    <string name="join_event_guest">You are already a Guest at this Event</string>
+    <string name="join_event_owner">You are the Owner of this Event</string>
 
     <string name="find_event_location_set">Location set</string>
     <string name="find_event_location_not_found">Location not found</string>
@@ -147,8 +153,13 @@
     <string name="public_string">Public</string>
     <string name="private_string">Private</string>
 
+    <string name="title_should_not_be_empty">The event title should not be empty</string>
+    <string name="invalid_dates">Invalid dates</string>
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
+    <string name="events_near_you">Events near you</string>
+    <string name="turn_gps_on">Turn on your GPS to see events near you</string>
+    <string name="activate_gps">ACTIVATE GPS</string>
 
     <!-- Polls and Voting -->
     <string name="polls_topbar_title">Polls and Voting</string>

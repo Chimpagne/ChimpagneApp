@@ -104,6 +104,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.uiautomator)
+
 
     androidTestImplementation(libs.androidx.rules)
 
@@ -132,6 +134,7 @@ dependencies {
     testImplementation(libs.mockito.core)
     androidTestImplementation(libs.mockito.android)
     implementation(libs.mockito.inline)
+    testImplementation(libs.json)
 
 }
 
