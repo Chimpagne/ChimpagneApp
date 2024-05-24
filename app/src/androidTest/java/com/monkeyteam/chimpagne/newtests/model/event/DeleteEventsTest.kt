@@ -36,7 +36,6 @@ class DeleteEventsTests {
         anAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
 
-    // Check events owned by PRINCE are deleted
     var e: ChimpagneEvent? = null
     eventManager.getEventById("LOTR", { e = it }, { assertTrue(false) })
     assertEquals(null, e)
@@ -44,7 +43,6 @@ class DeleteEventsTests {
     eventManager.getEventById("THIRD_EVENT", { e = it }, { assertTrue(false) })
     assertEquals(null, e)
 
-    // Check PRINCE is removed from guests/staffs
     eventManager.getEventById("FOURTH_EVENT", { e = it }, { assertTrue(false) })
     while (e == null) {}
     var event = e!!
@@ -61,7 +59,6 @@ class DeleteEventsTests {
         thirdAccount.firebaseAuthUID, { loading = false }, { assertTrue(false) })
     while (loading) {}
 
-    // Check events owned by THEREALKING are not deleted
     var e: ChimpagneEvent? = null
     eventManager.getEventById("FOURTH_EVENT", { e = it }, { assertTrue(false) })
     while (e == null) {}
