@@ -36,6 +36,7 @@ class AccountSettingsScreenUITest {
 
     composeTestRule.onNodeWithTag("account_settings_first_name").assertIsDisplayed()
     composeTestRule.onNodeWithTag("account_settings_last_name").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("account_settings_delete_button").assertIsDisplayed()
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
     assertTrue(goBackPressed)
