@@ -79,7 +79,7 @@ fun EventActions(
             IconInfo(
                 icon = Icons.Rounded.Poll,
                 description = stringResource(id = R.string.event_details_screen_voting_button),
-                onClick = { showToast("This function will be implemented in a future version") },
+                onClick = { navObject.navigateTo(Route.POLLS_SCREEN + "/" + uiState.id) },
                 testTag = "polls")))
     IconRow(icons = iconList)
   }
