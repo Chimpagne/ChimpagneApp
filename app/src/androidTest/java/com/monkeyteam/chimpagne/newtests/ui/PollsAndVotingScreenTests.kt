@@ -14,6 +14,7 @@ import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.event.polls.PollsAndVotingScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
 import org.junit.Rule
@@ -23,13 +24,14 @@ class PollsAndVotingScreenTests {
   val database = Database()
   private val ownerEvents = TEST_EVENTS[0]
   private val notOwnerEvent = TEST_EVENTS[3]
+  private val ownerAccount = TEST_ACCOUNTS[1]
 
   @get:Rule val composeTestRule = createComposeRule()
 
   @Before
   fun initTests() {
     initializeTestDatabase()
-    database.accountManager.signInTo(TEST_ACCOUNTS[1])
+    database.accountManager.signInTo(ownerAccount)
   }
 
   @Test
@@ -38,10 +40,15 @@ class PollsAndVotingScreenTests {
 
     while (eventVM.uiState.value.loading) {}
 
+    val accountVM = AccountViewModel(database)
+    accountVM.loginToChimpagneAccount(ownerAccount.firebaseAuthUID, {}, {})
+
+    while(accountVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      PollsAndVotingScreen(eventVM) { navActions.goBack() }
+      PollsAndVotingScreen(eventVM, accountVM) { navActions.goBack() }
     }
 
     composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
@@ -57,10 +64,15 @@ class PollsAndVotingScreenTests {
 
     while (eventVM.uiState.value.loading) {}
 
+    val accountVM = AccountViewModel(database)
+    accountVM.loginToChimpagneAccount(ownerAccount.firebaseAuthUID, {}, {})
+
+    while(accountVM.uiState.value.loading){}
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      PollsAndVotingScreen(eventVM) { navActions.goBack() }
+      PollsAndVotingScreen(eventVM, accountVM) { navActions.goBack() }
     }
 
     composeTestRule
@@ -80,11 +92,16 @@ class PollsAndVotingScreenTests {
     val eventVM = EventViewModel(ownerEvents.id, database)
 
     while (eventVM.uiState.value.loading) {}
+    val accountVM = AccountViewModel(database)
+
+    accountVM.loginToChimpagneAccount(ownerAccount.firebaseAuthUID, {}, {})
+
+    while(accountVM.uiState.value.loading){}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      PollsAndVotingScreen(eventVM) { navActions.goBack() }
+      PollsAndVotingScreen(eventVM, accountVM) { navActions.goBack() }
     }
 
     composeTestRule

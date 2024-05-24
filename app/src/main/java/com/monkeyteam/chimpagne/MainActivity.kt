@@ -217,7 +217,9 @@ class MainActivity : ComponentActivity() {
                               backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent()
               PollsAndVotingScreen(
-                  eventViewModel = eventViewModel, onGoBack = { navActions.goBack() })
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() })
             }
           }
         }

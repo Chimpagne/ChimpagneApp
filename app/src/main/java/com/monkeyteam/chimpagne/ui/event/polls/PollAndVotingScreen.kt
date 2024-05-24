@@ -35,16 +35,24 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
+fun PollsAndVotingScreen(
+    eventViewModel: EventViewModel,
+    accountViewModel: AccountViewModel,
+    onGoBack: () -> Unit) {
   val eventUIState by eventViewModel.uiState.collectAsState()
+    val accountUIState by accountViewModel.uiState.collectAsState()
   var displayCreatePollPopup by remember { mutableStateOf(false) }
+    var displayViewPollPopup by remember { mutableStateOf(false) }
+    var selectedPoll by remember { mutableStateOf(ChimpagnePoll()) }
 
   if (displayCreatePollPopup) {
     CreatePollDialog(
@@ -55,6 +63,18 @@ fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
         onPollCancel = { displayCreatePollPopup = false },
         onDismissRequest = { displayCreatePollPopup = false })
   }
+    if (displayViewPollPopup) {
+        ViewPollDialog(
+            poll = selectedPoll,
+            userId = accountUIState.currentUserUID!!,
+            userRole = eventUIState.currentUserRole,
+            onOptionVote = {
+                eventViewModel.castPollVoteAtomically(selectedPoll.id, it)
+                displayViewPollPopup = false
+            },
+            onPollCancel = { displayViewPollPopup = false },
+            onDismissRequest = { displayViewPollPopup = false })
+    }
   Scaffold(
       topBar = {
         TopAppBar(
@@ -81,9 +101,10 @@ fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
       }) { innerPadding ->
         Column(
             modifier =
-                Modifier.fillMaxSize()
-                    .padding(innerPadding)
-                    .background(MaterialTheme.colorScheme.background),
+            Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.Start) {
               Spacer(Modifier.height(16.dp))
               LazyColumn {
@@ -97,15 +118,21 @@ fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
                   item {
                     Text(
                         text = stringResource(id = R.string.polls_empty_poll_list),
-                        modifier = Modifier.padding(16.dp).testTag("empty poll list"))
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .testTag("empty poll list"))
                   }
                 } else {
                   items(eventUIState.polls.values.toList()) { poll ->
                     ChimpagneButton(
-                        modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("a poll"),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(5.dp)
+                            .testTag("a poll"),
                         text = poll.title,
                         onClick = {
-                          // TODO To be implemented in another PR//
+                            displayViewPollPopup = true
+                            selectedPoll = poll
                         })
                   }
                 }
