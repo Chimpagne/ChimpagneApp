@@ -116,6 +116,7 @@
     <string name="chimpagne_delete">Delete</string>
     <string name="chimpagne_you">You</string>
     <string name="chimpagne_ok">OK</string>
+    <string name="chimpagne_return">Return</string>
 
     <!--    Supplies    -->
     <string name="supplies_screen_title">Supplies to bring</string>

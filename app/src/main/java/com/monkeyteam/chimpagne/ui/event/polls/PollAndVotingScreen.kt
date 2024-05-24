@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
-import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
@@ -47,65 +46,54 @@ import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 fun PollsAndVotingScreen(
     eventViewModel: EventViewModel,
     accountViewModel: AccountViewModel,
-    onGoBack: () -> Unit) {
+    onGoBack: () -> Unit
+) {
   val eventUIState by eventViewModel.uiState.collectAsState()
-    val accountUIState by accountViewModel.uiState.collectAsState()
+  val accountUIState by accountViewModel.uiState.collectAsState()
   var displayCreatePollPopup by remember { mutableStateOf(false) }
-    var displayVotePollPopup by remember { mutableStateOf(false) }
-    var displayViewPollPopup by remember { mutableStateOf(false) }
-    var selectedPollId by remember { mutableStateOf("") }
+  var displayVotePollPopup by remember { mutableStateOf(false) }
+  var displayViewPollPopup by remember { mutableStateOf(false) }
+  var selectedPollId by remember { mutableStateOf("") }
 
   if (displayCreatePollPopup) {
     CreatePollDialog(
         onPollCreate = {
           eventViewModel.createPollAtomically(
-              poll = it,
-              onSuccess = {displayCreatePollPopup = false}
-          )
+              poll = it, onSuccess = { displayCreatePollPopup = false })
         },
         onPollCancel = { displayCreatePollPopup = false },
         onDismissRequest = { displayCreatePollPopup = false })
   }
-    if(displayVotePollPopup){
-        val poll = eventUIState.polls[selectedPollId]!!
-        VotePollDialog(
-            poll = poll,
-            userRole = eventUIState.currentUserRole,
-            onOptionVote = {
-                eventViewModel.castPollVoteAtomically(
-                    pollId = selectedPollId,
-                    optionIndex = it,
-                    {
-                        displayViewPollPopup = true
-                    }
-                )
-                           },
-            onPollDelete = {
-                eventViewModel.deletePollAtomically(
-                    pollId = it,
-                    onSuccess = {displayVotePollPopup = false}
-                )
-            },
-            onPollCancel = {displayVotePollPopup = false},
-            onDismissRequest = {displayVotePollPopup = false})
-    }
-    if (displayViewPollPopup) {
-        displayVotePollPopup = false
-        val poll = eventUIState.polls[selectedPollId]!!
-        ViewPollDialog(
-            poll = poll,
-            selectedOptionId = poll.votes[accountUIState.currentUserUID]!!,
-            userRole = eventUIState.currentUserRole,
-            onPollDelete = {
-                eventViewModel.deletePollAtomically(
-                    pollId = it,
-                    onSuccess = {displayViewPollPopup = false}
-                )
-            },
-            onPollCancel = {displayViewPollPopup = false},
-            onDismissRequest = {displayViewPollPopup = false}
-        )
-    }
+  if (displayVotePollPopup) {
+    val poll = eventUIState.polls[selectedPollId]!!
+    VotePollDialog(
+        poll = poll,
+        userRole = eventUIState.currentUserRole,
+        onOptionVote = {
+          eventViewModel.castPollVoteAtomically(
+              pollId = selectedPollId, optionIndex = it, { displayViewPollPopup = true })
+        },
+        onPollDelete = {
+          eventViewModel.deletePollAtomically(
+              pollId = it, onSuccess = { displayVotePollPopup = false })
+        },
+        onPollCancel = { displayVotePollPopup = false },
+        onDismissRequest = { displayVotePollPopup = false })
+  }
+  if (displayViewPollPopup) {
+    displayVotePollPopup = false
+    val poll = eventUIState.polls[selectedPollId]!!
+    ViewPollDialog(
+        poll = poll,
+        selectedOptionId = poll.votes[accountUIState.currentUserUID]!!,
+        userRole = eventUIState.currentUserRole,
+        onPollDelete = {
+          eventViewModel.deletePollAtomically(
+              pollId = it, onSuccess = { displayViewPollPopup = false })
+        },
+        onPollCancel = { displayViewPollPopup = false },
+        onDismissRequest = { displayViewPollPopup = false })
+  }
   Scaffold(
       topBar = {
         TopAppBar(
@@ -132,10 +120,9 @@ fun PollsAndVotingScreen(
       }) { innerPadding ->
         Column(
             modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.background),
+                Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.Start) {
               Spacer(Modifier.height(16.dp))
               LazyColumn {
@@ -149,27 +136,21 @@ fun PollsAndVotingScreen(
                   item {
                     Text(
                         text = stringResource(id = R.string.polls_empty_poll_list),
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .testTag("empty poll list"))
+                        modifier = Modifier.padding(16.dp).testTag("empty poll list"))
                   }
                 } else {
                   items(eventUIState.polls.values.toList()) { poll ->
                     ChimpagneButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(5.dp)
-                            .testTag("a poll"),
+                        modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("a poll"),
                         text = poll.title,
                         onClick = {
-                            selectedPollId = poll.id
-                            if(poll.votes.containsKey(accountUIState.currentUserUID)){
-                                displayViewPollPopup = true
-                            }else{
-                                displayVotePollPopup = true
-                            }
-                        }
-                    )
+                          selectedPollId = poll.id
+                          if (poll.votes.containsKey(accountUIState.currentUserUID)) {
+                            displayViewPollPopup = true
+                          } else {
+                            displayVotePollPopup = true
+                          }
+                        })
                   }
                 }
               }
