@@ -6,6 +6,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,9 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
@@ -49,10 +53,13 @@ fun EventCreationScreen(
 
   Scaffold(
       topBar = {
-        PanelTopBar(
-            navObject = navObject,
-            title = stringResource(id = R.string.event_creation_screen_name),
-            modifier = Modifier.testTag("create_event_title"))
+        TopBar(
+            text = stringResource(id = R.string.event_creation_screen_title),
+            navigationIcon = {
+              IconButton(onClick = { navObject.goBack() }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+              }
+            })
       },
       bottomBar = {
         PanelBottomBar(
