@@ -70,15 +70,12 @@ fun AccountSettingsScreen(
               IconTextButton(
                   text = stringResource(id = R.string.delete_account),
                   icon = Icons.Default.Delete,
-                  color = MaterialTheme.colorScheme.error, // Set the error color
+                  color = MaterialTheme.colorScheme.error,
                   textColor = MaterialTheme.colorScheme.onError,
                   onClick = { showDialog = true },
                   modifier =
                       Modifier.testTag("account_settings_delete_button")
-                          .padding(
-                              horizontal = 16.dp,
-                              vertical = 8.dp) // Adjust padding to make the button smaller
-                  )
+                          .padding(horizontal = 16.dp, vertical = 8.dp))
             })
       },
       floatingActionButton = {
