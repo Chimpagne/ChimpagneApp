@@ -1,10 +1,15 @@
 package com.monkeyteam.chimpagne.ui.event.polls
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,10 +23,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -39,7 +46,8 @@ fun CreatePollDialog(
 ){
     var title by remember { mutableStateOf("") }
     var query by remember { mutableStateOf("") }
-    val options: MutableList<String> = mutableListOf("", "")
+    val options = remember { mutableStateListOf("", "")}
+    val context = LocalContext.current
 
      CustomDialog(
          title = "Create A Poll",
@@ -55,80 +63,85 @@ fun CreatePollDialog(
                      text = stringResource(id = R.string.chimpagne_confirm),
                      modifier = Modifier.testTag("confirm_poll_button"),
                      onClick = {
-                         onPollCreate(
-                             ChimpagnePoll(
-                                 title = title,
-                                 query = query,
-                                 options = options
+                         if(title == "" || query == "" || options.contains("")){
+                             Toast.makeText(
+                                 context,
+                                 "Cannot create poll because some fields are empty",
+                                 Toast.LENGTH_SHORT
+                             ).show()
+                         }else{
+                             onPollCreate(
+                                 ChimpagnePoll(
+                                     title = title,
+                                     query = query,
+                                     options = options
+                                 )
                              )
-                        )
+                         }
+
                      }
                  )
              )
      ){
 
-     OutlinedTextField(
-         modifier = Modifier
-             .fillMaxWidth()
-             .padding(5.dp)
-             .testTag("poll_title_field"),
-         value = title,
-         onValueChange = { title = it },
-         label = { Text("Poll title") }
-     )
-         OutlinedTextField(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .padding(5.dp)
-                 .testTag("poll_query_field"),
-             value = query,
-             onValueChange = { query = it },
-             label = { Text("Poll query") }
-         )
-         LazyColumn {
+    Column(
+        modifier = Modifier.fillMaxHeight(0.42f)
+    ) {
+        LazyColumn { item {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .testTag("poll_title_field"),
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Poll title") }
+            )
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+                    .testTag("poll_query_field"),
+                value = query,
+                onValueChange = { query = it },
+                label = { Text("Poll query") }
+            )
+        }
              items(options.indices.toList()){id ->
                  var optionMutable by remember { mutableStateOf(options[id]) }
                  OutlinedTextField(
                      modifier = Modifier
                          .fillMaxWidth()
                          .padding(5.dp)
-                         .testTag("poll_options" + id + "_field"),
+                         .testTag("poll_option_" + id + "_field"),
                      value = optionMutable,
                      onValueChange = {
                          optionMutable = it
                          options[id] = it
                                      },
+                     label = { Text("Poll option " + (id+1)) },
                      trailingIcon = {
                          if(options.size > 2 && id == options.size - 1)
                          Icon(
                             Icons.Rounded.RemoveCircle,
                              "remove_option",
-                             Modifier.clickable {
-                                 options.removeLast()
-                                 Log.d("JUAN TEST", options.toString())
-                                 Log.d("JUAN TEST", options.size.toString())
-                             }
+                             Modifier.clickable { options.removeLast() }
                          )
                      }
                  )
              }
              item{
-                 Row (
-                     horizontalArrangement = Arrangement.Start
-                 ){
+                 Row {
                      if(options.size < 4){
                          Icon(
                              Icons.Rounded.AddCircle,
                              "add_option",
-                             Modifier.clickable {
-                                 options.add("")
-                                 Log.d("JUAN TEST", options.toString())
-                                 Log.d("JUAN TEST", options.size.toString())
-                             }
+                             Modifier.clickable { options.add("") }.padding(5.dp)
                          )
                      }
                  }
              }
          }
+     }
      }
 }

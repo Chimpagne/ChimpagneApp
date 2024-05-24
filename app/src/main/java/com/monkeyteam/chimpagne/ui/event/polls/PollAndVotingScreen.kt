@@ -46,11 +46,13 @@ fun PollsAndVotingScreen(
 ) {
     val eventUIState by eventViewModel.uiState.collectAsState()
     var displayCreatePollPopup by remember { mutableStateOf(false) }
-    var displayViewPollPopup by remember { mutableStateOf(false) }
 
     if(displayCreatePollPopup){
         CreatePollDialog(
-            onPollCreate = {eventViewModel.createPollAtomically(poll = it)},
+            onPollCreate = {
+                eventViewModel.createPollAtomically(poll = it)
+                displayCreatePollPopup = false
+                           },
             onPollCancel = {displayCreatePollPopup = false},
             onDismissRequest = {displayCreatePollPopup = false}
         )
