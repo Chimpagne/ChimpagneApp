@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.model.database
 
+import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
@@ -167,16 +168,27 @@ class ChimpagneEventManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    Log.d("DELETING EVENTS FOR USER", userUID)
     val ownerQuery = events.whereEqualTo("ownerId", userUID).get()
-    val guestQuery = events.whereArrayContains("guests.$userUID", true).get()
-    val staffQuery = events.whereArrayContains("staffs.$userUID", true).get()
+    val guestQuery = events.whereEqualTo("guests.$userUID", true).get()
+    val staffQuery = events.whereEqualTo("staffs.$userUID", true).get()
 
     Tasks.whenAllComplete(ownerQuery, guestQuery, staffQuery)
         .addOnCompleteListener { tasks ->
           if (tasks.isSuccessful) {
+            Log.d("Tasks successful", "Tasks are successful")
             val ownerDocs = ownerQuery.result?.documents ?: emptyList()
+            for (doc in ownerDocs) {
+              Log.d("ChimpagneEventManager", "Deleting event: ${doc.id}")
+            }
             val guestDocs = guestQuery.result?.documents ?: emptyList()
+            for (doc in guestDocs) {
+              Log.d("ChimpagneEventManager", "Deleting guest from events: ${doc.id}")
+            }
             val staffDocs = staffQuery.result?.documents ?: emptyList()
+            for (doc in staffDocs) {
+              Log.d("ChimpagneEventManager", "Deleting staff from events: ${doc.id}")
+            }
 
             val deleteTasks =
                 ownerDocs.map { document -> events.document(document.id).delete() }.toMutableList()
@@ -196,6 +208,9 @@ class ChimpagneEventManager(
                 }
 
             val allTasks = deleteTasks + updateTasks
+            for (task in allTasks) {
+              Log.d("ALL TASKS", task.toString())
+            }
 
             Tasks.whenAllComplete(allTasks)
                 .addOnCompleteListener {

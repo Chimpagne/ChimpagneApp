@@ -593,7 +593,7 @@ class EventViewModel(
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-      val loading: Boolean = true,
+      val loading: Boolean = false,
       val socialMediaLinks: Map<String, SocialMedia> =
           SupportedSocialMedia.associateBy { it.platformName }
   )

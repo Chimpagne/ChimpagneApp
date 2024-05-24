@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -72,7 +73,11 @@ fun AccountSettingsScreen(
                     // he created
                     // TODO
                     // Logout, remove events created and remove from joined
-                    accountViewModel.deleteAccount(onSuccess = onLogout,{})
+                    accountViewModel.deleteAccount(
+                        onSuccess = onLogout,
+                        {
+                          Log.e("AccountSettingsScreen", "Failed to delete account because of $it")
+                        })
                   },
                   modifier = Modifier.testTag("account_settings_delete_button"))
 
