@@ -4,9 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -28,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
@@ -39,19 +36,27 @@ import com.monkeyteam.chimpagne.ui.components.ButtonData
 import com.monkeyteam.chimpagne.ui.components.CustomDialog
 
 @Composable
-fun ViewPollDialog(
+fun VotePollDialog(
     poll: ChimpagnePoll,
-    selectedOptionId: ChimpagnePollOptionListIndex,
     userRole: ChimpagneRole,
+    onOptionVote: (ChimpagnePollOptionListIndex) -> Unit,
     onPollDelete: (ChimpagnePollId) -> Unit,
     onPollCancel: () -> Unit,
     onDismissRequest: () -> Unit,
 ) {
+    var hasSelectedOption by remember { mutableStateOf(false) }
+    var selectedOptionId by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
+
     CustomDialog(
         title = poll.query,
         onDismissRequest = onDismissRequest,
         buttonDataList =
-         if(listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF).contains(userRole)){
+        listOf(ButtonData(
+                text = stringResource(id = R.string.chimpagne_cancel),
+                modifier = Modifier.testTag("cancel option button"),
+                onClick = onPollCancel
+        )) + if(listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF).contains(userRole)){
             listOf(ButtonData(
                 text = stringResource(id = R.string.chimpagne_delete),
                 modifier = Modifier.testTag("delete option button"),
@@ -60,10 +65,20 @@ fun ViewPollDialog(
         }else{
             emptyList()
         } + listOf(ButtonData(
-             text = "Return",
-             modifier = Modifier.testTag("return button"),
-             onClick = onPollCancel
-         ))
+                text = stringResource(id = R.string.chimpagne_confirm),
+                modifier = Modifier.testTag("confirm option button"),
+                onClick = {
+                    if (!hasSelectedOption) {
+                        Toast.makeText(
+                            context,
+                            "You have not selected an option",
+                            Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        onOptionVote(selectedOptionId)
+                    }
+                }
+        ))
     ) {
         Column(modifier = Modifier.heightIn(0.dp, 200.dp)) {
             LazyColumn {
@@ -74,24 +89,21 @@ fun ViewPollDialog(
                         },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                         trailingContent = {
-                            Row{
-                                Text(
-                                    text = poll.getNumberOfVotesPerOption()[id].toString() + "/" +
-                                            poll.getNumberOfVotesPerOption().sum().toString(),
-                                    fontSize = 20.sp
-                                    )
-                                if (id == selectedOptionId) {
+                                if (id == selectedOptionId && hasSelectedOption) {
                                     Icon(
                                         imageVector = Icons.Rounded.RadioButtonChecked,
                                         contentDescription = "option " + (id + 1) + " selected"
                                     )
                                 } else{
-                                       Icon(
-                                            imageVector = Icons.Rounded.RadioButtonUnchecked,
-                                            contentDescription = "option " + (id + 1) + " unselected"
-                                        )
+                                    Icon(
+                                        imageVector = Icons.Rounded.RadioButtonUnchecked,
+                                        contentDescription = "option " + (id + 1) + " unselected",
+                                        modifier = Modifier.clickable {
+                                            hasSelectedOption = true
+                                            selectedOptionId = id
+                                        }
+                                    )
                                 }
-                            }
                         }
                     )
                 }
