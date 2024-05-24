@@ -13,12 +13,17 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -44,14 +49,37 @@ fun AccountSettingsScreen(
     onLogout: () -> Unit,
 ) {
   val accountViewModelState by accountViewModel.uiState.collectAsState()
-
+  var showDialog by remember { mutableStateOf(false) }
+  if (showDialog) {
+    DeleteAccountDialog(
+        onConfirm = {
+          showDialog = false
+          accountViewModel.deleteAccount(
+              onSuccess = onLogout,
+              onFailure = { Log.e("AccountSettingsScreen", "Failed to delete account", it) })
+        },
+        onDismiss = { showDialog = false })
+  }
   Scaffold(
       topBar = {
         TopAppBar(
             title = { Text(stringResource(id = R.string.account_settings_screen_title)) },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = { GoBackButton(onClick = onGoBack) },
-        )
+            actions = {
+              IconTextButton(
+                  text = stringResource(id = R.string.delete_account),
+                  icon = Icons.Default.Delete,
+                  color = MaterialTheme.colorScheme.error, // Set the error color
+                  textColor = MaterialTheme.colorScheme.onError,
+                  onClick = { showDialog = true },
+                  modifier =
+                      Modifier.testTag("account_settings_delete_button")
+                          .padding(
+                              horizontal = 16.dp,
+                              vertical = 8.dp) // Adjust padding to make the button smaller
+                  )
+            })
       },
       floatingActionButton = {
         FloatingActionButton(
@@ -63,24 +91,6 @@ fun AccountSettingsScreen(
             modifier = Modifier.fillMaxWidth().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center) {
-              ChimpagneSpacer()
-
-              IconTextButton(
-                  text = stringResource(id = R.string.delete_account),
-                  icon = Icons.Default.Delete,
-                  onClick = {
-                    // First pop up if sure that hes going to delete his account and all the events
-                    // he created
-                    // TODO
-                    // Logout, remove events created and remove from joined
-                    accountViewModel.deleteAccount(
-                        onSuccess = onLogout,
-                        {
-                          Log.e("AccountSettingsScreen", "Failed to delete account because of $it")
-                        })
-                  },
-                  modifier = Modifier.testTag("account_settings_delete_button"))
-
               ChimpagneSpacer()
 
               ProfileIcon(
@@ -119,4 +129,18 @@ fun SettingItem(label: String, value: String, modifier: Modifier) {
     Text(text = label, style = TextStyle(fontSize = 18.sp, fontFamily = ChimpagneFontFamily))
     Text(text = value, style = TextStyle(fontSize = 23.sp, fontFamily = ChimpagneFontFamily))
   }
+}
+
+@Composable
+fun DeleteAccountDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
+  androidx.compose.material3.AlertDialog(
+      onDismissRequest = onDismiss,
+      title = { Text(text = stringResource(id = R.string.confirm_delete_title)) },
+      text = { Text(text = stringResource(id = R.string.confirm_delete_message)) },
+      confirmButton = {
+        TextButton(onClick = onConfirm) { Text(text = stringResource(id = R.string.confirm)) }
+      },
+      dismissButton = {
+        TextButton(onClick = onDismiss) { Text(text = stringResource(id = R.string.cancel)) }
+      })
 }

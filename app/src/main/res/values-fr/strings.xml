@@ -160,6 +160,10 @@
     <string name="events_near_you">Evénements proches de vous</string>
     <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
     <string name="activate_gps">ACTIVER GPS</string>
+    <string name="confirm_delete_title">Supprimer le compte</string>
+    <string name="confirm_delete_message">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
+    <string name="confirm">Oui</string>
+    <string name="cancel">Non</string>
 
 
 </resources>

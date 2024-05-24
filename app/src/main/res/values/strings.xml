@@ -166,5 +166,9 @@
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+    <string name="confirm_delete_title">Deleting Account</string>
+    <string name="confirm_delete_message">Are you sure you want to delete your account ?</string>
+    <string name="confirm">Yes</string>
+    <string name="cancel">No</string>
 
 </resources>
