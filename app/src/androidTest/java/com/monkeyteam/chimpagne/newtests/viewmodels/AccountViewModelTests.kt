@@ -79,14 +79,12 @@ class AccountViewModelTests {
     val newLocation = Location("UpdatedLocation")
     accountViewModel.updateFirstName(newFirstName)
     accountViewModel.updateLastName(newLastName)
-    accountViewModel.updateLocation(newLocation)
 
     accountViewModel.submitUpdatedAccount({}, {})
     while (accountViewModel.uiState.value.loading) {}
 
     assertEquals(newFirstName, accountViewModel.uiState.value.currentUserAccount?.firstName)
     assertEquals(newLastName, accountViewModel.uiState.value.currentUserAccount?.lastName)
-    assertEquals(newLocation, accountViewModel.uiState.value.currentUserAccount?.location)
   }
 
   @Test

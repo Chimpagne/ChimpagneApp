@@ -55,11 +55,12 @@ class ChimpagneAccountManager(
    *   if there is no account associated with the given id
    * @param onFailure(exception) Called in case of... failure
    */
-  fun getAccount(
+  private fun getAccount(
       uid: ChimpagneAccountUID,
       onSuccess: (ChimpagneAccount?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+
     accounts
         .document(uid)
         .get()
@@ -72,12 +73,13 @@ class ChimpagneAccountManager(
       onSuccess: (ChimpagneAccount?, Uri?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+
     getAccount(
         uid,
         { account ->
           if (account == null) onSuccess(null, null)
           else
-              downloadProfilePicture(
+              fetchProfilePictureUri(
                   account.firebaseAuthUID,
               ) { uri ->
                 onSuccess(account, uri)
@@ -91,20 +93,25 @@ class ChimpagneAccountManager(
       onSuccess: (Map<ChimpagneAccountUID, ChimpagneAccount?>) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
-        uids.associate { (it to accounts.document(it).get()) }
-    Tasks.whenAllComplete(tasks.values)
-        .addOnSuccessListener {
-          val results =
-              tasks
-                  .map {
-                    val account = it.value.result.toObject<ChimpagneAccount>()
-                    (it.key to account)
-                  }
-                  .toMap()
-          onSuccess(results)
-        }
-        .addOnFailureListener(onFailure)
+    try {
+      val tasks: Map<ChimpagneAccountUID, Task<DocumentSnapshot>> =
+          uids.associateWith { uid -> accounts.document(uid).get() }
+
+      Tasks.whenAllComplete(tasks.values)
+          .addOnSuccessListener {
+            val results =
+                tasks
+                    .map {
+                      val account = it.value.result?.toObject<ChimpagneAccount>()
+                      (it.key to account)
+                    }
+                    .toMap()
+            onSuccess(results)
+          }
+          .addOnFailureListener(onFailure)
+    } catch (e: Exception) {
+      onFailure(e)
+    }
   }
 
   /** Puts the given account to Firebase and updates [currentUserAccount] accordingly */
@@ -159,12 +166,16 @@ class ChimpagneAccountManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  private fun downloadProfilePicture(uid: String, onSuccess: (Uri?) -> Unit) {
-    profilePictures
-        .child(uid)
-        .downloadUrl
-        .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
-        .addOnFailureListener { onSuccess(null) }
+  fun fetchProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
+    if (uid.isEmpty()) {
+      onSuccess(null)
+    } else {
+      profilePictures
+          .child(uid)
+          .downloadUrl
+          .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
+          .addOnFailureListener { onSuccess(null) }
+    }
   }
 
   private val eventManager = database.eventManager

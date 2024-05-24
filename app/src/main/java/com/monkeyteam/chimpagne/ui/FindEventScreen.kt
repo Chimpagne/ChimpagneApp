@@ -8,6 +8,7 @@ import android.content.IntentSender
 import android.location.LocationManager
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,7 +50,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,10 +76,10 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.ui.components.DateRangeSelector
@@ -87,23 +87,24 @@ import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
 import com.monkeyteam.chimpagne.ui.theme.CustomOrange
 import com.monkeyteam.chimpagne.ui.utilities.MapContainer
 import com.monkeyteam.chimpagne.ui.utilities.MarkerData
-import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeScanner
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
+import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 import kotlinx.coroutines.launch
 
 object FindEventScreens {
   const val FORM = 0
   const val MAP = 1
+  const val DETAIL = 2
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -111,13 +112,16 @@ object FindEventScreens {
 @Composable
 fun MainFindEventScreen(
     navObject: NavigationActions,
+    eventViewModel: EventViewModel,
     findViewModel: FindEventsViewModel,
     accountViewModel: AccountViewModel
 ) {
-  val pagerState = rememberPagerState { 2 }
+
+  val pagerState = rememberPagerState { 3 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
 
+  var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
   var toast: Toast? by remember { mutableStateOf(null) }
 
   val showToast: (String) -> Unit = { message ->
@@ -135,6 +139,12 @@ fun MainFindEventScreen(
     findViewModel.setLoading(false)
   }
 
+  val goToDetail: (ChimpagneEvent) -> Unit = { event ->
+    eventViewModel.updateUIStateWithEvent(event)
+    currentEvent = event
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.DETAIL) }
+  }
+
   val displayResult: () -> Unit = {
     coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.MAP) }
   }
@@ -149,13 +159,28 @@ fun MainFindEventScreen(
     }
   }
 
-  HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 1) { page
+  BackHandler {
+    when (pagerState.currentPage) {
+      FindEventScreens.MAP -> {
+        goToForm()
+      }
+      FindEventScreens.DETAIL -> {
+        displayResult()
+      }
+      else -> {
+        navObject.goBack()
+      }
+    }
+  }
+
+  HorizontalPager(state = pagerState, userScrollEnabled = false, beyondBoundsPageCount = 2) { page
     ->
     when (page) {
       FindEventScreens.FORM ->
           FindEventFormScreen(navObject, findViewModel, fetchEvents, showToast, displayResult)
-      FindEventScreens.MAP ->
-          FindEventMapScreen(goToForm, findViewModel, accountViewModel, navObject)
+      FindEventScreens.MAP -> FindEventMapScreen(goToForm, findViewModel, goToDetail)
+      FindEventScreens.DETAIL ->
+          EventScreen(navObject, eventViewModel, accountViewModel, pagerState)
     }
   }
 }
@@ -287,9 +312,8 @@ fun FindEventFormScreen(
 
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
+        TopBar(
+            text = stringResource(id = R.string.find_event_page_title),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
@@ -425,48 +449,33 @@ fun FindEventFormScreen(
 @ExperimentalMaterial3Api
 @Composable
 fun FindEventMapScreen(
-    onBackIconClicked: () -> Unit,
+    onBackIconClicked: () -> Unit = {},
     findViewModel: FindEventsViewModel,
-    accountViewModel: AccountViewModel,
-    navObject: NavigationActions
+    onEventClick: (ChimpagneEvent) -> Unit = {}
 ) {
 
   val uiState by findViewModel.uiState.collectAsState()
-  val accountUIState by accountViewModel.uiState.collectAsState()
-  var showPromptLogin by remember { mutableStateOf(false) }
 
-  val context = LocalContext.current
   val scope = rememberCoroutineScope()
   val scaffoldState = rememberBottomSheetScaffoldState()
   val coroutineScope = rememberCoroutineScope()
-  var currentEvent by remember { mutableStateOf<ChimpagneEvent?>(null) }
-
-  val stringResJoining = stringResource(id = R.string.joining_toast)
-  val stringResFailiure = stringResource(id = R.string.join_event_failiure)
-  val stringResSuccess = stringResource(id = R.string.join_event_success)
-
-  val stringResStaff = stringResource(id = R.string.join_event_staff)
-  val stringResGuest = stringResource(id = R.string.join_event_guest)
-  val stringResOwner = stringResource(id = R.string.join_event_owner)
+  var currentEvents by remember { mutableStateOf<List<ChimpagneEvent>>(listOf()) }
 
   val cameraPositionState = rememberCameraPositionState {
     position = CameraPosition.fromLatLngZoom(LatLng(46.5196, 6.6323), 10f)
   }
-  val onMarkerClick: (MarkerData) -> Unit = { markerData ->
+  val onMarkerClick: (Cluster<MarkerData>) -> Unit = { markers ->
     coroutineScope.launch {
-      currentEvent = uiState.events[markerData.id]
-      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markerData.position)) }
-
-      launch { scaffoldState.bottomSheetState.expand() }
+      currentEvents = markers.items.mapNotNull { marker -> uiState.events[marker.id] }
+      launch { cameraPositionState.animate(CameraUpdateFactory.newLatLng(markers.position)) }
+      launch {
+        scaffoldState.bottomSheetState.partialExpand()
+        scaffoldState.bottomSheetState.expand()
+      }
     }
   }
 
-  LaunchedEffect(uiState.events.size) {
-    if (uiState.events.size == 1) {
-      currentEvent = uiState.events.values.first()
-      scaffoldState.bottomSheetState.expand()
-    }
-  }
+  LaunchedEffect(uiState.events.size) { currentEvents = uiState.events.values.toList() }
 
   val goBack = {
     scope.launch {
@@ -476,57 +485,17 @@ fun FindEventMapScreen(
     }
   }
 
-  val onJoinClick: () -> Unit = {
-    when {
-      // Check if the user is not logged in
-      !accountViewModel.isUserLoggedIn() -> {
-        // Redirect user to login screen
-        showPromptLogin = true
-      }
-
-      // The user has not yet joined the event
-      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
-          ChimpagneRole.NOT_IN_EVENT -> {
-        currentEvent?.let { event ->
-          Toast.makeText(context, "$stringResJoining ${currentEvent?.title}", Toast.LENGTH_SHORT)
-              .show()
-
-          findViewModel.joinEvent(
-              event.id,
-              { Toast.makeText(context, stringResSuccess, Toast.LENGTH_SHORT).show() },
-              { Toast.makeText(context, stringResFailiure, Toast.LENGTH_SHORT).show() })
-
-          navObject.clearAndNavigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id})", false)
-        }
-      }
-
-      // The user has already joined the event, or is a staff for the event,or is the organizer
-      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
-          ChimpagneRole.STAFF -> {
-        Toast.makeText(context, stringResStaff, Toast.LENGTH_SHORT).show()
-      }
-      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
-          ChimpagneRole.OWNER -> {
-        Toast.makeText(context, stringResOwner, Toast.LENGTH_SHORT).show()
-      }
-      currentEvent?.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
-          ChimpagneRole.GUEST -> {
-        Toast.makeText(context, stringResGuest, Toast.LENGTH_SHORT).show()
-      }
-    }
+  val closeBottomSheet: () -> Unit = {
+    scope.launch { scaffoldState.bottomSheetState.partialExpand() }
   }
 
   val systemUiPadding = WindowInsets.systemBars.asPaddingValues()
 
   BottomSheetScaffold(
-      sheetContent = { DetailScreenSheet(event = currentEvent, onJoinClick, context) },
+      sheetContent = { DetailScreenListSheet(events = currentEvents, onEventClick) },
       scaffoldState = scaffoldState,
       modifier = Modifier.testTag("map_screen"),
       sheetPeekHeight = 0.dp) {
-        if (showPromptLogin) {
-          PromptLogin(context, navObject)
-          showPromptLogin = false
-        }
         Box(modifier = Modifier.padding(top = systemUiPadding.calculateTopPadding())) {
           MapContainer(
               cameraPositionState = cameraPositionState,
@@ -534,7 +503,8 @@ fun FindEventMapScreen(
               isMapInitialized = true,
               events = uiState.events,
               radius = uiState.radiusAroundLocationInM,
-              startingPosition = uiState.selectedLocation)
+              startingPosition = uiState.selectedLocation,
+              closeBottomSheet = closeBottomSheet)
 
           IconButton(
               modifier =

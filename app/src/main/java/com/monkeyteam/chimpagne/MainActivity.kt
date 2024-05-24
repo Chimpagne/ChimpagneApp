@@ -1,12 +1,13 @@
 package com.monkeyteam.chimpagne
 
-import AccountSettings
+import AccountSettingsScreen
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,21 +24,19 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
-import com.monkeyteam.chimpagne.ui.AccountEdit
-import com.monkeyteam.chimpagne.ui.DetailScreenSheet
+import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
 import com.monkeyteam.chimpagne.ui.MainFindEventScreen
 import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.MyEventsScreen
-import com.monkeyteam.chimpagne.ui.ViewDetailEventScreen
+import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
 import com.monkeyteam.chimpagne.ui.event.polls.PollsAndVotingScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
-import com.monkeyteam.chimpagne.ui.theme.AccountCreation
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -52,7 +51,7 @@ class MainActivity : ComponentActivity() {
   val database = Database(PUBLIC_TABLES)
   private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
@@ -101,24 +100,24 @@ class MainActivity : ComponentActivity() {
                   onContinueAsGuest = { continueAsGuest(false) })
             }
             composable(Route.ACCOUNT_CREATION_SCREEN) {
-              val onSuccessAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.HOME_SCREEN, true)
-              }
-              val onFailureAccountCreationScreen = {
-                navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
-              }
-              AccountCreation(
-                  navObject = navActions,
+              AccountUpdateScreen(
                   accountViewModel = accountViewModel,
-                  onSuccess = onSuccessAccountCreationScreen,
-                  onFailure = onFailureAccountCreationScreen)
+                  onGoBack = { navActions.goBack() },
+                  onAccountUpdated = { navActions.clearAndNavigateTo(Route.HOME_SCREEN, true) })
             }
             composable(Route.ACCOUNT_SETTINGS_SCREEN) {
-              AccountSettings(
-                  navObject = navActions, accountViewModel = accountViewModel, logout = logout)
+              AccountSettingsScreen(
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() },
+                  onLogout = logout,
+                  onEditRequest = { navActions.navigateTo(Route.ACCOUNT_EDIT_SCREEN) })
             }
             composable(Route.ACCOUNT_EDIT_SCREEN) {
-              AccountEdit(navObject = navActions, accountViewModel = accountViewModel)
+              AccountUpdateScreen(
+                  accountViewModel = accountViewModel,
+                  onAccountUpdated = { navActions.goBack() },
+                  editMode = true,
+                  onGoBack = { navActions.goBack() })
             }
 
             composable(Route.LOADING) { SpinnerView() }
@@ -126,6 +125,8 @@ class MainActivity : ComponentActivity() {
             composable(Route.FIND_AN_EVENT_SCREEN) {
               MainFindEventScreen(
                   navObject = navActions,
+                  eventViewModel =
+                      viewModel(factory = EventViewModel.EventViewModelFactory(null, database)),
                   findViewModel = viewModel(factory = FindEventsViewModelFactory(database)),
                   accountViewModel)
             }
@@ -149,17 +150,15 @@ class MainActivity : ComponentActivity() {
               MyEventsScreen(navObject = navActions, myEventsViewModel = myEventsViewModel)
             }
             composable(
-                route = Route.VIEW_DETAIL_EVENT_SCREEN + "/{EventID}",
+                route = Route.EVENT_SCREEN + "/{EventID}",
                 deepLinks =
                     listOf(
                         navDeepLink {
                           uriPattern = getString(R.string.deep_link_url_event) + "{EventID}"
                           action = Intent.ACTION_VIEW
                         }),
-                arguments =
-                    listOf(
-                        navArgument("EventID") { type = NavType.StringType },
-                    )) { backStackEntry ->
+                arguments = listOf(navArgument("EventID") { type = NavType.StringType })) {
+                    backStackEntry ->
                   val deeplinkHandled = intent?.action != Intent.ACTION_VIEW
                   if (!deeplinkHandled) {
                     if (FirebaseAuth.getInstance().currentUser != null) {
@@ -167,7 +166,7 @@ class MainActivity : ComponentActivity() {
                           FirebaseAuth.getInstance().currentUser?.uid!!, {}, {})
                     }
                   }
-                  ViewDetailEventScreen(
+                  EventScreen(
                       navObject = navActions,
                       eventViewModel =
                           viewModel(
@@ -176,16 +175,6 @@ class MainActivity : ComponentActivity() {
                                       backStackEntry.arguments?.getString("EventID"), database)),
                       accountViewModel = accountViewModel)
                 }
-            composable(Route.JOIN_EVENT_SCREEN) {
-              val eventViewModel: EventViewModel =
-                  viewModel(factory = EventViewModel.EventViewModelFactory(null, database))
-              val event = eventViewModel.buildChimpagneEvent()
-              DetailScreenSheet(
-                  event = event,
-                  onJoinClick = {
-                    navActions.navigateTo(Route.VIEW_DETAIL_EVENT_SCREEN + "/${event.id}/false")
-                  })
-            }
             composable(Route.MANAGE_STAFF_SCREEN + "/{EventID}") { backStackEntry ->
               val eventViewModel: EventViewModel =
                   viewModel(
