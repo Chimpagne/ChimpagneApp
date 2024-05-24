@@ -50,7 +50,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,6 +61,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -88,6 +88,7 @@ import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.components.TagField
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.theme.CustomGreen
@@ -312,9 +313,8 @@ fun FindEventFormScreen(
 
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = { Text(stringResource(id = R.string.find_event_page_title)) },
-            modifier = Modifier.shadow(4.dp).testTag("find_event_title"),
+        TopBar(
+            text = stringResource(id = R.string.find_event_page_title),
             navigationIcon = {
               IconButton(onClick = { navObject.goBack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
@@ -330,24 +330,27 @@ fun FindEventFormScreen(
             })
       },
       bottomBar = {
-        Button(
-            onClick = { onSearchClick() },
-            modifier =
-                Modifier.fillMaxWidth()
-                    .padding(8.dp)
-                    .height(56.dp)
-                    .testTag("button_search"), // Typical height for buttons
-            shape = MaterialTheme.shapes.extraLarge) {
-              if (uiState.loading) {
-                SpinnerView(MaterialTheme.colorScheme.onPrimary)
-              } else {
-                Icon(Icons.Rounded.Search, contentDescription = "Search")
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    stringResource(id = R.string.find_event_search_button_text).uppercase(),
-                    style = ChimpagneTypography.bodyLarge)
+        Box(modifier = Modifier.padding(8.dp).fillMaxWidth()) {
+          Button(
+              onClick = { onSearchClick() },
+              modifier =
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
+                      .clip(RoundedCornerShape(12.dp))
+                      .height(56.dp)
+                      .fillMaxWidth()
+                      .testTag("button_search"),
+              shape = MaterialTheme.shapes.extraLarge) {
+                if (uiState.loading) {
+                  SpinnerView(MaterialTheme.colorScheme.onPrimary)
+                } else {
+                  Icon(Icons.Rounded.Search, contentDescription = "Search")
+                  Spacer(Modifier.width(8.dp))
+                  Text(
+                      stringResource(id = R.string.find_event_search_button_text).uppercase(),
+                      style = ChimpagneTypography.bodyLarge)
+                }
               }
-            }
+        }
       }) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding).testTag("find_event_form_screen")) {
           Column(
@@ -511,7 +514,7 @@ fun FindEventMapScreen(
               modifier =
                   Modifier.padding(start = 12.dp, top = 12.dp)
                       .testTag("go_back")
-                      .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
+                      .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
                       .background(
                           color = MaterialTheme.colorScheme.surface,
                           shape = RoundedCornerShape(100))

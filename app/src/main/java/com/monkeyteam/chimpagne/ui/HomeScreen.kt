@@ -28,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -61,6 +60,7 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.LocationIconTextButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
@@ -199,8 +199,8 @@ fun HomeScreen(
 
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = { Text("") },
+        TopBar(
+            text = context.getString(R.string.events_near_you),
             actions = {
               ProfileIcon(
                   uiState.currentUserProfilePicture,
@@ -229,13 +229,6 @@ fun HomeScreen(
                       Modifier.fillMaxHeight(0.5f)
                           .fillMaxWidth()
                           .background(MaterialTheme.colorScheme.surface)) {
-                    item {
-                      Text(
-                          text = context.getString(R.string.events_near_you),
-                          style = MaterialTheme.typography.headlineLarge,
-                          modifier = Modifier.padding(16.dp))
-                    }
-
                     if (closestEventsState.value.isEmpty()) {
                       item {
                         Text(

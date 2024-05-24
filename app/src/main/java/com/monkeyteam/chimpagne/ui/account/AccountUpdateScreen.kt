@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -39,6 +37,7 @@ import com.monkeyteam.chimpagne.ui.components.ChimpagneSpacer
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.IconTextButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon
+import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
@@ -76,15 +75,12 @@ fun AccountUpdateScreen(
 
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = {
-              Text(
-                  stringResource(
-                      id =
-                          if (editMode) R.string.account_edit_screen_title
-                          else R.string.account_creation_screen_title))
-            },
-            modifier = Modifier.shadow(4.dp),
+        TopBar(
+            text =
+                stringResource(
+                    id =
+                        if (editMode) R.string.account_edit_screen_title
+                        else R.string.account_creation_screen_title),
             navigationIcon = { GoBackButton(onClick = onGoBack) })
       }) { paddingValues ->
         Column(

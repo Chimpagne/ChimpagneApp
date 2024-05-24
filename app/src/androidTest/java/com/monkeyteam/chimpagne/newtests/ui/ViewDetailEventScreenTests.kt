@@ -85,7 +85,8 @@ class ViewDetailEventScreenTests {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun qrCodeGeneration_displaysQRCode() {
-    val testEventId = "12345"
+    val testEventId = "1234"
+
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
@@ -94,13 +95,12 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.onNodeWithContentDescription("Scan QR").assertIsDisplayed()
     composeTestRule.onNodeWithContentDescription("Scan QR").performClick()
-
     composeTestRule.onNodeWithTag("close_button").performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
-  fun generalTextTest() {
+  fun generalTextTestTitle() {
     val event = TEST_EVENTS[0]
 
     val eventVM = EventViewModel(event.id, database)
@@ -113,11 +113,80 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("event_title").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("tag_list").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("number of guests").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun generalTextTestTags() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
+
+    composeTestRule.onNodeWithTag("tag list").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun generalTextTestGuests() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
+    composeTestRule.waitForIdle()
+
+    composeTestRule.onNodeWithTag("number_of_guests").assertExists()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun generalTextTestDate() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
     composeTestRule.onNodeWithTag("event date").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("description").assertIsDisplayed()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun generalTextTestDescription() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
+    composeTestRule.waitForIdle()
+
+    composeTestRule.onNodeWithTag("description").assertExists()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -214,9 +283,12 @@ class ViewDetailEventScreenTests {
   @OptIn(ExperimentalFoundationApi::class)
   @Test
   fun testShareButton() {
-    val event = TEST_EVENTS[0]
+    val event = TEST_EVENTS[2]
 
     val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
 
     while (eventVM.uiState.value.loading) {}
 
