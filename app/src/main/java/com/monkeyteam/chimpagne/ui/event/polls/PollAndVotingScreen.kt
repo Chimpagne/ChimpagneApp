@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -101,7 +102,7 @@ fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
                 } else {
                   items(eventUIState.polls.values.toList()) { poll ->
                     ChimpagneButton(
-                        modifier = Modifier.testTag("a poll"),
+                        modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("a poll"),
                         text = poll.title,
                         onClick = {
                           // TODO To be implemented in another PR//
