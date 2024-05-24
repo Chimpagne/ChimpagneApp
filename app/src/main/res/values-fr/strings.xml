@@ -4,7 +4,13 @@
     <string name="homescreen_join_event">TROUVER DES ÉVÉNEMENTS</string>
     <string name="homescreen_organize_event">ORGANISER UN ÉVÉNEMENT</string>
     <string name="homescreen_open_my_events_toast">"Ouverture"</string>
-    <string name="event_creation_screen_name">Créer Un événement</string>
+    <string name="account_creation_screen_create_account">Créer votre compte</string>
+    <string name="account_creation_screen_first_name">Prénom</string>
+    <string name="account_creation_screen_last_name">Nom</string>
+    <string name="account_creation_screen_city">Choisissez votre lieu</string>
+    <string name="account_creation_screen_language">Langue</string>
+    <string name="account_creation_screen_button">Créer votre compte</string>
+    <string name="event_creation_screen_name">Créer un événement</string>
     <string name="event_creation_screen_previous">Précédent</string>
     <string name="event_creation_screen_next">Prochain</string>
     <string name="event_creation_screen_create_event">Créer</string>
@@ -159,9 +165,14 @@
     <string name="events_near_you">Evénements proches de vous</string>
     <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
     <string name="activate_gps">ACTIVER GPS</string>
+
     <string name="wind_speed">Vent</string>
     <string name="noforecast_alreadyoccured">L\'évènement est passé, pas de prévision météo :)</string>
     <string name="noforecast_eventtoofarinfuture">Apercu rapide de la météo 10 jours avant l\'évènement</string>
+
+    <string name="account_settings">Paramètres du compte</string>
+    <string name="accountEditScreenButton">Editer compte</string>
+
 
 
 </resources>

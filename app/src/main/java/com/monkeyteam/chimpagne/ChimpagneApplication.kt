@@ -5,13 +5,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 
 class ChimpagneApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
+  override fun onCreate() {
+    super.onCreate()
 
-        val settings = FirebaseFirestoreSettings.Builder()
+    val settings =
+        FirebaseFirestoreSettings.Builder()
             .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
             .setPersistenceEnabled(true)
             .build()
-        FirebaseFirestore.getInstance().firestoreSettings = settings
-    }
+    FirebaseFirestore.getInstance().firestoreSettings = settings
+  }
 }

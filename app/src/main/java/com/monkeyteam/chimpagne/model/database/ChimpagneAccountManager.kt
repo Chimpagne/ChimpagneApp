@@ -65,11 +65,13 @@ class ChimpagneAccountManager(
         .document(uid)
         .get(Source.CACHE)
         .addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
-        .addOnFailureListener { accounts
-            .document(uid)
-            .get()
-            .addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
-            .addOnFailureListener { onFailure(it) } }
+        .addOnFailureListener {
+          accounts
+              .document(uid)
+              .get()
+              .addOnSuccessListener { onSuccess(it.toObject<ChimpagneAccount>()) }
+              .addOnFailureListener { onFailure(it) }
+        }
   }
 
   fun getAccountWithProfilePicture(

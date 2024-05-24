@@ -4,6 +4,12 @@
     <string name="homescreen_join_event">DISCOVER EVENTS</string>
     <string name="homescreen_organize_event">ORGANIZE AN EVENT</string>
     <string name="homescreen_open_my_events_toast">"Opening"</string>
+    <string name="account_creation_screen_create_account">Create your Account</string>
+    <string name="account_creation_screen_first_name">First Name</string>
+    <string name="account_creation_screen_last_name">Last Name</string>
+    <string name="account_creation_screen_city">Choose your City</string>
+    <string name="account_creation_screen_language">Language</string>
+    <string name="account_creation_screen_button">Create Account</string>
     <string name="event_creation_screen_name">Create An Event</string>
     <string name="event_creation_screen_previous">Previous</string>
     <string name="event_creation_screen_next">Next</string>
@@ -28,9 +34,10 @@
     <string name="event_creation_screen_beds">Beds</string>
     <string name="event_creation_screen_supplies">Supplies</string>
     <string name="event_creation_screen_add_supplies">Add supplies</string>
-    <string name="find_event_page_title">Find Event</string>
+    <string name="accountEditScreenButton">Edit Account</string>
+    <string name="find_event_page_title">Discover Events</string>
     <string name="find_event_search_button_text">Search</string>
-    <string name="find_event_event_location_legend">Event Location</string>
+    <string name="find_event_event_location_legend">Events Location</string>
     <string name="find_event_event_tags_legend">Add tags to your search</string>
     <string name="find_event_event_location_query_label">Enter an address</string>
     <string name="find_event_event_locate_me_button">Near me</string>
@@ -165,8 +172,10 @@
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+
     <string name="wind_speed">Wind</string>
     <string name="noforecast_alreadyoccured">Event has already occurred, no weather forecast :)</string>
     <string name="noforecast_eventtoofarinfuture">Weather forecast available 10 days before the event</string>
+    <string name="account_settings">Account settings</string>
 
 </resources>
