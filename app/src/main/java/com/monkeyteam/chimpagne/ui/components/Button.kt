@@ -9,16 +9,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -41,8 +45,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -65,7 +71,11 @@ fun ChimpagneButton(
 ) {
   Button(
       onClick = onClick,
-      modifier = modifier.padding(horizontal = 12.dp),
+      modifier =
+          modifier
+              .wrapContentWidth()
+              .padding(horizontal = 24.dp)
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp)),
       colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
       shape = shape,
       contentPadding = padding) {
@@ -75,6 +85,7 @@ fun ChimpagneButton(
         }
         Text(
             text = text,
+            modifier = Modifier.weight(1f),
             fontFamily = ChimpagneFontFamily,
             style = textStyle,
             textAlign = TextAlign.Center)
@@ -96,8 +107,8 @@ fun IconTextButton(
       verticalAlignment = Alignment.CenterVertically,
       modifier =
           modifier
-              .shadow(elevation = 4.dp, shape = RoundedCornerShape(100))
-              .background(shape = RoundedCornerShape(100), color = color)
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+              .background(shape = RoundedCornerShape(12.dp), color = color)
               .clickable(onClick = onClick)
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
@@ -132,13 +143,21 @@ fun GoBackButton(onClick: () -> Unit) {
 @Composable
 fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
   var showDialog by remember { mutableStateOf(false) }
-  IconButton(modifier = Modifier.testTag("calendarButton"), onClick = { showDialog = true }) {
-    Icon(
-        imageVector = Icons.Default.CalendarMonth,
-        contentDescription = "Add to Calendar",
-        tint = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.testTag("calendarButtonIcon"))
-  }
+  Box(
+      modifier =
+          Modifier.padding(8.dp)
+              .shadow(6.dp, RoundedCornerShape(12.dp))
+              .clip(RoundedCornerShape(12.dp))
+              .background(MaterialTheme.colorScheme.primaryContainer)
+              .clickable { showDialog = true }
+              .padding(8.dp)
+              .testTag("calendarButton")) {
+        Icon(
+            imageVector = Icons.Default.CalendarMonth,
+            contentDescription = "Add to Calendar",
+            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.size(36.dp).testTag("calendarButtonIcon"))
+      }
   if (showDialog) {
     popUpCalendar(
         onAccept = {
@@ -165,6 +184,7 @@ fun popUpCalendar(onAccept: () -> Unit, onReject: () -> Unit, event: ChimpagneEv
           stringResource(id = R.string.add_event_to_calendar_suffix)
   val builder =
       AlertDialog(
+          modifier = Modifier,
           onDismissRequest = { onReject() },
           title = { Text("Add to Calendar") },
           text = { Text(textQuestion) },
@@ -208,5 +228,34 @@ fun SocialButtonRow(context: Context, socialMediaLinks: Map<String, SocialMedia>
                 testTag = socialMedia.testTag)
           }
         }
+      }
+}
+
+@Composable
+fun ReportProblemButton(onClick: () -> Unit) {
+  Button(
+      onClick = onClick,
+      modifier =
+          Modifier.testTag("reportProblem")
+              .shadow(6.dp, RoundedCornerShape(12.dp))
+              .clip(RoundedCornerShape(12.dp))
+              .background(MaterialTheme.colorScheme.primaryContainer),
+      colors =
+          ButtonDefaults.buttonColors(
+              containerColor = MaterialTheme.colorScheme.primaryContainer,
+              contentColor = MaterialTheme.colorScheme.onPrimaryContainer),
+      contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp)) {
+        Icon(
+            imageVector = Icons.Default.Warning,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = stringResource(id = R.string.event_details_screen_report_problem),
+            fontFamily = ChimpagneFontFamily,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            fontSize = 16.sp)
       }
 }

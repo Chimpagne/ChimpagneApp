@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Login
@@ -40,6 +42,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -144,7 +147,7 @@ fun EventScreen(
                   textAlign = TextAlign.Center,
                   maxLines = 2,
                   overflow = TextOverflow.Ellipsis,
-                  modifier = Modifier.fillMaxWidth().testTag("event_title"))
+                  modifier = Modifier.fillMaxWidth().testTag("event title"))
             },
             modifier = Modifier.shadow(4.dp),
             navigationIcon = {
@@ -153,12 +156,20 @@ fun EventScreen(
               }
             },
             actions = {
-              IconButton(onClick = { showQRDialog = true }) {
-                Icon(
-                    imageVector = Icons.Rounded.QrCodeScanner,
-                    contentDescription = "Scan QR",
-                    modifier = Modifier.size(36.dp).testTag("scan QR"))
-              }
+              Box(
+                  modifier =
+                      Modifier.padding(end = 16.dp)
+                          .shadow(6.dp, RoundedCornerShape(12.dp))
+                          .clip(RoundedCornerShape(12.dp))
+                          .background(MaterialTheme.colorScheme.primaryContainer)
+                          .clickable { showQRDialog = true }
+                          .padding(8.dp)) {
+                    Icon(
+                        imageVector = Icons.Rounded.QrCodeScanner,
+                        contentDescription = "Scan QR",
+                        modifier = Modifier.size(36.dp).testTag("scan QR"),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                  }
             })
       },
       bottomBar = {
@@ -206,7 +217,7 @@ fun EventScreen(
                 item {
                   Row(
                       modifier =
-                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag_list")) {
+                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
                         uiState.tags.forEach { tag -> EventTagChip(tag) }
                       }
                 }
@@ -218,7 +229,12 @@ fun EventScreen(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
                 item { ChimpagneDivider() }
-                item { OrganiserView(uiState.ownerId, accountViewModel) }
+                item {
+                  OrganiserView(
+                      uiState.ownerId,
+                      accountViewModel,
+                      event = eventViewModel.buildChimpagneEvent())
+                }
                 if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
                   // Do nothing extra
                 } else {
@@ -236,26 +252,38 @@ fun EventScreen(
 
 @Composable
 fun IconRow(icons: List<IconInfo>) {
-  Row(modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp)) {
-    icons.forEach { iconInfo ->
-      Column(
-          horizontalAlignment = Alignment.CenterHorizontally,
-          modifier =
-              Modifier.padding(horizontal = 16.dp)
-                  .clickable(onClick = iconInfo.onClick)
-                  .testTag(iconInfo.testTag)) {
-            Icon(
-                imageVector = iconInfo.icon,
-                contentDescription = iconInfo.description,
-                modifier = Modifier.size(40.dp))
-            Text(
-                text = iconInfo.description,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 4.dp))
-          }
-    }
-  }
+  Row(
+      modifier =
+          Modifier.horizontalScroll(rememberScrollState())
+              .padding(horizontal = 16.dp, vertical = 8.dp),
+      horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        icons.forEach { iconInfo ->
+          Box(
+              modifier =
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
+                      .clip(RoundedCornerShape(12.dp))
+                      .background(MaterialTheme.colorScheme.primaryContainer)
+                      .clickable(onClick = iconInfo.onClick)
+                      .padding(4.dp)
+                      .testTag(iconInfo.testTag)) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(8.dp)) {
+                      Icon(
+                          imageVector = iconInfo.icon,
+                          contentDescription = iconInfo.description,
+                          modifier = Modifier.size(40.dp),
+                          tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                      Text(
+                          text = iconInfo.description,
+                          fontSize = 12.sp,
+                          textAlign = TextAlign.Center,
+                          color = MaterialTheme.colorScheme.onPrimaryContainer,
+                          modifier = Modifier.padding(top = 4.dp))
+                    }
+              }
+        }
+      }
 }
 
 data class IconInfo(

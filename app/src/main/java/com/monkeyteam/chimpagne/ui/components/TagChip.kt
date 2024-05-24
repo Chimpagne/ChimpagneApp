@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
@@ -53,7 +52,6 @@ fun EventTagChip(tag: String) {
   Box(
       modifier =
           Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-              .shadow(elevation = 4.dp, shape = RoundedCornerShape(50))
               .clip(RoundedCornerShape(50))
               .background(MaterialTheme.colorScheme.primaryContainer)
               .padding(horizontal = 16.dp, vertical = 8.dp)) {
