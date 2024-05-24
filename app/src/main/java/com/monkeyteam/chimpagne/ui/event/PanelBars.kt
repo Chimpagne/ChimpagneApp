@@ -72,7 +72,7 @@ fun PanelBottomBar(
         if (pagerState.currentPage > 0) {
           Box(
               modifier =
-                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
                       .clip(RoundedCornerShape(12.dp))
                       .background(MaterialTheme.colorScheme.primary)) {
                 Button(
@@ -95,7 +95,7 @@ fun PanelBottomBar(
         if (pagerState.currentPage < pagerState.pageCount - 1) {
           Box(
               modifier =
-                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
                       .clip(RoundedCornerShape(12.dp))
                       .background(MaterialTheme.colorScheme.primary)) {
                 Button(
@@ -115,7 +115,7 @@ fun PanelBottomBar(
         } else {
           Box(
               modifier =
-                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
                       .clip(RoundedCornerShape(12.dp))
                       .background(MaterialTheme.colorScheme.primary)) {
                 Button(

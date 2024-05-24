@@ -41,7 +41,7 @@ fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () 
     Card(
         modifier =
             modifier
-                .shadow(elevation = 10.dp, shape = RoundedCornerShape(12.dp))
+                .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
                 .clip(RoundedCornerShape(12.dp))
                 .fillMaxWidth()
                 .clickable { onClick() }

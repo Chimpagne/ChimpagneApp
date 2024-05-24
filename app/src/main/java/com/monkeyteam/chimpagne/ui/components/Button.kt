@@ -75,7 +75,7 @@ fun ChimpagneButton(
           modifier
               .wrapContentWidth()
               .padding(horizontal = 24.dp)
-              .shadow(elevation = 10.dp, shape = RoundedCornerShape(12.dp)),
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp)),
       colors = ButtonDefaults.buttonColors(containerColor = backgroundColor),
       shape = shape,
       contentPadding = padding) {
@@ -106,7 +106,7 @@ fun IconTextButton(
       verticalAlignment = Alignment.CenterVertically,
       modifier =
           modifier
-              .shadow(elevation = 10.dp, shape = RoundedCornerShape(12.dp))
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
               .background(shape = RoundedCornerShape(12.dp), color = color)
               .clickable(onClick = onClick)
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
@@ -145,7 +145,7 @@ fun CalendarButton(event: ChimpagneEvent?, contextMainActivity: Context) {
   Box(
       modifier =
           Modifier.padding(8.dp)
-              .shadow(10.dp, RoundedCornerShape(12.dp))
+              .shadow(6.dp, RoundedCornerShape(12.dp))
               .clip(RoundedCornerShape(12.dp))
               .background(MaterialTheme.colorScheme.primaryContainer)
               .clickable { showDialog = true }
@@ -236,7 +236,7 @@ fun ReportProblemButton(onClick: () -> Unit) {
       onClick = onClick,
       modifier =
           Modifier.testTag("reportProblem")
-              .shadow(10.dp, RoundedCornerShape(12.dp))
+              .shadow(6.dp, RoundedCornerShape(12.dp))
               .clip(RoundedCornerShape(12.dp))
               .background(MaterialTheme.colorScheme.primaryContainer),
       colors =

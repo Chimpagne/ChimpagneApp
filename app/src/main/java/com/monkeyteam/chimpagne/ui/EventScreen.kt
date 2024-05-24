@@ -159,7 +159,7 @@ fun EventScreen(
               Box(
                   modifier =
                       Modifier.padding(end = 16.dp)
-                          .shadow(10.dp, RoundedCornerShape(12.dp))
+                          .shadow(6.dp, RoundedCornerShape(12.dp))
                           .clip(RoundedCornerShape(12.dp))
                           .background(MaterialTheme.colorScheme.primaryContainer)
                           .clickable { showQRDialog = true }
@@ -260,7 +260,7 @@ fun IconRow(icons: List<IconInfo>) {
         icons.forEach { iconInfo ->
           Box(
               modifier =
-                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
                       .clip(RoundedCornerShape(12.dp))
                       .background(MaterialTheme.colorScheme.primaryContainer)
                       .clickable(onClick = iconInfo.onClick)

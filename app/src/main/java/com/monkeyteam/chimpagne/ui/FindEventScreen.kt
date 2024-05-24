@@ -335,7 +335,7 @@ fun FindEventFormScreen(
           Button(
               onClick = { onSearchClick() },
               modifier =
-                  Modifier.shadow(10.dp, RoundedCornerShape(12.dp))
+                  Modifier.shadow(6.dp, RoundedCornerShape(12.dp))
                       .clip(RoundedCornerShape(12.dp))
                       .height(56.dp)
                       .fillMaxWidth()
@@ -515,7 +515,7 @@ fun FindEventMapScreen(
               modifier =
                   Modifier.padding(start = 12.dp, top = 12.dp)
                       .testTag("go_back")
-                      .shadow(elevation = 10.dp, shape = RoundedCornerShape(12.dp))
+                      .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
                       .background(
                           color = MaterialTheme.colorScheme.surface,
                           shape = RoundedCornerShape(100))
