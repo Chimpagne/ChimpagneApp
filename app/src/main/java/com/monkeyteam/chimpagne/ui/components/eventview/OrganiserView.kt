@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -64,17 +63,8 @@ fun OrganiserView(
       horizontalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
         Row {
-          profilePictureUriState.value?.let { uri ->
-            ProfileIcon(
-                uri = uri,
-                onClick = {
-                  Toast.makeText(
-                          context,
-                          "This function will be implemented in a future version",
-                          Toast.LENGTH_SHORT)
-                      .show()
-                })
-          } ?: CircularProgressIndicator()
+          profilePictureUriState.value?.let { uri -> ProfileIcon(uri = uri, onClick = {}) }
+              ?: CircularProgressIndicator()
           Text(
               text =
                   "${

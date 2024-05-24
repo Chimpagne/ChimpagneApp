@@ -67,7 +67,7 @@ fun EventCreationScreen(
             lastButtonText = stringResource(id = R.string.event_creation_screen_create_event),
             lastButtonOnClick = {
               if (!uiState.loading) {
-                eventViewModel.createTheEvent(
+                eventViewModel.createEvent(
                     onInvalidInputs = {
                       showToast(EventViewModel.eventInputValidityToString(it, context))
                     },

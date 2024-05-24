@@ -3,6 +3,10 @@ package com.monkeyteam.chimpagne.model.database
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 
+/**
+ * In the current implementation, this class is not concurrency-safe. The only guarantee it provides
+ * is that the other fields are not modified
+ */
 class AtomicChimpagneEventManager(
     private val database: Database,
     private val events: CollectionReference

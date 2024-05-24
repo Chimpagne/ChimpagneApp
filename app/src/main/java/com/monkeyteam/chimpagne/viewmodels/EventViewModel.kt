@@ -125,6 +125,10 @@ class EventViewModel(
     }
   }
 
+  /**
+   * This builds a chimpagne event based on the values stored in the UI state. The imageURL is
+   * always set to "" at this point, since there is no way to change it currently.
+   */
   fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
         id = _uiState.value.id,
@@ -155,15 +159,13 @@ class EventViewModel(
     return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
   }
 
-  fun createTheEvent(
+  fun createEvent(
       onSuccess: (id: String) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
     val invalidInput = validateEventInputs()
-    if (invalidInput != null) {
-      onInvalidInputs(invalidInput)
-    } else {
+    if (invalidInput == null) {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         eventManager.createEvent(
@@ -179,20 +181,19 @@ class EventViewModel(
               onFailure(it)
             })
       }
+    } else {
+      onInvalidInputs(invalidInput)
     }
   }
 
-  fun updateTheEvent(
+  fun updateEvent(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {}
   ) {
 
     val invalidInput = validateEventInputs()
-    if (invalidInput != null) {
-      onInvalidInputs(invalidInput)
-      return
-    } else {
+    if (invalidInput == null) {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         eventManager.updateEvent(
@@ -207,10 +208,12 @@ class EventViewModel(
               onFailure(it)
             })
       }
+    } else {
+      onInvalidInputs(invalidInput)
     }
   }
 
-  fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun deleteEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       eventManager.deleteEvent(
@@ -238,10 +241,10 @@ class EventViewModel(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
-    joinTheEvent(onSuccess, onFailure)
+    joinEvent(onSuccess, onFailure)
   }
 
-  fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun joinEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
@@ -266,7 +269,7 @@ class EventViewModel(
     }
   }
 
-  fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun leaveEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       val accountUID = accountManager.currentUserAccount!!.firebaseAuthUID
@@ -358,10 +361,6 @@ class EventViewModel(
                     (updatedSocialMedia.platformName to updatedSocialMedia))
   }
 
-  fun getCurrentUserRole(): ChimpagneRole {
-    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
-  }
-
   fun promoteGuestToStaff(
       uid: ChimpagneAccountUID,
       onSuccess: () -> Unit = {},
@@ -432,6 +431,7 @@ class EventViewModel(
         })
   }
 
+  /** Updates the supplies without overriding the current supplies. */
   fun updateSupplyAtomically(supply: ChimpagneSupply) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.updateSupply(
@@ -445,6 +445,7 @@ class EventViewModel(
         {})
   }
 
+  /** Remove one supply without overriding the rest of the supplies. */
   fun removeSupplyAtomically(supplyId: ChimpagneSupplyId) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.removeSupply(

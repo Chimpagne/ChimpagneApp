@@ -20,12 +20,14 @@ interface Tables {
   val PROFILE_PICTURES: String
 }
 
+/** Tables used in production */
 object PUBLIC_TABLES : Tables {
   override val EVENTS = "events"
   override val ACCOUNTS = "accounts"
   override val PROFILE_PICTURES = "profilePictures"
 }
 
+/** Tables used for testing */
 object TEST_TABLES : Tables {
   override val EVENTS = "testevents"
   override val ACCOUNTS = "testAccounts"

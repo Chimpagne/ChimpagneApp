@@ -148,10 +148,6 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
-  fun setResultEvents(events: Map<ChimpagneEventId, ChimpagneEvent>) {
-    _uiState.value = _uiState.value.copy(events = events)
-  }
-
   fun eraseResults() {
     _uiState.value = _uiState.value.copy(events = emptyMap())
   }

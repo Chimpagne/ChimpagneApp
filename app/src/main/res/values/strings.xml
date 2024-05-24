@@ -159,6 +159,7 @@
     <string name="account_first_name">First Name</string>
     <string name="account_last_name">Last Name</string>
     <string name="account_logout">Log out</string>
+    <string name="account_settings">Account settings</string>
 
     <string name="title_should_not_be_empty">The event title should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
@@ -166,11 +167,11 @@
     <!-- DateRangeSelector -->
     <string name="select_date_range_for_query">Select a date range for the query</string>
 
-
     <string name="event_description_is_empty">No description</string>
 
+    <!-- Home screen -->
+    <string name="activate_gps">ACTIVATE GPS</string>
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
-    <string name="activate_gps">ACTIVATE GPS</string>
-    <string name="account_settings">Account settings</string>
+
 </resources>
