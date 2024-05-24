@@ -220,17 +220,15 @@ class MainActivity : ComponentActivity() {
                   eventViewModel = eventViewModel,
                   accountViewModel = accountViewModel)
             }
-            composable(Route.POLLS_SCREEN + "/{EventID}"){backStackEntry ->
-                val eventViewModel: EventViewModel =
-                    viewModel(
-                        factory =
-                        EventViewModel.EventViewModelFactory(
-                            backStackEntry.arguments?.getString("EventID"), database))
-                eventViewModel.fetchEvent()
-                PollsAndVotingScreen(
-                    eventViewModel = eventViewModel,
-                    onGoBack = {navActions.goBack()}
-                )
+            composable(Route.POLLS_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModel.EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent()
+              PollsAndVotingScreen(
+                  eventViewModel = eventViewModel, onGoBack = { navActions.goBack() })
             }
           }
         }
