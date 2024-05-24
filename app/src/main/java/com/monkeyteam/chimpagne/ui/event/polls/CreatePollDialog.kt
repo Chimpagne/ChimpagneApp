@@ -4,8 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -65,7 +65,7 @@ fun CreatePollDialog(
                       onPollCreate(ChimpagnePoll(title = title, query = query, options = options))
                     }
                   }))) {
-        Column(modifier = Modifier.fillMaxHeight(0.42f)) {
+        Column(modifier = Modifier.heightIn(0.dp, 400.dp)) {
           LazyColumn {
             item {
               OutlinedTextField(
