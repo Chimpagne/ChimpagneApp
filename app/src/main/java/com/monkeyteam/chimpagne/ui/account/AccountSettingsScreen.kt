@@ -132,12 +132,28 @@ fun SettingItem(label: String, value: String, modifier: Modifier) {
 fun DeleteAccountDialog(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   androidx.compose.material3.AlertDialog(
       onDismissRequest = onDismiss,
-      title = { Text(text = stringResource(id = R.string.confirm_delete_title)) },
-      text = { Text(text = stringResource(id = R.string.confirm_delete_message)) },
+      title = {
+        Text(
+            text = stringResource(id = R.string.confirm_delete_title),
+            modifier = Modifier.testTag("delete_account_dialog_title"))
+      },
+      text = {
+        Text(
+            text = stringResource(id = R.string.confirm_delete_message),
+            modifier = Modifier.testTag("delete_account_dialog_message"))
+      },
       confirmButton = {
-        TextButton(onClick = onConfirm) { Text(text = stringResource(id = R.string.confirm)) }
+        TextButton(
+            onClick = onConfirm,
+            modifier = Modifier.testTag("delete_account_dialog_confirm_button")) {
+              Text(text = stringResource(id = R.string.confirm))
+            }
       },
       dismissButton = {
-        TextButton(onClick = onDismiss) { Text(text = stringResource(id = R.string.cancel)) }
+        TextButton(
+            onClick = onDismiss,
+            modifier = Modifier.testTag("delete_account_dialog_cancel_button")) {
+              Text(text = stringResource(id = R.string.cancel))
+            }
       })
 }

@@ -1,6 +1,8 @@
 package com.monkeyteam.chimpagne.newtests.ui.account
 
 import AccountSettingsScreen
+import DeleteAccountDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -44,5 +46,31 @@ class AccountSettingsScreenUITest {
     assertTrue(editRequested)
     composeTestRule.onNodeWithTag("account_settings_logout_button").performClick()
     assertTrue(logoutPressed)
+  }
+
+  @Test
+  fun testDeleteAccountDialog() {
+    var confirmClicked = false
+    var dismissClicked = false
+
+    composeTestRule.setContent {
+      MaterialTheme {
+        DeleteAccountDialog(
+            onConfirm = { confirmClicked = true }, onDismiss = { dismissClicked = true })
+      }
+    }
+
+    composeTestRule.onNodeWithTag("delete_account_dialog_title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("delete_account_dialog_message").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("delete_account_dialog_confirm_button").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("delete_account_dialog_cancel_button").assertIsDisplayed()
+
+    composeTestRule.onNodeWithTag("delete_account_dialog_confirm_button").performClick()
+    assert(confirmClicked)
+
+    confirmClicked = false
+
+    composeTestRule.onNodeWithTag("delete_account_dialog_cancel_button").performClick()
+    assert(dismissClicked)
   }
 }
