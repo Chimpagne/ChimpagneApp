@@ -69,7 +69,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
-import com.monkeyteam.chimpagne.ui.utilities.WeatherApp
+import com.monkeyteam.chimpagne.ui.utilities.WeatherPager
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
@@ -231,7 +231,7 @@ fun EventScreen(
                 }
                 item { ChimpagneDivider() }
 
-                item { WeatherApp(event = eventViewModel.buildChimpagneEvent()) }
+                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
                 item { ChimpagneDivider() }
 
                 item {

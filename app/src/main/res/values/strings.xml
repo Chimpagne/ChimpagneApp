@@ -174,8 +174,10 @@
     <string name="activate_gps">ACTIVATE GPS</string>
 
     <string name="wind_speed">Wind</string>
+    <string name="noforecast_error">Failed to fetch weather data</string>
     <string name="noforecast_alreadyoccured">Event has already occurred, no weather forecast :)</string>
     <string name="noforecast_eventtoofarinfuture">Weather forecast available 10 days before the event</string>
+
     <string name="account_settings">Account settings</string>
 
 </resources>

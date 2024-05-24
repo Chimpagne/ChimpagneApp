@@ -9,8 +9,8 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.Weather
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
-import com.monkeyteam.chimpagne.ui.utilities.WeatherApp
-import com.monkeyteam.chimpagne.ui.utilities.WeatherCarousel
+import com.monkeyteam.chimpagne.ui.utilities.WeatherCarouselInternal
+import com.monkeyteam.chimpagne.ui.utilities.WeatherPager
 import java.time.LocalDate
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +26,7 @@ class FindEventViewModelTests {
   @Test
   fun testWeatherAppWithOldEvent() {
     val event = TEST_EVENTS[0]
-    composeTestRule.setContent { WeatherApp(event) }
+    composeTestRule.setContent { WeatherPager(event) }
     // Check that the message is displayed
     composeTestRule.onNodeWithTag("weather message").assertIsDisplayed()
   }
@@ -43,14 +43,14 @@ class FindEventViewModelTests {
             tags = listOf(),
             guests = emptyMap(),
             staffs = emptyMap(),
-            startsAtTimestamp = buildTimestamp(9, 5, 2025, 15, 15),
-            endsAtTimestamp = buildTimestamp(11, 5, 2025, 15, 15),
+            startsAtTimestamp = buildTimestamp(9, 5, 2050, 15, 15),
+            endsAtTimestamp = buildTimestamp(11, 5, 2050, 15, 15),
             ownerId = "Athena",
             supplies = mapOf(),
             parkingSpaces = 1,
             beds = 1)
 
-    composeTestRule.setContent { WeatherApp(event) }
+    composeTestRule.setContent { WeatherPager(event) }
     // Check that the message is displayed
     composeTestRule.onNodeWithTag("weather message").assertIsDisplayed()
   }
@@ -74,7 +74,7 @@ class FindEventViewModelTests {
             parkingSpaces = 1,
             beds = 1)
 
-    composeTestRule.setContent { WeatherApp(event) }
+    composeTestRule.setContent { WeatherPager(event) }
     // Check that the message is displayed
     composeTestRule.onNodeWithTag("loading_indicator").assertIsDisplayed()
   }
@@ -92,7 +92,7 @@ class FindEventViewModelTests {
                 maxWindSpeed = 10.0,
                 windDirection = 90))
 
-    composeTestRule.setContent { WeatherCarousel(weatherData = weatherData) }
+    composeTestRule.setContent { WeatherCarouselInternal(weatherData = weatherData) }
 
     // Check that the weather card is displayed
     composeTestRule.onNodeWithTag("weather card").assertIsDisplayed()

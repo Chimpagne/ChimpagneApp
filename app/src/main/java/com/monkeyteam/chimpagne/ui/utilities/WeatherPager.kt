@@ -48,7 +48,7 @@ import java.time.format.DateTimeFormatter
 import kotlinx.coroutines.launch
 
 @Composable
-fun WeatherApp(event: ChimpagneEvent) {
+fun WeatherPager(event: ChimpagneEvent) {
   val context = LocalContext.current
   val coroutineScope = rememberCoroutineScope()
 
@@ -84,7 +84,7 @@ fun WeatherApp(event: ChimpagneEvent) {
               },
               {
                 // Handle failure
-                message = "Failed to fetch weather data."
+                message = context.getString(R.string.noforecast_error)
               },
               context)
         }
@@ -95,7 +95,7 @@ fun WeatherApp(event: ChimpagneEvent) {
   Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
     when {
       message != null -> TextMessage(message)
-      weatherData != null -> WeatherCarousel(weatherData!!)
+      weatherData != null -> WeatherCarouselInternal(weatherData!!)
       else -> CircularProgressIndicator(modifier = Modifier.testTag("loading_indicator"))
     }
   }
@@ -113,7 +113,7 @@ fun generateDateRange(start: LocalDate, end: LocalDate): List<LocalDate> {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WeatherCarousel(weatherData: List<Weather>) {
+fun WeatherCarouselInternal(weatherData: List<Weather>) {
   val pagerState = rememberPagerState { weatherData.size }
 
   Column {
