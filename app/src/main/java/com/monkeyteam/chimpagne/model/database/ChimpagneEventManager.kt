@@ -140,7 +140,7 @@ class ChimpagneEventManager(
           event.copy(id = eventId),
           {
             updateEvent(
-                event.copy(id = eventId),
+                event.copy(id = eventId, imageUri = it),
                 {
                   database.accountManager.joinEvent(
                       eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
@@ -176,9 +176,10 @@ class ChimpagneEventManager(
       uploadEventPicture(
           event,
           {
+            val eventWithPicture = event.copy(imageUri = it)
             events
                 .document(event.id)
-                .set(event)
+                .set(eventWithPicture)
                 .addOnSuccessListener { onSuccess() }
                 .addOnFailureListener { onFailure(it) }
           },

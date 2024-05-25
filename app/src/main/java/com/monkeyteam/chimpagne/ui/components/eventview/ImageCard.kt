@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
+import android.util.Log
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,7 @@ import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 
 @Composable
 fun ImageCard(imageUri: String?) {
+  Log.d("AdvancedLogisticsPanel", "Event picture URI is: $imageUri")
   Card(
       modifier = Modifier.padding(16.dp).fillMaxWidth().aspectRatio(1.9f),
       shape = RoundedCornerShape(12.dp),

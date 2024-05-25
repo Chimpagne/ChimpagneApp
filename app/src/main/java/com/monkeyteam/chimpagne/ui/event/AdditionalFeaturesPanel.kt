@@ -21,7 +21,6 @@ import androidx.compose.material.icons.rounded.Layers
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,8 +44,6 @@ fun AdditionalFeaturesPanel(eventViewModel: EventViewModel) {
 
   var parkingText by remember { mutableStateOf(uiState.parkingSpaces.toString()) }
   var bedsText by remember { mutableStateOf(uiState.beds.toString()) }
-
-  LaunchedEffect(Unit) { eventViewModel.copyRealToTempImage() }
 
   val pickEventPicture =
       rememberLauncherForActivityResult(
