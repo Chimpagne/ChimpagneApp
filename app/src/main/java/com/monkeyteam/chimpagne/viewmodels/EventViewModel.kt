@@ -359,8 +359,12 @@ class EventViewModel(
                     (updatedSocialMedia.platformName to updatedSocialMedia))
   }
 
-  fun updateEventPicture(uri: Uri) {
-    _uiState.value = _uiState.value.copy(imageUri = uri)
+  fun updateTempEventPicture(uri: Uri) {
+    _uiState.value = _uiState.value.copy(tempImageUri = uri)
+  }
+
+  fun copyRealToTempImage() {
+    _uiState.value = _uiState.value.copy(tempImageUri = _uiState.value.imageUri)
   }
 
   fun getCurrentUserRole(): ChimpagneRole {
@@ -592,13 +596,14 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
+      val tempImageUri: Uri? = null,
       val imageUri: Uri? = null,
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-      val loading: Boolean = true,
+      val loading: Boolean = false,
       val socialMediaLinks: Map<String, SocialMedia> =
           SupportedSocialMedia.associateBy { it.platformName }
   )

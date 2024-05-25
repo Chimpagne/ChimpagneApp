@@ -52,7 +52,7 @@ fun AdditionalFeaturesPanel(eventViewModel: EventViewModel) {
             if (uri == null) {
               Log.d("AdvancedLogisticsPanel", "Event picture URI is null")
             } else {
-              eventViewModel.updateEventPicture(uri)
+              eventViewModel.updateTempEventPicture(uri)
             }
           })
   Column(
@@ -106,7 +106,7 @@ fun AdditionalFeaturesPanel(eventViewModel: EventViewModel) {
             stringResource(id = R.string.event_picture_title),
             Icons.Rounded.Image,
             "event_picture_title")
-        ImageCard(uiState.imageUri)
+        ImageCard(uiState.tempImageUri)
         Spacer(modifier = Modifier.height(16.dp))
         ChimpagneButton(
             onClick = { pickEventPicture.launch(PickVisualMediaRequest()) },
