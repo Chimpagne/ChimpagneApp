@@ -82,7 +82,7 @@ fun EditEventScreen(
           when (page) {
             0 -> FirstPanel(eventViewModel)
             1 -> TagsAndPubPanel(eventViewModel)
-            2 -> AdvancedLogisticsPanel(eventViewModel)
+            2 -> AdditionalFeaturesPanel(eventViewModel)
             3 -> ChooseSocialsPanel(eventViewModel)
           }
         }

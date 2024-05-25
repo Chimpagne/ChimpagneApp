@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,9 +15,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
 
 @Composable
-fun ImageWithBlackFilterOverlay(imageString: String = "", overlay: Boolean = false) {
+fun ImageWithBlackFilterOverlay(imageUri: Uri? = null, overlay: Boolean = false) {
   Box(modifier = Modifier.fillMaxWidth()) {
-    if (imageString.isEmpty()) {
+    if (imageUri == null) {
       Image(
           painter = painterResource(id = R.drawable.chimpagne_app_logo),
           contentDescription = "Default Logo",
@@ -24,7 +25,7 @@ fun ImageWithBlackFilterOverlay(imageString: String = "", overlay: Boolean = fal
           modifier = Modifier.fillMaxWidth())
     } else {
       Image(
-          painter = rememberAsyncImagePainter(model = imageString),
+          painter = rememberAsyncImagePainter(model = imageUri),
           contentDescription = "Event Image",
           contentScale = ContentScale.Crop,
           modifier = Modifier.fillMaxSize())

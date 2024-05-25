@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.viewmodels
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -97,7 +98,7 @@ class EventViewModel(
                         parkingSpaces = it.parkingSpaces,
                         beds = it.beds,
                         ownerId = it.ownerId,
-                        imageUrl = it.imageUrl,
+                        imageUri = it.imageUri,
                         socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
                         polls = it.polls)
                 _uiState.value =
@@ -141,7 +142,7 @@ class EventViewModel(
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        imageUrl = "",
+        imageUri = _uiState.value.imageUri,
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
         polls = _uiState.value.polls)
   }
@@ -358,6 +359,10 @@ class EventViewModel(
                     (updatedSocialMedia.platformName to updatedSocialMedia))
   }
 
+  fun updateEventPicture(uri: Uri) {
+    _uiState.value = _uiState.value.copy(imageUri = uri)
+  }
+
   fun getCurrentUserRole(): ChimpagneRole {
     return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
   }
@@ -565,7 +570,7 @@ class EventViewModel(
             parkingSpaces = event.parkingSpaces,
             beds = event.beds,
             ownerId = event.ownerId,
-            imageUrl = event.imageUrl,
+            imageUri = event.imageUri,
             socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
             polls = event.polls,
             currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
@@ -587,7 +592,7 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
-      val imageUrl: String = "",
+      val imageUri: Uri? = null,
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI

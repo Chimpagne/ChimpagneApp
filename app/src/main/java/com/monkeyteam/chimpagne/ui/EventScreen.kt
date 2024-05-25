@@ -213,7 +213,7 @@ fun EventScreen(
                       .padding(innerPadding)
                       .background(MaterialTheme.colorScheme.background),
               verticalArrangement = Arrangement.Top) {
-                item { ImageCard(uiState.imageUrl) }
+                item { ImageCard(uiState.imageUri) }
                 item {
                   Row(
                       modifier =
