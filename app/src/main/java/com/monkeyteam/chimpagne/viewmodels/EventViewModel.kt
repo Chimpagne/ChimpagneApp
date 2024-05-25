@@ -80,6 +80,7 @@ class EventViewModel(
         eventManager.getEventById(
             eventID!!,
             { event, uri ->
+              Log.d("EventViewModel", "Fetched event: $event with URI: $uri")
               if (event != null) {
                 _uiState.value =
                     EventUIState(
