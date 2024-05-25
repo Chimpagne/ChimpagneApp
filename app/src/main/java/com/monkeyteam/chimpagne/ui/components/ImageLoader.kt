@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui.components
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,7 +14,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.monkeyteam.chimpagne.R
 
 @Composable
-fun ImageWithBlackFilterOverlay(imageUri: Uri? = null, overlay: Boolean = false) {
+fun ImageWithBlackFilterOverlay(imageUri: String? = null, overlay: Boolean = false) {
   Box(modifier = Modifier.fillMaxWidth()) {
     if (imageUri == null) {
       Image(

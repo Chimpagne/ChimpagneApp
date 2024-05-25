@@ -1,7 +1,6 @@
 package com.monkeyteam.chimpagne.viewmodels
 
 import android.content.Context
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -80,27 +79,27 @@ class EventViewModel(
       viewModelScope.launch {
         eventManager.getEventById(
             eventID!!,
-            {
-              if (it != null) {
+            { event, uri ->
+              if (event != null) {
                 _uiState.value =
                     EventUIState(
-                        id = it.id,
-                        title = it.title,
-                        description = it.description,
-                        location = it.location,
-                        public = it.public,
-                        tags = it.tags,
-                        guests = it.guests,
-                        staffs = it.staffs,
-                        startsAtCalendarDate = it.startsAt(),
-                        endsAtCalendarDate = it.endsAt(),
-                        supplies = it.supplies,
-                        parkingSpaces = it.parkingSpaces,
-                        beds = it.beds,
-                        ownerId = it.ownerId,
-                        imageUri = it.imageUri,
-                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
-                        polls = it.polls)
+                        id = event.id,
+                        title = event.title,
+                        description = event.description,
+                        location = event.location,
+                        public = event.public,
+                        tags = event.tags,
+                        guests = event.guests,
+                        staffs = event.staffs,
+                        startsAtCalendarDate = event.startsAt(),
+                        endsAtCalendarDate = event.endsAt(),
+                        supplies = event.supplies,
+                        parkingSpaces = event.parkingSpaces,
+                        beds = event.beds,
+                        imageUri = uri,
+                        ownerId = event.ownerId,
+                        socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+                        polls = event.polls)
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
@@ -142,7 +141,7 @@ class EventViewModel(
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        imageUri = _uiState.value.imageUri,
+        imageUri = _uiState.value.imageUri.toString(),
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
         polls = _uiState.value.polls)
   }
@@ -165,12 +164,13 @@ class EventViewModel(
     if (invalidInput != null) {
       onInvalidInputs(invalidInput)
     } else {
+      val newEventPicture = _uiState.value.tempImageUri
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         eventManager.createEvent(
             buildChimpagneEvent(),
             {
-              _uiState.value = _uiState.value.copy(id = it)
+              _uiState.value = _uiState.value.copy(id = it, imageUri = newEventPicture.toString())
               eventID = _uiState.value.id
               _uiState.value = _uiState.value.copy(loading = false)
               onSuccess(it)
@@ -178,7 +178,8 @@ class EventViewModel(
             {
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
-            })
+            },
+            newEventPicture)
       }
     }
   }
@@ -359,7 +360,7 @@ class EventViewModel(
                     (updatedSocialMedia.platformName to updatedSocialMedia))
   }
 
-  fun updateTempEventPicture(uri: Uri) {
+  fun updateTempEventPicture(uri: String) {
     _uiState.value = _uiState.value.copy(tempImageUri = uri)
   }
 
@@ -574,7 +575,6 @@ class EventViewModel(
             parkingSpaces = event.parkingSpaces,
             beds = event.beds,
             ownerId = event.ownerId,
-            imageUri = event.imageUri,
             socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
             polls = event.polls,
             currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
@@ -596,8 +596,8 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
-      val tempImageUri: Uri? = null,
-      val imageUri: Uri? = null,
+      val tempImageUri: String? = null,
+      val imageUri: String? = null,
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI

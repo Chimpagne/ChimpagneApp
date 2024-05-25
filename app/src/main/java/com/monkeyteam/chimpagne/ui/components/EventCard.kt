@@ -36,7 +36,7 @@ import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
-fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
   Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp).fillMaxWidth()) {
     Card(
         modifier =

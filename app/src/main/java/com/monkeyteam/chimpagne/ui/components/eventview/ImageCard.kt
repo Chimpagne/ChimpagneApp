@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
-import android.net.Uri
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
 
 @Composable
-fun ImageCard(imageUri: Uri?) {
+fun ImageCard(imageUri: String?) {
   Card(
       modifier = Modifier.padding(16.dp).fillMaxWidth().aspectRatio(1.9f),
       shape = RoundedCornerShape(12.dp),

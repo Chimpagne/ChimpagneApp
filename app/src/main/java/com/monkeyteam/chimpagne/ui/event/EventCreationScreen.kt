@@ -12,7 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,8 +42,6 @@ fun EventCreationScreen(
   fun showToast(message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
   }
-
-  LaunchedEffect(Unit) { eventViewModel.copyRealToTempImage() }
 
   BackHandler {
     if (pagerState.currentPage > 0) {

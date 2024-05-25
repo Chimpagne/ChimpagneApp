@@ -1,5 +1,8 @@
 package com.monkeyteam.chimpagne.model.database
 
+import android.net.Uri
+import android.util.Log
+import androidx.core.net.toUri
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
@@ -8,11 +11,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
 import com.monkeyteam.chimpagne.model.location.Location
 
 class ChimpagneEventManager(
     private val database: Database,
-    private val events: CollectionReference
+    private val events: CollectionReference,
+    private val eventPictures: StorageReference
 ) {
   val atomic = AtomicChimpagneEventManager(database, events)
 
@@ -68,36 +73,91 @@ class ChimpagneEventManager(
         .addOnFailureListener { onFailure(it) }
   }
 
+  fun fetchEventPictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
+    if (uid.isEmpty()) {
+      onSuccess(null)
+    } else {
+      eventPictures
+          .child(uid)
+          .downloadUrl
+          .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
+          .addOnFailureListener { onSuccess(null) }
+    }
+  }
+
   fun getEventById(
       id: String,
-      onSuccess: (ChimpagneEvent?) -> Unit,
+      onSuccess: (ChimpagneEvent?, String?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     events
         .document(id)
         .get()
-        .addOnSuccessListener { onSuccess(it.toObject<ChimpagneEvent>()) }
+        .addOnSuccessListener { account ->
+          val event = account.toObject<ChimpagneEvent>()
+          if (event != null) {
+            fetchEventPictureUri(id) { uri -> onSuccess(event, uri.toString()) }
+            Log.d("ChimpagneAccountManager", "Fetched event: $event")
+          } else {
+            onSuccess(null, null)
+          }
+        }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun uploadEventPicture(
+      event: ChimpagneEvent,
+      onSuccess: (id: String) -> Unit,
+      onFailure: (Exception) -> Unit,
+      eventPictureUri: String
+  ) {
+    val imageRef = eventPictures.child(event.id)
+    imageRef
+        .putFile(eventPictureUri.toUri())
+        .addOnSuccessListener {
+          imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+            Log.d("ChimpagneAccountManager", "Uploaded image to: $downloadUrl")
+            onSuccess(downloadUrl.toString())
+          }
+        }
         .addOnFailureListener { onFailure(it) }
   }
 
   fun createEvent(
       event: ChimpagneEvent,
       onSuccess: (id: String) -> Unit,
-      onFailure: (Exception) -> Unit
+      onFailure: (Exception) -> Unit,
+      eventPictureUri: String? = null
   ) {
     if (database.accountManager.currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
     }
-
     val eventId = events.document().id
-    updateEvent(
-        event.copy(id = eventId),
-        {
-          database.accountManager.joinEvent(
-              eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
-        },
-        { onFailure(it) })
+    if (eventPictureUri != null) {
+      Log.d("ChimpagneEventManager", "Uploading event picture with uri: $eventPictureUri")
+      uploadEventPicture(
+          event.copy(id = eventId),
+          {
+            updateEvent(
+                event.copy(id = eventId),
+                {
+                  database.accountManager.joinEvent(
+                      eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+                },
+                { onFailure(it) })
+          },
+          { onFailure(it) },
+          eventPictureUri)
+    } else {
+      updateEvent(
+          event.copy(id = eventId),
+          {
+            database.accountManager.joinEvent(
+                eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+          },
+          { onFailure(it) })
+    }
   }
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
@@ -157,6 +217,12 @@ class ChimpagneEventManager(
               events.add(event)
             }
           }
+          /*val eventsWithPictures: MutableList<ChimpagneEvent> = ArrayList()
+          for (event in events) {
+            fetchEventPictureUri(event.id) { uri ->
+              eventsWithPictures.add(event.copy(imageUri = uri.toString()))
+            }
+          }*/
           onSuccess(events)
         }
         .addOnFailureListener { onFailure(it) }
