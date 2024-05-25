@@ -197,17 +197,20 @@ class EventViewModel(
     } else {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
+        val newEventPicture = _uiState.value.tempImageUri
         eventManager.updateEvent(
             buildChimpagneEvent(),
             {
-              _uiState.value = _uiState.value.copy(loading = false)
+              _uiState.value =
+                  _uiState.value.copy(loading = false, imageUri = newEventPicture.toString())
               onSuccess()
             },
             {
               Log.d("UPDATE AN EVENT", "Error : ", it)
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
-            })
+            },
+            newEventPicture)
       }
     }
   }

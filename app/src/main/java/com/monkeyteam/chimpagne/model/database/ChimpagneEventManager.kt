@@ -160,18 +160,37 @@ class ChimpagneEventManager(
     }
   }
 
-  fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+  fun updateEvent(
+      event: ChimpagneEvent,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit,
+      eventPictureUri: String? = null
+  ) {
 
     if (event.id == "") {
       onFailure(Exception("null event id"))
       return
     }
 
-    events
-        .document(event.id)
-        .set(event)
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
+    if (eventPictureUri != null) {
+      uploadEventPicture(
+          event,
+          {
+            events
+                .document(event.id)
+                .set(event)
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { onFailure(it) }
+          },
+          { onFailure(it) },
+          eventPictureUri)
+    } else {
+      events
+          .document(event.id)
+          .set(event)
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onFailure(it) }
+    }
   }
 
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
