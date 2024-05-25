@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.model.database
 
-import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import com.firebase.geofire.GeoFireUtils
@@ -73,21 +72,9 @@ class ChimpagneEventManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun fetchEventPictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
-    if (uid.isEmpty()) {
-      onSuccess(null)
-    } else {
-      eventPictures
-          .child(uid)
-          .downloadUrl
-          .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
-          .addOnFailureListener { onSuccess(null) }
-    }
-  }
-
   fun getEventById(
       id: String,
-      onSuccess: (ChimpagneEvent?, String?) -> Unit,
+      onSuccess: (ChimpagneEvent?) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
     events
@@ -95,12 +82,7 @@ class ChimpagneEventManager(
         .get()
         .addOnSuccessListener { account ->
           val event = account.toObject<ChimpagneEvent>()
-          if (event != null) {
-            fetchEventPictureUri(id) { uri -> onSuccess(event, uri.toString()) }
-            Log.d("ChimpagneAccountManager", "Fetched event: $event")
-          } else {
-            onSuccess(null, null)
-          }
+          onSuccess(event)
         }
         .addOnFailureListener { onFailure(it) }
   }
@@ -237,12 +219,6 @@ class ChimpagneEventManager(
               events.add(event)
             }
           }
-          /*val eventsWithPictures: MutableList<ChimpagneEvent> = ArrayList()
-          for (event in events) {
-            fetchEventPictureUri(event.id) { uri ->
-              eventsWithPictures.add(event.copy(imageUri = uri.toString()))
-            }
-          }*/
           onSuccess(events)
         }
         .addOnFailureListener { onFailure(it) }

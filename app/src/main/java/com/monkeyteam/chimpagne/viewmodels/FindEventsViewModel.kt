@@ -131,12 +131,10 @@ class FindEventsViewModel(database: Database) : ViewModel() {
       try {
         eventManager.getEventById(
             id,
-            { event, pictureUri ->
+            { event ->
               if (event != null) {
-                val eventWithPicture = event.copy(imageUri = pictureUri)
                 _uiState.value =
-                    _uiState.value.copy(
-                        events = mapOf(eventWithPicture.id to eventWithPicture), loading = false)
+                    _uiState.value.copy(events = mapOf(event.id to event), loading = false)
                 onSuccess()
               } else {
                 Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")

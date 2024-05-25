@@ -79,8 +79,7 @@ class EventViewModel(
       viewModelScope.launch {
         eventManager.getEventById(
             eventID!!,
-            { event, uri ->
-              Log.d("EventViewModel", "Fetched event: $event with URI: $uri")
+            { event ->
               if (event != null) {
                 _uiState.value =
                     EventUIState(
@@ -97,7 +96,7 @@ class EventViewModel(
                         supplies = event.supplies,
                         parkingSpaces = event.parkingSpaces,
                         beds = event.beds,
-                        imageUri = uri,
+                        imageUri = event.imageUri,
                         ownerId = event.ownerId,
                         socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
                         polls = event.polls)
@@ -369,6 +368,8 @@ class EventViewModel(
   }
 
   fun copyRealToTempImage() {
+    Log.d("EventViewModelTR", "Old image URI: ${_uiState.value.tempImageUri}")
+    Log.d("EventViewModelTR", "New image URI: ${_uiState.value.imageUri}")
     _uiState.value = _uiState.value.copy(tempImageUri = _uiState.value.imageUri)
   }
 
