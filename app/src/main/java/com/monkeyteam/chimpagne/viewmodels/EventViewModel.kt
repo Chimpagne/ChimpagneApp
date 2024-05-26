@@ -104,6 +104,7 @@ class EventViewModel(
                     _uiState.value.copy(
                         currentUserRole =
                             getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
+                _uiState.value = _uiState.value.copy(tempImageUri = _uiState.value.imageUri)
                 onSuccess()
                 _uiState.value = _uiState.value.copy(loading = false)
               } else {
