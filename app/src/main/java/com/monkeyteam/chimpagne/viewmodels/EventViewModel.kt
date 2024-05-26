@@ -202,8 +202,8 @@ class EventViewModel(
         eventManager.updateEvent(
             buildChimpagneEvent(),
             {
-              _uiState.value =
-                  _uiState.value.copy(loading = false, imageUri = newEventPicture.toString())
+              _uiState.value = _uiState.value.copy(imageUri = newEventPicture.toString())
+              _uiState.value = _uiState.value.copy(loading = false)
               onSuccess()
             },
             {
@@ -366,12 +366,6 @@ class EventViewModel(
 
   fun updateTempEventPicture(uri: String) {
     _uiState.value = _uiState.value.copy(tempImageUri = uri)
-  }
-
-  fun copyRealToTempImage() {
-    Log.d("EventViewModelTR", "Old image URI: ${_uiState.value.tempImageUri}")
-    Log.d("EventViewModelTR", "New image URI: ${_uiState.value.imageUri}")
-    _uiState.value = _uiState.value.copy(tempImageUri = _uiState.value.imageUri)
   }
 
   fun getCurrentUserRole(): ChimpagneRole {

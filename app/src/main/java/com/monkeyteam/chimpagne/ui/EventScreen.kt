@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -95,6 +96,9 @@ fun EventScreen(
     toast?.cancel()
     toast = Toast.makeText(context, message, Toast.LENGTH_SHORT).apply { show() }
   }
+
+  // Needed, otherwise screen doesnt update instantly after event is edited
+  LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
 
   val onJoinClick: (ChimpagneEvent) -> Unit = { event ->
     when {

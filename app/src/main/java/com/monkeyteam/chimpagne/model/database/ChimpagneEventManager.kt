@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.model.database
 
-import android.util.Log
 import androidx.core.net.toUri
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
@@ -98,7 +97,6 @@ class ChimpagneEventManager(
         .putFile(eventPictureUri.toUri())
         .addOnSuccessListener {
           imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
-            Log.d("ChimpagneAccountManager", "Uploaded image to: $downloadUrl")
             onSuccess(downloadUrl.toString())
           }
         }
@@ -117,7 +115,6 @@ class ChimpagneEventManager(
     }
     val eventId = events.document().id
     if (eventPictureUri != null) {
-      Log.d("ChimpagneEventManager", "Uploading event picture with uri: $eventPictureUri")
       uploadEventPicture(
           event.copy(id = eventId),
           {
@@ -154,7 +151,7 @@ class ChimpagneEventManager(
       return
     }
 
-    if (eventPictureUri != null) {
+    if (eventPictureUri != null && event.imageUri != eventPictureUri) {
       uploadEventPicture(
           event,
           {
