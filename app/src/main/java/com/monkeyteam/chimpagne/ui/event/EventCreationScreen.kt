@@ -86,7 +86,7 @@ fun EventCreationScreen(
                 0 -> FirstPanel(eventViewModel)
                 1 -> TagsAndPubPanel(eventViewModel)
                 2 -> SuppliesPanel(eventViewModel)
-                3 -> AdvancedLogisticsPanel(eventViewModel)
+                3 -> AdditionalFeaturesPanel(eventViewModel)
                 4 -> ChooseSocialsPanel(eventViewModel)
               }
             }

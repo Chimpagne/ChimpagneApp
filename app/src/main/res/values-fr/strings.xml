@@ -27,7 +27,8 @@
     <string name="event_creation_screen_event_made_public">Cet événement a été rendu publique !</string>
     <string name="event_creation_screen_make_event_public">Rendre cet événement publique</string>
     <string name="event_creation_screen_public_legend">Visibilité De l\'événement</string>
-    <string name="event_creation_screen_logistics">Aménagements</string>
+    <string name="event_creation_screen_additional_features">Fonctionnalités supplémentaires</string>
+    <string name="event_picture_title">Image de l\'événement</string>
     <string name="event_creation_screen_parking">Parking</string>
     <string name="event_creation_screen_number_parking">Nombre de places de parque</string>
     <string name="event_creation_screen_number_beds">Nombre de lits</string>
