@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -98,7 +99,7 @@ fun EventScreen(
   }
 
   // Needed, otherwise screen doesnt update instantly after event is edited
-  LaunchedEffect(Unit) { eventViewModel.fetchEvent {} }
+  LaunchedEffect(Unit) { eventViewModel.fetchEvent() }
 
   val onJoinClick: (ChimpagneEvent) -> Unit = { event ->
     when {
@@ -217,7 +218,10 @@ fun EventScreen(
                       .padding(innerPadding)
                       .background(MaterialTheme.colorScheme.background),
               verticalArrangement = Arrangement.Top) {
-                item { ImageCard(uiState.imageUri) }
+                item {
+                  Log.d("EventScreen", "ImageUri: ${uiState}")
+                  ImageCard(uiState.imageUri)
+                }
                 item {
                   Row(
                       modifier =

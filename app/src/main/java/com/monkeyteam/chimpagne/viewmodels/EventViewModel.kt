@@ -576,6 +576,7 @@ class EventViewModel(
             beds = event.beds,
             ownerId = event.ownerId,
             socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+            imageUri = event.imageUri,
             polls = event.polls,
             currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
   }
