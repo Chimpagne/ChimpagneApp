@@ -6,12 +6,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Bed
@@ -55,62 +55,76 @@ fun AdditionalFeaturesPanel(eventViewModel: EventViewModel) {
               eventViewModel.updateTempEventPicture(uri.toString())
             }
           })
-  Column(
+
+  LazyColumn(
       modifier = Modifier.padding(16.dp).fillMaxHeight(), verticalArrangement = Arrangement.Top) {
-        Legend(
-            stringResource(id = R.string.event_creation_screen_additional_features),
-            Icons.Rounded.Layers,
-            "logistics_title")
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+          Legend(
+              stringResource(id = R.string.event_creation_screen_additional_features),
+              Icons.Rounded.Layers,
+              "logistics_title")
+          Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        // Choosing number of parking spots
-        Legend(
-            stringResource(id = R.string.event_creation_screen_parking),
-            Icons.Rounded.DirectionsCar,
-            "parking_title")
-        OutlinedTextField(
-            value = parkingText,
-            onValueChange = {
-              parkingText = it
-              try {
-                eventViewModel.updateParkingSpaces(abs(parkingText.toInt()))
-              } catch (_: Exception) {
-                eventViewModel.updateParkingSpaces(0)
-              }
-            },
-            label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth().testTag("n_parking"))
+        item {
+          // Choosing number of parking spots
+          Legend(
+              stringResource(id = R.string.event_creation_screen_parking),
+              Icons.Rounded.DirectionsCar,
+              "parking_title")
+          OutlinedTextField(
+              value = parkingText,
+              onValueChange = {
+                parkingText = it
+                try {
+                  eventViewModel.updateParkingSpaces(abs(parkingText.toInt()))
+                } catch (_: Exception) {
+                  eventViewModel.updateParkingSpaces(0)
+                }
+              },
+              label = { Text(stringResource(id = R.string.event_creation_screen_number_parking)) },
+              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+              modifier = Modifier.fillMaxWidth().testTag("n_parking"))
+          Spacer(modifier = Modifier.height(16.dp))
+        }
 
-        // Choosing number of beds
-        Spacer(modifier = Modifier.height(16.dp))
-        Legend(
-            stringResource(id = R.string.event_creation_screen_beds),
-            Icons.Rounded.Bed,
-            "beds_title")
-        OutlinedTextField(
-            value = bedsText,
-            onValueChange = {
-              bedsText = it
-              try {
-                eventViewModel.updateBeds(abs(bedsText.toInt()))
-              } catch (_: Exception) {
-                eventViewModel.updateBeds(0)
-              }
-            },
-            label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth().testTag("n_beds"))
-        // Event Image
-        Legend(
-            stringResource(id = R.string.event_picture_title),
-            Icons.Rounded.Image,
-            "event_picture_title")
-        ImageCard(uiState.tempImageUri)
-        Spacer(modifier = Modifier.height(16.dp))
-        ChimpagneButton(
-            onClick = { pickEventPicture.launch(PickVisualMediaRequest()) },
-            text = "Add Picture",
-            modifier = Modifier)
+        item {
+          // Choosing number of beds
+          Legend(
+              stringResource(id = R.string.event_creation_screen_beds),
+              Icons.Rounded.Bed,
+              "beds_title")
+          OutlinedTextField(
+              value = bedsText,
+              onValueChange = {
+                bedsText = it
+                try {
+                  eventViewModel.updateBeds(abs(bedsText.toInt()))
+                } catch (_: Exception) {
+                  eventViewModel.updateBeds(0)
+                }
+              },
+              label = { Text(stringResource(id = R.string.event_creation_screen_number_beds)) },
+              keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+              modifier = Modifier.fillMaxWidth().testTag("n_beds"))
+          Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+          // Event Image
+          Legend(
+              stringResource(id = R.string.event_picture_title),
+              Icons.Rounded.Image,
+              "event_picture_title")
+          ImageCard(uiState.tempImageUri)
+          Spacer(modifier = Modifier.height(16.dp))
+        }
+
+        item {
+          ChimpagneButton(
+              onClick = { pickEventPicture.launch(PickVisualMediaRequest()) },
+              text = "Add Picture",
+              modifier = Modifier)
+        }
       }
 }

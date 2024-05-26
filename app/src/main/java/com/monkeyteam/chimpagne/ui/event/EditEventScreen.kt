@@ -40,7 +40,10 @@ fun EditEventScreen(
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
   }
 
-  LaunchedEffect(Unit) { eventViewModel.copyRealToTempImage() }
+  LaunchedEffect(Unit) {
+    eventViewModel.fetchEvent({ eventViewModel.copyRealToTempImage() }, {})
+  } // Doesn't work yet
+
   Scaffold(
       topBar = {
         TopBar(
