@@ -131,10 +131,9 @@ class FindEventsViewModel(database: Database) : ViewModel() {
       try {
         eventManager.getEventById(
             id,
-            { event ->
-              if (event != null) {
-                _uiState.value =
-                    _uiState.value.copy(events = mapOf(event.id to event), loading = false)
+            {
+              if (it != null) {
+                _uiState.value = _uiState.value.copy(events = mapOf(it.id to it), loading = false)
                 onSuccess()
               } else {
                 Log.d("FETCHING AN EVENT WITH ID", "Error : no such event exists")

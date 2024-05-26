@@ -50,7 +50,7 @@ fun AdditionalFeaturesPanel(eventViewModel: EventViewModel) {
           contract = ActivityResultContracts.PickVisualMedia(),
           onResult = { uri: Uri? ->
             if (uri == null) {
-              Log.d("AdvancedLogisticsPanel", "Event picture URI is null")
+              Log.d("AdditionalFeaturesPanel", "Event picture URI is null")
             } else {
               eventViewModel.updateTempEventPicture(uri.toString())
             }
