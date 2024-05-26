@@ -559,6 +559,7 @@ class EventViewModel(
   }
 
   fun updateUIStateWithEvent(event: ChimpagneEvent) {
+    eventID = event.id
     _uiState.value =
         EventUIState(
             id = event.id,
