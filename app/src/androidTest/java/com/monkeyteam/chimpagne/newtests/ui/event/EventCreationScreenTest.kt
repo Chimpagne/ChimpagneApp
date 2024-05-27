@@ -198,6 +198,8 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("n_beds").performTextInput(valueBed)
     composeTestRule.onNodeWithTag("last_button").assertDoesNotExist()
     composeTestRule.onNodeWithTag("next_button").performClick()
+
+    composeTestRule.onNodeWithTag("EventPicture").assertExists().performClick()
   }
 
   @Test

@@ -124,7 +124,7 @@ fun AdditionalFeaturesPanel(eventViewModel: EventViewModel) {
           ChimpagneButton(
               onClick = { pickEventPicture.launch(PickVisualMediaRequest()) },
               text = "Add Picture",
-              modifier = Modifier)
+              modifier = Modifier.testTag("EventPicture"))
         }
       }
 }
