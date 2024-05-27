@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
+import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -27,11 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -50,7 +49,6 @@ fun OrganiserView(
 ) {
 
   val profilePictureUriState = remember { mutableStateOf<Uri?>(null) }
-  val clipboardManager = LocalClipboardManager.current
 
   LaunchedEffect(ownerId) {
     accountViewModel.fetchAccounts(listOf(ownerId))
@@ -97,12 +95,19 @@ fun OrganiserView(
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .clickable {
-                      val annotatedString = buildAnnotatedString {
-                        append(
-                            ContextCompat.getString(context, R.string.deep_link_url_event) +
-                                event.id)
-                      }
-                      clipboardManager.setText(annotatedString)
+                      val shareText =
+                          ContextCompat.getString(context, R.string.deep_link_url_event) + event.id
+                      val shareIntent =
+                          Intent().apply {
+                            // Intent is for sending data
+                            action = Intent.ACTION_SEND
+                            // Add the text to share to the intent
+                            putExtra(Intent.EXTRA_TEXT, shareText)
+                            // We are sharing plain text so this just sets the MIME type of the data
+                            type = "text/plain"
+                          }
+                      val chooserIntent = Intent.createChooser(shareIntent, null)
+                      context.startActivity(chooserIntent)
                     }
                     .padding(8.dp)) {
               Icon(
