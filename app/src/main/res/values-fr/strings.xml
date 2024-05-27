@@ -66,6 +66,11 @@
     <string name="date_tools_until">Jusqu\'au</string>
     <string name="date_tools_at">à</string>
     <string name="event_details_screen_number_of_guests">personnes ont rejoint</string>
+    <string name="event_details_screen_organiser">Organisateur</string>
+    <string name="event_details_screen_description">Description</string>
+    <string name="event_details_screen_socials">Résaux Sociaux/Médias</string>
+    <string name="event_details_screen_facilities">Hébèrgement et Parking</string>
+    <string name="event_details_screen_actions">Actions</string>
     <string name="event_details_screen_organized_by">Organisé par</string>
     <string name="event_details_screen_report_problem">Signaler</string>
     <string name="event_details_screen_leave_button">Quitter l\'événement</string>

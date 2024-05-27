@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -59,7 +60,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.EventTagChip
-import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneDivider
+import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneLogoDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
@@ -219,7 +220,7 @@ fun EventScreen(
                       .background(MaterialTheme.colorScheme.background),
               verticalArrangement = Arrangement.Top) {
                 item {
-                  Log.d("EventScreen", "ImageUri: ${uiState}")
+                  Log.d("EventScreen", "ImageUri: $uiState")
                   ImageCard(uiState.imageUri)
                 }
                 item {
@@ -229,14 +230,24 @@ fun EventScreen(
                         uiState.tags.forEach { tag -> EventTagChip(tag) }
                       }
                 }
-                item { ChimpagneDivider() }
+                item { Spacer(modifier = Modifier.padding(vertical = 16.dp)) }
                 item { EventMainInfo(event = eventViewModel.buildChimpagneEvent()) }
-                item { ChimpagneDivider() }
+                item {
+                  ChimpagneLogoDivider(
+                      text = stringResource(id = R.string.event_details_screen_description),
+                      icon = painterResource(id = R.drawable.description),
+                      modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                }
                 item {
                   EventDescription(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
-                item { ChimpagneDivider() }
+                item {
+                  ChimpagneLogoDivider(
+                      text = stringResource(id = R.string.event_details_screen_organiser),
+                      icon = painterResource(id = R.drawable.event_organiser),
+                      modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                }
                 item {
                   OrganiserView(
                       uiState.ownerId,

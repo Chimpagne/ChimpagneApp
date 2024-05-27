@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backpack
 import androidx.compose.material.icons.rounded.Edit
@@ -10,8 +11,11 @@ import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.ui.IconInfo
@@ -34,8 +38,23 @@ fun EventActions(
   val context = LocalContext.current
 
   Column {
-    SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
-    ChimpagneDivider()
+    if (uiState.socialMediaLinks.isNotEmpty()) {
+      ChimpagneLogoDivider(
+          text = stringResource(id = R.string.event_details_screen_socials),
+          icon = painterResource(id = R.drawable.socials),
+          modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+      SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
+    }
+    ChimpagneLogoDivider(
+        text = stringResource(id = R.string.event_details_screen_facilities),
+        icon = painterResource(id = R.drawable.accommodation),
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+    // insert beds and parking here
+
+    ChimpagneLogoDivider(
+        text = stringResource(id = R.string.event_details_screen_actions),
+        icon = painterResource(id = R.drawable.action),
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
     val iconList = mutableListOf<IconInfo>()
     if (uiState.currentUserRole == ChimpagneRole.OWNER) {
       iconList.add(

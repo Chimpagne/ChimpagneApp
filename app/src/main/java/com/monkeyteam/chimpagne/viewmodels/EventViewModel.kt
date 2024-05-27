@@ -81,6 +81,10 @@ class EventViewModel(
             eventID!!,
             { event ->
               if (event != null) {
+                val validSocialMediaLinks =
+                    convertSMLinksToSM(event.socialMediaLinks).filterValues {
+                      it.chosenGroupUrl.isNotEmpty()
+                    }
                 _uiState.value =
                     EventUIState(
                         id = event.id,
@@ -98,7 +102,7 @@ class EventViewModel(
                         beds = event.beds,
                         imageUri = event.imageUri,
                         ownerId = event.ownerId,
-                        socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+                        socialMediaLinks = validSocialMediaLinks,
                         polls = event.polls)
                 _uiState.value =
                     _uiState.value.copy(
