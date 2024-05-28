@@ -63,7 +63,7 @@ https://www.figma.com/file/EfCQDVZTCt10o1LOw7R6H9/APP?type=design&node-id=0%3A1&
 - Product owner Sprint 7: Juan
 - Product owner Sprint 8: Arnaud
 - Product owner Sprint 9: Gregory
-- Product owner Sprint 9: Sacha
+- Product owner Sprint 10: Sacha
 
 
 ## How to setup the project on your device
