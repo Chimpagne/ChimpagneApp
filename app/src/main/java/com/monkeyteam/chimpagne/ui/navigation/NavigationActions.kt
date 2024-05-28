@@ -18,6 +18,7 @@ object Route {
   const val LOADING_LOGIN = "loadingLogin"
   const val MANAGE_STAFF_SCREEN = "manageStaffScreen"
   const val SUPPLIES_SCREEN = "SuppliesScreen"
+  const val POLLS_SCREEN = "PollsScreen"
 }
 
 class NavigationActions(private val navController: NavHostController) {
