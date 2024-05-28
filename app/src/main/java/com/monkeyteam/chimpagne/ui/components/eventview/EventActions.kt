@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backpack
@@ -101,5 +102,6 @@ fun EventActions(
                 onClick = { showToast("This function will be implemented in a future version") },
                 testTag = "polls")))
     IconRow(icons = iconList)
+    Spacer(modifier = Modifier.padding(8.dp))
   }
 }
