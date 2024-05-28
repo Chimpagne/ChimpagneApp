@@ -22,6 +22,7 @@ import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
+import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -244,8 +245,7 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.setContent {
       val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
+      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
     }
 
     composeTestRule.onNodeWithTag("share").assertExists()
@@ -271,26 +271,5 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.onNodeWithTag("go_back").assertHasClickAction()
     composeTestRule.onNodeWithTag("go_back").performClick()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testShareButton() {
-    val event = TEST_EVENTS[2]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
-    }
-
-    composeTestRule.onNodeWithTag("share").assertExists()
   }
 }
