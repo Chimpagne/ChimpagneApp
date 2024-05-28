@@ -160,7 +160,6 @@
     <string name="account_first_name">First Name</string>
     <string name="account_last_name">Last Name</string>
     <string name="account_logout">Log out</string>
-    <string name="account_settings">Account settings</string>
 
     <string name="title_should_not_be_empty">The event title should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
