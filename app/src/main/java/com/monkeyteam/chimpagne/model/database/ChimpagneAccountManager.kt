@@ -68,7 +68,11 @@ class ChimpagneAccountManager(
         .addOnFailureListener { onFailure(it) }
   }
 
-  fun deleteAccount(userUid: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+  fun deleteAccount(
+      userUid: ChimpagneAccountUID,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
     accounts
         .document(userUid)
         .delete()
