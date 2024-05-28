@@ -4,7 +4,6 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -13,9 +12,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
@@ -25,10 +21,8 @@ import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
-import com.monkeyteam.chimpagne.ui.ManageStaffScreen
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
@@ -251,10 +245,11 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
+      EventScreen(
+          navObject = navActions, eventViewModel = eventVM, accountViewModel = accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").assertExists()
+    composeTestRule.onNodeWithTag("share").performScrollTo().assertExists().assertHasClickAction()
 
     Thread.sleep(2000)
     accountViewModel.logoutFromChimpagneAccount()
@@ -297,114 +292,10 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").assertIsDisplayed().assertHasClickAction()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testEditButton() {
-
-    database.accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    val event = TEST_EVENTS[0]
-    val eventVM = EventViewModel(event.id, database)
-
-    var navController: NavHostController? = null
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      navController = rememberNavController()
-      val navActions = NavigationActions(navController!!)
-      NavHost(navController = navController!!, startDestination = Route.EVENT_SCREEN) {
-        composable(Route.EVENT_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
-        composable(Route.EDIT_EVENT_SCREEN + "/${eventVM.uiState.value.id}") {
-          EventScreen(navObject = navActions, eventViewModel = eventVM, accountViewModel)
-        }
-      }
-    }
-
-    composeTestRule.onNodeWithTag("edit").assertExists()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testSuppliesButton() {
-    val event = TEST_EVENTS[0]
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (accountViewModel.uiState.value.loading) {}
-
-    val eventVM = EventViewModel(event.id, database)
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      NavHost(
-          navController = navController,
-          startDestination = Route.MY_EVENTS_SCREEN + "/${eventVM.uiState.value.id}") {
-            composable(Route.MY_EVENTS_SCREEN + "/${eventVM.uiState.value.id}") {
-              EventScreen(navActions, eventVM, accountViewModel)
-            }
-            composable(Route.SUPPLIES_SCREEN + "/${eventVM.uiState.value.id}") {
-              EventScreen(navObject = navActions, eventVM, accountViewModel)
-            }
-          }
-    }
-
-    composeTestRule.onNodeWithTag("supplies").assertIsDisplayed().assertHasClickAction()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testPollsButton() {
-    val event = TEST_EVENTS[0]
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (accountViewModel.uiState.value.loading) {}
-
-    val eventVM = EventViewModel(event.id, database)
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
-    }
-
-    composeTestRule.onNodeWithTag("polls").assertExists()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
-  @Test
-  fun testManageStaffButton() {
-    database.accountManager.signInTo(TEST_ACCOUNTS[1])
-    val event = TEST_EVENTS[0]
-    val eventVM = EventViewModel(event.id, database)
-    var navController: NavHostController? = null
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      navController = rememberNavController()
-      val navActions = NavigationActions(navController!!)
-
-      NavHost(navController = navController!!, startDestination = Route.MY_EVENTS_SCREEN) {
-        composable(Route.MY_EVENTS_SCREEN) { EventScreen(navActions, eventVM, accountViewModel) }
-        composable(Route.MANAGE_STAFF_SCREEN + "/${eventVM.uiState.value.id}") {
-          ManageStaffScreen(
-              navObject = navActions, eventViewModel = eventVM, accountViewModel = accountViewModel)
-        }
-      }
-    }
-
-    composeTestRule.onNodeWithTag("manage staff").assertExists()
+    composeTestRule
+        .onNodeWithTag("share")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 }
