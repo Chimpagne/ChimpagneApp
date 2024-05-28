@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
+import com.monkeyteam.chimpagne.ui.AccommodationsRow
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
@@ -50,7 +51,8 @@ fun EventActions(
         text = stringResource(id = R.string.event_details_screen_facilities),
         icon = painterResource(id = R.drawable.accommodation),
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
-    // insert beds and parking here
+
+    AccommodationsRow(eventViewModel)
 
     ChimpagneLogoDivider(
         text = stringResource(id = R.string.event_details_screen_actions),

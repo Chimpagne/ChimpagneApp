@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -68,6 +69,7 @@ import com.monkeyteam.chimpagne.ui.components.eventview.ImageCard
 import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
@@ -311,3 +313,37 @@ data class IconInfo(
     val onClick: () -> Unit,
     val testTag: String
 )
+
+@Composable
+fun AccommodationsBox(iconRes: Int, text: String) {
+  Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
+    Icon(
+        painter = painterResource(id = iconRes),
+        contentDescription = null,
+        modifier = Modifier.size(24.dp))
+    Spacer(modifier = Modifier.width(8.dp))
+    Text(
+        text = text,
+        fontFamily = ChimpagneFontFamily,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontSize = 16.sp)
+  }
+}
+
+@Composable
+fun AccommodationsRow(eventViewModel: EventViewModel) {
+  val uiState by eventViewModel.uiState.collectAsState()
+  Row(
+      horizontalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterHorizontally),
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically) {
+        AccommodationsBox(
+            iconRes = R.drawable.bed_icon,
+            text = "${uiState.beds} ${stringResource(id = R.string.event_details_screen_beds)}")
+        AccommodationsBox(
+            iconRes = R.drawable.car_icon,
+            text =
+                "${uiState.parkingSpaces} ${stringResource(id = R.string.event_details_screen_slots)}")
+      }
+}

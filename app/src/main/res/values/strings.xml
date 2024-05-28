@@ -67,6 +67,8 @@
     <string name="date_tools_at">at</string>
     <string name="close">Close</string>
     <string name="event_details_screen_number_of_guests">guests joined</string>
+    <string name="event_details_screen_beds">beds</string>
+    <string name="event_details_screen_slots">slots</string>
     <string name="event_details_screen_organiser">Organizer</string>
     <string name="event_details_screen_description">Description</string>
     <string name="event_details_screen_socials">Socials/Media</string>
