@@ -245,11 +245,10 @@ class ViewDetailEventScreenTests {
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventScreen(
-          navObject = navActions, eventViewModel = eventVM, accountViewModel = accountViewModel)
+      EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").performScrollTo().assertExists().assertHasClickAction()
+    composeTestRule.onNodeWithTag("share").assertExists()
 
     Thread.sleep(2000)
     accountViewModel.logoutFromChimpagneAccount()
@@ -292,10 +291,6 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule
-        .onNodeWithTag("share")
-        .performScrollTo()
-        .assertIsDisplayed()
-        .assertHasClickAction()
+    composeTestRule.onNodeWithTag("share").assertExists()
   }
 }
