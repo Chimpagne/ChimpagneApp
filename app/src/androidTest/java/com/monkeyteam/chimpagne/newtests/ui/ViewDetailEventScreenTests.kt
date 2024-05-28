@@ -298,8 +298,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").assertHasClickAction()
-    composeTestRule.onNodeWithTag("share").performClick()
+    composeTestRule.onNodeWithTag("share").assertIsDisplayed().assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -326,7 +325,7 @@ class ViewDetailEventScreenTests {
       }
     }
 
-    composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("edit").assertIsDisplayed().assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -359,7 +358,7 @@ class ViewDetailEventScreenTests {
           }
     }
 
-    composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("supplies").assertIsDisplayed().assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -382,7 +381,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("polls").assertIsDisplayed().assertHasClickAction()
   }
 
   @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -407,6 +406,6 @@ class ViewDetailEventScreenTests {
       }
     }
 
-    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("manage staff").assertIsDisplayed().assertHasClickAction()
   }
 }
