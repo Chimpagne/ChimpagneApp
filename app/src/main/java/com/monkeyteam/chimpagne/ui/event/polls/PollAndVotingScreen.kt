@@ -50,6 +50,7 @@ fun PollsAndVotingScreen(
 ) {
   val eventUIState by eventViewModel.uiState.collectAsState()
   val accountUIState by accountViewModel.uiState.collectAsState()
+
   var displayCreatePollPopup by remember { mutableStateOf(false) }
   var displayVotePollPopup by remember { mutableStateOf(false) }
   var displayViewPollPopup by remember { mutableStateOf(false) }
