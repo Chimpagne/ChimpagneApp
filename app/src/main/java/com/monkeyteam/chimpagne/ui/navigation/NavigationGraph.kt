@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.ui.navigation
 
 import AccountSettingsScreen
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -46,7 +47,7 @@ fun NavigationGraph(
   database: Database,
   accountViewModel: AccountViewModel,
 ) {
-  val context = LocalContext.current as MainActivity
+  val context = LocalContext.current as Activity
   val navActions = NavigationActions(navController)
 
   val onLogin: () -> Unit = {
@@ -69,9 +70,10 @@ fun NavigationGraph(
   }
 
   val onLogout: () -> Unit = {
-    AuthUI.getInstance().signOut(context)
-    accountViewModel.logoutFromChimpagneAccount()
-    navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+    AuthUI.getInstance().signOut(context).addOnCompleteListener {
+      accountViewModel.logoutFromChimpagneAccount()
+      navActions.clearAndNavigateTo(Route.LOGIN_SCREEN, true)
+    }
   }
 
   val onContinueAsGuest: () -> Unit = {
