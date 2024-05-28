@@ -196,6 +196,7 @@ class EventViewModel(
       onInvalidInputs(invalidInput)
       return
     } else {
+      // Only update with valid inputs
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         val newEventPicture = _uiState.value.tempImageUri
