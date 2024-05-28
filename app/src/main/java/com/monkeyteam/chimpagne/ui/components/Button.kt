@@ -219,7 +219,7 @@ fun SocialButtonRow(context: Context, socialMediaLinks: Map<String, SocialMedia>
   Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally),
-      modifier = Modifier.fillMaxWidth()) {
+      modifier = Modifier.fillMaxWidth().testTag("Social_Media")) {
         for (socialMedia in socialMediaLinks.values) {
           if (socialMedia.chosenGroupUrl.isNotEmpty()) {
             SocialButton(
