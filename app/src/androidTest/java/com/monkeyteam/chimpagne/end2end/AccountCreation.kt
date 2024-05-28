@@ -1,12 +1,12 @@
 package com.monkeyteam.chimpagne.end2end
 
 import android.Manifest
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -30,16 +30,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class EventCreation {
+class AccountCreation {
   val timeout: Long = 3000 // in milliseconds
 
   val database = Database()
   val account =
-      ChimpagneAccount(
-          firebaseAuthUID = "ovoland",
-          firstName = "Graphics",
-          lastName = "Expert",
-          joinedEvents = hashMapOf())
+      ChimpagneAccount(firebaseAuthUID = "darth", firstName = "Jar Jar", lastName = "Binks")
 
   @get:Rule val composeTestRule = createComposeRule()
 
@@ -53,14 +49,11 @@ class EventCreation {
     every { FirebaseAuth.getInstance().currentUser } returns mockk(relaxed = true)
     every { FirebaseAuth.getInstance().currentUser?.uid } returns account.firebaseAuthUID
 
-    initializeTestDatabase(accounts = listOf(account))
+    initializeTestDatabase()
   }
 
-  @OptIn(ExperimentalTestApi::class)
   @Test
-  fun eventCreationEnd2End() {
-    val eventName = "OUR FIRST END TO END TEST"
-
+  fun accountCreationEnd2End() {
     lateinit var navController: NavHostController
     lateinit var accountViewModel: AccountViewModel
 
@@ -73,34 +66,42 @@ class EventCreation {
     }
 
     composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route == Route.HOME_SCREEN
+      navController.currentDestination?.route == Route.ACCOUNT_CREATION_SCREEN
     }
-    composeTestRule.onNodeWithTag("organize_event_button").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route == Route.EVENT_CREATION_SCREEN
-    }
-    composeTestRule.onNodeWithTag("add_a_title").performTextInput(eventName)
-    composeTestRule.onNodeWithTag("next_button").performClick()
-    composeTestRule.onNodeWithTag("next_button").performClick()
-    composeTestRule.onNodeWithTag("next_button").performClick()
-    composeTestRule.onNodeWithTag("next_button").performClick()
-    composeTestRule.onNodeWithTag("last_button").performClick()
+    composeTestRule.onNodeWithTag("first_name_field").performTextInput(account.firstName)
+    composeTestRule.onNodeWithTag("last_name_field").performTextInput(account.lastName)
+    composeTestRule.onNodeWithTag("submit_button").performClick()
 
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route == Route.HOME_SCREEN
     }
-    composeTestRule.onNodeWithTag("open_events_button").performClick()
+    composeTestRule.onNodeWithTag("account_settings_button").performClick()
 
     composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
+      navController.currentDestination?.route == Route.ACCOUNT_SETTINGS_SCREEN
     }
-    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), timeout)
-    composeTestRule.onNodeWithText(eventName, useUnmergedTree = true).assertExists()
-    composeTestRule.onNodeWithTag("a created event").performClick()
+    composeTestRule.onNodeWithText(account.firstName, useUnmergedTree = true).assertIsDisplayed()
+    composeTestRule.onNodeWithText(account.lastName, useUnmergedTree = true).assertIsDisplayed()
+    composeTestRule.onNodeWithTag("edit_account_button").performClick()
 
     composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
+      navController.currentDestination?.route == Route.ACCOUNT_EDIT_SCREEN
+    }
+    composeTestRule.onNodeWithTag("first_name_field").performTextClearance()
+    composeTestRule.onNodeWithTag("first_name_field").performTextInput("Sith")
+    composeTestRule.onNodeWithTag("last_name_field").performTextClearance()
+    composeTestRule.onNodeWithTag("last_name_field").performTextInput("Lord")
+    composeTestRule.onNodeWithTag("submit_button").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route == Route.ACCOUNT_SETTINGS_SCREEN
+    }
+    composeTestRule.onNodeWithText("Sith", useUnmergedTree = true).assertIsDisplayed()
+    composeTestRule.onNodeWithText("Lord", useUnmergedTree = true).assertIsDisplayed()
+    composeTestRule.onNodeWithTag("account_settings_logout_button").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route == Route.LOGIN_SCREEN
     }
   }
 }
