@@ -2,10 +2,7 @@ package com.monkeyteam.chimpagne.model.location
 
 import java.time.LocalDate
 
-/**
- * Weather data class filled up with data from the API
- * Then used to build the UI
- */
+/** Weather data class filled up with data from the API Then used to build the UI */
 data class Weather(
     val location: Location? = Location(),
     val date: LocalDate = LocalDate.now(),
