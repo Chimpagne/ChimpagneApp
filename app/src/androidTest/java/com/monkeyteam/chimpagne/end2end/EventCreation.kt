@@ -1,7 +1,9 @@
 package com.monkeyteam.chimpagne.end2end
 
 import android.Manifest
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -55,8 +57,9 @@ class EventCreation {
     initializeTestDatabase(accounts = listOf(account))
   }
 
+  @OptIn(ExperimentalTestApi::class)
   @Test
-  fun ultimateTest() {
+  fun eventCreationEnd2End() {
     val eventName = "OUR FIRST END TO END TEST"
 
     lateinit var navController: NavHostController
@@ -92,6 +95,7 @@ class EventCreation {
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
     }
+    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), timeout)
     composeTestRule.onNodeWithTag("a created event").performClick()
 
     composeTestRule.waitUntil(timeout) {
