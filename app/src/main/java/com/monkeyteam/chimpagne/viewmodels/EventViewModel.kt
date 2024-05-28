@@ -156,7 +156,7 @@ class EventViewModel(
     return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
   }
 
-  fun createTheEvent(
+  fun createEvent(
       onSuccess: (id: String) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}

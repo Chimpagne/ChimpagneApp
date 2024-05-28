@@ -57,7 +57,7 @@ fun EventActions(
               description = stringResource(id = R.string.event_details_screen_leave_button),
               onClick = {
                 if (isUserLoggedIn) {
-                  eventViewModel.leaveEvent(
+                  eventViewModel.leaveTheEvent(
                       onSuccess = {
                         showToast(
                             context.getString(R.string.event_details_screen_leave_toast_success))
@@ -79,7 +79,7 @@ fun EventActions(
             IconInfo(
                 icon = Icons.Rounded.Poll,
                 description = stringResource(id = R.string.event_details_screen_voting_button),
-                onClick = {},
+                onClick = { showToast("This function will be implemented in a future version") },
                 testTag = "polls")))
     IconRow(icons = iconList)
   }

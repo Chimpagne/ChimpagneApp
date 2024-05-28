@@ -55,7 +55,7 @@ fun EditEventScreen(
             lastButtonText = stringResource(id = R.string.chimpagne_save),
             lastButtonOnClick = {
               if (!uiState.loading) {
-                eventViewModel.updateEvent(
+                eventViewModel.updateTheEvent(
                     onSuccess = {
                       Toast.makeText(
                               context,
