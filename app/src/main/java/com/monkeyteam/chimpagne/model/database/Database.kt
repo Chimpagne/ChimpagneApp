@@ -21,7 +21,7 @@ interface Tables {
 }
 
 /** Tables used in production */
-object PUBLIC_TABLES : Tables {
+object PRODUCTION_TABLES : Tables {
   override val EVENTS = "events"
   override val ACCOUNTS = "accounts"
   override val PROFILE_PICTURES = "profilePictures"

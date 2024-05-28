@@ -48,6 +48,8 @@ class ChimpagneEventManager(
         .addOnCompleteListener {
           val matchingEvents: MutableList<ChimpagneEvent> = ArrayList()
           for (task in tasks) {
+            // Takes a snapshot of the query
+            // see https://firebase.google.com/docs/firestore/query-data/listen#kotlin+ktx
             val snap = task.result
             for (doc in snap!!.documents) {
               val event = doc.toObject<ChimpagneEvent>()!!
@@ -102,7 +104,7 @@ class ChimpagneEventManager(
 
   fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
 
-    if (event.id == "") {
+    if (event.id.isEmpty()) {
       onFailure(Exception("null event id"))
       return
     }
