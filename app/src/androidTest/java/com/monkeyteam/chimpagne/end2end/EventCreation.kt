@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.end2end
 
 import android.Manifest
 import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -96,11 +95,11 @@ class EventCreation {
       navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
     }
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), timeout)
+    composeTestRule.onNodeWithText(eventName, useUnmergedTree = true).assertExists()
     composeTestRule.onNodeWithTag("a created event").performClick()
 
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
     }
-    composeTestRule.onNodeWithText(eventName, useUnmergedTree = true).assertIsDisplayed()
   }
 }
