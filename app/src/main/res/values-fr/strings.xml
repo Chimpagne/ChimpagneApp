@@ -173,4 +173,13 @@
 
 
 
+    <!-- Polls and Voting -->
+    <string name="polls_topbar_title">Votes et sondages</string>
+    <string name="polls_legend_text">Sondages de l\'événement</string>
+    <string name="polls_empty_poll_list">Il y aucun sondage pour cet événement</string>
+    <string name="polls_create_a_poll_title">Créez un sondage</string>
+    <string name="polls_create_a_poll_empty_field_toast">Ne peut pas créer un sondage car il y a des champs vide</string>
+    <string name="polls_create_a_poll_title_field">Titre du sondage</string>
+    <string name="polls_create_a_poll_query_field">Question du sondage</string>
+    <string name="polls_create_a_poll_option_field">Option</string>
 </resources>
