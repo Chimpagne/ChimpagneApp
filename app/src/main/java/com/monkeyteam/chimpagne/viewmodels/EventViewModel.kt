@@ -79,31 +79,32 @@ class EventViewModel(
       viewModelScope.launch {
         eventManager.getEventById(
             eventID!!,
-            {
-              if (it != null) {
+            { event ->
+              if (event != null) {
                 _uiState.value =
                     EventUIState(
-                        id = it.id,
-                        title = it.title,
-                        description = it.description,
-                        location = it.location,
-                        public = it.public,
-                        tags = it.tags,
-                        guests = it.guests,
-                        staffs = it.staffs,
-                        startsAtCalendarDate = it.startsAt(),
-                        endsAtCalendarDate = it.endsAt(),
-                        supplies = it.supplies,
-                        parkingSpaces = it.parkingSpaces,
-                        beds = it.beds,
-                        ownerId = it.ownerId,
-                        imageUrl = it.imageUrl,
-                        socialMediaLinks = convertSMLinksToSM(it.socialMediaLinks),
-                        polls = it.polls)
+                        id = event.id,
+                        title = event.title,
+                        description = event.description,
+                        location = event.location,
+                        public = event.public,
+                        tags = event.tags,
+                        guests = event.guests,
+                        staffs = event.staffs,
+                        startsAtCalendarDate = event.startsAt(),
+                        endsAtCalendarDate = event.endsAt(),
+                        supplies = event.supplies,
+                        parkingSpaces = event.parkingSpaces,
+                        beds = event.beds,
+                        imageUri = event.imageUri,
+                        ownerId = event.ownerId,
+                        socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+                        polls = event.polls)
                 _uiState.value =
                     _uiState.value.copy(
                         currentUserRole =
                             getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
+                _uiState.value = _uiState.value.copy(tempImageUri = _uiState.value.imageUri)
                 onSuccess()
                 _uiState.value = _uiState.value.copy(loading = false)
               } else {
@@ -125,10 +126,6 @@ class EventViewModel(
     }
   }
 
-  /**
-   * This builds a chimpagne event based on the values stored in the UI state. The imageURL is
-   * always set to "" at this point, since there is no way to change it currently.
-   */
   fun buildChimpagneEvent(): ChimpagneEvent {
     return ChimpagneEvent(
         id = _uiState.value.id,
@@ -145,7 +142,7 @@ class EventViewModel(
         supplies = _uiState.value.supplies,
         parkingSpaces = _uiState.value.parkingSpaces,
         beds = _uiState.value.beds,
-        imageUrl = "",
+        imageUri = _uiState.value.imageUri.toString(),
         socialMediaLinks = convertSMToSMLinks(_uiState.value.socialMediaLinks),
         polls = _uiState.value.polls)
   }
@@ -159,19 +156,22 @@ class EventViewModel(
     return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
   }
 
-  fun createEvent(
+  fun createTheEvent(
       onSuccess: (id: String) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
     val invalidInput = validateEventInputs()
-    if (invalidInput == null) {
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
+    } else {
+      val newEventPicture = _uiState.value.tempImageUri
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         eventManager.createEvent(
             buildChimpagneEvent(),
             {
-              _uiState.value = _uiState.value.copy(id = it)
+              _uiState.value = _uiState.value.copy(id = it, imageUri = newEventPicture.toString())
               eventID = _uiState.value.id
               _uiState.value = _uiState.value.copy(loading = false)
               onSuccess(it)
@@ -179,26 +179,30 @@ class EventViewModel(
             {
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
-            })
+            },
+            newEventPicture)
       }
-    } else {
-      onInvalidInputs(invalidInput)
     }
   }
 
-  fun updateEvent(
+  fun updateTheEvent(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {}
   ) {
 
     val invalidInput = validateEventInputs()
-    if (invalidInput == null) {
+    if (invalidInput != null) {
+      onInvalidInputs(invalidInput)
+      return
+    } else {
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
+        val newEventPicture = _uiState.value.tempImageUri
         eventManager.updateEvent(
             buildChimpagneEvent(),
             {
+              _uiState.value = _uiState.value.copy(imageUri = newEventPicture.toString())
               _uiState.value = _uiState.value.copy(loading = false)
               onSuccess()
             },
@@ -206,14 +210,13 @@ class EventViewModel(
               Log.d("UPDATE AN EVENT", "Error : ", it)
               _uiState.value = _uiState.value.copy(loading = false)
               onFailure(it)
-            })
+            },
+            newEventPicture)
       }
-    } else {
-      onInvalidInputs(invalidInput)
     }
   }
 
-  fun deleteEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       eventManager.deleteEvent(
@@ -241,10 +244,10 @@ class EventViewModel(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
-    joinEvent(onSuccess, onFailure)
+    joinTheEvent(onSuccess, onFailure)
   }
 
-  fun joinEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
@@ -269,7 +272,7 @@ class EventViewModel(
     }
   }
 
-  fun leaveEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       val accountUID = accountManager.currentUserAccount!!.firebaseAuthUID
@@ -361,6 +364,14 @@ class EventViewModel(
                     (updatedSocialMedia.platformName to updatedSocialMedia))
   }
 
+  fun updateTempEventPicture(uri: String) {
+    _uiState.value = _uiState.value.copy(tempImageUri = uri)
+  }
+
+  fun getCurrentUserRole(): ChimpagneRole {
+    return getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: "")
+  }
+
   fun promoteGuestToStaff(
       uid: ChimpagneAccountUID,
       onSuccess: () -> Unit = {},
@@ -431,7 +442,6 @@ class EventViewModel(
         })
   }
 
-  /** Updates the supplies without overriding the current supplies. */
   fun updateSupplyAtomically(supply: ChimpagneSupply) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.updateSupply(
@@ -445,7 +455,6 @@ class EventViewModel(
         {})
   }
 
-  /** Remove one supply without overriding the rest of the supplies. */
   fun removeSupplyAtomically(supplyId: ChimpagneSupplyId) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.removeSupply(
@@ -550,6 +559,7 @@ class EventViewModel(
   }
 
   fun updateUIStateWithEvent(event: ChimpagneEvent) {
+    eventID = event.id
     _uiState.value =
         EventUIState(
             id = event.id,
@@ -566,8 +576,8 @@ class EventViewModel(
             parkingSpaces = event.parkingSpaces,
             beds = event.beds,
             ownerId = event.ownerId,
-            imageUrl = event.imageUrl,
             socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
+            imageUri = event.imageUri,
             polls = event.polls,
             currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
   }
@@ -588,13 +598,14 @@ class EventViewModel(
       val supplies: Map<ChimpagneSupplyId, ChimpagneSupply> = mapOf(),
       val parkingSpaces: Int = 0,
       val beds: Int = 0,
-      val imageUrl: String = "",
+      val tempImageUri: String? = null,
+      val imageUri: String? = null,
       val polls: Map<ChimpagnePollId, ChimpagnePoll> = emptyMap(),
 
       // unmodifiable by the UI
       val ownerId: ChimpagneAccountUID = "",
       val currentUserRole: ChimpagneRole = ChimpagneRole.NOT_IN_EVENT,
-      val loading: Boolean = true,
+      val loading: Boolean = false,
       val socialMediaLinks: Map<String, SocialMedia> =
           SupportedSocialMedia.associateBy { it.platformName }
   )

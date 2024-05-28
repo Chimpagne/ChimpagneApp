@@ -10,15 +10,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.monkeyteam.chimpagne.ui.components.ImageWithBlackFilterOverlay
+import com.monkeyteam.chimpagne.ui.components.ImageLoader
 
 @Composable
-fun ImageCard(imageUrl: String) {
+fun ImageCard(imageUri: String?) {
   Card(
       modifier = Modifier.padding(16.dp).fillMaxWidth().aspectRatio(1.9f),
       shape = RoundedCornerShape(12.dp),
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
       elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-        ImageWithBlackFilterOverlay(imageUrl)
+        ImageLoader(imageUri)
       }
 }
