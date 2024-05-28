@@ -185,7 +185,7 @@ class EventViewModel(
     }
   }
 
-  fun updateTheEvent(
+  fun updateEvent(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {}
@@ -216,7 +216,7 @@ class EventViewModel(
     }
   }
 
-  fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun deleteEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       eventManager.deleteEvent(
