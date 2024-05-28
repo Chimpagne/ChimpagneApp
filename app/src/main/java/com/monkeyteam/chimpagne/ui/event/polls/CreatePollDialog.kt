@@ -69,11 +69,13 @@ fun CreatePollDialog(
           LazyColumn {
             item {
               OutlinedTextField(
+                  singleLine = true,
                   modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("poll title field"),
                   value = title,
                   onValueChange = { title = it },
                   label = { Text(stringResource(id = R.string.polls_create_a_poll_title_field)) })
               OutlinedTextField(
+                  maxLines = 2,
                   modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("poll query field"),
                   value = query,
                   onValueChange = { query = it },
@@ -82,6 +84,7 @@ fun CreatePollDialog(
             items(options.indices.toList()) { id ->
               var optionMutable by remember { mutableStateOf(options[id]) }
               OutlinedTextField(
+                  maxLines = 2,
                   modifier =
                       Modifier.fillMaxWidth()
                           .padding(5.dp)
