@@ -33,19 +33,18 @@ class EventCreation {
   val timeout: Long = 3000 // in milliseconds
 
   val database = Database()
-  val account = ChimpagneAccount(
-    firebaseAuthUID = "ovoland",
-    firstName = "Graphics",
-    lastName = "Expert",
-    joinedEvents = hashMapOf()
-  )
+  val account =
+      ChimpagneAccount(
+          firebaseAuthUID = "ovoland",
+          firstName = "Graphics",
+          lastName = "Expert",
+          joinedEvents = hashMapOf())
 
-  @get:Rule
-  val composeTestRule = createComposeRule()
+  @get:Rule val composeTestRule = createComposeRule()
 
   @get:Rule
   val mRuntimePermissionRule: GrantPermissionRule =
-    GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
+      GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
 
   @Before
   fun init() {
@@ -68,12 +67,16 @@ class EventCreation {
       accountViewModel = viewModel(factory = AccountViewModelFactory(database))
 
       NavigationGraph(
-        navController = navController, accountViewModel = accountViewModel, database = database)
+          navController = navController, accountViewModel = accountViewModel, database = database)
     }
-    composeTestRule.waitUntil(timeout) { navController.currentDestination?.route == Route.HOME_SCREEN }
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route == Route.HOME_SCREEN
+    }
 
     composeTestRule.onNodeWithTag("organize_event_button").performClick()
-    composeTestRule.waitUntil(timeout) { navController.currentDestination?.route == Route.EVENT_CREATION_SCREEN }
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route == Route.EVENT_CREATION_SCREEN
+    }
     composeTestRule.onNodeWithTag("add_a_title").performTextInput(eventName)
     composeTestRule.onNodeWithTag("next_button").performClick()
     composeTestRule.onNodeWithTag("next_button").performClick()
@@ -81,14 +84,19 @@ class EventCreation {
     composeTestRule.onNodeWithTag("next_button").performClick()
     composeTestRule.onNodeWithTag("last_button").performClick()
 
-    composeTestRule.waitUntil(timeout) { navController.currentDestination?.route == Route.HOME_SCREEN }
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route == Route.HOME_SCREEN
+    }
     composeTestRule.onNodeWithTag("open_events_button").performClick()
 
-    composeTestRule.waitUntil(timeout) { navController.currentDestination?.route == Route.MY_EVENTS_SCREEN }
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
+    }
     composeTestRule.onNodeWithTag("a created event").performClick()
 
-    composeTestRule.waitUntil(timeout) { navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false }
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
+    }
     composeTestRule.onNodeWithText(eventName, useUnmergedTree = true).assertIsDisplayed()
   }
-
 }
