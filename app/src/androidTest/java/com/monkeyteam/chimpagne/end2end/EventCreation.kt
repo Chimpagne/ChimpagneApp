@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.end2end
 import android.Manifest
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -98,6 +100,37 @@ class EventCreation {
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), timeout)
     composeTestRule.onNodeWithText(eventName, useUnmergedTree = true).assertExists()
     composeTestRule.onNodeWithTag("a created event").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
+    }
+    composeTestRule.waitUntilAtLeastOneExists(hasText(eventName), timeout)
+    composeTestRule.onNodeWithTag("manage staff").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.MANAGE_STAFF_SCREEN) ?: false
+    }
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
+    }
+    composeTestRule.onNodeWithTag("supplies").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.SUPPLIES_SCREEN) ?: false
+    }
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
+    }
+    composeTestRule.onNodeWithTag("polls").performClick()
+
+    composeTestRule.waitUntil(timeout) {
+      navController.currentDestination?.route?.startsWith(Route.POLLS_SCREEN) ?: false
+    }
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
 
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
