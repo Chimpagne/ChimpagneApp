@@ -101,7 +101,8 @@ fun PollsAndVotingScreen(
         if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
             .contains(eventUIState.currentUserRole)) {
           FloatingActionButton(
-              modifier = Modifier.size(70.dp), onClick = { displayCreatePollDialog = true }) {
+              modifier = Modifier.size(70.dp).testTag("fab_create_poll"),
+              onClick = { displayCreatePollDialog = true }) {
                 Icon(Icons.Rounded.Add, "create poll button")
               }
         }

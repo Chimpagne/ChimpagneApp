@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -84,7 +83,6 @@ class LocationViewModel(myContext: Context) {
 }
 
 @SuppressLint("StateFlowValueCalledInComposition", "MissingPermission")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navObject: NavigationActions,
@@ -256,6 +254,7 @@ fun HomeScreen(
                       items(closestEventsState.value) { event ->
                         EventCard(
                             event,
+                            modifier = Modifier.testTag(event.id),
                             onClick = { navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}") })
                       }
                     }

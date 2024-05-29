@@ -80,7 +80,7 @@ class FindEventsViewModel(database: Database) : ViewModel() {
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {},
       chimpagneAccountUID: ChimpagneAccountUID,
-      radiusInM: Double = 100000.0,
+      radiusInM: Double = Double.MAX_VALUE,
       nDaysInTheFuture: Int = 10
   ) {
     var filter =
