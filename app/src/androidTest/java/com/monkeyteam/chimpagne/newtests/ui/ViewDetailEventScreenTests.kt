@@ -247,7 +247,7 @@ class ViewDetailEventScreenTests {
       OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
     }
 
-    composeTestRule.onNodeWithTag("share").assertExists()
+    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
 
     Thread.sleep(2000)
     accountViewModel.logoutFromChimpagneAccount()

@@ -23,6 +23,7 @@ import com.monkeyteam.chimpagne.ui.AccommodationsRow
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
+import com.monkeyteam.chimpagne.ui.components.areAllSocialMediaLinksEmpty
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -40,7 +41,7 @@ fun EventActions(
   val context = LocalContext.current
 
   Column {
-    if (uiState.socialMediaLinks.isNotEmpty()) {
+    if (!areAllSocialMediaLinksEmpty(uiState.socialMediaLinks)) {
       ChimpagneLogoDivider(
           text = stringResource(id = R.string.event_details_screen_socials),
           icon = painterResource(id = R.drawable.socials),

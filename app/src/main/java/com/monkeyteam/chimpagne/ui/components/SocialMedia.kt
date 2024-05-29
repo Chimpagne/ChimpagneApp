@@ -9,7 +9,11 @@ data class SocialMedia(
     val labelResource: Int = 0,
     val iconResource: Int = 0,
     val testTag: String = ""
-)
+) {
+  fun isEmpty(): Boolean {
+    return chosenGroupUrl.isBlank()
+  }
+}
 
 val SupportedSocialMedia =
     listOf(
@@ -58,4 +62,8 @@ fun convertSMLinksToSM(socialMediaLinks: Map<String, String>): Map<String, Socia
 
 fun convertSMToSMLinks(socialMedia: Map<String, SocialMedia>): Map<String, String> {
   return socialMedia.mapValues { it.value.chosenGroupUrl }
+}
+
+fun areAllSocialMediaLinksEmpty(socialMediaLinks: Map<String, SocialMedia>): Boolean {
+  return socialMediaLinks.values.all { it.isEmpty() }
 }
