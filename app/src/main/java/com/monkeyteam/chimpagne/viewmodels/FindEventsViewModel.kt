@@ -72,7 +72,11 @@ class FindEventsViewModel(database: Database) : ViewModel() {
     }
   }
 
-  fun fetchAroundLocation(
+  /**
+   * Fetch public events around a location, given a radius in meters. Only events in the given date
+   * range are fetched.
+   */
+  fun fetchFeedEvents(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {},
       chimpagneAccountUID: ChimpagneAccountUID,

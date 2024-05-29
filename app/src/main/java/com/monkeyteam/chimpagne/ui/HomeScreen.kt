@@ -130,7 +130,7 @@ fun HomeScreen(
       }
     }
 
-    findViewModel.fetchAroundLocation(
+    findViewModel.fetchFeedEvents(
         onSuccess = {
           findViewModel.uiState.value.events.forEach { (_, u) -> eventsNearMe.add(u) }
 

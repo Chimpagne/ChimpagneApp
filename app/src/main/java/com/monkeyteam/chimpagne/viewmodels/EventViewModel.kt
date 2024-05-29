@@ -73,6 +73,9 @@ class EventViewModel(
   }
 
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
+  /**
+   * If the eventID is null, the event is created. If the eventID is not null, the event is updated.
+   */
   fun fetchEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     if (eventID != null) {
       _uiState.value = _uiState.value.copy(loading = true)
