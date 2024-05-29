@@ -206,7 +206,10 @@ fun NavigationGraph(
                   EventViewModel.EventViewModelFactory(
                       backStackEntry.arguments?.getString("EventID"), database))
       eventViewModel.fetchEvent()
-      PollsAndVotingScreen(eventViewModel = eventViewModel, onGoBack = { navActions.goBack() })
+      PollsAndVotingScreen(
+          eventViewModel = eventViewModel,
+          accountViewModel = accountViewModel,
+          onGoBack = { navActions.goBack() })
     }
   }
 }
