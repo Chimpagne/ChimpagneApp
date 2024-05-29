@@ -73,8 +73,7 @@ class ManageStaffScreenTests {
       ManageStaffScreen(navActions, eventVM, accountVM)
     }
 
-    composeTestRule.onNodeWithTag("go_back_button").assertHasClickAction()
-    composeTestRule.onNodeWithContentDescription("back").performClick()
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

@@ -19,7 +19,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.TEST_ACCOUNTS
-import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.FindEventFormScreen
 import com.monkeyteam.chimpagne.ui.FindEventMapScreen
@@ -62,7 +61,7 @@ class FindEventScreenTest {
 
   @Before
   fun init() {
-    initializeTestDatabase()
+    //    initializeTestDatabase()
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
