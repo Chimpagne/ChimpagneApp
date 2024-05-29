@@ -169,8 +169,6 @@
     <string name="activate_gps">ACTIVER GPS</string>
     <string name="confirm_delete_title">Supprimer le compte</string>
     <string name="confirm_delete_message">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
-    <string name="confirm">Oui</string>
-    <string name="cancel">Non</string>
     <string name="account_settings">Paramètres du compte</string>
     <string name="accountEditScreenButton">Editer compte</string>
 
