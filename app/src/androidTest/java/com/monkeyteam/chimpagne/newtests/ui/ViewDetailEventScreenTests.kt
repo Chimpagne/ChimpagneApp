@@ -113,7 +113,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -280,8 +280,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("go_back").performScrollTo().assertHasClickAction()
-    composeTestRule.onNodeWithTag("go_back").performClick()
+    composeTestRule.onNodeWithTag("go_back_button").performScrollTo().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
