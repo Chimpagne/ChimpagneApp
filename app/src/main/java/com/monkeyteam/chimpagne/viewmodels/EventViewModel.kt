@@ -73,6 +73,9 @@ class EventViewModel(
   }
 
   /* THIS MUST BE CALLED IN MAIN ACTIVITY ON TRANSITION TO THE SCREEN THAT USES THE VIEW MODEL */
+  /**
+   * If the eventID is null, the event is created. If the eventID is not null, the event is updated.
+   */
   fun fetchEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     if (eventID != null) {
       _uiState.value = _uiState.value.copy(loading = true)
@@ -156,7 +159,7 @@ class EventViewModel(
     return _uiState.value.socialMediaLinks.values.any { isInvalidUrl(it) }
   }
 
-  fun createTheEvent(
+  fun createEvent(
       onSuccess: (id: String) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {},
       onFailure: (Exception) -> Unit = {}
@@ -185,7 +188,7 @@ class EventViewModel(
     }
   }
 
-  fun updateTheEvent(
+  fun updateEvent(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {},
       onInvalidInputs: (EventInputValidity) -> Unit = {}
@@ -196,6 +199,7 @@ class EventViewModel(
       onInvalidInputs(invalidInput)
       return
     } else {
+      // Only update with valid inputs
       _uiState.value = _uiState.value.copy(loading = true)
       viewModelScope.launch {
         val newEventPicture = _uiState.value.tempImageUri
@@ -216,7 +220,7 @@ class EventViewModel(
     }
   }
 
-  fun deleteTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun deleteEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       eventManager.deleteEvent(
@@ -272,7 +276,7 @@ class EventViewModel(
     }
   }
 
-  fun leaveTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun leaveEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       val accountUID = accountManager.currentUserAccount!!.firebaseAuthUID

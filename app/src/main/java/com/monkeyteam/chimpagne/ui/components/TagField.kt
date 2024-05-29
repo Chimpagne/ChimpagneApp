@@ -21,6 +21,11 @@ import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
 import java.util.Locale
 
+/**
+ * Builds a [TagField] composable. This has the following features:
+ * - tag prediction : common tags are displayed as suggestions
+ * - Auto complete
+ */
 @Composable
 fun TagField(
     selectedTags: List<String>,

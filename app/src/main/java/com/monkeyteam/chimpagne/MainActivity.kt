@@ -23,7 +23,7 @@ import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
+import com.monkeyteam.chimpagne.model.database.PRODUCTION_TABLES
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
@@ -48,7 +48,7 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-  val database = Database(PUBLIC_TABLES)
+  val database = Database(PRODUCTION_TABLES)
   private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -217,7 +217,9 @@ class MainActivity : ComponentActivity() {
                               backStackEntry.arguments?.getString("EventID"), database))
               eventViewModel.fetchEvent()
               PollsAndVotingScreen(
-                  eventViewModel = eventViewModel, onGoBack = { navActions.goBack() })
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() })
             }
           }
         }
