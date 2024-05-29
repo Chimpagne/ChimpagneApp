@@ -54,7 +54,6 @@ import androidx.core.content.ContextCompat.startActivity
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
-import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import java.util.Locale
@@ -100,6 +99,7 @@ fun IconTextButton(
     icon: ImageVector,
     textStyle: TextStyle = ChimpagneTypography.titleSmall,
     color: Color = MaterialTheme.colorScheme.surfaceVariant,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -113,21 +113,8 @@ fun IconTextButton(
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
-        Text(text.uppercase(Locale.ROOT), style = textStyle)
+        Text(text.uppercase(Locale.ROOT), style = textStyle.copy(color = textColor))
       }
-}
-
-@Deprecated(
-    "Use GoBackButton(onClick: () -> Unit) instead",
-    replaceWith = ReplaceWith("GoBackButton(onClick = onGoBack)"))
-@Composable
-fun GoBackButton(navigationActions: NavigationActions) {
-  IconButton(onClick = { navigationActions.goBack() }) {
-    Icon(
-        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-        contentDescription = "Go Back",
-        tint = MaterialTheme.colorScheme.onSurface)
-  }
 }
 
 @Composable

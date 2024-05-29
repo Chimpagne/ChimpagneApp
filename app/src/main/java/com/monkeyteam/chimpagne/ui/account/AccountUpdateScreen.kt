@@ -146,6 +146,7 @@ fun AccountUpdateScreen(
       }
 }
 
+/** Checks if the account is empty, and displays toasts accordingly. */
 fun checkNotEmpty(account: ChimpagneAccount, context: Context): Boolean {
   return if (account.firstName == "") {
     Toast.makeText(

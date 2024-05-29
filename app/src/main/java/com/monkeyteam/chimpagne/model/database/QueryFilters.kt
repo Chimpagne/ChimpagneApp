@@ -5,6 +5,7 @@ import com.google.firebase.firestore.Filter
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import java.util.Calendar
 
+/** Filters used by the feed and the Discover Events page. */
 fun containsTagsFilter(tags: List<String>): Filter {
   return Filter.arrayContainsAny("tags", tags)
 }

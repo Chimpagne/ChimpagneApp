@@ -98,6 +98,7 @@
     <string name="join_event_staff">Already a Staff Member for this Event</string>
     <string name="join_event_guest">You are already a Guest at this Event</string>
     <string name="join_event_owner">You are the Owner of this Event</string>
+    <string name="delete_account">Delete Account</string>
 
     <string name="find_event_location_set">Location set</string>
     <string name="find_event_location_not_found">Location not found</string>
@@ -124,6 +125,7 @@
     <string name="chimpagne_delete">Delete</string>
     <string name="chimpagne_you">You</string>
     <string name="chimpagne_ok">OK</string>
+    <string name="chimpagne_return">Return</string>
 
     <!--    Supplies    -->
     <string name="supplies_screen_title">Supplies to bring</string>
@@ -180,5 +182,18 @@
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+    <string name="confirm_delete_title">Deleting Account</string>
+    <string name="confirm_delete_message">Are you sure you want to delete your account ?</string>
     <string name="account_settings">Account settings</string>
+
+    <!-- Polls and Voting -->
+    <string name="polls_topbar_title">Polls and Voting</string>
+    <string name="polls_legend_text">Event Polls</string>
+    <string name="polls_empty_poll_list">No polls were created for this event</string>
+    <string name="polls_create_a_poll_title">Create a Poll</string>
+    <string name="polls_create_a_poll_empty_field_toast">Cannot create poll because some fields are empty</string>
+    <string name="polls_create_a_poll_title_field">Poll title</string>
+    <string name="polls_create_a_poll_query_field">Poll query</string>
+    <string name="polls_create_a_poll_option_field">Poll option</string>
+
 </resources>

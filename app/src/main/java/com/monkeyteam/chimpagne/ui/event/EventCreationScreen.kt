@@ -1,15 +1,12 @@
 package com.monkeyteam.chimpagne.ui.event
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.monkeyteam.chimpagne.R
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -55,19 +53,16 @@ fun EventCreationScreen(
       topBar = {
         TopBar(
             text = stringResource(id = R.string.event_creation_screen_title),
-            navigationIcon = {
-              IconButton(onClick = { navObject.goBack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-              }
-            })
+            navigationIcon = { GoBackButton { navObject.goBack() } })
       },
       bottomBar = {
         PanelBottomBar(
             pagerState = pagerState,
             lastButtonText = stringResource(id = R.string.event_creation_screen_create_event),
             lastButtonOnClick = {
+              Log.d("EventCreationScreen", "Create event button clicked ${uiState.loading}")
               if (!uiState.loading) {
-                eventViewModel.createTheEvent(
+                eventViewModel.createEvent(
                     onInvalidInputs = {
                       showToast(EventViewModel.eventInputValidityToString(it, context))
                     },

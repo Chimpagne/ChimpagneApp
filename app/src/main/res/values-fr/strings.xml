@@ -97,6 +97,7 @@
     <string name="join_event_staff">Vous êtes déjà un membre du Staff pour cet Evénement</string>
     <string name="join_event_guest">Vous êtes déjà inscrit à cet Evénement</string>
     <string name="join_event_owner">Vous êtes l\'Organisateur de cet Evénement</string>
+    <string name="delete_account">Supprimer le compte</string>
 
     <string name="find_event_location_set">Localisé</string>
     <string name="find_event_location_not_found">Localisation échouée</string>
@@ -122,6 +123,7 @@
     <string name="chimpagne_delete">Supprimer</string>
     <string name="chimpagne_you">Vous</string>
     <string name="chimpagne_ok">OK</string>
+    <string name="chimpagne_return">Retourner</string>
 
     <!--    Supplies    -->
     <string name="supplies_screen_title">Liste de fournitures</string>
@@ -173,8 +175,19 @@
     <string name="events_near_you">Evénements proches de vous</string>
     <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
     <string name="activate_gps">ACTIVER GPS</string>
+    <string name="confirm_delete_title">Supprimer le compte</string>
+    <string name="confirm_delete_message">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
     <string name="account_settings">Paramètres du compte</string>
     <string name="accountEditScreenButton">Editer compte</string>
 
 
+    <!-- Polls and Voting -->
+    <string name="polls_topbar_title">Votes et sondages</string>
+    <string name="polls_legend_text">Sondages de l\'événement</string>
+    <string name="polls_empty_poll_list">Il n\'y aucun sondage pour cet événement</string>
+    <string name="polls_create_a_poll_title">Créez un sondage</string>
+    <string name="polls_create_a_poll_empty_field_toast">Ne peut pas créer un sondage car il y a des champs vide</string>
+    <string name="polls_create_a_poll_title_field">Titre du sondage</string>
+    <string name="polls_create_a_poll_query_field">Question du sondage</string>
+    <string name="polls_create_a_poll_option_field">Option</string>
 </resources>

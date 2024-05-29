@@ -15,6 +15,7 @@ data class SocialMedia(
   }
 }
 
+/** Used to add links inside the app. This is also used for non-social media links, like spotify */
 val SupportedSocialMedia =
     listOf(
         SocialMedia(

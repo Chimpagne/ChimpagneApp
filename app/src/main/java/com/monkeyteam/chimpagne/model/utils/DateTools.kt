@@ -50,12 +50,14 @@ fun timestampToStringWithDateAndTime(timestamp: Timestamp): String {
       DateFormat.getTimeInstance(DateFormat.SHORT).format(timestamp.toDate())
 }
 
+/** Returns the date in dd/MM/yyyy format. */
 @Composable
 fun simpleDateFormat(timestamp: Timestamp): String {
   val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
   return dateFormat.format(timestamp.toDate())
 }
 
+/** Returns the time in HH:mm format. */
 @Composable
 fun simpleTimeFormat(timestamp: Timestamp): String {
   val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())

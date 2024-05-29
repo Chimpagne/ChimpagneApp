@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 class AccountViewModel(database: Database) : ViewModel() {
 
   private val accountManager = database.accountManager
+  private val eventManager = database.eventManager
 
   private val _uiState = MutableStateFlow(AccountUIState())
   val uiState: StateFlow<AccountUIState> = _uiState
@@ -131,6 +132,12 @@ class AccountViewModel(database: Database) : ViewModel() {
         accountUIDs,
         { _uiState.value = _uiState.value.copy(fetchedAccounts = it, loading = false) },
         { _uiState.value = _uiState.value.copy(loading = false) })
+  }
+
+  fun deleteAccount(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+    eventManager.deleteAllRelatedEvents(_uiState.value.currentUserUID!!, onSuccess, onFailure)
+    accountManager.deleteAccount(
+        _uiState.value.currentUserUID!!, onSuccess = { onSuccess() }, onFailure = { onFailure(it) })
   }
 }
 
