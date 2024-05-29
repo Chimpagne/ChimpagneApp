@@ -62,7 +62,7 @@ class FindEventScreenTest {
 
   @Before
   fun init() {
-        initializeTestDatabase()
+    initializeTestDatabase()
   }
 
   @OptIn(ExperimentalMaterial3Api::class)
