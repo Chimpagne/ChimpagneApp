@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Poll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +38,6 @@ import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PollsAndVotingScreen(
     eventViewModel: EventViewModel,
@@ -49,38 +47,38 @@ fun PollsAndVotingScreen(
   val eventUIState by eventViewModel.uiState.collectAsState()
   val accountUIState by accountViewModel.uiState.collectAsState()
 
-  var displayCreatePollPopup by remember { mutableStateOf(false) }
-  var displayVotePollPopup by remember { mutableStateOf(false) }
-  var displayViewPollPopup by remember { mutableStateOf(false) }
+  var displayCreatePollDialog by remember { mutableStateOf(false) }
+  var displayVotePollDialog by remember { mutableStateOf(false) }
+  var displayViewPollDialog by remember { mutableStateOf(false) }
   var selectedPollId by remember { mutableStateOf("") }
 
-  if (displayCreatePollPopup) {
+  if (displayCreatePollDialog) {
     CreatePollDialog(
         onPollCreate = {
           eventViewModel.createPollAtomically(
-              poll = it, onSuccess = { displayCreatePollPopup = false })
+              poll = it, onSuccess = { displayCreatePollDialog = false })
         },
-        onPollCancel = { displayCreatePollPopup = false },
-        onDismissRequest = { displayCreatePollPopup = false })
+        onPollCancel = { displayCreatePollDialog = false },
+        onDismissRequest = { displayCreatePollDialog = false })
   }
-  if (displayVotePollPopup) {
+  if (displayVotePollDialog) {
     val poll = eventUIState.polls[selectedPollId]!!
     VotePollDialog(
         poll = poll,
         userRole = eventUIState.currentUserRole,
         onOptionVote = {
           eventViewModel.castPollVoteAtomically(
-              pollId = selectedPollId, optionIndex = it, { displayViewPollPopup = true })
+              pollId = selectedPollId, optionIndex = it, { displayViewPollDialog = true })
         },
         onPollDelete = {
           eventViewModel.deletePollAtomically(
-              pollId = it, onSuccess = { displayVotePollPopup = false })
+              pollId = it, onSuccess = { displayVotePollDialog = false })
         },
-        onPollCancel = { displayVotePollPopup = false },
-        onDismissRequest = { displayVotePollPopup = false })
+        onPollCancel = { displayVotePollDialog = false },
+        onDismissRequest = { displayVotePollDialog = false })
   }
-  if (displayViewPollPopup) {
-    displayVotePollPopup = false
+  if (displayViewPollDialog) {
+    displayVotePollDialog = false
     val poll = eventUIState.polls[selectedPollId]!!
     ViewPollDialog(
         poll = poll,
@@ -88,10 +86,10 @@ fun PollsAndVotingScreen(
         userRole = eventUIState.currentUserRole,
         onPollDelete = {
           eventViewModel.deletePollAtomically(
-              pollId = it, onSuccess = { displayViewPollPopup = false })
+              pollId = it, onSuccess = { displayViewPollDialog = false })
         },
-        onPollCancel = { displayViewPollPopup = false },
-        onDismissRequest = { displayViewPollPopup = false })
+        onPollCancel = { displayViewPollDialog = false },
+        onDismissRequest = { displayViewPollDialog = false })
   }
   Scaffold(
       topBar = {
@@ -103,7 +101,7 @@ fun PollsAndVotingScreen(
         if (listOf(ChimpagneRole.OWNER, ChimpagneRole.STAFF)
             .contains(eventUIState.currentUserRole)) {
           FloatingActionButton(
-              modifier = Modifier.size(70.dp), onClick = { displayCreatePollPopup = true }) {
+              modifier = Modifier.size(70.dp), onClick = { displayCreatePollDialog = true }) {
                 Icon(Icons.Rounded.Add, "create poll button")
               }
         }
@@ -136,9 +134,9 @@ fun PollsAndVotingScreen(
                         onClick = {
                           selectedPollId = poll.id
                           if (poll.votes.containsKey(accountUIState.currentUserUID)) {
-                            displayViewPollPopup = true
+                            displayViewPollDialog = true
                           } else {
-                            displayVotePollPopup = true
+                            displayVotePollDialog = true
                           }
                         })
                   }

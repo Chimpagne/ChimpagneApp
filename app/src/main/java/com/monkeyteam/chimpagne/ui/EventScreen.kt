@@ -234,6 +234,7 @@ fun EventScreen(
                 item { ChimpagneDivider() }
                 item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
                 item { ChimpagneDivider() }
+
                 if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
                   // Do nothing extra
                 } else {

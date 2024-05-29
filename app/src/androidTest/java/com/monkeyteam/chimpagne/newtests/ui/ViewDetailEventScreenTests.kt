@@ -269,7 +269,8 @@ class ViewDetailEventScreenTests {
     Thread.sleep(2000)
 
     composeTestRule
-        .onNodeWithTag("organiser", useUnmergedTree = true)
+
+        .onNodeWithTag("share", useUnmergedTree = true)
         .performScrollTo()
         .assertIsDisplayed()
   }
