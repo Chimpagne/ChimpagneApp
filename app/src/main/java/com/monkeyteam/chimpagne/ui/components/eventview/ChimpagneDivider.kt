@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
@@ -26,11 +26,11 @@ fun ChimpagneDivider() {
 }
 
 @Composable
-fun ChimpagneLogoDivider(text: String, icon: Painter, modifier: Modifier = Modifier) {
+fun ChimpagneLogoDivider(text: String, icon: ImageVector, modifier: Modifier = Modifier) {
   Row(
       verticalAlignment = Alignment.CenterVertically,
       modifier = modifier.padding(vertical = 8.dp, horizontal = 5.dp).fillMaxWidth()) {
-        Icon(painter = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+        Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = text, fontSize = 16.sp, style = ChimpagneTypography.titleMedium)
         HorizontalDivider(modifier = Modifier.weight(1f).padding(start = 8.dp).height(1.dp))

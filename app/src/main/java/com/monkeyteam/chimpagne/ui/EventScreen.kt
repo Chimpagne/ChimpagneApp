@@ -25,6 +25,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Login
+import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.DirectionsCar
+import androidx.compose.material.icons.rounded.KingBed
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +53,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -237,7 +240,7 @@ fun EventScreen(
                 item {
                   ChimpagneLogoDivider(
                       text = stringResource(id = R.string.event_details_screen_description),
-                      icon = painterResource(id = R.drawable.description),
+                      icon = Icons.Rounded.Description,
                       modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
                 }
                 item {
@@ -247,7 +250,7 @@ fun EventScreen(
                 item {
                   ChimpagneLogoDivider(
                       text = stringResource(id = R.string.event_details_screen_organiser),
-                      icon = painterResource(id = R.drawable.event_organiser),
+                      icon = Icons.Rounded.Person,
                       modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
                 }
                 item {
@@ -315,12 +318,9 @@ data class IconInfo(
 )
 
 @Composable
-fun AccommodationsBox(iconRes: Int, text: String) {
+fun AccommodationsBox(icon: ImageVector, text: String) {
   Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
-    Icon(
-        painter = painterResource(id = iconRes),
-        contentDescription = null,
-        modifier = Modifier.size(24.dp))
+    Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
     Spacer(modifier = Modifier.width(8.dp))
     Text(
         text = text,
@@ -339,10 +339,10 @@ fun AccommodationsRow(eventViewModel: EventViewModel) {
       modifier = Modifier.fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically) {
         AccommodationsBox(
-            iconRes = R.drawable.bed_icon,
+            icon = Icons.Rounded.KingBed,
             text = "${uiState.beds} ${stringResource(id = R.string.event_details_screen_beds)}")
         AccommodationsBox(
-            iconRes = R.drawable.car_icon,
+            icon = Icons.Rounded.DirectionsCar,
             text =
                 "${uiState.parkingSpaces} ${stringResource(id = R.string.event_details_screen_slots)}")
       }

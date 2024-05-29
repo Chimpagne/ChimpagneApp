@@ -6,15 +6,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backpack
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.House
+import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
+import androidx.compose.material.icons.rounded.TouchApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
@@ -44,20 +46,20 @@ fun EventActions(
     if (!areAllSocialMediaLinksEmpty(uiState.socialMediaLinks)) {
       ChimpagneLogoDivider(
           text = stringResource(id = R.string.event_details_screen_socials),
-          icon = painterResource(id = R.drawable.socials),
+          icon = Icons.Rounded.People,
           modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
       SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
     }
     ChimpagneLogoDivider(
         text = stringResource(id = R.string.event_details_screen_facilities),
-        icon = painterResource(id = R.drawable.accommodation),
+        icon = Icons.Rounded.House,
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
 
     AccommodationsRow(eventViewModel)
 
     ChimpagneLogoDivider(
         text = stringResource(id = R.string.event_details_screen_actions),
-        icon = painterResource(id = R.drawable.action),
+        icon = Icons.Rounded.TouchApp,
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
     val iconList = mutableListOf<IconInfo>()
     if (uiState.currentUserRole == ChimpagneRole.OWNER) {
