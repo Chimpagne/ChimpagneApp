@@ -54,11 +54,15 @@ fun SimpleMapCard(startingPosition: Location) {
   }
 
   LaunchedEffect(startingPosition) {
-    val zoomLevel = getZoomLevel(2000.0)
-    val cameraUpdate =
-        CameraUpdateFactory.newLatLngZoom(
-            LatLng(startingPosition.latitude, startingPosition.longitude), zoomLevel)
-    cameraPositionState.move(cameraUpdate)
+    try {
+      val zoomLevel = getZoomLevel(2000.0)
+      val cameraUpdate =
+          CameraUpdateFactory.newLatLngZoom(
+              LatLng(startingPosition.latitude, startingPosition.longitude), zoomLevel)
+      cameraPositionState.move(cameraUpdate)
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
   }
 
   Box(

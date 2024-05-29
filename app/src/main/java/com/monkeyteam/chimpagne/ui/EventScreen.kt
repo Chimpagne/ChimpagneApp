@@ -223,10 +223,6 @@ fun EventScreen(
                   EventDescription(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
-                item { SimpleMapCard(startingPosition = uiState.location) }
-                item { ChimpagneDivider() }
-                item { ChimpagneDivider() }
-                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
                 item { ChimpagneDivider() }
                 item {
                   OrganiserView(
@@ -234,6 +230,10 @@ fun EventScreen(
                       accountViewModel,
                       event = eventViewModel.buildChimpagneEvent())
                 }
+                item { SimpleMapCard(startingPosition = uiState.location) }
+                item { ChimpagneDivider() }
+                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
+                item { ChimpagneDivider() }
                 if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
                   // Do nothing extra
                 } else {

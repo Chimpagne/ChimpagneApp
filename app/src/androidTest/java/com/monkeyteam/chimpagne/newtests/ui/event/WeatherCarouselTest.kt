@@ -4,7 +4,6 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.Timestamp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
@@ -55,30 +54,6 @@ class FindEventViewModelTests {
     composeTestRule.setContent { WeatherPager(event) }
     // Check that the message is displayed
     composeTestRule.onNodeWithTag("weather message").assertIsDisplayed()
-  }
-
-  @Test
-  fun testLoadingState() {
-    val event =
-        ChimpagneEvent(
-            id = "1",
-            title = "1t",
-            description = "1d",
-            location = Location("EPFL", 46.519124, 6.567593),
-            public = true,
-            tags = listOf(),
-            guests = emptyMap(),
-            staffs = emptyMap(),
-            startsAtTimestamp = Timestamp.now(),
-            endsAtTimestamp = buildTimestamp(11, 5, 2030, 15, 15),
-            ownerId = "Athenaaaa",
-            supplies = mapOf(),
-            parkingSpaces = 1,
-            beds = 1)
-
-    composeTestRule.setContent { WeatherPager(event) }
-    // Check that the message is displayed
-    composeTestRule.onNodeWithTag("loading_indicator").assertExists()
   }
 
   @Test

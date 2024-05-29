@@ -59,7 +59,7 @@ fun OrganiserView(
   Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween,
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+      modifier = Modifier.fillMaxWidth().testTag("organiser").padding(horizontal = 16.dp)) {
         Row {
           profilePictureUriState.value?.let { uri -> ProfileIcon(uri = uri, onClick = {}) }
               ?: CircularProgressIndicator()
@@ -80,7 +80,7 @@ fun OrganiserView(
 
         Box(
             modifier =
-                Modifier.testTag("share")
+                Modifier.testTag("shareevent")
                     .shadow(6.dp, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer)
