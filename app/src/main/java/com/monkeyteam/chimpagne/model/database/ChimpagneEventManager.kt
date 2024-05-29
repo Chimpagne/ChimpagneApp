@@ -51,6 +51,8 @@ class ChimpagneEventManager(
         .addOnCompleteListener {
           val matchingEvents: MutableList<ChimpagneEvent> = ArrayList()
           for (task in tasks) {
+            // Takes a snapshot of the query
+            // see https://firebase.google.com/docs/firestore/query-data/listen#kotlin+ktx
             val snap = task.result
             for (doc in snap!!.documents) {
               val event = doc.toObject<ChimpagneEvent>()!!
@@ -146,7 +148,7 @@ class ChimpagneEventManager(
       eventPictureUri: String? = null
   ) {
 
-    if (event.id == "") {
+    if (event.id.isEmpty()) {
       onFailure(Exception("null event id"))
       return
     }
@@ -219,5 +221,58 @@ class ChimpagneEventManager(
           onSuccess(events)
         }
         .addOnFailureListener { onFailure(it) }
+  }
+
+  fun deleteAllRelatedEvents(
+      userUID: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    val ownerQuery = events.whereEqualTo("ownerId", userUID).get()
+    val guestQuery = events.whereEqualTo("guests.$userUID", true).get()
+    val staffQuery = events.whereEqualTo("staffs.$userUID", true).get()
+
+    Tasks.whenAllComplete(ownerQuery, guestQuery, staffQuery)
+        .addOnCompleteListener { tasks ->
+          if (tasks.isSuccessful) {
+            val ownerDocs = ownerQuery.result?.documents ?: emptyList()
+            val guestDocs = guestQuery.result?.documents ?: emptyList()
+            val staffDocs = staffQuery.result?.documents ?: emptyList()
+
+            val deleteTasks =
+                ownerDocs.map { document -> events.document(document.id).delete() }.toMutableList()
+
+            val updateTasks =
+                (guestDocs + staffDocs).map { document ->
+                  val event = document.toObject<ChimpagneEvent>()
+                  val updatedGuests = event!!.guests.toMutableMap()
+                  val updatedStaffs = event.staffs.toMutableMap()
+
+                  updatedGuests.remove(userUID)
+                  updatedStaffs.remove(userUID)
+
+                  events
+                      .document(document.id)
+                      .update(mapOf("guests" to updatedGuests, "staffs" to updatedStaffs))
+                }
+
+            val allTasks = deleteTasks + updateTasks
+
+            Tasks.whenAllComplete(allTasks)
+                .addOnCompleteListener {
+                  if (it.isSuccessful) {
+                    onSuccess()
+                  } else {
+                    val exception = it.exception ?: Exception("Unknown error occurred")
+                    onFailure(exception)
+                  }
+                }
+                .addOnFailureListener { exception -> onFailure(exception) }
+          } else {
+            val exception = tasks.exception ?: Exception("Unknown error occurred")
+            onFailure(exception)
+          }
+        }
+        .addOnFailureListener { exception -> onFailure(exception) }
   }
 }

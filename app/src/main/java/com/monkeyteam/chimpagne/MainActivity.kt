@@ -23,7 +23,7 @@ import androidx.navigation.navDeepLink
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
+import com.monkeyteam.chimpagne.model.database.PRODUCTION_TABLES
 import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.HomeScreen
 import com.monkeyteam.chimpagne.ui.LoginScreen
@@ -34,6 +34,7 @@ import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
+import com.monkeyteam.chimpagne.ui.event.polls.PollsAndVotingScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
@@ -47,7 +48,7 @@ import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-  val database = Database(PUBLIC_TABLES)
+  val database = Database(PRODUCTION_TABLES)
   private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
   @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -207,6 +208,18 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   eventViewModel = eventViewModel,
                   accountViewModel = accountViewModel)
+            }
+            composable(Route.POLLS_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModel.EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent()
+              PollsAndVotingScreen(
+                  eventViewModel = eventViewModel,
+                  accountViewModel = accountViewModel,
+                  onGoBack = { navActions.goBack() })
             }
           }
         }

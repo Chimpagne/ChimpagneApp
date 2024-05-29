@@ -82,7 +82,7 @@ fun EventActions(
               description = stringResource(id = R.string.event_details_screen_leave_button),
               onClick = {
                 if (isUserLoggedIn) {
-                  eventViewModel.leaveTheEvent(
+                  eventViewModel.leaveEvent(
                       onSuccess = {
                         showToast(
                             context.getString(R.string.event_details_screen_leave_toast_success))
@@ -104,7 +104,7 @@ fun EventActions(
             IconInfo(
                 icon = Icons.Rounded.Poll,
                 description = stringResource(id = R.string.event_details_screen_voting_button),
-                onClick = { showToast("This function will be implemented in a future version") },
+                onClick = { navObject.navigateTo(Route.POLLS_SCREEN + "/" + uiState.id) },
                 testTag = "polls")))
     IconRow(icons = iconList)
     Spacer(modifier = Modifier.padding(8.dp))

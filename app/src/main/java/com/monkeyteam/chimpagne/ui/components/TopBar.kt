@@ -13,6 +13,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
+/**
+ * Used on every screen with a top bar. This ensure the text placement is consistent, as well as the
+ * positioning and font used.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
