@@ -42,6 +42,9 @@ fun CreatePollDialog(
   val options = remember { mutableStateListOf("", "") }
   val context = LocalContext.current
 
+  val minNumberOfOptions = 2
+  val maxNumberOfOptions = 4
+
   CustomDialog(
       title = stringResource(id = R.string.polls_create_a_poll_title),
       onDismissRequest = onDismissRequest,
@@ -101,7 +104,7 @@ fun CreatePollDialog(
                             (id + 1))
                   },
                   trailingIcon = {
-                    if (options.size > 2 && id == options.size - 1)
+                    if (options.size > minNumberOfOptions && id == options.size - 1)
                         Icon(
                             Icons.Rounded.RemoveCircle,
                             "remove option button",
@@ -110,7 +113,7 @@ fun CreatePollDialog(
             }
             item {
               Row {
-                if (options.size < 4) {
+                if (options.size < maxNumberOfOptions) {
                   Icon(
                       Icons.Rounded.AddCircle,
                       "add option button",
