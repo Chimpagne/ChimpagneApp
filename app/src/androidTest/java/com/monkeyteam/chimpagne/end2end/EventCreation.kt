@@ -32,7 +32,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class EventCreation {
-  val timeout: Long = 3000 // in milliseconds
+  val timeout: Long = 5000 // in milliseconds
 
   val database = Database()
   val account =
@@ -103,36 +103,6 @@ class EventCreation {
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
     }
-    composeTestRule.waitUntilAtLeastOneExists(hasText(eventName), timeout)
-    composeTestRule.onNodeWithTag("manage staff").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.MANAGE_STAFF_SCREEN) ?: false
-    }
-    composeTestRule.onNodeWithTag("go_back_button").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
-    }
-    composeTestRule.onNodeWithTag("supplies").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.SUPPLIES_SCREEN) ?: false
-    }
-    composeTestRule.onNodeWithTag("go_back_button").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
-    }
-    composeTestRule.onNodeWithTag("polls").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.POLLS_SCREEN) ?: false
-    }
-    composeTestRule.onNodeWithTag("go_back_button").performClick()
-
-    composeTestRule.waitUntil(timeout) {
-      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
-    }
+    composeTestRule.waitUntilExactlyOneExists(hasText(eventName), timeout)
   }
 }

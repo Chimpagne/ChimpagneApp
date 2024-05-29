@@ -10,7 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
+import com.monkeyteam.chimpagne.model.database.PRODUCTION_TABLES
 import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -18,7 +18,7 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
 
 class MainActivity : ComponentActivity() {
 
-  val database = Database(PUBLIC_TABLES)
+  val database = Database(PRODUCTION_TABLES)
   private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
