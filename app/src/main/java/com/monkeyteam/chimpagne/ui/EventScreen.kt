@@ -71,6 +71,7 @@ import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
+import com.monkeyteam.chimpagne.ui.utilities.WeatherPager
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
@@ -236,6 +237,8 @@ fun EventScreen(
                   EventDescription(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
+                item { ChimpagneDivider() }
+                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
                 item { ChimpagneDivider() }
                 item {
                   OrganiserView(
