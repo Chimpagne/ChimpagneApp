@@ -252,7 +252,7 @@ fun HomeScreen(
                             }
                       }
                     } else {
-                      items(closestEventsState.value) { event ->
+                      items(closestEventsState.value.sortedBy { it.startsAtTimestamp }) { event ->
                         EventCard(
                             event,
                             onClick = { navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}") })

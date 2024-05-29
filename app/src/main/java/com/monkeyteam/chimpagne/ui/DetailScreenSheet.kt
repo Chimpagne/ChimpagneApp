@@ -57,7 +57,7 @@ fun DetailScreenListSheet(
               .nestedScroll(nestedScrollConnection), // Add nested scroll modifier
       state = lazyListState // Attach LazyListState to track scroll position
       ) {
-        items(events) { event ->
+        items(events.sortedBy { it.startsAtTimestamp }) { event ->
           EventCard(
               event = event,
               onClick = { onEventClick(event) }, // Use the provided onJoinClick callback

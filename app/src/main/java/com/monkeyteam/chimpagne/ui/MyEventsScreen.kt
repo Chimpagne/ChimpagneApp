@@ -66,7 +66,8 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         modifier = Modifier.padding(16.dp).testTag("empty create event list"))
                   }
                 } else {
-                  items(uiState.createdEvents.values.toList()) { event ->
+                  items(uiState.createdEvents.values.toList().sortedBy { it.startsAtTimestamp }) {
+                      event ->
                     EventCard(event = event, modifier = Modifier.testTag("a created event")) {
                       navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
                     }
@@ -86,7 +87,8 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         modifier = Modifier.padding(16.dp).testTag("empty join event list"))
                   }
                 } else {
-                  items(uiState.joinedEvents.values.toList()) { event ->
+                  items(uiState.joinedEvents.values.toList().sortedBy { it.startsAtTimestamp }) {
+                      event ->
                     EventCard(event = event, modifier = Modifier.testTag("a joined event")) {
                       navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
                     }
@@ -108,11 +110,15 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
                         modifier = Modifier.padding(16.dp).testTag("empty_past_events_list"))
                   }
                 } else {
-                  items(uiState.pastEvents.values.toList()) { event ->
-                    EventCard(event = event, modifier = Modifier.testTag("past_event_card")) {
-                      navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
-                    }
-                  }
+                  items(
+                      uiState.pastEvents.values
+                          .toList()
+                          .sortedBy { it.endsAtTimestamp }
+                          .reversed()) { event ->
+                        EventCard(event = event, modifier = Modifier.testTag("past_event_card")) {
+                          navObject.navigateTo(Route.EVENT_SCREEN + "/${event.id}")
+                        }
+                      }
                 }
               }
             }

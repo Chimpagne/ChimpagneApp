@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -34,7 +33,6 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SuppliesScreen(
     navObject: NavigationActions,
@@ -109,7 +107,7 @@ fun SuppliesScreen(
     if (supplyList.isNotEmpty()) {
       Text(text = listTitle, modifier = Modifier.padding(12.dp, 8.dp))
       LazyColumn(modifier = Modifier.testTag(testTag)) {
-        supplyList.forEach { supply ->
+        supplyList.reversed().forEach { supply ->
           item {
             SupplyCard(supply = supply) {
               displayedSupply = supply
