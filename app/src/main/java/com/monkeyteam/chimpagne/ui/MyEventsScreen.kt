@@ -9,13 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material.icons.rounded.HourglassBottom
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.components.EventCard
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.Legend
 import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
@@ -43,11 +41,7 @@ fun MyEventsScreen(navObject: NavigationActions, myEventsViewModel: MyEventsView
       topBar = {
         TopBar(
             text = stringResource(id = R.string.my_events_screen_name),
-            navigationIcon = {
-              IconButton(onClick = { navObject.goBack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-              }
-            })
+            navigationIcon = { GoBackButton { navObject.goBack() } })
       }) { innerPadding ->
         Column(
             modifier =

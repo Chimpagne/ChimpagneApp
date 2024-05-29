@@ -23,7 +23,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Login
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.DirectionsCar
@@ -33,11 +32,9 @@ import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -56,7 +53,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.monkeyteam.chimpagne.R
@@ -65,6 +61,9 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.EventTagChip
 import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneLogoDivider
+import com.monkeyteam.chimpagne.ui.components.GoBackButton
+import com.monkeyteam.chimpagne.ui.components.TopBar
+import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
@@ -150,22 +149,9 @@ fun EventScreen(
 
   Scaffold(
       topBar = {
-        TopAppBar(
-            title = {
-              Text(
-                  text = uiState.title,
-                  style = ChimpagneTypography.titleLarge,
-                  textAlign = TextAlign.Center,
-                  maxLines = 2,
-                  overflow = TextOverflow.Ellipsis,
-                  modifier = Modifier.fillMaxWidth().testTag("event title"))
-            },
-            modifier = Modifier.shadow(4.dp),
-            navigationIcon = {
-              IconButton(onClick = { goBack() }, modifier = Modifier.testTag("go_back")) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
-              }
-            },
+        TopBar(
+            text = uiState.title,
+            navigationIcon = { GoBackButton(goBack) },
             actions = {
               Box(
                   modifier =
