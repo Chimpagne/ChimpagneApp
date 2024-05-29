@@ -38,22 +38,62 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.Legend
+import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
+fun PollsAndVotingScreen(
+    eventViewModel: EventViewModel,
+    accountViewModel: AccountViewModel,
+    onGoBack: () -> Unit
+) {
   val eventUIState by eventViewModel.uiState.collectAsState()
+  val accountUIState by accountViewModel.uiState.collectAsState()
+
   var displayCreatePollPopup by remember { mutableStateOf(false) }
+  var displayVotePollPopup by remember { mutableStateOf(false) }
+  var displayViewPollPopup by remember { mutableStateOf(false) }
+  var selectedPollId by remember { mutableStateOf("") }
 
   if (displayCreatePollPopup) {
     CreatePollDialog(
         onPollCreate = {
-          eventViewModel.createPollAtomically(poll = it)
-          displayCreatePollPopup = false
+          eventViewModel.createPollAtomically(
+              poll = it, onSuccess = { displayCreatePollPopup = false })
         },
         onPollCancel = { displayCreatePollPopup = false },
         onDismissRequest = { displayCreatePollPopup = false })
+  }
+  if (displayVotePollPopup) {
+    val poll = eventUIState.polls[selectedPollId]!!
+    VotePollDialog(
+        poll = poll,
+        userRole = eventUIState.currentUserRole,
+        onOptionVote = {
+          eventViewModel.castPollVoteAtomically(
+              pollId = selectedPollId, optionIndex = it, { displayViewPollPopup = true })
+        },
+        onPollDelete = {
+          eventViewModel.deletePollAtomically(
+              pollId = it, onSuccess = { displayVotePollPopup = false })
+        },
+        onPollCancel = { displayVotePollPopup = false },
+        onDismissRequest = { displayVotePollPopup = false })
+  }
+  if (displayViewPollPopup) {
+    displayVotePollPopup = false
+    val poll = eventUIState.polls[selectedPollId]!!
+    ViewPollDialog(
+        poll = poll,
+        selectedOptionId = poll.votes[accountUIState.currentUserUID]!!,
+        userRole = eventUIState.currentUserRole,
+        onPollDelete = {
+          eventViewModel.deletePollAtomically(
+              pollId = it, onSuccess = { displayViewPollPopup = false })
+        },
+        onPollCancel = { displayViewPollPopup = false },
+        onDismissRequest = { displayViewPollPopup = false })
   }
   Scaffold(
       topBar = {
@@ -105,7 +145,12 @@ fun PollsAndVotingScreen(eventViewModel: EventViewModel, onGoBack: () -> Unit) {
                         modifier = Modifier.fillMaxWidth().padding(5.dp).testTag("a poll"),
                         text = poll.title,
                         onClick = {
-                          // TODO To be implemented in another PR//
+                          selectedPollId = poll.id
+                          if (poll.votes.containsKey(accountUIState.currentUserUID)) {
+                            displayViewPollPopup = true
+                          } else {
+                            displayVotePollPopup = true
+                          }
                         })
                   }
                 }
