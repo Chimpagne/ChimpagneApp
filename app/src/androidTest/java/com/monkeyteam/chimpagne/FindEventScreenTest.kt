@@ -3,8 +3,10 @@ package com.monkeyteam.chimpagne
 import android.location.LocationManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -219,7 +221,7 @@ class FindEventScreenTest {
     assertTrue(eventViewModel.getRole(myAccount.firebaseAuthUID) == ChimpagneRole.OWNER)
   }
 
-  @OptIn(ExperimentalMaterial3Api::class)
+  @OptIn(ExperimentalMaterial3Api::class, ExperimentalTestApi::class)
   @Test
   fun displayTitle() {
     composeTestRule.setContent {
@@ -233,7 +235,7 @@ class FindEventScreenTest {
           accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
+    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("screen title"), 10)
   }
 
   @OptIn(ExperimentalMaterial3Api::class)

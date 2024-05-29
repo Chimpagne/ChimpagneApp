@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
@@ -30,6 +31,7 @@ fun TopBar(
             text = text,
             style = MaterialTheme.typography.headlineMedium,
             fontFamily = ChimpagneFontFamily,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(16.dp))
       },
       actions = actions,
