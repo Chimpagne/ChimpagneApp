@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.event
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -59,6 +60,7 @@ fun EventCreationScreen(
             pagerState = pagerState,
             lastButtonText = stringResource(id = R.string.event_creation_screen_create_event),
             lastButtonOnClick = {
+              Log.d("EventCreationScreen", "Create event button clicked ${uiState.loading}")
               if (!uiState.loading) {
                 eventViewModel.createTheEvent(
                     onInvalidInputs = {

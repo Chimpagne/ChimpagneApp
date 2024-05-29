@@ -98,6 +98,7 @@ fun IconTextButton(
     icon: ImageVector,
     textStyle: TextStyle = ChimpagneTypography.titleSmall,
     color: Color = MaterialTheme.colorScheme.surfaceVariant,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -111,7 +112,7 @@ fun IconTextButton(
               .padding(horizontal = 24.dp, vertical = 12.dp)) {
         Icon(icon, contentDescription = text)
         Spacer(Modifier.width(8.dp))
-        Text(text.uppercase(Locale.ROOT), style = textStyle)
+        Text(text.uppercase(Locale.ROOT), style = textStyle.copy(color = textColor))
       }
 }
 

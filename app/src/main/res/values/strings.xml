@@ -91,6 +91,7 @@
     <string name="join_event_staff">Already a Staff Member for this Event</string>
     <string name="join_event_guest">You are already a Guest at this Event</string>
     <string name="join_event_owner">You are the Owner of this Event</string>
+    <string name="delete_account">Delete Account</string>
 
     <string name="find_event_location_set">Location set</string>
     <string name="find_event_location_not_found">Location not found</string>
@@ -173,6 +174,8 @@
     <string name="events_near_you">Events near you</string>
     <string name="turn_gps_on">Turn on your GPS to see events near you</string>
     <string name="activate_gps">ACTIVATE GPS</string>
+    <string name="confirm_delete_title">Deleting Account</string>
+    <string name="confirm_delete_message">Are you sure you want to delete your account ?</string>
     <string name="account_settings">Account settings</string>
 
     <!-- Polls and Voting -->
