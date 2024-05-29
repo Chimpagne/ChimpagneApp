@@ -210,7 +210,8 @@ fun HomeScreen(
                     } else {
                       navObject.navigateTo(Route.ACCOUNT_SETTINGS_SCREEN)
                     }
-                  })
+                  },
+                  modifier = Modifier.testTag("account_settings_button"))
             })
       }) { innerPadding ->
         if (showPromptLogin) {
