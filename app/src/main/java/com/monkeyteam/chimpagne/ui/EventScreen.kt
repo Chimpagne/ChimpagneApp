@@ -238,14 +238,14 @@ fun EventScreen(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
                 item { ChimpagneDivider() }
-                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
-                item { ChimpagneDivider() }
                 item {
                   OrganiserView(
                       uiState.ownerId,
                       accountViewModel,
                       event = eventViewModel.buildChimpagneEvent())
                 }
+                item { ChimpagneDivider() }
+                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
                 if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
                   // Do nothing extra
                 } else {
