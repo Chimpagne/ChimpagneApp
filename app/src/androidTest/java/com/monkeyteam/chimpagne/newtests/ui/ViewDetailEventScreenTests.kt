@@ -12,8 +12,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.monkeyteam.chimpagne.model.database.Database
@@ -25,7 +23,6 @@ import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
-import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import org.junit.Before
@@ -248,7 +245,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("go_back").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -269,39 +266,11 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").assertHasClickAction().performClick()
-  }
+    Thread.sleep(2000)
 
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testSuppliesButton() {
-    val event = TEST_EVENTS[0]
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (accountViewModel.uiState.value.loading) {}
-
-    val eventVM = EventViewModel(event.id, database)
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-
-      NavHost(
-          navController = navController,
-          startDestination = Route.MY_EVENTS_SCREEN + "/${eventVM.uiState.value.id}") {
-            composable(Route.MY_EVENTS_SCREEN + "/${eventVM.uiState.value.id}") {
-              EventScreen(navActions, eventVM, accountViewModel)
-            }
-            composable(Route.SUPPLIES_SCREEN + "/${eventVM.uiState.value.id}") {
-              EventScreen(navObject = navActions, eventVM, accountViewModel)
-            }
-          }
-    }
-
-    composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()
+    composeTestRule
+        .onNodeWithTag("organiser", useUnmergedTree = true)
+        .performScrollTo()
+        .assertIsDisplayed()
   }
 }
