@@ -183,4 +183,9 @@
     <string name="polls_create_a_poll_title_field">Titre du sondage</string>
     <string name="polls_create_a_poll_query_field">Question du sondage</string>
     <string name="polls_create_a_poll_option_field">Option</string>
+
+    <string name="wind_speed">Vent</string>
+    <string name="noforecast_alreadyoccured">L\'évènement est passé, pas de prévision météo :)</string>
+    <string name="noforecast_eventtoofarinfuture">Apercu rapide de la météo 10 jours avant l\'évènement</string>
+    <string name="noforecast_error">Erreur de chargement de la météo</string>
 </resources>
