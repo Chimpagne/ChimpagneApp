@@ -68,6 +68,18 @@ class ChimpagneAccountManager(
         .addOnFailureListener { onFailure(it) }
   }
 
+  fun deleteAccount(
+      userUid: ChimpagneAccountUID,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    accounts
+        .document(userUid)
+        .delete()
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure(it) }
+  }
+
   fun getAccountWithProfilePicture(
       uid: ChimpagneAccountUID,
       onSuccess: (ChimpagneAccount?, Uri?) -> Unit,

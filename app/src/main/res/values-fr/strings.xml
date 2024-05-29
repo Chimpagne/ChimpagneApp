@@ -90,6 +90,7 @@
     <string name="join_event_staff">Vous êtes déjà un membre du Staff pour cet Evénement</string>
     <string name="join_event_guest">Vous êtes déjà inscrit à cet Evénement</string>
     <string name="join_event_owner">Vous êtes l\'Organisateur de cet Evénement</string>
+    <string name="delete_account">Supprimer le compte</string>
 
     <string name="find_event_location_set">Localisé</string>
     <string name="find_event_location_not_found">Localisation échouée</string>
@@ -153,8 +154,6 @@
     <string name="account_first_name">Prénom</string>
     <string name="account_last_name">Nom</string>
     <string name="account_logout">Se déconnecter</string>
-    <string name="account_settings">Paramètres du compte</string>
-    <string name="accountEditScreenButton">Editer compte</string>
 
     <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
     <string name="invalid_dates">Dates invalides</string>
@@ -166,11 +165,12 @@
     <string name="event_description_is_empty">Pas de décription</string>
 
     <string name="events_near_you">Evénements proches de vous</string>
-
-    <!-- Homescreen -->
     <string name="turn_gps_on">Activer votre GPS pour voir les événements proches de vous</string>
     <string name="activate_gps">ACTIVER GPS</string>
-
+    <string name="confirm_delete_title">Supprimer le compte</string>
+    <string name="confirm_delete_message">Êtes-vous sûr de vouloir supprimer votre compte ?</string>
+    <string name="account_settings">Paramètres du compte</string>
+    <string name="accountEditScreenButton">Editer compte</string>
 
 
     <!-- Polls and Voting -->
