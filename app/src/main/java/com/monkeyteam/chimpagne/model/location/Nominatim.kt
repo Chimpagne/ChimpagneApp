@@ -16,6 +16,18 @@ object NominatimConstants {
   var PORT = 443
 }
 
+/**
+ * Converts a place name to a list of possible locations using the Nominatim search API.
+ *
+ * @param name The place name to search for.
+ * @param onResult Callback function invoked with a list of Location objects.
+ * @param limit Maximum number of results to return (default is 5).
+ *
+ * This function makes an HTTP GET request to the Nominatim API to search for the given place name.
+ * It processes the response and constructs Location objects with unique display names, latitude,
+ * and longitude. If the request fails or no unique locations are found, the callback is invoked
+ * with an empty list.
+ */
 fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, limit: Int = 5) {
   val client = OkHttpClient()
 

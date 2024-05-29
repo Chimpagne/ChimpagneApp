@@ -10,9 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 
+/**
+ * Used on every screen with a top bar. This ensure the text placement is consistent, as well as the
+ * positioning and font used.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
@@ -26,6 +31,7 @@ fun TopBar(
             text = text,
             style = MaterialTheme.typography.headlineMedium,
             fontFamily = ChimpagneFontFamily,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(16.dp))
       },
       actions = actions,

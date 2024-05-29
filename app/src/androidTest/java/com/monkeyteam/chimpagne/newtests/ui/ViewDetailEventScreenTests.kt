@@ -110,7 +110,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("event title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
   }
 
   @OptIn(ExperimentalFoundationApi::class)

@@ -91,8 +91,7 @@ class EventViewModelTests {
     replaceVMEventBy(eventCreationVM, testEvent)
     assertEqualEventVMWithEvent(eventCreationVM, testEvent)
 
-    eventCreationVM.createTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventCreationVM.createEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
@@ -113,8 +112,7 @@ class EventViewModelTests {
 
     assertEqualEventVMWithEvent(eventSearchVM, testEvent)
 
-    eventSearchVM.deleteTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.deleteEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
@@ -129,8 +127,7 @@ class EventViewModelTests {
 
     replaceVMEventBy(eventCreationVM, testEvent)
 
-    eventCreationVM.createTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventCreationVM.createEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
@@ -154,8 +151,7 @@ class EventViewModelTests {
     replaceVMEventBy(eventSearchVM, testUpdateEvent)
     assertEqualEventVMWithEvent(eventSearchVM, testUpdateEvent)
 
-    eventSearchVM.updateTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.updateEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventSearchVM.uiState.value.loading) {}
@@ -174,8 +170,7 @@ class EventViewModelTests {
 
     assertEqualEventVMWithEvent(eventSearch2VM, testUpdateEvent)
 
-    eventSearch2VM.deleteTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearch2VM.deleteEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearch2VM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
   }
@@ -186,8 +181,7 @@ class EventViewModelTests {
 
     replaceVMEventBy(eventCreationVM, testEvent)
 
-    eventCreationVM.createTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventCreationVM.createEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
 
     // Wait for database to get the data
     while (eventCreationVM.uiState.value.loading) {}
@@ -209,17 +203,17 @@ class EventViewModelTests {
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
 
     database.accountManager.signInTo(TEST_ACCOUNTS[0])
-    eventSearchVM.joinTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.joinEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
-    eventSearchVM.joinTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.joinEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     database.accountManager.signInTo(TEST_ACCOUNTS[2])
-    eventSearchVM.joinTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.joinEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
@@ -232,24 +226,23 @@ class EventViewModelTests {
                 TEST_ACCOUNTS[2].firebaseAuthUID,
             ))
 
-    eventSearchVM.leaveTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.leaveEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
-    eventSearchVM.leaveTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.leaveEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     database.accountManager.signInTo(TEST_ACCOUNTS[0])
-    eventSearchVM.leaveTheEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.leaveEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
     assertTrue(eventSearchVM.uiState.value.guests.isEmpty())
 
-    eventSearchVM.deleteTheEvent(
-        onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
+    eventSearchVM.deleteEvent(onSuccess = { assertTrue(true) }, onFailure = { assertTrue(false) })
     while (eventSearchVM.uiState.value.loading) {}
     Thread.sleep(SLEEP_AMOUNT_MILLIS)
   }

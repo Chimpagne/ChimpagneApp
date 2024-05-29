@@ -103,7 +103,7 @@ data class MarkerData(val id: String, val name: String, val location: Location) 
   override fun getPosition(): LatLng {
     return LatLng(location.latitude, location.longitude)
   }
-
+  /** Necessary overrides to get the clustering to work. */
   override fun getTitle(): String {
     return name
   }
