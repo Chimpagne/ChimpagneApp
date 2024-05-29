@@ -254,7 +254,11 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("share")
+        .performScrollTo()
+        .performScrollTo()
+        .assertHasClickAction()
     composeTestRule.onNodeWithTag("share").performClick()
 
     Thread.sleep(2000)
@@ -276,7 +280,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("go_back").assertHasClickAction()
+    composeTestRule.onNodeWithTag("go_back").performScrollTo().assertHasClickAction()
     composeTestRule.onNodeWithTag("go_back").performClick()
   }
 
@@ -298,7 +302,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("share").assertHasClickAction()
+    composeTestRule.onNodeWithTag("share").performScrollTo().assertHasClickAction()
     composeTestRule.onNodeWithTag("share").performClick()
   }
 
@@ -326,7 +330,7 @@ class ViewDetailEventScreenTests {
       }
     }
 
-    composeTestRule.onNodeWithTag("edit").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("edit").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -359,7 +363,11 @@ class ViewDetailEventScreenTests {
           }
     }
 
-    composeTestRule.onNodeWithTag("supplies").assertHasClickAction().performClick()
+    composeTestRule
+        .onNodeWithTag("supplies")
+        .performScrollTo()
+        .assertHasClickAction()
+        .performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class)
@@ -382,7 +390,7 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule.onNodeWithTag("polls").assertHasClickAction().performClick()
+    composeTestRule.onNodeWithTag("polls").performScrollTo().assertHasClickAction().performClick()
   }
 
   @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -407,6 +415,10 @@ class ViewDetailEventScreenTests {
       }
     }
 
-    composeTestRule.onNodeWithTag("manage staff").assertHasClickAction().performClick()
+    composeTestRule
+        .onNodeWithTag("manage staff")
+        .performScrollTo()
+        .assertHasClickAction()
+        .performClick()
   }
 }

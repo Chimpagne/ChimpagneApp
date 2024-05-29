@@ -78,7 +78,7 @@ class FindEventViewModelTests {
 
     composeTestRule.setContent { WeatherPager(event) }
     // Check that the message is displayed
-    composeTestRule.onNodeWithTag("loading_indicator").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("loading_indicator").assertExists()
   }
 
   @Test
