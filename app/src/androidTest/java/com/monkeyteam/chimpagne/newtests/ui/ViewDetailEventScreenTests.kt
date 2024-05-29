@@ -320,4 +320,30 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
   }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun testShareButton() {
+    val event = TEST_EVENTS[2]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
+
+    Thread.sleep(2000)
+
+    composeTestRule
+        .onNodeWithTag("share", useUnmergedTree = true)
+        .performScrollTo()
+        .assertIsDisplayed()
+  }
 }
