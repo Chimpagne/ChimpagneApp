@@ -22,6 +22,7 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.AppLayout
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -69,7 +70,7 @@ class EventCreation {
       navController = rememberNavController()
       accountViewModel = viewModel(factory = AccountViewModelFactory(database))
 
-      NavigationGraph(
+      AppLayout(
           navController = navController, accountViewModel = accountViewModel, database = database)
     }
 
