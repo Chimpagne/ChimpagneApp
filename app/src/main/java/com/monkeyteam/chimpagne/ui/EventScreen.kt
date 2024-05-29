@@ -68,8 +68,8 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
-import com.monkeyteam.chimpagne.ui.utilities.promptLogin
 import com.monkeyteam.chimpagne.ui.utilities.WeatherPager
+import com.monkeyteam.chimpagne.ui.utilities.promptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
