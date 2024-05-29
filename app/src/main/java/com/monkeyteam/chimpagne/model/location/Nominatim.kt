@@ -11,8 +11,8 @@ import okhttp3.Response
 import org.json.JSONArray
 
 object NominatimConstants {
-  var SCHEME = "https"
   var HOST = "nominatim.openstreetmap.org"
+  var SCHEME = "https"
   var PORT = 443
 }
 
