@@ -36,7 +36,7 @@ import com.monkeyteam.chimpagne.model.utils.timestampToStringWithDateAndTime
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 
 @Composable
-fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
   Box(modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp).fillMaxWidth()) {
     Card(
         modifier =
@@ -51,7 +51,7 @@ fun EventCard(event: ChimpagneEvent, modifier: Modifier = Modifier, onClick: () 
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
           Column(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-              ImageWithBlackFilterOverlay(event.imageUrl, true)
+              ImageLoader(event.imageUri, true)
               // Adding the status overlay on top of the image
               Row(
                   horizontalArrangement = Arrangement.End,

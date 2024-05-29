@@ -38,6 +38,7 @@ fun EditEventScreen(
   fun showToast(message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
   }
+
   Scaffold(
       topBar = {
         TopBar(
@@ -82,7 +83,7 @@ fun EditEventScreen(
           when (page) {
             0 -> FirstPanel(eventViewModel)
             1 -> TagsAndPubPanel(eventViewModel)
-            2 -> AdvancedLogisticsPanel(eventViewModel)
+            2 -> AdditionalFeaturesPanel(eventViewModel)
             3 -> ChooseSocialsPanel(eventViewModel)
           }
         }

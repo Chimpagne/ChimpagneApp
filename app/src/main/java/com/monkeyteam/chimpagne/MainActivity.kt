@@ -35,6 +35,7 @@ import com.monkeyteam.chimpagne.ui.account.AccountUpdateScreen
 import com.monkeyteam.chimpagne.ui.event.EditEventScreen
 import com.monkeyteam.chimpagne.ui.event.EventCreationScreen
 import com.monkeyteam.chimpagne.ui.event.details.supplies.SuppliesScreen
+import com.monkeyteam.chimpagne.ui.event.polls.PollsAndVotingScreen
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
@@ -219,6 +220,16 @@ class MainActivity : ComponentActivity() {
                   navObject = navActions,
                   eventViewModel = eventViewModel,
                   accountViewModel = accountViewModel)
+            }
+            composable(Route.POLLS_SCREEN + "/{EventID}") { backStackEntry ->
+              val eventViewModel: EventViewModel =
+                  viewModel(
+                      factory =
+                          EventViewModel.EventViewModelFactory(
+                              backStackEntry.arguments?.getString("EventID"), database))
+              eventViewModel.fetchEvent()
+              PollsAndVotingScreen(
+                  eventViewModel = eventViewModel, onGoBack = { navActions.goBack() })
             }
           }
         }

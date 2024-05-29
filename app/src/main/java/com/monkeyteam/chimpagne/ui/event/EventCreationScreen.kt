@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.event
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -66,6 +67,7 @@ fun EventCreationScreen(
             pagerState = pagerState,
             lastButtonText = stringResource(id = R.string.event_creation_screen_create_event),
             lastButtonOnClick = {
+              Log.d("EventCreationScreen", "Create event button clicked ${uiState.loading}")
               if (!uiState.loading) {
                 eventViewModel.createTheEvent(
                     onInvalidInputs = {
@@ -86,7 +88,7 @@ fun EventCreationScreen(
                 0 -> FirstPanel(eventViewModel)
                 1 -> TagsAndPubPanel(eventViewModel)
                 2 -> SuppliesPanel(eventViewModel)
-                3 -> AdvancedLogisticsPanel(eventViewModel)
+                3 -> AdditionalFeaturesPanel(eventViewModel)
                 4 -> ChooseSocialsPanel(eventViewModel)
               }
             }

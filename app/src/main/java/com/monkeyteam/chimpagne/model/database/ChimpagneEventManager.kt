@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.model.database
 
+import androidx.core.net.toUri
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
@@ -8,11 +9,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.StorageReference
 import com.monkeyteam.chimpagne.model.location.Location
 
 class ChimpagneEventManager(
     private val database: Database,
-    private val events: CollectionReference
+    private val events: CollectionReference,
+    private val eventPictures: StorageReference
 ) {
   val atomic = AtomicChimpagneEventManager(database, events)
 
@@ -76,42 +79,98 @@ class ChimpagneEventManager(
     events
         .document(id)
         .get()
-        .addOnSuccessListener { onSuccess(it.toObject<ChimpagneEvent>()) }
+        .addOnSuccessListener { account ->
+          val event = account.toObject<ChimpagneEvent>()
+          onSuccess(event)
+        }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun uploadEventPicture(
+      event: ChimpagneEvent,
+      onSuccess: (id: String) -> Unit,
+      onFailure: (Exception) -> Unit,
+      eventPictureUri: String
+  ) {
+    val imageRef = eventPictures.child(event.id)
+    imageRef
+        .putFile(eventPictureUri.toUri())
+        .addOnSuccessListener {
+          imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+            onSuccess(downloadUrl.toString())
+          }
+        }
         .addOnFailureListener { onFailure(it) }
   }
 
   fun createEvent(
       event: ChimpagneEvent,
       onSuccess: (id: String) -> Unit,
-      onFailure: (Exception) -> Unit
+      onFailure: (Exception) -> Unit,
+      eventPictureUri: String? = null
   ) {
     if (database.accountManager.currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
     }
-
     val eventId = events.document().id
-    updateEvent(
-        event.copy(id = eventId),
-        {
-          database.accountManager.joinEvent(
-              eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
-        },
-        { onFailure(it) })
+    if (eventPictureUri != null) {
+      uploadEventPicture(
+          event.copy(id = eventId),
+          {
+            updateEvent(
+                event.copy(id = eventId, imageUri = it),
+                {
+                  database.accountManager.joinEvent(
+                      eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+                },
+                { onFailure(it) })
+          },
+          { onFailure(it) },
+          eventPictureUri)
+    } else {
+      updateEvent(
+          event.copy(id = eventId),
+          {
+            database.accountManager.joinEvent(
+                eventId, ChimpagneRole.OWNER, { onSuccess(eventId) }, { onFailure(it) })
+          },
+          { onFailure(it) })
+    }
   }
 
-  fun updateEvent(event: ChimpagneEvent, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+  fun updateEvent(
+      event: ChimpagneEvent,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit,
+      eventPictureUri: String? = null
+  ) {
 
     if (event.id == "") {
       onFailure(Exception("null event id"))
       return
     }
 
-    events
-        .document(event.id)
-        .set(event)
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onFailure(it) }
+    if (eventPictureUri != null && event.imageUri != eventPictureUri) {
+      uploadEventPicture(
+          event,
+          {
+            val eventWithPicture = event.copy(imageUri = it)
+            events
+                .document(event.id)
+                .set(eventWithPicture)
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { onFailure(it) }
+          },
+          { onFailure(it) },
+          eventPictureUri)
+    } else {
+      events
+          .document(event.id)
+          .set(event)
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onFailure(it) }
+    }
   }
 
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
@@ -160,5 +219,58 @@ class ChimpagneEventManager(
           onSuccess(events)
         }
         .addOnFailureListener { onFailure(it) }
+  }
+
+  fun deleteAllRelatedEvents(
+      userUID: String,
+      onSuccess: () -> Unit = {},
+      onFailure: (Exception) -> Unit = {}
+  ) {
+    val ownerQuery = events.whereEqualTo("ownerId", userUID).get()
+    val guestQuery = events.whereEqualTo("guests.$userUID", true).get()
+    val staffQuery = events.whereEqualTo("staffs.$userUID", true).get()
+
+    Tasks.whenAllComplete(ownerQuery, guestQuery, staffQuery)
+        .addOnCompleteListener { tasks ->
+          if (tasks.isSuccessful) {
+            val ownerDocs = ownerQuery.result?.documents ?: emptyList()
+            val guestDocs = guestQuery.result?.documents ?: emptyList()
+            val staffDocs = staffQuery.result?.documents ?: emptyList()
+
+            val deleteTasks =
+                ownerDocs.map { document -> events.document(document.id).delete() }.toMutableList()
+
+            val updateTasks =
+                (guestDocs + staffDocs).map { document ->
+                  val event = document.toObject<ChimpagneEvent>()
+                  val updatedGuests = event!!.guests.toMutableMap()
+                  val updatedStaffs = event.staffs.toMutableMap()
+
+                  updatedGuests.remove(userUID)
+                  updatedStaffs.remove(userUID)
+
+                  events
+                      .document(document.id)
+                      .update(mapOf("guests" to updatedGuests, "staffs" to updatedStaffs))
+                }
+
+            val allTasks = deleteTasks + updateTasks
+
+            Tasks.whenAllComplete(allTasks)
+                .addOnCompleteListener {
+                  if (it.isSuccessful) {
+                    onSuccess()
+                  } else {
+                    val exception = it.exception ?: Exception("Unknown error occurred")
+                    onFailure(exception)
+                  }
+                }
+                .addOnFailureListener { exception -> onFailure(exception) }
+          } else {
+            val exception = tasks.exception ?: Exception("Unknown error occurred")
+            onFailure(exception)
+          }
+        }
+        .addOnFailureListener { exception -> onFailure(exception) }
   }
 }
