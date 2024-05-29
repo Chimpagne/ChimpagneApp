@@ -181,8 +181,6 @@
     <string name="noforecast_alreadyoccured">Event has already occurred, no weather forecast :)</string>
     <string name="noforecast_eventtoofarinfuture">Weather forecast available 10 days before the event</string>
 
-    <string name="account_settings">Account settings</string>
-
 
     <string name="confirm_delete_title">Deleting Account</string>
     <string name="confirm_delete_message">Are you sure you want to delete your account ?</string>
