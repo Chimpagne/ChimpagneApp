@@ -182,11 +182,16 @@
     <!-- Polls and Voting -->
     <string name="polls_topbar_title">Polls and Voting</string>
     <string name="polls_legend_text">Event Polls</string>
-    <string name="polls_empty_poll_list">There were no polls created for this event</string>
+    <string name="polls_empty_poll_list">No polls were created for this event</string>
     <string name="polls_create_a_poll_title">Create a Poll</string>
     <string name="polls_create_a_poll_empty_field_toast">Cannot create poll because some fields are empty</string>
     <string name="polls_create_a_poll_title_field">Poll title</string>
     <string name="polls_create_a_poll_query_field">Poll query</string>
     <string name="polls_create_a_poll_option_field">Poll option</string>
+
+    <string name="wind_speed">Wind</string>
+    <string name="noforecast_eventtoofarinfuture">Weather forecast available 10 days before the event</string>
+    <string name="noforecast_error">Failed to fetch weather data</string>
+    <string name="noforecast_alreadyoccured">Event has already occurred, no weather forecast :)</string>
 
 </resources>
