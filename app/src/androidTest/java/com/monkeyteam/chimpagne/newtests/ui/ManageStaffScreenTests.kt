@@ -73,7 +73,7 @@ class ManageStaffScreenTests {
       ManageStaffScreen(navActions, eventVM, accountVM)
     }
 
-    composeTestRule.onNodeWithContentDescription("back").assertHasClickAction()
+    composeTestRule.onNodeWithTag("go_back_button").assertHasClickAction()
     composeTestRule.onNodeWithContentDescription("back").performClick()
   }
 

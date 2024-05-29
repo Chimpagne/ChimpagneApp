@@ -46,7 +46,7 @@ class PollsAndVotingScreenTests {
 
     composeTestRule.onNodeWithTag("screen title").assertIsDisplayed()
     composeTestRule.onNodeWithContentDescription("create poll button").assertIsDisplayed()
-    composeTestRule.onNodeWithContentDescription("back").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("go_back_button").assertIsDisplayed()
     composeTestRule.onNodeWithContentDescription("poll legend text").assertIsDisplayed()
     composeTestRule.onNodeWithTag("empty poll list").assertIsDisplayed()
   }
