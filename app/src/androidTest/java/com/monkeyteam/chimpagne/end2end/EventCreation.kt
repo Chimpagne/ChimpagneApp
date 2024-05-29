@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
-import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory

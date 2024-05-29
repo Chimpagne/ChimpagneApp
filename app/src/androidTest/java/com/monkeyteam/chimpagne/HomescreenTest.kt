@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne
 
 import android.location.LocationManager
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
