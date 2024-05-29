@@ -53,7 +53,7 @@ import com.google.android.gms.location.SettingsClient
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
-import com.monkeyteam.chimpagne.model.database.PUBLIC_TABLES
+import com.monkeyteam.chimpagne.model.database.PRODUCTION_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
@@ -97,7 +97,7 @@ fun HomeScreen(
   var showPromptLogin by remember { mutableStateOf(false) }
   var enableGPSButtonState by remember { mutableStateOf<LocationState>(LocationState.Idle) }
 
-  val database = Database(PUBLIC_TABLES)
+  val database = Database(PRODUCTION_TABLES)
   val findViewModel = FindEventsViewModel(database)
   val eventsNearMe = mutableListOf<ChimpagneEvent>()
 
@@ -130,7 +130,7 @@ fun HomeScreen(
       }
     }
 
-    findViewModel.fetchAroundLocation(
+    findViewModel.fetchFeedEvents(
         onSuccess = {
           findViewModel.uiState.value.events.forEach { (_, u) -> eventsNearMe.add(u) }
 

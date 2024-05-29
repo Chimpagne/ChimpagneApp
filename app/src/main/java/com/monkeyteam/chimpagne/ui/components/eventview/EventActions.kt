@@ -57,7 +57,7 @@ fun EventActions(
               description = stringResource(id = R.string.event_details_screen_leave_button),
               onClick = {
                 if (isUserLoggedIn) {
-                  eventViewModel.leaveTheEvent(
+                  eventViewModel.leaveEvent(
                       onSuccess = {
                         showToast(
                             context.getString(R.string.event_details_screen_leave_toast_success))

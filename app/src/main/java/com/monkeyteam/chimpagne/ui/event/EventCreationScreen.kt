@@ -69,7 +69,7 @@ fun EventCreationScreen(
             lastButtonOnClick = {
               Log.d("EventCreationScreen", "Create event button clicked ${uiState.loading}")
               if (!uiState.loading) {
-                eventViewModel.createTheEvent(
+                eventViewModel.createEvent(
                     onInvalidInputs = {
                       showToast(EventViewModel.eventInputValidityToString(it, context))
                     },

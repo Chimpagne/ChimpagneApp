@@ -4,6 +4,10 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.storage.StorageReference
 
+/**
+ * This implementation ensures that the account is always consistent across all clients, even when
+ * the account is being updated concurrently from multiple sources.
+ */
 class AtomicChimpagneAccountManager(
     private val database: Database,
     private val accounts: CollectionReference,

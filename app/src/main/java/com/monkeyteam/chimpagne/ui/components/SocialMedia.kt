@@ -11,6 +11,7 @@ data class SocialMedia(
     val testTag: String = ""
 )
 
+/** Used to add links inside the app. This is also used for non-social media links, like spotify */
 val SupportedSocialMedia =
     listOf(
         SocialMedia(

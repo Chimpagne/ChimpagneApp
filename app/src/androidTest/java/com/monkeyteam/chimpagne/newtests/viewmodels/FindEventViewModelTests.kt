@@ -241,7 +241,7 @@ class FindEventViewModelTests {
 
     assertTrue(eventSearchVM.uiState.value.guests[testAccount.firebaseAuthUID] == true)
 
-    eventSearchVM.leaveTheEvent()
+    eventSearchVM.leaveEvent()
     while (eventSearchVM.uiState.value.loading) {}
   }
 }
