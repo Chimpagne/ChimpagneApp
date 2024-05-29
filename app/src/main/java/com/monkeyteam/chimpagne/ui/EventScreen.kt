@@ -65,6 +65,7 @@ import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.eventview.ImageCard
 import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
+import com.monkeyteam.chimpagne.ui.components.eventview.SimpleMapCard
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
@@ -237,6 +238,8 @@ fun EventScreen(
                   EventDescription(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
+                item { SimpleMapCard(startingPosition = uiState.location) }
+                item { ChimpagneDivider() }
                 item { ChimpagneDivider() }
                 item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
                 item { ChimpagneDivider() }

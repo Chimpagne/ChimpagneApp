@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.model.location
 
 import android.util.Log
 import java.io.IOException
+import java.util.Locale
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.HttpUrl
@@ -14,6 +15,10 @@ object NominatimConstants {
   var SCHEME = "https"
   var HOST = "nominatim.openstreetmap.org"
   var PORT = 443
+}
+
+fun getCurrentLanguage(): String {
+  return Locale.getDefault().language
 }
 
 fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, limit: Int = 5) {
@@ -31,7 +36,16 @@ fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, lim
           .addQueryParameter("limit", limit.toString())
           .build()
 
-  val request = Request.Builder().url(url).addHeader("User-Agent", "Chimpagne").build()
+  val language = getCurrentLanguage()
+  val acceptLanguage = if (language == "fr") "fr" else "en"
+
+  val request =
+      Request.Builder()
+          .url(url)
+          .addHeader("User-Agent", "Chimpagne")
+          .addHeader("Accept-Language", acceptLanguage)
+          .build()
+
   client
       .newCall(request)
       .enqueue(
