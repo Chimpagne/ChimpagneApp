@@ -66,9 +66,9 @@ import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
-import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
 import com.monkeyteam.chimpagne.ui.utilities.SpinnerView
+import com.monkeyteam.chimpagne.ui.utilities.promptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
 import kotlinx.coroutines.launch
@@ -87,7 +87,6 @@ fun EventScreen(
   val context = LocalContext.current
 
   var showDialog by remember { mutableStateOf(false) }
-  var showPromptLogin by remember { mutableStateOf(false) }
   var showQRDialog by remember { mutableStateOf(false) }
   var toast: Toast? by remember { mutableStateOf(null) }
 
@@ -102,7 +101,7 @@ fun EventScreen(
   val onJoinClick: (ChimpagneEvent) -> Unit = { event ->
     when {
       !accountViewModel.isUserLoggedIn() -> {
-        showPromptLogin = true
+        promptLogin(context, navObject)
       }
       event.getRole(accountUIState.currentUserAccount?.firebaseAuthUID ?: "") ==
           ChimpagneRole.NOT_IN_EVENT -> {
@@ -179,10 +178,6 @@ fun EventScreen(
         if (showQRDialog) {
           QRCodeDialog(eventId = uiState.id, onDismiss = { showQRDialog = false })
         }
-        if (showPromptLogin) {
-          PromptLogin(context, navObject)
-          showPromptLogin = false
-        }
         if (showDialog) {
           popUpCalendar(
               onAccept = {
@@ -234,7 +229,7 @@ fun EventScreen(
                   item {
                     EventActions(
                         navObject, eventViewModel, accountViewModel.isUserLoggedIn(), showToast) {
-                          showPromptLogin = it
+                          promptLogin(context, navObject)
                         }
                   }
                 }

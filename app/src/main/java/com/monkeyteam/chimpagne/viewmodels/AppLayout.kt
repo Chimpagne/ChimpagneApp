@@ -11,15 +11,18 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 
 @Composable
 fun AppLayout(
-  navController: NavHostController,
-  database: Database,
-  accountViewModel: AccountViewModel,
-  ) {
+    navController: NavHostController,
+    database: Database,
+    accountViewModel: AccountViewModel,
+) {
   Scaffold(
-    bottomBar = {
-//      ChimpagneNavigationBar(navController = navController, accountViewModel = accountViewModel)
-    }
-  ) { paddingValues ->
-    NavigationGraph(navController = navController, database = database, accountViewModel = accountViewModel, modifier = Modifier.padding(paddingValues))
-  }
+      bottomBar = {
+        ChimpagneNavigationBar(navController = navController, accountViewModel = accountViewModel)
+      }) { padding ->
+        NavigationGraph(
+            navController = navController,
+            database = database,
+            accountViewModel = accountViewModel,
+            modifier = Modifier.padding(padding))
+      }
 }
