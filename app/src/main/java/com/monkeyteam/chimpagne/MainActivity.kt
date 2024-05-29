@@ -15,6 +15,7 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTheme
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.AppLayout
 
 class MainActivity : ComponentActivity() {
 
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
 
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-          NavigationGraph(
+          AppLayout(
               navController = navController,
               database = database,
               accountViewModel = accountViewModel)
