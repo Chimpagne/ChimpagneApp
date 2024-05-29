@@ -334,9 +334,7 @@ class ViewDetailEventScreenTests {
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
+      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
     }
 
     Thread.sleep(2000)
