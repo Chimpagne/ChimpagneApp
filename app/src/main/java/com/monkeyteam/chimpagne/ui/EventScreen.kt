@@ -62,6 +62,7 @@ import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.EventTagChip
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.TopBar
+import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneLogoDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
