@@ -176,7 +176,5 @@
     <string name="activate_gps">ACTIVATE GPS</string>
     <string name="confirm_delete_title">Deleting Account</string>
     <string name="confirm_delete_message">Are you sure you want to delete your account ?</string>
-    <string name="confirm">Yes</string>
-    <string name="cancel">No</string>
     <string name="account_settings">Account settings</string>
 </resources>
