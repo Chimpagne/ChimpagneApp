@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PRODUCTION_TABLES
@@ -17,12 +19,12 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
 
 class MainActivity : ComponentActivity() {
-
-  val database = Database(PRODUCTION_TABLES)
-  private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    val database = Database(PRODUCTION_TABLES, applicationContext)
+    val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
+
     setContent {
       ChimpagneTheme {
         val navController = rememberNavController()

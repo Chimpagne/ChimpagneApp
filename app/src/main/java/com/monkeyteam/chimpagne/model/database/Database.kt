@@ -1,10 +1,12 @@
 package com.monkeyteam.chimpagne.model.database
 
+import android.content.Context
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 
-class Database(tables: Tables = TEST_TABLES) {
+// context != null iff not running a test
+class Database(tables: Tables = TEST_TABLES, val context: Context? = null) {
   private val db = Firebase.firestore
   private val events = db.collection(tables.EVENTS)
   private val accounts = db.collection(tables.ACCOUNTS)

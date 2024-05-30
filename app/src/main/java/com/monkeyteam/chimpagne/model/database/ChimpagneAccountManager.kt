@@ -9,6 +9,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
+import com.monkeyteam.chimpagne.model.utils.isOnline
 
 /** Use this class to interact */
 class ChimpagneAccountManager(
@@ -179,15 +180,17 @@ class ChimpagneAccountManager(
   }
 
   fun fetchProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
-    if (uid.isEmpty()) {
+    if (uid.isEmpty() || !isOnline(database.context)) {
       onSuccess(null)
-    } else {
-      profilePictures
-          .child(uid)
-          .downloadUrl
-          .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
-          .addOnFailureListener { onSuccess(null) }
+      return
     }
+
+    profilePictures
+        .child(uid)
+        .downloadUrl
+        .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
+        .addOnFailureListener { onSuccess(null) }
+
   }
 
   private val eventManager = database.eventManager
