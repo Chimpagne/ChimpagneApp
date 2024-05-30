@@ -118,6 +118,7 @@ fun MainFindEventScreen(
     accountViewModel: AccountViewModel
 ) {
 
+  val accountUIState by accountViewModel.uiState.collectAsState()
   val pagerState = rememberPagerState { 3 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current
@@ -141,11 +142,9 @@ fun MainFindEventScreen(
   }
 
   val goToDetail: (ChimpagneEvent) -> Unit = { event ->
-    coroutineScope.launch {
-      eventViewModel.updateUIStateWithEvent(event)
-      currentEvent = event
-      pagerState.scrollToPage(FindEventScreens.DETAIL)
-    }
+    eventViewModel.updateUIStateWithEvent(event)
+    currentEvent = event
+    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.DETAIL) }
   }
 
   val displayResult: () -> Unit = {
