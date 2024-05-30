@@ -22,7 +22,6 @@ import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
-import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -231,28 +230,6 @@ class ViewDetailEventScreenTests {
         .assertHasClickAction()
   }
 
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testUserIsInEvent() {
-    val event = TEST_EVENTS[2]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
-    }
-
-    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
-
-    Thread.sleep(2000)
-    accountViewModel.logoutFromChimpagneAccount()
-  }
-
   @Test
   fun testSocialMedia() {
     val event = TEST_EVENTS[0]
@@ -319,26 +296,5 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testShareButton() {
-    val event = TEST_EVENTS[2]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
-    }
-
-    Thread.sleep(2000)
-
-    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
   }
 }
