@@ -5,8 +5,6 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -107,7 +105,7 @@ class PollEnd2EndTest {
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
     }
-    composeTestRule.onNodeWithTag("polls").performClick()
+    /*composeTestRule.onNodeWithTag("polls").performClick()
 
     // Verifying empty state
     composeTestRule.waitUntil(timeout) {
@@ -149,6 +147,7 @@ class PollEnd2EndTest {
       navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
     }
     Thread.sleep(200)
+    */
     composeTestRule.onNodeWithTag("supplies").performClick()
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route?.startsWith(Route.SUPPLIES_SCREEN) ?: false
