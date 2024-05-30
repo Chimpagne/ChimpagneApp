@@ -67,6 +67,7 @@ import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 
+/** We use this SuppressLint annotation to be able the case where the user is not logged in. */
 @SuppressLint("StateFlowValueCalledInComposition", "MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
