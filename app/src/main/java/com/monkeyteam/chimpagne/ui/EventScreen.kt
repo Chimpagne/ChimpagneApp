@@ -24,6 +24,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Login
+import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.DirectionsCar
+import androidx.compose.material.icons.rounded.KingBed
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +51,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +63,7 @@ import com.monkeyteam.chimpagne.ui.components.EventTagChip
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.TopBar
 import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneDivider
+import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneLogoDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
@@ -65,6 +71,7 @@ import com.monkeyteam.chimpagne.ui.components.eventview.ImageCard
 import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
+import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.ui.utilities.QRCodeDialog
@@ -205,7 +212,7 @@ fun EventScreen(
                       .background(MaterialTheme.colorScheme.background),
               verticalArrangement = Arrangement.Top) {
                 item {
-                  Log.d("EventScreen", "ImageUri: ${uiState}")
+                  Log.d("EventScreen", "ImageUri: $uiState")
                   ImageCard(uiState.imageUri)
                 }
                 item {
@@ -215,14 +222,24 @@ fun EventScreen(
                         uiState.tags.forEach { tag -> EventTagChip(tag) }
                       }
                 }
-                item { ChimpagneDivider() }
+                item { Spacer(modifier = Modifier.padding(vertical = 16.dp)) }
                 item { EventMainInfo(event = eventViewModel.buildChimpagneEvent()) }
-                item { ChimpagneDivider() }
+                item {
+                  ChimpagneLogoDivider(
+                      text = stringResource(id = R.string.event_details_screen_description),
+                      icon = Icons.Rounded.Description,
+                      modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                }
                 item {
                   EventDescription(
                       uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
                 }
-                item { ChimpagneDivider() }
+                item {
+                  ChimpagneLogoDivider(
+                      text = stringResource(id = R.string.event_details_screen_organiser),
+                      icon = Icons.Rounded.Person,
+                      modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                }
                 item {
                   OrganiserView(
                       uiState.ownerId,
@@ -288,3 +305,34 @@ data class IconInfo(
     val onClick: () -> Unit,
     val testTag: String
 )
+
+@Composable
+fun AccommodationsBox(icon: ImageVector, text: String) {
+  Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
+    Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(24.dp))
+    Spacer(modifier = Modifier.width(8.dp))
+    Text(
+        text = text,
+        fontFamily = ChimpagneFontFamily,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontSize = 16.sp)
+  }
+}
+
+@Composable
+fun AccommodationsRow(eventViewModel: EventViewModel) {
+  val uiState by eventViewModel.uiState.collectAsState()
+  Row(
+      horizontalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterHorizontally),
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically) {
+        AccommodationsBox(
+            icon = Icons.Rounded.KingBed,
+            text = "${uiState.beds} ${stringResource(id = R.string.event_details_screen_beds)}")
+        AccommodationsBox(
+            icon = Icons.Rounded.DirectionsCar,
+            text =
+                "${uiState.parkingSpaces} ${stringResource(id = R.string.event_details_screen_slots)}")
+      }
+}

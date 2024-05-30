@@ -22,6 +22,7 @@ import com.monkeyteam.chimpagne.ui.EventScreen
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
+import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -232,6 +233,78 @@ class ViewDetailEventScreenTests {
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
+  fun testUserIsInEvent() {
+    val event = TEST_EVENTS[2]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
+    }
+
+    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
+
+    Thread.sleep(2000)
+    accountViewModel.logoutFromChimpagneAccount()
+  }
+
+  @Test
+  fun testSocialMedia() {
+    val event = TEST_EVENTS[0]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[0].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[0])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventActions(
+          navObject = navActions,
+          eventViewModel = eventVM,
+          isUserLoggedIn = true,
+          showToast = {},
+          showPromptLogin = {})
+    }
+
+    composeTestRule.onNodeWithTag("Social_Media").assertExists()
+  }
+
+  @Test
+  fun testLeaveEventButton() {
+    val event = TEST_EVENTS[2]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[0].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[0])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventActions(
+          navObject = navActions,
+          eventViewModel = eventVM,
+          isUserLoggedIn = true,
+          showToast = {},
+          showPromptLogin = {})
+    }
+
+    composeTestRule.onNodeWithTag("leave").assertExists().assertHasClickAction()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
   fun testNavigationBackFunctionality() {
     val event = TEST_EVENTS[0]
 
@@ -261,16 +334,11 @@ class ViewDetailEventScreenTests {
     while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
+      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
     }
 
     Thread.sleep(2000)
 
-    composeTestRule
-        .onNodeWithTag("share", useUnmergedTree = true)
-        .performScrollTo()
-        .assertIsDisplayed()
+    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
   }
 }
