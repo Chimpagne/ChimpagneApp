@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.IntentSender
-import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -42,7 +41,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.CurrentLocationRequest
 import com.google.android.gms.location.LocationRequest
@@ -54,8 +52,10 @@ import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.database.PRODUCTION_TABLES
+import com.monkeyteam.chimpagne.model.feed.getClosestNEvent
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
+import com.monkeyteam.chimpagne.model.location.LocationViewModel
 import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.LocationIconTextButton
@@ -67,22 +67,6 @@ import com.monkeyteam.chimpagne.ui.utilities.PromptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 
-class LocationViewModel(myContext: Context) {
-  private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(myContext)
-
-  fun startLocationUpdates(
-      myContext: Context,
-      onLocationSuccess: (lat: Double, lng: Double) -> Unit
-  ) {
-    if (ActivityCompat.checkSelfPermission(myContext, Manifest.permission.ACCESS_FINE_LOCATION) ==
-        PackageManager.PERMISSION_GRANTED) {
-      fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-        location?.let { onLocationSuccess(it.latitude, it.longitude) }
-      }
-    }
-  }
-}
-
 @SuppressLint("StateFlowValueCalledInComposition", "MissingPermission")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,7 +75,6 @@ fun HomeScreen(
     accountViewModel: AccountViewModel,
     locationViewModel: LocationViewModel = LocationViewModel(myContext = LocalContext.current)
 ) {
-  val N_CLOSEST = 4
   val context = LocalContext.current
   val uiState by accountViewModel.uiState.collectAsState()
   var showPromptLogin by remember { mutableStateOf(false) }
@@ -105,21 +88,6 @@ fun HomeScreen(
 
   val fusedLocationProviderClient = remember {
     LocationServices.getFusedLocationProviderClient(context)
-  }
-  fun getClosestNEvent(
-      li: List<ChimpagneEvent>,
-      n: Int,
-      myLocation: Location
-  ): List<ChimpagneEvent> {
-    if (li.size <= n) return li
-
-    val sortedEvents =
-        eventsNearMe.sortedBy { event ->
-          val eventLocation = event.location
-          myLocation.distanceTo(eventLocation)
-        }
-
-    return sortedEvents.take(n)
   }
 
   fun updateFeed() {
@@ -135,7 +103,7 @@ fun HomeScreen(
           findViewModel.uiState.value.events.forEach { (_, u) -> eventsNearMe.add(u) }
 
           findViewModel.uiState.value.selectedLocation?.let {
-            closestEventsState.value = getClosestNEvent(eventsNearMe, N_CLOSEST, it)
+            closestEventsState.value = getClosestNEvent(eventsNearMe, it)
           }
         },
         onFailure = { Log.e("err", it.toString()) },

@@ -20,6 +20,10 @@ object Route {
 }
 
 class NavigationActions(private val navController: NavHostController) {
+  /**
+   * Navigate to the specified route. Route is a string because we pass it directly to the
+   * navController
+   */
   fun navigateTo(route: String) {
     navController.navigate(route) {
       // Avoid multiple copies of the same destination when
@@ -47,9 +51,5 @@ class NavigationActions(private val navController: NavHostController) {
       launchSingleTop = true
     }
     if (setAsStartDestination) navController.graph.setStartDestination(route)
-  }
-
-  fun popBackStack() {
-    navController.popBackStack()
   }
 }

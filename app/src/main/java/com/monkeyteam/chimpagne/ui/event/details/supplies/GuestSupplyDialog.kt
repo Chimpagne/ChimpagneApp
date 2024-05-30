@@ -15,6 +15,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.ui.components.ButtonData
 import com.monkeyteam.chimpagne.ui.components.CustomDialog
 
+/** Dialog used to assign a supply to a user. */
 @Composable
 fun GuestSupplyDialog(
     supply: ChimpagneSupply,

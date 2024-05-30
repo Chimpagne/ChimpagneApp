@@ -61,9 +61,9 @@ fun TagsAndPubPanel(eventViewModel: EventViewModel) {
           Checkbox(
               checked = uiState.public,
               onCheckedChange = { eventViewModel.updateEventPublicity(!uiState.public) })
-          if (uiState.public)
-              Text(stringResource(id = R.string.event_creation_screen_event_made_public))
-          else Text(stringResource(id = R.string.event_creation_screen_make_event_public))
+          if (uiState.public) {
+            Text(stringResource(id = R.string.event_creation_screen_event_made_public))
+          } else Text(stringResource(id = R.string.event_creation_screen_make_event_public))
         }
       }
 }

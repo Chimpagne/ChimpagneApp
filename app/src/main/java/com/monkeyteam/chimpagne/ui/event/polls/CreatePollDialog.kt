@@ -58,7 +58,7 @@ fun CreatePollDialog(
                   text = stringResource(id = R.string.chimpagne_confirm),
                   modifier = Modifier.testTag("confirm poll button"),
                   onClick = {
-                    if (title == "" || query == "" || options.contains("")) {
+                    if (title.isEmpty() || query.isEmpty() || options.contains("")) {
                       Toast.makeText(
                               context,
                               context.getString(R.string.polls_create_a_poll_empty_field_toast),
