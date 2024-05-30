@@ -76,7 +76,7 @@ class ChimpagneAccountManager(
     accounts
         .document(userUid)
         .delete()
-        .addOnSuccessListener { onSuccess() }
+        .addOnSuccessListener { deleteProfilePicture(userUid, { onSuccess() }, { onFailure(it) }) }
         .addOnFailureListener { onFailure(it) }
   }
 
@@ -175,6 +175,18 @@ class ChimpagneAccountManager(
             onSuccess(downloadUrl.toString())
           }
         }
+        .addOnFailureListener { onFailure(it) }
+  }
+
+  fun deleteProfilePicture(
+      userUid: ChimpagneAccountUID,
+      onSuccess: () -> Unit,
+      onFailure: (Exception) -> Unit
+  ) {
+    profilePictures
+        .child(userUid)
+        .delete()
+        .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onFailure(it) }
   }
 
