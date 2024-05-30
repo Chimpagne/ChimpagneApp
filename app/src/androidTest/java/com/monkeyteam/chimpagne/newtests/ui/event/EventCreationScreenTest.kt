@@ -179,8 +179,12 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("previous_button").assertDoesNotExist()
   }
 
+  /**
+   * This tests the accommodation UI. We check than the number of beds and parking spaces are
+   * editable
+   */
   @Test
-  fun testFourthPanel() {
+  fun accommodationsPanelTest() {
     // Now we do this to go the correct screen
     composeTestRule.setContent {
       val navController = rememberNavController()

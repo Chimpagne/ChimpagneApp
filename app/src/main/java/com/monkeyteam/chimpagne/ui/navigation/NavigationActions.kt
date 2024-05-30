@@ -32,6 +32,15 @@ class NavigationActions(private val navController: NavHostController) {
     navController.navigateUp()
   }
 
+  /**
+   * Clears the navigation stack and navigates to the specified route. Optionally sets the specified
+   * route as the start destination.
+   *
+   * @param route The target route to navigate to. This is a string, because it is passed directly
+   *   as a navgraph destination.
+   * @param setAsStartDestination A boolean flag indicating whether to set the specified route as
+   *   the start destination. Defaults to `false`.
+   */
   fun clearAndNavigateTo(route: String, setAsStartDestination: Boolean = false) {
     navController.navigate(route) {
       popUpTo(0) { inclusive = true }

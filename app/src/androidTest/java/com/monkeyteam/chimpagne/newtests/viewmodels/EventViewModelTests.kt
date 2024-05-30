@@ -498,13 +498,12 @@ class EventViewModelTests {
 
     database.accountManager.signInTo(TEST_ACCOUNTS[1])
   }
-  // This passes on my machine...
+
   @Test
   fun testInvalidTitle() {
     val context = InstrumentationRegistry.getInstrumentation().targetContext
     val result =
         EventViewModel.eventInputValidityToString(EventInputValidity.INVALID_TITLE, context)
-    print(result)
     assertEquals(context.getString(R.string.title_should_not_be_empty), result)
   }
 
