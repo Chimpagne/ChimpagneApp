@@ -40,22 +40,24 @@ import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneTypography
 import com.monkeyteam.chimpagne.ui.utilities.getZoomLevel
 
+const val DEFAULT_RADIUS = 2000.0
+
 @Composable
 fun SimpleMapCard(startingPosition: Location) {
   val context = LocalContext.current
   val cameraPositionState = rememberCameraPositionState()
 
   val onClick: () -> Unit = {
-    val gmmIntentUri =
+    val googleMapIntentUri =
         Uri.parse("google.navigation:q=${startingPosition.latitude},${startingPosition.longitude}")
-    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    val mapIntent = Intent(Intent.ACTION_VIEW, googleMapIntentUri)
     mapIntent.setPackage("com.google.android.apps.maps")
     context.startActivity(mapIntent)
   }
 
   LaunchedEffect(startingPosition) {
     try {
-      val zoomLevel = getZoomLevel(2000.0)
+      val zoomLevel = getZoomLevel(DEFAULT_RADIUS)
       val cameraUpdate =
           CameraUpdateFactory.newLatLngZoom(
               LatLng(startingPosition.latitude, startingPosition.longitude), zoomLevel)

@@ -80,7 +80,7 @@ fun OrganiserView(
 
         Box(
             modifier =
-                Modifier.testTag("shareevent")
+                Modifier.testTag("share")
                     .shadow(6.dp, RoundedCornerShape(12.dp))
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.colorScheme.primaryContainer)
