@@ -1,22 +1,31 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Backpack
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.House
+import androidx.compose.material.icons.rounded.People
 import androidx.compose.material.icons.rounded.PeopleAlt
 import androidx.compose.material.icons.rounded.Poll
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
+import androidx.compose.material.icons.rounded.TouchApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneRole
+import com.monkeyteam.chimpagne.ui.AccommodationsRow
 import com.monkeyteam.chimpagne.ui.IconInfo
 import com.monkeyteam.chimpagne.ui.IconRow
 import com.monkeyteam.chimpagne.ui.components.SocialButtonRow
+import com.monkeyteam.chimpagne.ui.components.areAllSocialMediaLinksEmpty
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.EventViewModel
@@ -34,8 +43,24 @@ fun EventActions(
   val context = LocalContext.current
 
   Column {
-    SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
-    ChimpagneDivider()
+    if (!areAllSocialMediaLinksEmpty(uiState.socialMediaLinks)) {
+      ChimpagneLogoDivider(
+          text = stringResource(id = R.string.event_details_screen_socials),
+          icon = Icons.Rounded.People,
+          modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+      SocialButtonRow(context = context, socialMediaLinks = uiState.socialMediaLinks)
+    }
+    ChimpagneLogoDivider(
+        text = stringResource(id = R.string.event_details_screen_facilities),
+        icon = Icons.Rounded.House,
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+
+    AccommodationsRow(eventViewModel)
+
+    ChimpagneLogoDivider(
+        text = stringResource(id = R.string.event_details_screen_actions),
+        icon = Icons.Rounded.TouchApp,
+        modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
     val iconList = mutableListOf<IconInfo>()
     if (uiState.currentUserRole == ChimpagneRole.OWNER) {
       iconList.add(
@@ -82,5 +107,6 @@ fun EventActions(
                 onClick = { navObject.navigateTo(Route.POLLS_SCREEN + "/" + uiState.id) },
                 testTag = "polls")))
     IconRow(icons = iconList)
+    Spacer(modifier = Modifier.padding(8.dp))
   }
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -204,7 +205,8 @@ fun SocialButton(imageLogo: Int, urlAsString: String, context: Context, testTag:
 fun SocialButtonRow(context: Context, socialMediaLinks: Map<String, SocialMedia>) {
   Row(
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+      horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally),
+      modifier = Modifier.fillMaxWidth().testTag("Social_Media")) {
         for (socialMedia in socialMediaLinks.values) {
           if (socialMedia.chosenGroupUrl.isNotEmpty()) {
             SocialButton(

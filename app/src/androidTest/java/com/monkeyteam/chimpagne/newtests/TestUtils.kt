@@ -38,7 +38,8 @@ val TEST_EVENTS =
                     Pair("2", ChimpagneSupply("2", "ff", 2, "d")),
                     Pair("3", ChimpagneSupply("3", "ee", 3, "e"))),
             parkingSpaces = 1,
-            beds = 2),
+            beds = 2,
+            socialMediaLinks = mapOf("discord" to "https://discord.gg/kFQZAcx5")),
         ChimpagneEvent(
             id = "SECOND_EVENT",
             title = "Second event",
