@@ -141,9 +141,11 @@ fun MainFindEventScreen(
   }
 
   val goToDetail: (ChimpagneEvent) -> Unit = { event ->
-    eventViewModel.updateUIStateWithEvent(event)
-    currentEvent = event
-    coroutineScope.launch { pagerState.scrollToPage(FindEventScreens.DETAIL) }
+    coroutineScope.launch {
+      eventViewModel.updateUIStateWithEvent(event)
+      currentEvent = event
+      pagerState.scrollToPage(FindEventScreens.DETAIL)
+    }
   }
 
   val displayResult: () -> Unit = {
