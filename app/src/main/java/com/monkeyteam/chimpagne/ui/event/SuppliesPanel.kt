@@ -64,7 +64,7 @@ fun SuppliesPanel(eventViewModel: EventViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn {
-          items(uiState.supplies.values.toList()) { item ->
+          items(uiState.supplies.values.toList().reversed()) { item ->
             ListItem(
                 headlineContent = {
                   Text(
