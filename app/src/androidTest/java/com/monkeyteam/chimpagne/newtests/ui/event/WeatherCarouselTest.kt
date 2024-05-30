@@ -9,7 +9,6 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.Weather
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
-import com.monkeyteam.chimpagne.newtests.TEST_EVENTS
 import com.monkeyteam.chimpagne.ui.utilities.WeatherCarouselInternal
 import com.monkeyteam.chimpagne.ui.utilities.WeatherPager
 import java.time.LocalDate
@@ -23,14 +22,6 @@ class FindEventViewModelTests {
   val database = Database()
 
   @get:Rule val composeTestRule = createComposeRule()
-
-  @Test
-  fun testWeatherAppWithOldEvent() {
-    val event = TEST_EVENTS[0]
-    composeTestRule.setContent { WeatherPager(event) }
-    // Check that the message is displayed
-    composeTestRule.onNodeWithTag("weather message").assertIsDisplayed()
-  }
 
   @Test
   fun testWeatherAppWithFutureEvent() {

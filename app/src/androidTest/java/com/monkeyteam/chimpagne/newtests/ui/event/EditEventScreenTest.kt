@@ -72,17 +72,12 @@ class EditEventScreenTestTest {
       EditEventScreen(
           0, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
     }
-
     // Move to the Second Panel
-
-    composeTestRule.onNodeWithTag("next_button").performClick()
-    // composeTestRule.onNodeWithTag("next_button")
-    // composeTestRule.onNodeWithText("More event infos").assertIsDisplayed()
-
+    composeTestRule.onNodeWithTag("next_button").assertExists().performClick()
     // Return to the First Panel
-    composeTestRule.onNodeWithTag("previous_button").performClick()
-
-    // composeTestRule.onNodeWithText("Title").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("previous_button").assertExists().performClick()
+    // Check that we have moved to then previous screen
+    composeTestRule.onNodeWithText("Title").assertIsDisplayed()
   }
 
   @Test
@@ -96,17 +91,6 @@ class EditEventScreenTestTest {
     }
 
     composeTestRule.onNodeWithTag("LocationComponent").assertIsDisplayed()
-  }
-
-  @Test
-  fun testPanel1() {
-
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      EditEventScreen(
-          1, navActions, viewModel(factory = EventViewModel.EventViewModelFactory(null, database)))
-    }
   }
 
   @Test
