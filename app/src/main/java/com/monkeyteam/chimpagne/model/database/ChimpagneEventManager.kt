@@ -68,7 +68,7 @@ class ChimpagneEventManager(
           }
 
           // matchingEvents contains the results
-          onSuccess(matchingEvents)
+          onSuccess(matchingEvents.sortedBy { it.startsAtTimestamp })
         }
         .addOnFailureListener { onFailure(it) }
   }
@@ -218,7 +218,7 @@ class ChimpagneEventManager(
               events.add(event)
             }
           }
-          onSuccess(events)
+          onSuccess(events.sortedBy { it.startsAtTimestamp })
         }
         .addOnFailureListener { onFailure(it) }
   }
