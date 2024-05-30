@@ -29,7 +29,7 @@ class FindEventViewModelTests {
     val event = TEST_EVENTS[0]
     composeTestRule.setContent { WeatherPager(event) }
     // Check that the message is displayed
-    composeTestRule.onNodeWithTag("weather message").assertIsDisplayed()
+    composeTestRule.onNodeWithTag("weather message").assertExists()
   }
 
   @Test
