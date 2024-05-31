@@ -104,7 +104,7 @@ fun EventScreen(
     toast = Toast.makeText(context, message, Toast.LENGTH_SHORT).apply { show() }
   }
 
-  // Needed, otherwise screen doesnt update instantly after event is edited
+  // Needed, otherwise screen doesn't update instantly after event is edited
   LaunchedEffect(Unit) { eventViewModel.fetchEvent() }
 
   val onJoinClick: (ChimpagneEvent) -> Unit = { event ->

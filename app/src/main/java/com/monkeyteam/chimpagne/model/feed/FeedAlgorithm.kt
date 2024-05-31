@@ -3,14 +3,13 @@ package com.monkeyteam.chimpagne.model.feed
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.location.Location
 
-val N_CLOSEST = 4
+// 50 as a reasonable value
+const val N_CLOSEST = 50
 
 fun getClosestNEvent(
     li: List<ChimpagneEvent>,
     myLocation: Location,
 ): List<ChimpagneEvent> {
-  if (li.size <= N_CLOSEST) return li
-
   val sortedEvents =
       li.sortedBy { event ->
         val eventLocation = event.location
