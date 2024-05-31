@@ -169,16 +169,3 @@ fun initializeTestDatabase(
     Tasks.await(profilePicturesTable.child(entry.key).putFile(entry.value))
   }
 }
-
-fun setMobileDataEnabled(context: Context, enabled: Boolean) {
-  val conman = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-  val conmanClass = Class.forName(conman.javaClass.name)
-  val iConnectivityManagerField: Field = conmanClass.getDeclaredField("mService")
-  iConnectivityManagerField.isAccessible = true
-  val iConnectivityManager: Any = iConnectivityManagerField.get(conman)
-  val iConnectivityManagerClass = Class.forName(iConnectivityManager.javaClass.name)
-  val setMobileDataEnabledMethod: Method =
-      iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", java.lang.Boolean.TYPE)
-  setMobileDataEnabledMethod.isAccessible = true
-  setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled)
-}
