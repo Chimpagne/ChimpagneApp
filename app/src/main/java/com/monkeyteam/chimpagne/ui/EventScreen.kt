@@ -244,7 +244,7 @@ fun EventScreen(
                 if (uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT) {
                   EventActions(
                       navObject, eventViewModel, accountViewModel.isUserLoggedIn(), showToast) {
-                        showPromptLogin = it
+                        promptLogin(context, navObject)
                       }
                 }
               }
