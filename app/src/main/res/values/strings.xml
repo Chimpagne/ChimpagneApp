@@ -71,6 +71,8 @@
     <string name="event_details_screen_slots">slots</string>
     <string name="event_details_screen_organiser">Organizer</string>
     <string name="event_details_screen_description">Description</string>
+    <string name="event_details_screen_map">Location</string>
+    <string name="event_details_screen_weather">Weather forecast</string>
     <string name="event_details_screen_socials">Sharing and Messaging</string>
     <string name="event_details_screen_facilities">Accommodation and Parking</string>
     <string name="event_details_screen_actions">Actions</string>

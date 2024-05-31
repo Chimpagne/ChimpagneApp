@@ -586,7 +586,9 @@ class EventViewModel(
             ownerId = event.ownerId,
             socialMediaLinks = convertSMLinksToSM(event.socialMediaLinks),
             imageUri = event.imageUri,
-            polls = event.polls,
+            polls = event.polls)
+    _uiState.value =
+        _uiState.value.copy(
             currentUserRole = getRole(accountManager.currentUserAccount?.firebaseAuthUID ?: ""))
   }
 

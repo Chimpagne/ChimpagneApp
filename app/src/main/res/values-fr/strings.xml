@@ -70,6 +70,8 @@
     <string name="event_details_screen_slots">places</string>
     <string name="event_details_screen_organiser">Organisateur</string>
     <string name="event_details_screen_description">Description</string>
+    <string name="event_details_screen_map">Localisation</string>
+    <string name="event_details_screen_weather">Météo</string>
     <string name="event_details_screen_socials">Partage et Communication</string>
     <string name="event_details_screen_facilities">Hébèrgement et Parking</string>
     <string name="event_details_screen_actions">Actions</string>

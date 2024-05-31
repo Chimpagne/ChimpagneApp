@@ -1,6 +1,7 @@
 package com.monkeyteam.chimpagne.model.location
 
 import android.util.Log
+import com.monkeyteam.chimpagne.model.utils.getCurrentLanguage
 import java.io.IOException
 import okhttp3.Call
 import okhttp3.Callback
@@ -43,7 +44,16 @@ fun convertNameToLocations(name: String, onResult: (List<Location>) -> Unit, lim
           .addQueryParameter("limit", limit.toString())
           .build()
 
-  val request = Request.Builder().url(url).addHeader("User-Agent", "Chimpagne").build()
+  val language = getCurrentLanguage()
+  val acceptedLanguage = if (language == "fr") "fr" else "en"
+
+  val request =
+      Request.Builder()
+          .url(url)
+          .addHeader("User-Agent", "Chimpagne")
+          .addHeader("Accept-Language", acceptedLanguage)
+          .build()
+
   client
       .newCall(request)
       .enqueue(
