@@ -30,10 +30,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/** End to end test for adding a supply to an event, as well as creating a poll and voting on it. */
+/** End to end test for adding a supply to an event as well as creating a poll and voting on it. */
 @RunWith(AndroidJUnit4::class)
 class PollEnd2EndTest {
-  val timeout: Long = 5000 // in milliseconds
+  private val timeout: Long = 5000 // in milliseconds
 
   val database = Database()
   val account =
