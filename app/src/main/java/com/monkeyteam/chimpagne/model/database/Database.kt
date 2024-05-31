@@ -7,7 +7,11 @@ import com.google.firebase.storage.storage
 import com.monkeyteam.chimpagne.model.utils.internetAccessListener
 
 // context != null iff not running a test
-class Database(tables: Tables = TEST_TABLES, context: Context? = null, allowInternetAccess: Boolean = true) {
+class Database(
+    tables: Tables = TEST_TABLES,
+    context: Context? = null,
+    allowInternetAccess: Boolean = true
+) {
   private val db = Firebase.firestore
   private val events = db.collection(tables.EVENTS)
   private val accounts = db.collection(tables.ACCOUNTS)
@@ -26,7 +30,7 @@ class Database(tables: Tables = TEST_TABLES, context: Context? = null, allowInte
         connected = true
       } else {
         internetAccessListener(
-          context, onAvailable = { connected = true }, onLost = { connected = false })
+            context, onAvailable = { connected = true }, onLost = { connected = false })
       }
     }
   }

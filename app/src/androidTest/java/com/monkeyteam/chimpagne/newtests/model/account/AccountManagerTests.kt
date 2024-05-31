@@ -50,6 +50,5 @@ class AccountManagerTests {
   @Test
   fun updateAccountWhileOfflineIsDisabled() {
     setMobileDataEnabled(instrumentationContext, false)
-
   }
 }

@@ -5,10 +5,8 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
-import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import junit.framework.TestCase
 import junit.framework.TestCase.assertTrue
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -22,12 +20,14 @@ class OfflineEventManagerTests {
   fun uploadEventPictureIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.uploadEventPicture(ChimpagneEvent("banana"), eventPictureUri = "MONKEY.PNG",  onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.uploadEventPicture(
+        ChimpagneEvent("banana"),
+        eventPictureUri = "MONKEY.PNG",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -36,12 +36,14 @@ class OfflineEventManagerTests {
   fun createEventIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.createEvent(ChimpagneEvent("banana"), eventPictureUri = "MONKEY.PNG",  onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.createEvent(
+        ChimpagneEvent("banana"),
+        eventPictureUri = "MONKEY.PNG",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -50,12 +52,14 @@ class OfflineEventManagerTests {
   fun updateEventIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.updateEvent(ChimpagneEvent("banana"), eventPictureUri = "MONKEY.PNG",  onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.updateEvent(
+        ChimpagneEvent("banana"),
+        eventPictureUri = "MONKEY.PNG",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -64,12 +68,13 @@ class OfflineEventManagerTests {
   fun deleteEventIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.deleteEvent("BANANA",  onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.deleteEvent(
+        "BANANA",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -78,12 +83,14 @@ class OfflineEventManagerTests {
   fun addGuestIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.addGuest("BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.addGuest(
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -92,12 +99,14 @@ class OfflineEventManagerTests {
   fun removeGuestIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.removeGuest("BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.removeGuest(
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -106,12 +115,14 @@ class OfflineEventManagerTests {
   fun addStaffIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.addStaff("BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.addStaff(
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -120,12 +131,14 @@ class OfflineEventManagerTests {
   fun removeStaffIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.removeGuest("BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.removeGuest(
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -134,12 +147,14 @@ class OfflineEventManagerTests {
   fun updateSupplyIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.updateSupply("BANANA", ChimpagneSupply("MONKEY"), onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.updateSupply(
+        "BANANA",
+        ChimpagneSupply("MONKEY"),
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -148,12 +163,14 @@ class OfflineEventManagerTests {
   fun removeSupplyIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.removeSupply("BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.removeSupply(
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -162,12 +179,15 @@ class OfflineEventManagerTests {
   fun assignSupplyIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.assignSupply("PARTY", "BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.assignSupply(
+        "PARTY",
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -176,12 +196,15 @@ class OfflineEventManagerTests {
   fun unassignSupplyIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.unassignSupply("PARTY", "BANANA", "MONKEY", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.unassignSupply(
+        "PARTY",
+        "BANANA",
+        "MONKEY",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -190,12 +213,14 @@ class OfflineEventManagerTests {
   fun deletePollIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.deletePoll("PARTY", "BANANA", onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.deletePoll(
+        "PARTY",
+        "BANANA",
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }
@@ -204,12 +229,16 @@ class OfflineEventManagerTests {
   fun castPollVoteIsDisabled() {
     var loading = true
     var exception: Exception = Exception()
-    eventManager.atomic.castPollVote("PARTY", "POLL","BANANA", 0, onSuccess = {
-      assertTrue(false)
-    }, onFailure = {
-      exception = it
-      loading = false
-    })
+    eventManager.atomic.castPollVote(
+        "PARTY",
+        "POLL",
+        "BANANA",
+        0,
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     TestCase.assertEquals(NetworkNotAvailableException::class, exception::class)
   }

@@ -471,7 +471,11 @@ class EventViewModel(
         onFailure)
   }
 
-  fun assignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID, onFailure: (Exception) -> Unit = {}) {
+  fun assignSupplyAtomically(
+      supplyId: ChimpagneSupplyId,
+      accountUID: ChimpagneAccountUID,
+      onFailure: (Exception) -> Unit = {}
+  ) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.assignSupply(
         _uiState.value.id,
@@ -487,7 +491,11 @@ class EventViewModel(
         onFailure)
   }
 
-  fun unassignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID, onFailure: (Exception) -> Unit = {}) {
+  fun unassignSupplyAtomically(
+      supplyId: ChimpagneSupplyId,
+      accountUID: ChimpagneAccountUID,
+      onFailure: (Exception) -> Unit = {}
+  ) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.unassignSupply(
         _uiState.value.id,
