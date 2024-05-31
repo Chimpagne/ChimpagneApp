@@ -516,11 +516,11 @@ class EventViewModelTests {
     assertEquals(context.getString(R.string.invalid_dates), result)
   }
 
-    @Test
-    fun testEmptyLocation() {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val result =
-            EventViewModel.eventInputValidityToString(EventInputValidity.EMPTY_LOCATION, context)
-        assertEquals(context.getString(R.string.location_should_not_be_empty), result)
-    }
+  @Test
+  fun testEmptyLocation() {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    val result =
+        EventViewModel.eventInputValidityToString(EventInputValidity.EMPTY_LOCATION, context)
+    assertEquals(context.getString(R.string.location_should_not_be_empty), result)
+  }
 }
