@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
@@ -243,15 +242,7 @@ class EventViewModel(
    * joinEvent in FindEventViewModel
    * --> Call in DetailEventScreen
    */
-  fun joinEvent(
-      eventId: ChimpagneEventId = _uiState.value.id,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
-    joinTheEvent(onSuccess, onFailure)
-  }
-
-  fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun joinEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
