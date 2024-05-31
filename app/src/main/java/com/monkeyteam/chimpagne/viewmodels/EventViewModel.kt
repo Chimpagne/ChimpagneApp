@@ -446,7 +446,7 @@ class EventViewModel(
         })
   }
 
-  fun updateSupplyAtomically(supply: ChimpagneSupply) {
+  fun updateSupplyAtomically(supply: ChimpagneSupply, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.updateSupply(
         _uiState.value.id,
@@ -456,10 +456,10 @@ class EventViewModel(
               _uiState.value.copy(
                   supplies = _uiState.value.supplies + (supply.id to supply), loading = false)
         },
-        {})
+        onFailure)
   }
 
-  fun removeSupplyAtomically(supplyId: ChimpagneSupplyId) {
+  fun removeSupplyAtomically(supplyId: ChimpagneSupplyId, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.removeSupply(
         _uiState.value.id,
@@ -468,10 +468,10 @@ class EventViewModel(
           _uiState.value =
               _uiState.value.copy(supplies = _uiState.value.supplies - supplyId, loading = false)
         },
-        {})
+        onFailure)
   }
 
-  fun assignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+  fun assignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.assignSupply(
         _uiState.value.id,
@@ -484,10 +484,10 @@ class EventViewModel(
               _uiState.value.copy(
                   supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
         },
-        {})
+        onFailure)
   }
 
-  fun unassignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+  fun unassignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.unassignSupply(
         _uiState.value.id,
@@ -500,7 +500,7 @@ class EventViewModel(
               _uiState.value.copy(
                   supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
         },
-        {})
+        onFailure)
   }
 
   fun createPollAtomically(

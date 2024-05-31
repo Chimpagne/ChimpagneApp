@@ -2,7 +2,7 @@ package com.monkeyteam.chimpagne.model.database
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
-import com.monkeyteam.chimpagne.model.utils.NoNetworkAvailableException
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 /**
  * In the current implementation, this class is not concurrency-safe. The only guarantee it provides
@@ -19,7 +19,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -37,7 +37,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -55,7 +55,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -73,7 +73,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -91,7 +91,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -109,7 +109,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -128,7 +128,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -147,7 +147,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -165,7 +165,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -183,7 +183,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -203,7 +203,7 @@ class AtomicChimpagneEventManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 

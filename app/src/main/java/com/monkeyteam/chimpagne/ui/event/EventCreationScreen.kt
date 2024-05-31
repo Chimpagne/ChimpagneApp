@@ -69,7 +69,10 @@ fun EventCreationScreen(
                     onSuccess = {
                       showToast(context.getString(R.string.event_creation_screen_toast_finish))
                       navObject.goBack()
-                    })
+                    },
+                  onFailure = {
+                    showToast(context.getString(R.string.event_creation_screen_toast_failed))
+                  })
               }
             })
       }) { innerPadding ->

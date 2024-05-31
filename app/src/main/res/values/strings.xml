@@ -16,6 +16,7 @@
     <string name="event_creation_screen_create_event">Create Event</string>
     <string name="event_creation_screen_toast_creating">Creating the event…</string>
     <string name="event_creation_screen_toast_finish">Event has been created successfully!</string>
+    <string name="event_creation_screen_toast_failed">Event creation failed !</string>
     <string name="event_creation_screen_title">Create an event</string>
     <string name="event_creation_screen_title_legend">Title</string>
     <string name="event_creation_screen_description">Add a description</string>

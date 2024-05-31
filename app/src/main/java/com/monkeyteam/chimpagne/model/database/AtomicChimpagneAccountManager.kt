@@ -3,7 +3,7 @@ package com.monkeyteam.chimpagne.model.database
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.storage.StorageReference
-import com.monkeyteam.chimpagne.model.utils.NoNetworkAvailableException
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 /**
  * This implementation ensures that the account is always consistent across all clients, even when
@@ -21,10 +21,14 @@ class AtomicChimpagneAccountManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
-    accounts.document(uid).update("joinedEvent.$eventId", FieldValue.delete()).addOnSuccessListener { onSuccess() }.addOnFailureListener(onFailure)
+    accounts
+        .document(uid)
+        .update("joinedEvent.$eventId", FieldValue.delete())
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener(onFailure)
   }
 }

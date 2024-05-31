@@ -90,7 +90,6 @@ class AccountViewModel(database: Database) : ViewModel() {
           },
           {
             Log.e("AccountViewModel", "Failed to update account", it)
-            _uiState.value = _uiState.value.copy(loading = false)
             onFailure(it)
           })
     }

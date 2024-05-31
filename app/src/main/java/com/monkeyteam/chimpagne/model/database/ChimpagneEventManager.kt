@@ -11,7 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.monkeyteam.chimpagne.model.location.Location
-import com.monkeyteam.chimpagne.model.utils.NoNetworkAvailableException
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 class ChimpagneEventManager(
     private val database: Database,
@@ -96,7 +96,7 @@ class ChimpagneEventManager(
       eventPictureUri: String
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -118,7 +118,7 @@ class ChimpagneEventManager(
       eventPictureUri: String? = null
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -159,7 +159,7 @@ class ChimpagneEventManager(
       eventPictureUri: String? = null
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -192,7 +192,7 @@ class ChimpagneEventManager(
 
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -249,7 +249,7 @@ class ChimpagneEventManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 

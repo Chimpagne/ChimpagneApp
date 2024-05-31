@@ -1,5 +1,7 @@
 package com.monkeyteam.chimpagne.newtests
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.net.Uri
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
@@ -14,6 +16,9 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import java.lang.reflect.Field
+import java.lang.reflect.Method
+
 
 const val SLEEP_AMOUNT_MILLIS: Long = 300
 
@@ -164,4 +169,17 @@ fun initializeTestDatabase(
   for (entry in profilePictures.entries.iterator()) {
     Tasks.await(profilePicturesTable.child(entry.key).putFile(entry.value))
   }
+}
+
+fun setMobileDataEnabled(context: Context, enabled: Boolean) {
+    val conman = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val conmanClass = Class.forName(conman.javaClass.name)
+    val iConnectivityManagerField: Field = conmanClass.getDeclaredField("mService")
+    iConnectivityManagerField.isAccessible = true
+    val iConnectivityManager: Any = iConnectivityManagerField.get(conman)
+    val iConnectivityManagerClass = Class.forName(iConnectivityManager.javaClass.name)
+    val setMobileDataEnabledMethod: Method =
+        iConnectivityManagerClass.getDeclaredMethod("setMobileDataEnabled", java.lang.Boolean.TYPE)
+    setMobileDataEnabledMethod.isAccessible = true
+    setMobileDataEnabledMethod.invoke(iConnectivityManager, enabled)
 }

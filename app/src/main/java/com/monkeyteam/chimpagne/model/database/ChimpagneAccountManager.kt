@@ -9,7 +9,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
-import com.monkeyteam.chimpagne.model.utils.NoNetworkAvailableException
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 /** Use this class to interact */
 class ChimpagneAccountManager(
@@ -134,7 +134,7 @@ class ChimpagneAccountManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -172,7 +172,7 @@ class ChimpagneAccountManager(
       onFailure: (Exception) -> Unit
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -204,7 +204,6 @@ class ChimpagneAccountManager(
         .downloadUrl
         .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
         .addOnFailureListener { onSuccess(null) }
-
   }
 
   private val eventManager = database.eventManager
@@ -217,7 +216,7 @@ class ChimpagneAccountManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 
@@ -257,7 +256,7 @@ class ChimpagneAccountManager(
       onFailure: (Exception) -> Unit = {}
   ) {
     if (!database.connected) {
-      onFailure(NoNetworkAvailableException())
+      onFailure(NetworkNotAvailableException())
       return
     }
 

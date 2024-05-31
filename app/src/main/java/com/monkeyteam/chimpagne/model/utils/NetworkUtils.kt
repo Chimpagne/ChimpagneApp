@@ -10,30 +10,33 @@ import androidx.core.content.ContextCompat.getSystemService
 
 // see https://developer.android.com/training/monitoring-device-state/connectivity-status-type
 fun internetAccessListener(context: Context, onAvailable: () -> Unit, onLost: () -> Unit) {
-  val networkRequest = NetworkRequest.Builder()
-    .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-    .build()
+  val networkRequest =
+      NetworkRequest.Builder()
+          .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+          .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+          .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+          .build()
 
-  val networkCallback = object : ConnectivityManager.NetworkCallback() {
-    // network is available for use
-    override fun onAvailable(network: Network) {
-      super.onAvailable(network)
-      Log.d("Internet access", "connected")
-      onAvailable()
-    }
+  val networkCallback =
+      object : ConnectivityManager.NetworkCallback() {
+        // network is available for use
+        override fun onAvailable(network: Network) {
+          super.onAvailable(network)
+          Log.d("Internet access", "connected")
+          onAvailable()
+        }
 
-    // lost network connection
-    override fun onLost(network: Network) {
-      super.onLost(network)
-      Log.d("Internet access", "not connected")
-      onLost()
-    }
-  }
+        // lost network connection
+        override fun onLost(network: Network) {
+          super.onLost(network)
+          Log.d("Internet access", "not connected")
+          onLost()
+        }
+      }
 
-  val connectivityManager = getSystemService(context, ConnectivityManager::class.java) as ConnectivityManager
+  val connectivityManager =
+      getSystemService(context, ConnectivityManager::class.java) as ConnectivityManager
   connectivityManager.requestNetwork(networkRequest, networkCallback)
 }
 
-class NoNetworkAvailableException : Exception("No network available")
+class NetworkNotAvailableException : Exception("No network available")
