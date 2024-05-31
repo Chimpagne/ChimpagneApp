@@ -231,28 +231,6 @@ class ViewDetailEventScreenTests {
         .assertHasClickAction()
   }
 
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testUserIsInEvent() {
-    val event = TEST_EVENTS[2]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
-    }
-
-    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
-
-    Thread.sleep(2000)
-    accountViewModel.logoutFromChimpagneAccount()
-  }
-
   @Test
   fun testSocialMedia() {
     val event = TEST_EVENTS[0]
@@ -305,6 +283,28 @@ class ViewDetailEventScreenTests {
 
   @OptIn(ExperimentalFoundationApi::class)
   @Test
+  fun testUserIsInEvent() {
+    val event = TEST_EVENTS[2]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
+    }
+
+    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
+
+    composeTestRule.waitForIdle()
+    accountViewModel.logoutFromChimpagneAccount()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
   fun testNavigationBackFunctionality() {
     val event = TEST_EVENTS[0]
 
@@ -319,26 +319,5 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
-  }
-
-  @OptIn(ExperimentalFoundationApi::class)
-  @Test
-  fun testShareButton() {
-    val event = TEST_EVENTS[2]
-
-    val eventVM = EventViewModel(event.id, database)
-
-    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    accountManager.signInTo(TEST_ACCOUNTS[1])
-
-    while (eventVM.uiState.value.loading) {}
-
-    composeTestRule.setContent {
-      OrganiserView(ownerId = "123", accountViewModel = accountViewModel, event = event)
-    }
-
-    Thread.sleep(2000)
-
-    composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
   }
 }

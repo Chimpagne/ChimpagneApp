@@ -1,6 +1,5 @@
 package com.monkeyteam.chimpagne.ui
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -17,18 +16,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Login
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.DirectionsCar
 import androidx.compose.material.icons.rounded.KingBed
+import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.QrCodeScanner
+import androidx.compose.material.icons.rounded.WbSunny
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -62,13 +63,13 @@ import com.monkeyteam.chimpagne.model.utils.createCalendarIntent
 import com.monkeyteam.chimpagne.ui.components.EventTagChip
 import com.monkeyteam.chimpagne.ui.components.GoBackButton
 import com.monkeyteam.chimpagne.ui.components.TopBar
-import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.ChimpagneLogoDivider
 import com.monkeyteam.chimpagne.ui.components.eventview.EventActions
 import com.monkeyteam.chimpagne.ui.components.eventview.EventDescription
 import com.monkeyteam.chimpagne.ui.components.eventview.EventMainInfo
 import com.monkeyteam.chimpagne.ui.components.eventview.ImageCard
 import com.monkeyteam.chimpagne.ui.components.eventview.OrganiserView
+import com.monkeyteam.chimpagne.ui.components.eventview.SimpleMapCard
 import com.monkeyteam.chimpagne.ui.components.popUpCalendar
 import com.monkeyteam.chimpagne.ui.navigation.NavigationActions
 import com.monkeyteam.chimpagne.ui.theme.ChimpagneFontFamily
@@ -103,7 +104,7 @@ fun EventScreen(
     toast = Toast.makeText(context, message, Toast.LENGTH_SHORT).apply { show() }
   }
 
-  // Needed, otherwise screen doesnt update instantly after event is edited
+  // Needed, otherwise screen doesn't update instantly after event is edited
   LaunchedEffect(Unit) { eventViewModel.fetchEvent() }
 
   val onJoinClick: (ChimpagneEvent) -> Unit = { event ->
@@ -200,58 +201,51 @@ fun EventScreen(
         if (uiState.id.isEmpty()) {
           SpinnerView()
         } else {
-          LazyColumn(
+
+          Column(
               modifier =
                   Modifier.fillMaxSize()
                       .padding(innerPadding)
-                      .background(MaterialTheme.colorScheme.background),
-              verticalArrangement = Arrangement.Top) {
-                item {
-                  Log.d("EventScreen", "ImageUri: $uiState")
-                  ImageCard(uiState.imageUri)
-                }
-                item {
-                  Row(
-                      modifier =
-                          Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
-                        uiState.tags.forEach { tag -> EventTagChip(tag) }
+                      .background(MaterialTheme.colorScheme.background)
+                      .verticalScroll(rememberScrollState())) {
+                ImageCard(uiState.imageUri)
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier =
+                        Modifier.horizontalScroll(rememberScrollState()).testTag("tag list")) {
+                      uiState.tags.forEach { tag -> EventTagChip(tag) }
+                    }
+                Spacer(modifier = Modifier.padding(vertical = 16.dp))
+                EventMainInfo(event = eventViewModel.buildChimpagneEvent())
+                ChimpagneLogoDivider(
+                    text = stringResource(id = R.string.event_details_screen_description),
+                    icon = Icons.Rounded.Description,
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                EventDescription(
+                    uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
+                ChimpagneLogoDivider(
+                    text = stringResource(id = R.string.event_details_screen_organiser),
+                    icon = Icons.Rounded.Person,
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                OrganiserView(
+                    uiState.ownerId, accountViewModel, event = eventViewModel.buildChimpagneEvent())
+                ChimpagneLogoDivider(
+                    text = stringResource(id = R.string.event_details_screen_map),
+                    icon = Icons.Rounded.Map,
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                SimpleMapCard(startingPosition = uiState.location)
+
+                ChimpagneLogoDivider(
+                    text = stringResource(id = R.string.event_details_screen_weather),
+                    icon = Icons.Rounded.WbSunny,
+                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
+                WeatherPager(event = eventViewModel.buildChimpagneEvent())
+
+                if (uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT) {
+                  EventActions(
+                      navObject, eventViewModel, accountViewModel.isUserLoggedIn(), showToast) {
+                        showPromptLogin = it
                       }
-                }
-                item { Spacer(modifier = Modifier.padding(vertical = 16.dp)) }
-                item { EventMainInfo(event = eventViewModel.buildChimpagneEvent()) }
-                item {
-                  ChimpagneLogoDivider(
-                      text = stringResource(id = R.string.event_details_screen_description),
-                      icon = Icons.Rounded.Description,
-                      modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
-                }
-                item {
-                  EventDescription(
-                      uiState.description, uiState.currentUserRole != ChimpagneRole.NOT_IN_EVENT)
-                }
-                item {
-                  ChimpagneLogoDivider(
-                      text = stringResource(id = R.string.event_details_screen_organiser),
-                      icon = Icons.Rounded.Person,
-                      modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
-                }
-                item {
-                  OrganiserView(
-                      uiState.ownerId,
-                      accountViewModel,
-                      event = eventViewModel.buildChimpagneEvent())
-                }
-                item { ChimpagneDivider() }
-                item { WeatherPager(event = eventViewModel.buildChimpagneEvent()) }
-                if (uiState.currentUserRole == ChimpagneRole.NOT_IN_EVENT) {
-                  // Do nothing extra
-                } else {
-                  item {
-                    EventActions(
-                        navObject, eventViewModel, accountViewModel.isUserLoggedIn(), showToast) {
-                          promptLogin(context, navObject)
-                        }
-                  }
                 }
               }
         }
