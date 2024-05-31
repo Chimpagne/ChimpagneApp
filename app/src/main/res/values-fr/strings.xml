@@ -163,7 +163,8 @@
     <string name="account_last_name">Nom</string>
     <string name="account_logout">Se déconnecter</string>
 
-    <string name="title_should_not_be_empty">Le titre de l\'événement ne peut être vide</string>
+    <string name="title_should_not_be_empty">Le titre de l\'événement est requis</string>
+    <string name="location_should_not_be_empty">La Localisation est requise</string>
     <string name="invalid_dates">Dates invalides</string>
     <string name="invalid_social_media_links">Liens de médias sociaux invalides</string>
 
