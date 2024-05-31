@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 enum class EventInputValidity {
   INVALID_TITLE,
   INVALID_SOCIAL_MEDIA_LINKS,
-  INVALID_DATES
+  INVALID_DATES,
+  EMPTY_LOCATION
 }
 
 class EventViewModel(
@@ -57,6 +58,8 @@ class EventViewModel(
         EventInputValidity.INVALID_SOCIAL_MEDIA_LINKS ->
             context.getString(R.string.invalid_social_media_links)
         EventInputValidity.INVALID_DATES -> context.getString(R.string.invalid_dates)
+        EventInputValidity.EMPTY_LOCATION ->
+            context.getString(R.string.location_should_not_be_empty)
       }
     }
   }
@@ -64,6 +67,7 @@ class EventViewModel(
   private fun validateEventInputs(): EventInputValidity? {
     return when {
       _uiState.value.title.isEmpty() -> EventInputValidity.INVALID_TITLE
+      _uiState.value.location.name.isEmpty() -> EventInputValidity.EMPTY_LOCATION
       _uiState.value.startsAtCalendarDate.after(_uiState.value.endsAtCalendarDate) ||
           _uiState.value.startsAtCalendarDate.equals(_uiState.value.endsAtCalendarDate) ->
           EventInputValidity.INVALID_DATES
