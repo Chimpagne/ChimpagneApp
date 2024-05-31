@@ -118,7 +118,6 @@ fun MainFindEventScreen(
     accountViewModel: AccountViewModel
 ) {
 
-  val accountUIState by accountViewModel.uiState.collectAsState()
   val pagerState = rememberPagerState { 3 }
   val coroutineScope = rememberCoroutineScope()
   val context = LocalContext.current

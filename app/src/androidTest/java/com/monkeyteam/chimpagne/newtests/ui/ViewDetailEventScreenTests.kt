@@ -299,7 +299,7 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.onNodeWithTag("share").assertExists().assertHasClickAction()
 
-    Thread.sleep(2000)
+    composeTestRule.waitForIdle()
     accountViewModel.logoutFromChimpagneAccount()
   }
 

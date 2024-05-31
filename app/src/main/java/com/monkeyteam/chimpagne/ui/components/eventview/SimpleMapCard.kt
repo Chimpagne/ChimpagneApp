@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne.ui.components.eventview
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,57 +65,51 @@ fun SimpleMapCard(startingPosition: Location) {
     }
   }
 
-  Box(
-      modifier =
-          Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
-              .fillMaxWidth()
-              .pointerInput(Unit) { detectTapGestures { onClick() } }) {
-        Column {
-          Card(
-              modifier =
-                  Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-                      .clip(RoundedCornerShape(12.dp))
-                      .fillMaxWidth()
-                      .aspectRatio(1.7f)
-                      .padding(bottom = 12.dp),
-              shape = RoundedCornerShape(12.dp),
-              colors =
-                  CardDefaults.cardColors(
-                      containerColor = MaterialTheme.colorScheme.surfaceVariant),
-              elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-                GoogleMap(
-                    modifier = Modifier.testTag("map card").fillMaxSize(),
-                    onMapClick = { onClick() },
-                    cameraPositionState = cameraPositionState,
-                    uiSettings =
-                        MapUiSettings(
-                            zoomControlsEnabled = false,
-                            myLocationButtonEnabled = false,
-                            mapToolbarEnabled = false,
-                            scrollGesturesEnabled = false,
-                            scrollGesturesEnabledDuringRotateOrZoom = false,
-                            tiltGesturesEnabled = false,
-                            zoomGesturesEnabled = false,
-                            rotationGesturesEnabled = false),
-                    properties =
-                        MapProperties(
-                            isMyLocationEnabled = false,
-                            isTrafficEnabled = false,
-                            isIndoorEnabled = true)) {}
-              }
-
-          Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Rounded.LocationOn,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(end = 8.dp).height(20.dp))
-            Text(
-                text = startingPosition.name,
-                style = ChimpagneTypography.bodySmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis)
+  Box(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp).fillMaxWidth()) {
+    Column {
+      Card(
+          modifier =
+              Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+                  .clip(RoundedCornerShape(12.dp))
+                  .fillMaxWidth()
+                  .aspectRatio(1.9f),
+          shape = RoundedCornerShape(12.dp),
+          colors =
+              CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+          elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)) {
+            GoogleMap(
+                modifier = Modifier.testTag("map card").fillMaxSize(),
+                onMapClick = { onClick() },
+                cameraPositionState = cameraPositionState,
+                uiSettings =
+                    MapUiSettings(
+                        zoomControlsEnabled = false,
+                        myLocationButtonEnabled = false,
+                        mapToolbarEnabled = false,
+                        scrollGesturesEnabled = false,
+                        scrollGesturesEnabledDuringRotateOrZoom = false,
+                        tiltGesturesEnabled = false,
+                        zoomGesturesEnabled = false,
+                        rotationGesturesEnabled = false),
+                properties =
+                    MapProperties(
+                        isMyLocationEnabled = false,
+                        isTrafficEnabled = false,
+                        isIndoorEnabled = true))
           }
-        }
+
+      Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+        Icon(
+            imageVector = Icons.Rounded.LocationOn,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.padding(end = 8.dp).height(20.dp))
+        Text(
+            text = startingPosition.name,
+            style = ChimpagneTypography.bodySmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis)
       }
+    }
+  }
 }
