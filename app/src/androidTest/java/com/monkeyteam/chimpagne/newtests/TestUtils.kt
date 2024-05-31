@@ -1,7 +1,5 @@
 package com.monkeyteam.chimpagne.newtests
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.net.Uri
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
@@ -16,8 +14,6 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.TEST_TABLES
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
-import java.lang.reflect.Field
-import java.lang.reflect.Method
 
 const val SLEEP_AMOUNT_MILLIS: Long = 300
 

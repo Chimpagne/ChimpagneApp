@@ -35,13 +35,13 @@ class OfflineAccountManagerTests {
     loading = true
     exception = Exception()
     accountManager.updateCurrentAccount(
-      ChimpagneAccount("BANANA"),
-      profilePicture = Uri.EMPTY,
-      onSuccess = { assertTrue(false) },
-      onFailure = {
-        exception = it
-        loading = false
-      })
+        ChimpagneAccount("BANANA"),
+        profilePicture = Uri.EMPTY,
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
 
     assertEquals(NetworkNotAvailableException::class, exception::class)
@@ -68,16 +68,14 @@ class OfflineAccountManagerTests {
     var loading = true
     var exception: Exception = Exception()
     accountManager.joinEvent(
-      "MONKEY",
-      ChimpagneRole.GUEST,
-      onSuccess = { assertTrue(false) },
-      onFailure = {
-        exception = it
-        loading = false
-      })
+        "MONKEY",
+        ChimpagneRole.GUEST,
+        onSuccess = { assertTrue(false) },
+        onFailure = {
+          exception = it
+          loading = false
+        })
     while (loading) {}
     assertEquals(NetworkNotAvailableException::class, exception::class)
   }
-
-
 }
