@@ -9,7 +9,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
-import com.monkeyteam.chimpagne.model.utils.isOnline
+import com.monkeyteam.chimpagne.model.utils.NoNetworkAvailableException
 
 /** Use this class to interact */
 class ChimpagneAccountManager(
@@ -133,6 +133,11 @@ class ChimpagneAccountManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NoNetworkAvailableException())
+      return
+    }
+
     accounts
         .document(account.firebaseAuthUID)
         .set(account)
@@ -166,7 +171,11 @@ class ChimpagneAccountManager(
       onSuccess: (String) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    //    profilePictures.child(account.firebaseAuthUID).delete()
+    if (!database.connected) {
+      onFailure(NoNetworkAvailableException())
+      return
+    }
+
     val imageRef = profilePictures.child(account.firebaseAuthUID)
     imageRef
         .putFile(uri)
@@ -180,7 +189,12 @@ class ChimpagneAccountManager(
   }
 
   fun fetchProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
-    if (uid.isEmpty() || !isOnline(database.context)) {
+    if (!database.connected) {
+      onSuccess(null)
+      return
+    }
+
+    if (uid.isEmpty() || !database.connected) {
       onSuccess(null)
       return
     }
@@ -202,6 +216,11 @@ class ChimpagneAccountManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NoNetworkAvailableException())
+      return
+    }
+
     if (currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
@@ -237,6 +256,11 @@ class ChimpagneAccountManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NoNetworkAvailableException())
+      return
+    }
+
     if (currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
