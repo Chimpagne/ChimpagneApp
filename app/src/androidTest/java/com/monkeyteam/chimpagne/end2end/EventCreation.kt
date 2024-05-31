@@ -1,10 +1,13 @@
 package com.monkeyteam.chimpagne.end2end
 
 import android.Manifest
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -17,7 +20,9 @@ import androidx.test.rule.GrantPermissionRule
 import com.google.firebase.auth.FirebaseAuth
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.Database
+import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
+import com.monkeyteam.chimpagne.ui.components.LocationSelector
 import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -47,6 +52,15 @@ class EventCreation {
   @get:Rule
   val mRuntimePermissionRule: GrantPermissionRule =
       GrantPermissionRule.grant(Manifest.permission.ACCESS_FINE_LOCATION)
+
+  @Composable
+  fun LocationSelectorTestView(
+      selectedLocation: Location?,
+      updateSelectedLocation: (Location) -> Unit
+  ) {
+    LocationSelector(
+        selectedLocation = selectedLocation, updateSelectedLocation = updateSelectedLocation)
+  }
 
   @Before
   fun init() {
@@ -82,6 +96,12 @@ class EventCreation {
       navController.currentDestination?.route == Route.EVENT_CREATION_SCREEN
     }
     composeTestRule.onNodeWithTag("add_a_title").performTextInput(eventName)
+    composeTestRule.onNodeWithText("Search for a location").performTextInput("New York")
+    composeTestRule.onNodeWithTag("SearchIcon").performClick()
+    composeTestRule.waitUntil(timeout) {
+      composeTestRule.onAllNodesWithTag("location_possibility").fetchSemanticsNodes().isNotEmpty()
+    }
+    composeTestRule.onAllNodesWithTag("location_possibility").onFirst().performClick()
     composeTestRule.onNodeWithTag("next_button").performClick()
     composeTestRule.onNodeWithTag("next_button").performClick()
     composeTestRule.onNodeWithTag("next_button").performClick()
