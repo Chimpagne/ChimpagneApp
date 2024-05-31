@@ -72,6 +72,8 @@
     <string name="event_details_screen_slots">slots</string>
     <string name="event_details_screen_organiser">Organizer</string>
     <string name="event_details_screen_description">Description</string>
+    <string name="event_details_screen_map">Location</string>
+    <string name="event_details_screen_weather">Weather forecast</string>
     <string name="event_details_screen_socials">Sharing and Messaging</string>
     <string name="event_details_screen_facilities">Accommodation and Parking</string>
     <string name="event_details_screen_actions">Actions</string>
@@ -171,7 +173,8 @@
     <string name="account_last_name">Last Name</string>
     <string name="account_logout">Log out</string>
 
-    <string name="title_should_not_be_empty">The event title should not be empty</string>
+    <string name="title_should_not_be_empty">The Event Title should not be empty</string>
+    <string name="location_should_not_be_empty">The Location should not be empty</string>
     <string name="invalid_dates">Invalid dates</string>
     <string name="invalid_social_media_links">Invalid social media links</string>
     <!-- DateRangeSelector -->

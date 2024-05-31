@@ -125,7 +125,8 @@ fun LocationSelector(
                     Text(
                         text = location.name,
                         modifier =
-                            Modifier.clickable {
+                            Modifier.testTag("location_possibility")
+                                .clickable {
                                   locationQuery = location.name
                                   searchCompleted = true
                                   showSearchBar = false
