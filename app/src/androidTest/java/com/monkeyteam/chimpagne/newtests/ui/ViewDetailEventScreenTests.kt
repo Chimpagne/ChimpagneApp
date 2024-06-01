@@ -342,11 +342,11 @@ class ViewDetailEventScreenTests {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
       EventActions(
-        navObject = navActions,
-        eventViewModel = eventVM,
-        isUserLoggedIn = true,
-        showToast = {},
-        showPromptLogin = {})
+          navObject = navActions,
+          eventViewModel = eventVM,
+          isUserLoggedIn = true,
+          showToast = {},
+          showPromptLogin = {})
     }
 
     composeTestRule.onNodeWithTag("delete").performScrollTo().performClick()
