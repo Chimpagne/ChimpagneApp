@@ -1,10 +1,16 @@
 package com.monkeyteam.chimpagne.model.database
 
+import android.content.Context
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
+import com.monkeyteam.chimpagne.model.utils.internetAccessListener
 
-class Database(tables: Tables = TEST_TABLES) {
+class Database(
+    tables: Tables = TEST_TABLES,
+    context: Context? = null, // context != null iff not running a test
+    allowInternetAccess: Boolean = true // put this to false in android tests for offline mode
+) {
   private val db = Firebase.firestore
   private val events = db.collection(tables.EVENTS)
   private val accounts = db.collection(tables.ACCOUNTS)
@@ -13,6 +19,20 @@ class Database(tables: Tables = TEST_TABLES) {
 
   val eventManager = ChimpagneEventManager(this, events, eventPictures)
   val accountManager = ChimpagneAccountManager(this, accounts, profilePictures)
+
+  var connected = false
+    private set
+
+  init {
+    if (allowInternetAccess) {
+      if (context == null) { // context == null means we are in a test and thus have Internet
+        connected = true
+      } else {
+        internetAccessListener(
+            context, onAvailable = { connected = true }, onLost = { connected = false })
+      }
+    }
+  }
 }
 
 interface Tables {

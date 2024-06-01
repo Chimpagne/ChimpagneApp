@@ -104,6 +104,13 @@ fun EventActions(
                         showToast(
                             context.getString(R.string.event_details_screen_leave_toast_success))
                         navObject.goBack()
+                      },
+                      onFailure = {
+                        Toast.makeText(
+                                context,
+                                context.getString(R.string.event_details_screen_leave_failure),
+                                Toast.LENGTH_SHORT)
+                            .show()
                       })
                 } else {
                   showPromptLogin()

@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -63,7 +62,6 @@ import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModel
 
 /** We use this SuppressLint annotation to be able the case where the user is not logged in. */
 @SuppressLint("StateFlowValueCalledInComposition", "MissingPermission")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navObject: NavigationActions,
@@ -158,7 +156,6 @@ fun HomeScreen(
           enableGPSButtonState = LocationState.Error("Location permission denied")
         }
       }
-
   Scaffold(
       topBar = {
         TopBar(
