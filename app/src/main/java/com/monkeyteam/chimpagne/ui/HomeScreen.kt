@@ -84,7 +84,6 @@ class LocationViewModel(myContext: Context) {
 }
 
 @SuppressLint("StateFlowValueCalledInComposition", "MissingPermission")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navObject: NavigationActions,
@@ -196,7 +195,6 @@ fun HomeScreen(
           enableGPSButtonState = LocationState.Error("Location permission denied")
         }
       }
-
   Scaffold(
       topBar = {
         TopBar(
@@ -312,8 +310,7 @@ fun HomeScreen(
                             navObject.navigateTo(Route.EVENT_CREATION_SCREEN)
                           }
                         },
-                        text = stringResource(R.string.homescreen_organize_event),
-                    )
+                        text = stringResource(R.string.homescreen_organize_event),)
                   }
             }
       }
