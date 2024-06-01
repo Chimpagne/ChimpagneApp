@@ -344,9 +344,6 @@ class ViewDetailEventScreenTests {
       EventScreen(navActions, eventVM, accountViewModel)
     }
 
-    composeTestRule
-      .onNodeWithTag("delete")
-      .performScrollTo()
-      .performClick()
+    composeTestRule.onNodeWithTag("delete").performScrollTo().performClick()
   }
 }
