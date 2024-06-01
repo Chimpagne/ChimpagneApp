@@ -61,7 +61,13 @@ fun PollsAndVotingScreen(
           eventViewModel.createPollAtomically(
               poll = it,
               onSuccess = { displayCreatePollDialog = false },
-              onFailure = { Toast.makeText(context, context.getString(R.string.polls_create_failure), Toast.LENGTH_SHORT).show() })
+              onFailure = {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.polls_create_failure),
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
         },
         onPollCancel = { displayCreatePollDialog = false },
         onDismissRequest = { displayCreatePollDialog = false })
@@ -76,13 +82,23 @@ fun PollsAndVotingScreen(
               pollId = selectedPollId,
               optionIndex = it,
               onSuccess = { displayViewPollDialog = true },
-              onFailure = {Toast.makeText(context, context.getString(R.string.polls_vote_failure), Toast.LENGTH_SHORT).show() })
+              onFailure = {
+                Toast.makeText(
+                        context, context.getString(R.string.polls_vote_failure), Toast.LENGTH_SHORT)
+                    .show()
+              })
         },
         onPollDelete = {
           eventViewModel.deletePollAtomically(
               pollId = it,
               onSuccess = { displayVotePollDialog = false },
-              onFailure = {Toast.makeText(context, context.getString(R.string.polls_delete_failure), Toast.LENGTH_SHORT).show() })
+              onFailure = {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.polls_delete_failure),
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
         },
         onPollCancel = { displayVotePollDialog = false },
         onDismissRequest = { displayVotePollDialog = false })

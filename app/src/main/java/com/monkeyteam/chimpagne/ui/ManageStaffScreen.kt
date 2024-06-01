@@ -65,7 +65,7 @@ fun ManageStaffScreen(
   val eventUIState by eventViewModel.uiState.collectAsState()
   val accountUIState by accountViewModel.uiState.collectAsState()
   var isOnEdit by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   Scaffold(
       topBar = {
@@ -118,8 +118,13 @@ fun ManageStaffScreen(
                           isOnEdit = isOnEdit,
                           isStaff = true,
                           modifier = Modifier.testTag("staff member")) {
-                            eventViewModel.demoteStaffToGuest(account.firebaseAuthUID){
-                                Toast.makeText(context, context.getString(R.string.manage_staff_demote_staff_to_guest_failure), Toast.LENGTH_SHORT).show()
+                            eventViewModel.demoteStaffToGuest(account.firebaseAuthUID) {
+                              Toast.makeText(
+                                      context,
+                                      context.getString(
+                                          R.string.manage_staff_demote_staff_to_guest_failure),
+                                      Toast.LENGTH_SHORT)
+                                  .show()
                             }
                           }
                     }
@@ -148,8 +153,13 @@ fun ManageStaffScreen(
                             isOnEdit = true,
                             isStaff = false,
                             modifier = Modifier.testTag("guest member")) {
-                              eventViewModel.promoteGuestToStaff(account.firebaseAuthUID){
-                                  Toast.makeText(context, context.getString(R.string.manage_staff_promote_guest_to_staff_failure), Toast.LENGTH_SHORT).show()
+                              eventViewModel.promoteGuestToStaff(account.firebaseAuthUID) {
+                                Toast.makeText(
+                                        context,
+                                        context.getString(
+                                            R.string.manage_staff_promote_guest_to_staff_failure),
+                                        Toast.LENGTH_SHORT)
+                                    .show()
                               }
                             }
                       }

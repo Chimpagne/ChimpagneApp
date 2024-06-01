@@ -62,9 +62,16 @@ fun SuppliesScreen(
         supply = ChimpagneSupply(),
         onDismissRequest = { displayAddPopup = false },
         onSave = {
-            eventViewModel.updateSupplyAtomically(
-                supply = it,
-                onFailure = { Toast.makeText(context, context.getString(R.string.supplies_create_failure), Toast.LENGTH_SHORT).show() }) })
+          eventViewModel.updateSupplyAtomically(
+              supply = it,
+              onFailure = {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.supplies_create_failure),
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
+        })
   }
 
   var displayedSupply by remember { mutableStateOf(ChimpagneSupply()) }
@@ -78,12 +85,24 @@ fun SuppliesScreen(
               eventViewModel.assignSupplyAtomically(
                   supplyId = displayedSupply.id,
                   accountUID = accountsUiState.currentUserUID!!,
-                  onFailure = { Toast.makeText(context, context.getString(R.string.supplies_assign_myself_failure), Toast.LENGTH_SHORT).show() })
+                  onFailure = {
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.supplies_assign_myself_failure),
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  })
             } else {
               eventViewModel.unassignSupplyAtomically(
                   supplyId = displayedSupply.id,
                   accountUID = accountsUiState.currentUserUID!!,
-                  onFailure = { Toast.makeText(context, context.getString(R.string.supplies_unassign_myself_failure), Toast.LENGTH_SHORT).show() })
+                  onFailure = {
+                    Toast.makeText(
+                            context,
+                            context.getString(R.string.supplies_unassign_myself_failure),
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  })
             }
             displayAssignPopup = false
             displayedSupply = ChimpagneSupply()
@@ -97,12 +116,28 @@ fun SuppliesScreen(
     } else {
       StaffSupplyDialog(
           supply = displayedSupply,
-          updateSupply = { eventViewModel.updateSupplyAtomically(
-              supply = it,
-              onFailure = { Toast.makeText(context, context.getString(R.string.supplies_update_failure), Toast.LENGTH_SHORT).show() }) },
-          deleteSupply = { eventViewModel.removeSupplyAtomically(
-              supplyId = displayedSupply.id,
-              onFailure = { Toast.makeText(context, context.getString(R.string.supplies_delete_failure), Toast.LENGTH_SHORT).show() }) },
+          updateSupply = {
+            eventViewModel.updateSupplyAtomically(
+                supply = it,
+                onFailure = {
+                  Toast.makeText(
+                          context,
+                          context.getString(R.string.supplies_update_failure),
+                          Toast.LENGTH_SHORT)
+                      .show()
+                })
+          },
+          deleteSupply = {
+            eventViewModel.removeSupplyAtomically(
+                supplyId = displayedSupply.id,
+                onFailure = {
+                  Toast.makeText(
+                          context,
+                          context.getString(R.string.supplies_delete_failure),
+                          Toast.LENGTH_SHORT)
+                      .show()
+                })
+          },
           loggedUserUID = accountsUiState.currentUserUID!!,
           accounts = accountsUiState.fetchedAccounts,
           onDismissRequest = {

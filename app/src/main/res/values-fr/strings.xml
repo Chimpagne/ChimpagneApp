@@ -85,6 +85,7 @@
     <string name="event_details_screen_location_button">Localisation</string>
     <string name="event_details_screen_supplies_button">Fournitures</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
+    <string name="event_details_screen_leave_failure">Échec pour quitter l\'évènement</string>
     <string name="edit_event">Editer l\'événement</string>
     <string name="edit_event_toast_finish">L\'événement a été édité</string>
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
