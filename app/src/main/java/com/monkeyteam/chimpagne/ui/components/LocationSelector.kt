@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,12 @@ fun LocationSelector(
   var showSearchBar by remember { mutableStateOf(false) }
   var searchCompleted by remember { mutableStateOf(false) }
   var possibleLocations by remember { mutableStateOf(emptyList<Location>()) }
+
+  LaunchedEffect(selectedLocation) {
+    if (selectedLocation != null) {
+      locationQuery = selectedLocation.name
+    }
+  }
 
   val launchSearch = {
     if (locationQuery.isNotEmpty()) {
