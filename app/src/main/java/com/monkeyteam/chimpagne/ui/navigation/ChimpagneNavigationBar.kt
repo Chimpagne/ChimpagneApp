@@ -17,8 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.ui.utilities.promptLogin
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 
@@ -31,6 +33,25 @@ fun ChimpagneNavigationBar(navController: NavHostController, accountViewModel: A
   val currentRouteState by navController.currentBackStackEntryAsState()
   val currentRoute = currentRouteState?.destination?.route
 
+  val navigationItems =
+      listOf(
+          ChimpagneNavigationBarItem(
+              targetRoute = Route.HOME_SCREEN,
+              icon = Icons.Default.Home,
+              description = stringResource(id = R.string.navbar_home),
+              testTag = "home_button"),
+          ChimpagneNavigationBarItem(
+              targetRoute = Route.FIND_AN_EVENT_SCREEN,
+              icon = Icons.Default.Language,
+              description = stringResource(id = R.string.navbar_discover),
+              testTag = "discover_events_button"),
+          ChimpagneNavigationBarItem(
+              targetRoute = Route.MY_EVENTS_SCREEN,
+              icon = Icons.Default.CalendarMonth,
+              description = stringResource(id = R.string.narbar_my_events),
+              testTag = "open_events_button",
+              accountRequired = true))
+
   NavigationBar(
       containerColor =
           if (BLACKLISTED_ROUTES.contains(currentRoute)) Color.Transparent
@@ -38,7 +59,7 @@ fun ChimpagneNavigationBar(navController: NavHostController, accountViewModel: A
         if (BLACKLISTED_ROUTES.contains(currentRoute)) {
           return@NavigationBar
         }
-        NAVIGATION_ITEMS.forEach { item ->
+        navigationItems.forEach { item ->
           NavigationBarItem(
               selected = navController.currentDestination?.route == item.targetRoute,
               onClick = {
@@ -65,22 +86,3 @@ data class ChimpagneNavigationBarItem(
     val testTag: String,
     val accountRequired: Boolean = false
 )
-
-val NAVIGATION_ITEMS =
-    listOf(
-        ChimpagneNavigationBarItem(
-            targetRoute = Route.HOME_SCREEN,
-            icon = Icons.Default.Home,
-            description = "Home",
-            testTag = "home_button"),
-        ChimpagneNavigationBarItem(
-            targetRoute = Route.FIND_AN_EVENT_SCREEN,
-            icon = Icons.Default.Language,
-            description = "Discover",
-            testTag = "discover_events_button"),
-        ChimpagneNavigationBarItem(
-            targetRoute = Route.MY_EVENTS_SCREEN,
-            icon = Icons.Default.CalendarMonth,
-            description = "My Events",
-            testTag = "open_events_button",
-            accountRequired = true))

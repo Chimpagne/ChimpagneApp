@@ -204,4 +204,9 @@
     <string name="noforecast_error">Failed to fetch weather data</string>
     <string name="noforecast_alreadyoccured">Event has already occurred, no weather forecast :)</string>
 
+    <!-- Polls and Voting -->
+    <string name="navbar_home">Home</string>
+    <string name="navbar_discover">Discover</string>
+    <string name="narbar_my_events">My Events</string>
+
 </resources>

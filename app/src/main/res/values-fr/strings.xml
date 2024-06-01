@@ -198,4 +198,9 @@
     <string name="noforecast_alreadyoccured">L\'évènement est passé, pas de prévision météo :)</string>
     <string name="noforecast_eventtoofarinfuture">Apercu rapide de la météo 10 jours avant l\'évènement</string>
     <string name="noforecast_error">Erreur de chargement de la météo</string>
+
+    <!-- Navigation bar -->
+    <string name="navbar_home">Accueil</string>
+    <string name="navbar_discover">Découvrir</string>
+    <string name="narbar_my_events">Mes Évènements</string>
 </resources>

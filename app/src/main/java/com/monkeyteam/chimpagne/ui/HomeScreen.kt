@@ -20,7 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.api.ResolvableApiException
@@ -209,10 +208,9 @@ fun HomeScreen(
             })
       },
       floatingActionButton = {
-        ExtendedFloatingActionButton(
+        FloatingActionButton(
             onClick = { navObject.navigateTo(Route.EVENT_CREATION_SCREEN) },
-            icon = { Icon(Icons.Filled.Add, "organize an event") },
-            text = { Text(stringResource(R.string.homescreen_organize_event)) },
+            content = { Icon(Icons.Filled.Add, "organize an event") },
             modifier = Modifier.testTag("organize_event_button"))
       }) { innerPadding ->
         LazyColumn(Modifier.padding(innerPadding)) {
