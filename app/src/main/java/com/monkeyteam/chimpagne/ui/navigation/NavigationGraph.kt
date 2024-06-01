@@ -40,6 +40,10 @@ import com.monkeyteam.chimpagne.viewmodels.FindEventsViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModel
 import com.monkeyteam.chimpagne.viewmodels.MyEventsViewModelFactory
 
+/**
+ * The app starts at the route LOADING NavigationGraph is also responsible for the dynamic
+ * navigation between screens when the user is logged in (or not)
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NavigationGraph(
