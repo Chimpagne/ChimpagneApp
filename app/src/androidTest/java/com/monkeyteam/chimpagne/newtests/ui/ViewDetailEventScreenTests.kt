@@ -333,15 +333,20 @@ class ViewDetailEventScreenTests {
 
     val eventVM = EventViewModel(event.id, database)
 
-    while (eventVM.uiState.value.loading) {}
-
     accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
-    while (accountViewModel.uiState.value.loading) {}
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
 
     composeTestRule.setContent {
       val navController = rememberNavController()
       val navActions = NavigationActions(navController)
-      EventScreen(navActions, eventVM, accountViewModel)
+      EventActions(
+        navObject = navActions,
+        eventViewModel = eventVM,
+        isUserLoggedIn = true,
+        showToast = {},
+        showPromptLogin = {})
     }
 
     composeTestRule.onNodeWithTag("delete").performScrollTo().performClick()
