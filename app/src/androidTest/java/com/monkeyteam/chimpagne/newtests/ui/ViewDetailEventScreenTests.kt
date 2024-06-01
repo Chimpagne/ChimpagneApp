@@ -325,4 +325,28 @@ class ViewDetailEventScreenTests {
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
   }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun testDeleteEventFunctionality() {
+    val event = TEST_EVENTS[1]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    while (eventVM.uiState.value.loading) {}
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    while (accountViewModel.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventScreen(navActions, eventVM, accountViewModel)
+    }
+
+    composeTestRule
+      .onNodeWithTag("delete")
+      .performScrollTo()
+      .performClick()
+  }
 }
