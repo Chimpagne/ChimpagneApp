@@ -20,6 +20,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.ui.components.ButtonData
 import com.monkeyteam.chimpagne.ui.components.CustomDialog
 
+/** This dialog is shown from the supplies screen. */
 @Composable
 fun EditSupplyDialog(
     supply: ChimpagneSupply = ChimpagneSupply(),

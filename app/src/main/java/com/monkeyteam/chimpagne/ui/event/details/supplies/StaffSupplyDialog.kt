@@ -18,6 +18,10 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.ui.components.ButtonData
 import com.monkeyteam.chimpagne.ui.components.CustomDialog
 
+/**
+ * Dialog used to assign a supply, as a staff member. The main difference from the other supply
+ * allocation dialog is that a staff member can assign a supply to someone else
+ */
 @Composable
 fun StaffSupplyDialog(
     supply: ChimpagneSupply,

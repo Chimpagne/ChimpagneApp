@@ -179,8 +179,12 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("previous_button").assertDoesNotExist()
   }
 
+  /**
+   * This tests the accommodation UI. We check than the number of beds and parking spaces are
+   * editable
+   */
   @Test
-  fun testFourthPanel() {
+  fun accommodationsPanelTest() {
     // Now we do this to go the correct screen
     composeTestRule.setContent {
       val navController = rememberNavController()
@@ -239,8 +243,13 @@ class EventCreationScreenTest {
     composeTestRule.onNodeWithTag("next_button").assertDoesNotExist()
   }
 
+  /*
+  By default, we set the start and end times to be one hour after the current time.
+  This helps we doing manual testing, so that the created event is not in the past
+  by the time the user gets to the "my event" screen
+   */
   @Test
-  fun defaultStartAndEndTest() {
+  fun defaultStartAndEndTimeForEventTest() {
     val eventUIState = EventViewModel.EventUIState()
     // Get the current time
     val currentTime = Calendar.getInstance()
@@ -266,7 +275,11 @@ class EventCreationScreenTest {
     // Assert that the end time is approximately 2 hours after the current time
     assertApproximatelyEqual(expectedEndTime, eventUIState.endsAtCalendarDate, toleranceMillis)
   }
-
+  /*
+  Used in the test above to assert that the start and end times are approximately equal. This
+  is necessary because there is some amount of unpredictable latency when running these tests,
+  particularly in the CI
+   */
   private fun assertApproximatelyEqual(
       expected: Calendar,
       actual: java.util.Calendar,

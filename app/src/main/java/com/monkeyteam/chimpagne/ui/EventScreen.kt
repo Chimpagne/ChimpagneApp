@@ -117,7 +117,6 @@ fun EventScreen(
           ChimpagneRole.NOT_IN_EVENT -> {
         showToast(context.getString(R.string.joining_toast) + event.title)
         eventViewModel.joinEvent(
-            event.id,
             {
               showToast(context.getString(R.string.join_event_success))
               showDialog = true
