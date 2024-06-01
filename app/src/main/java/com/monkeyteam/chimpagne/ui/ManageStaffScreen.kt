@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -63,6 +65,7 @@ fun ManageStaffScreen(
   val eventUIState by eventViewModel.uiState.collectAsState()
   val accountUIState by accountViewModel.uiState.collectAsState()
   var isOnEdit by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
   Scaffold(
       topBar = {
@@ -115,7 +118,9 @@ fun ManageStaffScreen(
                           isOnEdit = isOnEdit,
                           isStaff = true,
                           modifier = Modifier.testTag("staff member")) {
-                            eventViewModel.demoteStaffToGuest(account.firebaseAuthUID)
+                            eventViewModel.demoteStaffToGuest(account.firebaseAuthUID){
+                                Toast.makeText(context, context.getString(R.string.manage_staff_demote_staff_to_guest_failure), Toast.LENGTH_SHORT).show()
+                            }
                           }
                     }
                   }
@@ -143,7 +148,9 @@ fun ManageStaffScreen(
                             isOnEdit = true,
                             isStaff = false,
                             modifier = Modifier.testTag("guest member")) {
-                              eventViewModel.promoteGuestToStaff(account.firebaseAuthUID)
+                              eventViewModel.promoteGuestToStaff(account.firebaseAuthUID){
+                                  Toast.makeText(context, context.getString(R.string.manage_staff_promote_guest_to_staff_failure), Toast.LENGTH_SHORT).show()
+                              }
                             }
                       }
                     }

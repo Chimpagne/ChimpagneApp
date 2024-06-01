@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -87,7 +88,8 @@ fun EventActions(
                         showToast(
                             context.getString(R.string.event_details_screen_leave_toast_success))
                         navObject.goBack()
-                      })
+                      },
+                      onFailure = {Toast.makeText(context, context.getString(R.string.event_details_screen_leave_failure), Toast.LENGTH_SHORT).show()})
                 } else {
                   showPromptLogin(true)
                 }

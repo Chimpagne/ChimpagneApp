@@ -6,7 +6,7 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 import com.monkeyteam.chimpagne.model.utils.internetAccessListener
 
-+class Database(
+class Database(
     tables: Tables = TEST_TABLES,
     context: Context? = null, // context != null iff not running a test
     allowInternetAccess: Boolean = true // put this to false in android tests for offline mode

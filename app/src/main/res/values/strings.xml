@@ -86,6 +86,8 @@
     <string name="event_details_screen_location_button">Location</string>
     <string name="event_details_screen_voting_button">Polls &amp; voting</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
+    <string name="event_details_screen_leave_failure">Failure to leave the event</string>
+    <string name="event_details_screen_delete_failure">Failure to delete the event</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>
@@ -117,6 +119,8 @@
     <string name="manage_staff_screen_empty_staff_list">There is no staff for this event</string>
     <string name="manage_staff_screen_guest_list_name">Guest List:</string>
     <string name="manage_staff_screen_empty_guest_list">There are no guests in this event:</string>
+    <string name="manage_staff_promote_guest_to_staff_failure">Failure to promote guest</string>
+    <string name="manage_staff_demote_staff_to_guest_failure">Failure to demote staff</string>
 
 
     <!-- Chimpagne -->
@@ -150,6 +154,11 @@
     <string name="supplies_delete">Delete this supply ?</string>
     <string name="supplies_delete_description">This action is irreversible !</string>
     <string name="supplies_nb_assigned">assigned</string>
+    <string name="supplies_create_failure">Failed to create supply</string>
+    <string name="supplies_update_failure">Failed to update supply</string>
+    <string name="supplies_delete_failure">Failed to delete supply</string>
+    <string name="supplies_assign_myself_failure">Failed to assign yourself to supply</string>
+    <string name="supplies_unassign_myself_failure">Failed to un-assign yourself to supply</string>
 
     <!-- DeepLinks -->
     <string name="deep_link_url_event" translatable="false">https://www.manigo.ch/events/?uid=</string>
@@ -199,6 +208,9 @@
     <string name="polls_create_a_poll_title_field">Poll title</string>
     <string name="polls_create_a_poll_query_field">Poll query</string>
     <string name="polls_create_a_poll_option_field">Poll option</string>
+    <string name="polls_create_failure">Failed to create a poll</string>
+    <string name="polls_vote_failure">Failed to vote on poll</string>
+    <string name="polls_delete_failure">Failed to delete poll</string>
 
     <string name="wind_speed">Wind</string>
     <string name="noforecast_eventtoofarinfuture">Weather forecast available 10 days before the event</string>
