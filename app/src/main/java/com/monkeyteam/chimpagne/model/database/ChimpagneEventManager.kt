@@ -11,6 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 class ChimpagneEventManager(
     private val database: Database,
@@ -94,6 +95,11 @@ class ChimpagneEventManager(
       onFailure: (Exception) -> Unit,
       eventPictureUri: String
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     val imageRef = eventPictures.child(event.id)
     imageRef
         .putFile(eventPictureUri.toUri())
@@ -111,6 +117,11 @@ class ChimpagneEventManager(
       onFailure: (Exception) -> Unit,
       eventPictureUri: String? = null
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     if (database.accountManager.currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
@@ -147,6 +158,10 @@ class ChimpagneEventManager(
       onFailure: (Exception) -> Unit,
       eventPictureUri: String? = null
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
 
     if (event.id.isEmpty()) {
       onFailure(Exception("null event id"))
@@ -176,6 +191,11 @@ class ChimpagneEventManager(
   }
 
   fun deleteEvent(id: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(id)
         .get()
@@ -228,6 +248,11 @@ class ChimpagneEventManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     val ownerQuery = events.whereEqualTo("ownerId", userUID).get()
     val guestQuery = events.whereEqualTo("guests.$userUID", true).get()
     val staffQuery = events.whereEqualTo("staffs.$userUID", true).get()

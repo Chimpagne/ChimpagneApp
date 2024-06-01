@@ -2,6 +2,7 @@ package com.monkeyteam.chimpagne.model.database
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FieldValue
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 /**
  * In the current implementation, this class is not concurrency-safe. The only guarantee it provides
@@ -17,6 +18,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("guests.${userUID}", true)
@@ -30,6 +36,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("guests.${userUID}", FieldValue.delete())
@@ -43,6 +54,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("staffs.${userUID}", true)
@@ -56,6 +72,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("staffs.${userUID}", FieldValue.delete())
@@ -69,6 +90,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("supplies.${supply.id}", supply)
@@ -82,6 +108,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("supplies.${supplyId}", FieldValue.delete())
@@ -96,6 +127,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("supplies.$supplyId.assignedTo.$accountUID", true)
@@ -110,6 +146,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("supplies.$supplyId.assignedTo.$accountUID", FieldValue.delete())
@@ -123,6 +164,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("polls.${poll.id}", poll)
@@ -136,6 +182,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("polls.${pollId}", FieldValue.delete())
@@ -151,6 +202,11 @@ class AtomicChimpagneEventManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     events
         .document(eventId)
         .update("polls.${pollId}.votes.${accountUID}", optionIndex)

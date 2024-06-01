@@ -17,12 +17,12 @@ import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
 import com.monkeyteam.chimpagne.viewmodels.AppLayout
 
 class MainActivity : ComponentActivity() {
-
-  val database = Database(PRODUCTION_TABLES)
-  private val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    val database = Database(PRODUCTION_TABLES, applicationContext)
+    val accountViewModel: AccountViewModel by viewModels { AccountViewModelFactory(database) }
+
     setContent {
       ChimpagneTheme {
         val navController = rememberNavController()

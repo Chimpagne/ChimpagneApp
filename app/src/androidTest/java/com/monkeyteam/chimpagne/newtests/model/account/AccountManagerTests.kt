@@ -1,6 +1,8 @@
 package com.monkeyteam.chimpagne.newtests.model.account
 
+import android.content.Context
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccount
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.Database
@@ -17,9 +19,12 @@ class AccountManagerTests {
 
   val database = Database()
 
+  lateinit var instrumentationContext: Context
+
   @Before
   fun init() {
     initializeTestDatabase()
+    instrumentationContext = InstrumentationRegistry.getInstrumentation().context
   }
 
   @Test
