@@ -1,14 +1,17 @@
 package com.monkeyteam.chimpagne.ui.utilities
 
 import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.UiComposable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.Cluster
@@ -36,12 +39,10 @@ fun <T : ClusterItem> ChimpagneClustering(
     onClusterItemInfoWindowLongClick: (T) -> Unit = {},
     clusterContent:
         @[UiComposable Composable]
-        ((Cluster<T>) -> Unit)? =
-        null,
+        ((Cluster<T>) -> Unit)? = { Box(modifier = Modifier.testTag("cluster")) {}},
     clusterItemContent:
         @[UiComposable Composable]
-        ((T) -> Unit)? =
-        null,
+        ((T) -> Unit)? = { Box(modifier = Modifier.testTag("cluster-item")) {}},
 ) {
   val clusterManager = rememberClusterManager<T>()
   val customAlgorithm = remember { CustomAlgorithm<T>() }
