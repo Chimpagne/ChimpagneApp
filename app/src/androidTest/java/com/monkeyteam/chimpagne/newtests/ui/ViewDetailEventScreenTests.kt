@@ -229,6 +229,11 @@ class ViewDetailEventScreenTests {
         .performScrollTo()
         .assertIsDisplayed()
         .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("delete")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 
   @Test

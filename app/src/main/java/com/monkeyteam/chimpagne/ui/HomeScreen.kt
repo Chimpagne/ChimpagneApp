@@ -51,7 +51,6 @@ import com.monkeyteam.chimpagne.model.feed.getClosestNEvent
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.location.LocationState
 import com.monkeyteam.chimpagne.model.location.LocationViewModel
-import com.monkeyteam.chimpagne.ui.components.ChimpagneButton
 import com.monkeyteam.chimpagne.ui.components.EventCard
 import com.monkeyteam.chimpagne.ui.components.LocationIconTextButton
 import com.monkeyteam.chimpagne.ui.components.ProfileIcon

@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.components.eventview
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -63,6 +64,22 @@ fun EventActions(
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp))
     val iconList = mutableListOf<IconInfo>()
     if (uiState.currentUserRole == ChimpagneRole.OWNER) {
+      iconList.add(
+          IconInfo(
+              icon = Icons.Rounded.RemoveCircleOutline,
+              description = stringResource(id = R.string.event_details_screen_delete),
+              onClick = {
+                eventViewModel.deleteEvent(
+                    onSuccess = { navObject.goBack() },
+                    onFailure = {
+                      Toast.makeText(
+                              context,
+                              context.getString(R.string.event_details_screen_delete_failure),
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    })
+              },
+              testTag = "delete"))
       iconList.add(
           IconInfo(
               icon = Icons.Rounded.Edit,
