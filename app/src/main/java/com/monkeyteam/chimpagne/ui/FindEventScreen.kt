@@ -268,6 +268,7 @@ fun FindEventFormScreen(
   val locationPermissionRequest =
       rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
           permissions ->
+        // The == true is necessary for null safety
         if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
           // Permissions granted, now check if GPS is enabled and request enabling if necessary.

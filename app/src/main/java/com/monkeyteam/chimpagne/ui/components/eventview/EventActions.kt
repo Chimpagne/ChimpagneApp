@@ -37,7 +37,7 @@ fun EventActions(
     eventViewModel: EventViewModel,
     isUserLoggedIn: Boolean,
     showToast: (String) -> Unit,
-    showPromptLogin: (Boolean) -> Unit
+    showPromptLogin: () -> Unit
 ) {
 
   val uiState by eventViewModel.uiState.collectAsState()
@@ -97,7 +97,7 @@ fun EventActions(
                             .show()
                       })
                 } else {
-                  showPromptLogin(true)
+                  showPromptLogin()
                 }
               },
               testTag = "leave"))

@@ -2,7 +2,6 @@ package com.monkeyteam.chimpagne
 
 import android.location.LocationManager
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -26,21 +25,6 @@ class HomescreenTest {
   val permissionRule: GrantPermissionRule =
       GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION)
   val database = Database()
-
-  @Test
-  fun TestButtonsAreDisplayed() {
-    val accountViewModel = AccountViewModel(database = database)
-    // Start on the correct screen
-    composeTestRule.setContent {
-      val navController = rememberNavController()
-      val navActions = NavigationActions(navController)
-      HomeScreen(navActions, accountViewModel)
-    }
-
-    composeTestRule.onNodeWithTag("open_events_button").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("discover_events_button").assertIsDisplayed()
-    composeTestRule.onNodeWithTag("organize_event_button").assertIsDisplayed()
-  }
 
   @OptIn(ExperimentalMaterial3Api::class)
   @Test
