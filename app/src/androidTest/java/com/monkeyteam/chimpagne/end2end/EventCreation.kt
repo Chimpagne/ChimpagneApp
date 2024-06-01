@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
@@ -23,10 +24,10 @@ import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.components.LocationSelector
-import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.AppLayout
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -83,7 +84,7 @@ class EventCreation {
       navController = rememberNavController()
       accountViewModel = viewModel(factory = AccountViewModelFactory(database))
 
-      NavigationGraph(
+      AppLayout(
           navController = navController, accountViewModel = accountViewModel, database = database)
     }
 
@@ -111,6 +112,8 @@ class EventCreation {
     composeTestRule.waitUntil(timeout) {
       navController.currentDestination?.route == Route.HOME_SCREEN
     }
+    composeTestRule.onNodeWithTag("home_button").isDisplayed()
+    composeTestRule.onNodeWithTag("discover_events_button").isDisplayed()
     composeTestRule.onNodeWithTag("open_events_button").performClick()
 
     composeTestRule.waitUntil(timeout) {
