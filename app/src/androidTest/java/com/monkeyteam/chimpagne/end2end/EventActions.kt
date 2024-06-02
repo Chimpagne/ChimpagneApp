@@ -119,8 +119,9 @@ class EventActions {
     composeTestRule.waitUntil(TIMEOUT_MILLIS) {
       navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
     }
-    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(5 * SLEEP_AMOUNT_MILLIS)
 
+      composeTestRule.waitUntilAtLeastOneExists(hasTestTag("Event info"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("Event info").assertExists().performTouchInput { this.swipeUp() }
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("polls"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("polls").performScrollTo().performClick()
