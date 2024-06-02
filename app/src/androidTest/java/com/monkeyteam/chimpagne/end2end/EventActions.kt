@@ -12,7 +12,6 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -120,47 +119,45 @@ class EventActions {
     composeTestRule.waitUntil(TIMEOUT_MILLIS) {
       navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
     }
-      Thread.sleep(SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
 
-      composeTestRule.onNodeWithTag("Event info").assertExists().performTouchInput {
-          this.swipeUp()
-      }
+    composeTestRule.onNodeWithTag("Event info").assertExists().performTouchInput { this.swipeUp() }
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("polls"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("polls").performScrollTo().performClick()
 
     composeTestRule.waitUntil(TIMEOUT_MILLIS) {
       navController.currentDestination?.route == Route.POLLS_SCREEN + "/{EventID}"
     }
-      composeTestRule.onNodeWithContentDescription("create poll button").performClick()
+    composeTestRule.onNodeWithContentDescription("create poll button").performClick()
 
-      composeTestRule.onNodeWithTag("poll title field").performTextInput("Poll 1")
-      composeTestRule.onNodeWithTag("poll query field").performTextInput("Are you a monkey ?")
+    composeTestRule.onNodeWithTag("poll title field").performTextInput("Poll 1")
+    composeTestRule.onNodeWithTag("poll query field").performTextInput("Are you a monkey ?")
 
-      composeTestRule.onNodeWithTag("poll option 1 field").performTextInput("Yes")
-      composeTestRule.onNodeWithTag("poll option 2 field").performTextInput("No")
+    composeTestRule.onNodeWithTag("poll option 1 field").performTextInput("Yes")
+    composeTestRule.onNodeWithTag("poll option 2 field").performTextInput("No")
 
-      composeTestRule.onNodeWithTag("confirm poll button").performClick()
+    composeTestRule.onNodeWithTag("confirm poll button").performClick()
 
-      Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
 
-      composeTestRule.onNodeWithTag("a poll").assertIsDisplayed().performClick()
+    composeTestRule.onNodeWithTag("a poll").assertIsDisplayed().performClick()
 
-      composeTestRule.onNodeWithContentDescription("option 1 unselected").performClick()
+    composeTestRule.onNodeWithContentDescription("option 1 unselected").performClick()
 
-      composeTestRule.onNodeWithTag("confirm option button").performClick()
+    composeTestRule.onNodeWithTag("confirm option button").performClick()
 
-      Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
 
-      composeTestRule.onNodeWithContentDescription("option 1 selected").assertExists()
-      composeTestRule.onNodeWithContentDescription("option 2 unselected").assertExists()
+    composeTestRule.onNodeWithContentDescription("option 1 selected").assertExists()
+    composeTestRule.onNodeWithContentDescription("option 2 unselected").assertExists()
 
-      composeTestRule.onNodeWithTag("return button").assertIsDisplayed().performClick()
+    composeTestRule.onNodeWithTag("return button").assertIsDisplayed().performClick()
 
-      Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
+    Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
 
-      composeTestRule.onNodeWithTag("a poll").performClick()
-      composeTestRule.onNodeWithTag("delete poll button").assertIsDisplayed().performClick()
+    composeTestRule.onNodeWithTag("a poll").performClick()
+    composeTestRule.onNodeWithTag("delete poll button").assertIsDisplayed().performClick()
 
-      composeTestRule.onNodeWithTag("go_back_button").performClick()
+    composeTestRule.onNodeWithTag("go_back_button").performClick()
   }
 }
