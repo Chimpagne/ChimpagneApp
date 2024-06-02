@@ -7,7 +7,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +18,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
+import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
@@ -105,6 +105,7 @@ class EventActions {
     composeTestRule.waitUntil(TIMEOUT_MILLIS) {
       navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
     }
+    Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithText(event.title, useUnmergedTree = true).assertExists()
     composeTestRule.onNodeWithTag("a created event").performClick()
