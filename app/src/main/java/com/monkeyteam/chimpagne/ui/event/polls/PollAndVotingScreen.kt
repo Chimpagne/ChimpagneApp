@@ -1,5 +1,6 @@
 package com.monkeyteam.chimpagne.ui.event.polls
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,7 @@ fun PollsAndVotingScreen(
 ) {
   val eventUIState by eventViewModel.uiState.collectAsState()
   val accountUIState by accountViewModel.uiState.collectAsState()
+  val context = LocalContext.current
 
   var displayCreatePollDialog by remember { mutableStateOf(false) }
   var displayVotePollDialog by remember { mutableStateOf(false) }
@@ -56,7 +59,15 @@ fun PollsAndVotingScreen(
     CreatePollDialog(
         onPollCreate = {
           eventViewModel.createPollAtomically(
-              poll = it, onSuccess = { displayCreatePollDialog = false })
+              poll = it,
+              onSuccess = { displayCreatePollDialog = false },
+              onFailure = {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.polls_create_failure),
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
         },
         onPollCancel = { displayCreatePollDialog = false },
         onDismissRequest = { displayCreatePollDialog = false })
@@ -68,11 +79,26 @@ fun PollsAndVotingScreen(
         userRole = eventUIState.currentUserRole,
         onOptionVote = {
           eventViewModel.castPollVoteAtomically(
-              pollId = selectedPollId, optionIndex = it, { displayViewPollDialog = true })
+              pollId = selectedPollId,
+              optionIndex = it,
+              onSuccess = { displayViewPollDialog = true },
+              onFailure = {
+                Toast.makeText(
+                        context, context.getString(R.string.polls_vote_failure), Toast.LENGTH_SHORT)
+                    .show()
+              })
         },
         onPollDelete = {
           eventViewModel.deletePollAtomically(
-              pollId = it, onSuccess = { displayVotePollDialog = false })
+              pollId = it,
+              onSuccess = { displayVotePollDialog = false },
+              onFailure = {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.polls_delete_failure),
+                        Toast.LENGTH_SHORT)
+                    .show()
+              })
         },
         onPollCancel = { displayVotePollDialog = false },
         onDismissRequest = { displayVotePollDialog = false })

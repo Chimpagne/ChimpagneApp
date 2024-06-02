@@ -17,6 +17,14 @@ import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.ui.components.EventCard
 
+/**
+ * Composable function to display a list of events in a sheet that occupies up to 75% of the screen
+ * height.
+ *
+ * @param events List of ChimpagneEvent objects to be displayed in the list.
+ * @param onEventClick Lambda function to be executed when an event item is clicked. Defaults to an
+ *   empty lambda.
+ */
 @Composable
 fun DetailScreenListSheet(
     events: List<ChimpagneEvent>,

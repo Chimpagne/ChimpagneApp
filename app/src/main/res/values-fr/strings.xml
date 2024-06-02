@@ -16,6 +16,7 @@
     <string name="event_creation_screen_create_event">Créer</string>
     <string name="event_creation_screen_toast_creating">Creation de l\'événement…</string>
     <string name="event_creation_screen_toast_finish">L\'événement a été créé !</string>
+    <string name="event_creation_screen_toast_failed">Échec de la création de l\'évènement !</string>
     <string name="event_creation_screen_title">Création de l\'événement</string>
     <string name="event_creation_screen_title_legend">Titre</string>
     <string name="event_creation_screen_description">Ajouter une description</string>
@@ -84,6 +85,7 @@
     <string name="event_details_screen_location_button">Localisation</string>
     <string name="event_details_screen_supplies_button">Fournitures</string>
     <string name="event_details_screen_voting_button">Votes et sondages</string>
+    <string name="event_details_screen_leave_failure">Échec pour quitter l\'évènement</string>
     <string name="edit_event">Editer l\'événement</string>
     <string name="edit_event_toast_finish">L\'événement a été édité</string>
     <string name="edit_event_save_failure">Les changements de l\'événement n\'ont pas pu être édité !</string>
@@ -115,6 +117,8 @@
     <string name="manage_staff_screen_empty_staff_list">Il n\'y a pas de personnel dans l\'événement</string>
     <string name="manage_staff_screen_guest_list_name">Liste des invités:</string>
     <string name="manage_staff_screen_empty_guest_list">Il n\'y a pas d\'invités à cette événement</string>
+    <string name="manage_staff_promote_guest_to_staff_failure">Échec de promouvoir l\'invité </string>
+    <string name="manage_staff_demote_staff_to_guest_failure">Échec de retrograder le personnel</string>
 
     <!-- Chimpagne -->
     <string name="chimpagne_cancel">Annuler</string>
@@ -147,6 +151,11 @@
     <string name="supplies_delete">Supprimer cette fourniture ?</string>
     <string name="supplies_delete_description">Cette action est irreversible !</string>
     <string name="supplies_nb_assigned">assignés</string>
+    <string name="supplies_create_failure">Échec de créer une fourniture</string>
+    <string name="supplies_update_failure">Échec de changer la fourniture</string>
+    <string name="supplies_delete_failure">Échec de supprimer la fourniture</string>
+    <string name="supplies_assign_myself_failure">Échec de vous assignez de la fourniture</string>
+    <string name="supplies_unassign_myself_failure">Échec de vous désassignez de la fourniture</string>
 
     <string name="public_string">Public</string>
     <string name="private_string">Privé</string>
@@ -193,9 +202,17 @@
     <string name="polls_create_a_poll_title_field">Titre du sondage</string>
     <string name="polls_create_a_poll_query_field">Question du sondage</string>
     <string name="polls_create_a_poll_option_field">Option</string>
+    <string name="polls_create_failure">Échec de la création du sondage</string>
+    <string name="polls_vote_failure">Échec de voter sur le sondage</string>
+    <string name="polls_delete_failure">Échec de supprimer le sondage</string>
 
     <string name="wind_speed">Vent</string>
     <string name="noforecast_alreadyoccured">L\'évènement est passé, pas de prévision météo :)</string>
     <string name="noforecast_eventtoofarinfuture">Apercu rapide de la météo 10 jours avant l\'évènement</string>
     <string name="noforecast_error">Erreur de chargement de la météo</string>
+
+    <!-- Navigation bar -->
+    <string name="navbar_home">Accueil</string>
+    <string name="navbar_discover">Découvrir</string>
+    <string name="narbar_my_events">Mes Évènements</string>
 </resources>

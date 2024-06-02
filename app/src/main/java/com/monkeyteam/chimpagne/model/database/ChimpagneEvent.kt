@@ -49,6 +49,7 @@ data class ChimpagneEvent(
 
   fun getRole(userUID: ChimpagneAccountUID): ChimpagneRole {
     if (ownerId == userUID) return ChimpagneRole.OWNER
+    // The == true are necessary to be null safe
     if (staffs[userUID] == true) return ChimpagneRole.STAFF
     if (guests[userUID] == true) return ChimpagneRole.GUEST
     return ChimpagneRole.NOT_IN_EVENT

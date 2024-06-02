@@ -139,6 +139,7 @@ fun AccountUpdateScreen(
                                         else R.string.account_creation_failed),
                                     Toast.LENGTH_SHORT)
                                 .show()
+                            loading = false
                           })
                     }
                   })

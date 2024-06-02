@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.monkeyteam.chimpagne.R
 import com.monkeyteam.chimpagne.model.database.ChimpagneAccountUID
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
-import com.monkeyteam.chimpagne.model.database.ChimpagneEventId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePoll
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollId
 import com.monkeyteam.chimpagne.model.database.ChimpagnePollOptionListIndex
@@ -247,15 +246,7 @@ class EventViewModel(
    * joinEvent in FindEventViewModel
    * --> Call in DetailEventScreen
    */
-  fun joinEvent(
-      eventId: ChimpagneEventId = _uiState.value.id,
-      onSuccess: () -> Unit = {},
-      onFailure: (Exception) -> Unit = {}
-  ) {
-    joinTheEvent(onSuccess, onFailure)
-  }
-
-  fun joinTheEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
+  fun joinEvent(onSuccess: () -> Unit = {}, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     viewModelScope.launch {
       accountManager.joinEvent(
@@ -450,7 +441,7 @@ class EventViewModel(
         })
   }
 
-  fun updateSupplyAtomically(supply: ChimpagneSupply) {
+  fun updateSupplyAtomically(supply: ChimpagneSupply, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.updateSupply(
         _uiState.value.id,
@@ -460,10 +451,10 @@ class EventViewModel(
               _uiState.value.copy(
                   supplies = _uiState.value.supplies + (supply.id to supply), loading = false)
         },
-        {})
+        onFailure)
   }
 
-  fun removeSupplyAtomically(supplyId: ChimpagneSupplyId) {
+  fun removeSupplyAtomically(supplyId: ChimpagneSupplyId, onFailure: (Exception) -> Unit = {}) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.removeSupply(
         _uiState.value.id,
@@ -472,10 +463,14 @@ class EventViewModel(
           _uiState.value =
               _uiState.value.copy(supplies = _uiState.value.supplies - supplyId, loading = false)
         },
-        {})
+        onFailure)
   }
 
-  fun assignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+  fun assignSupplyAtomically(
+      supplyId: ChimpagneSupplyId,
+      accountUID: ChimpagneAccountUID,
+      onFailure: (Exception) -> Unit = {}
+  ) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.assignSupply(
         _uiState.value.id,
@@ -488,10 +483,14 @@ class EventViewModel(
               _uiState.value.copy(
                   supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
         },
-        {})
+        onFailure)
   }
 
-  fun unassignSupplyAtomically(supplyId: ChimpagneSupplyId, accountUID: ChimpagneAccountUID) {
+  fun unassignSupplyAtomically(
+      supplyId: ChimpagneSupplyId,
+      accountUID: ChimpagneAccountUID,
+      onFailure: (Exception) -> Unit = {}
+  ) {
     _uiState.value = _uiState.value.copy(loading = true)
     eventManager.atomic.unassignSupply(
         _uiState.value.id,
@@ -504,7 +503,7 @@ class EventViewModel(
               _uiState.value.copy(
                   supplies = _uiState.value.supplies + (supplyId to newSupply), loading = false)
         },
-        {})
+        onFailure)
   }
 
   fun createPollAtomically(

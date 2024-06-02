@@ -9,6 +9,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.StorageReference
+import com.monkeyteam.chimpagne.model.utils.NetworkNotAvailableException
 
 /** Use this class to interact */
 class ChimpagneAccountManager(
@@ -132,6 +133,11 @@ class ChimpagneAccountManager(
       onSuccess: () -> Unit,
       onFailure: (Exception) -> Unit
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     accounts
         .document(account.firebaseAuthUID)
         .set(account)
@@ -165,7 +171,11 @@ class ChimpagneAccountManager(
       onSuccess: (String) -> Unit,
       onFailure: (Exception) -> Unit
   ) {
-    //    profilePictures.child(account.firebaseAuthUID).delete()
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     val imageRef = profilePictures.child(account.firebaseAuthUID)
     imageRef
         .putFile(uri)
@@ -191,15 +201,21 @@ class ChimpagneAccountManager(
   }
 
   fun fetchProfilePictureUri(uid: String, onSuccess: (Uri?) -> Unit) {
-    if (uid.isEmpty()) {
+    if (!database.connected) {
       onSuccess(null)
-    } else {
-      profilePictures
-          .child(uid)
-          .downloadUrl
-          .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
-          .addOnFailureListener { onSuccess(null) }
+      return
     }
+
+    if (uid.isEmpty() || !database.connected) {
+      onSuccess(null)
+      return
+    }
+
+    profilePictures
+        .child(uid)
+        .downloadUrl
+        .addOnSuccessListener { downloadedURI -> onSuccess(downloadedURI) }
+        .addOnFailureListener { onSuccess(null) }
   }
 
   private val eventManager = database.eventManager
@@ -211,6 +227,11 @@ class ChimpagneAccountManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     if (currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
@@ -246,6 +267,11 @@ class ChimpagneAccountManager(
       onSuccess: () -> Unit = {},
       onFailure: (Exception) -> Unit = {}
   ) {
+    if (!database.connected) {
+      onFailure(NetworkNotAvailableException())
+      return
+    }
+
     if (currentUserAccount == null) {
       onFailure(NotLoggedInException())
       return
