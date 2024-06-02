@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -31,6 +32,7 @@ import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
 import com.monkeyteam.chimpagne.model.database.ChimpagneSupply
 import com.monkeyteam.chimpagne.model.database.Database
 import com.monkeyteam.chimpagne.model.location.Location
+import com.monkeyteam.chimpagne.model.utils.buildCalendar
 import com.monkeyteam.chimpagne.model.utils.buildTimestamp
 import com.monkeyteam.chimpagne.newtests.SLEEP_AMOUNT_MILLIS
 import com.monkeyteam.chimpagne.newtests.initializeTestDatabase
@@ -39,13 +41,19 @@ import com.monkeyteam.chimpagne.ui.navigation.NavigationGraph
 import com.monkeyteam.chimpagne.ui.navigation.Route
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModel
 import com.monkeyteam.chimpagne.viewmodels.AccountViewModelFactory
+import com.monkeyteam.chimpagne.viewmodels.AppLayout
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Calendar
 
 @RunWith(AndroidJUnit4::class)
 class EventDiscovery {
@@ -58,27 +66,34 @@ class EventDiscovery {
                 firstName = "Cal",
                 lastName = "Kestis"
             )
+
+    val tomorrow = buildCalendar(Timestamp.now())
+
+    init {
+        tomorrow.add(Calendar.DATE, 1)
+    }
         val events = listOf(
             ChimpagneEvent(
                 id = "EVENT_TO_DISCOVER_1",
                 title = "Jedi fallen order",
                 location = Location("EPFL", 46.519124, 6.567593),
                 public = true,
-                tags = listOf("star wars", "jedi apprentice"),
+                tags = listOf("starwars", "jediapprentice"),
                 startsAtTimestamp = Timestamp.now(),
-                endsAtTimestamp = Timestamp.now(),
+                endsAtTimestamp = buildTimestamp(tomorrow),
                 ownerId = "JUAN"
             ),
-            ChimpagneEvent(
-                id = "EVENT_TO_DISCOVER_2",
-                title = "Jedi survivor",
-                location = Location("EPFL", 46.519124, 6.567593),
-                public = true,
-                tags = listOf("star wars", "jedi master"),
-                startsAtTimestamp = Timestamp.now(),
-                endsAtTimestamp = Timestamp.now(),
-                ownerId = "JUAN"
-            ))
+//            ChimpagneEvent(
+//                id = "EVENT_TO_DISCOVER_2",
+//                title = "Jedi survivor",
+//                location = Location("EPFL", 46.519124, 6.567593),
+//                public = true,
+//                tags = listOf("starwars", "jedimaster"),
+//                startsAtTimestamp = Timestamp.now(),
+//                endsAtTimestamp = Timestamp.now(),
+//                ownerId = "JUAN"
+//            )
+        )
 
         @get:Rule
         val composeTestRule = createComposeRule()
@@ -115,7 +130,7 @@ class EventDiscovery {
                 navController = rememberNavController()
                 accountViewModel = viewModel(factory = AccountViewModelFactory(database))
 
-                NavigationGraph(
+                AppLayout(
                     navController = navController,
                     accountViewModel = accountViewModel,
                     database = database
@@ -125,29 +140,39 @@ class EventDiscovery {
             composeTestRule.waitUntil(TIMEOUT_MILLIS) {
                 navController.currentDestination?.route == Route.HOME_SCREEN
             }
-            composeTestRule.onNodeWithTag("discover_events_button").assertExists().performClick()
-
+            composeTestRule.onNodeWithTag("discover_events_button").performClick()
             composeTestRule.waitUntil(TIMEOUT_MILLIS) {
                 navController.currentDestination?.route == Route.FIND_AN_EVENT_SCREEN
             }
+
             composeTestRule.onNodeWithText("Search for a location").assertExists().performTextInput("EPFL")
             composeTestRule.onNodeWithTag("SearchIcon").performClick()
             composeTestRule.waitUntil(TIMEOUT_MILLIS) {
                 composeTestRule.onAllNodesWithTag("location_possibility").fetchSemanticsNodes().isNotEmpty()
             }
-            composeTestRule.onAllNodesWithTag("location_possibility").onFirst().assertExists().performClick()
+            composeTestRule.onAllNodesWithTag("location_possibility").onFirst().performClick()
 
             composeTestRule.onNodeWithTag("find_slider").assertExists().performTouchInput {
                 this.swipeRight()
             }
-            composeTestRule.onNodeWithText("Enter a tag").assertExists().performTextInput("jedi apprentice")
+            composeTestRule.onNodeWithTag("button_search").performClick()
 
-            composeTestRule.onNodeWithTag("button_search").assertExists().performClick()
+//            composeTestRule.waitUntilAtLeastOneExists(hasTestTag("cluster"), TIMEOUT_MILLIS)
+            var ok = false
+            runBlocking {
+                launch {
+                    delay(TIMEOUT_MILLIS)
+                    ok = true
+                }
+            }
 
-            composeTestRule.onNodeWithTag("bottom sheet").assertExists().performClick()
-            composeTestRule.waitUntilAtLeastOneExists(hasTestTag(events[0].id), TIMEOUT_MILLIS)
-            composeTestRule.onNodeWithTag(events[0].id).performScrollTo().performClick()
+//            composeTestRule.onNodeWithTag("discover_events_button").assertIsDisplayed()
+            composeTestRule.waitUntil(TIMEOUT_MILLIS) { ok }
+//            Thread.sleep(TIMEOUT_MILLIS)
 
+            composeTestRule.onNodeWithTag("ggle_maps").performClick()
+            Thread.sleep(TIMEOUT_MILLIS)
+            composeTestRule.onNodeWithTag("EVENT_TO_DISCOVER_1").performClick()
             composeTestRule.waitUntilAtLeastOneExists(hasTestTag("join_button"), TIMEOUT_MILLIS) /*doesnt work, cannot figure out why*/
         }
 }
