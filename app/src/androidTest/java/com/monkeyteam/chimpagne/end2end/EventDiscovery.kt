@@ -3,6 +3,7 @@ package com.monkeyteam.chimpagne.end2end
 import android.Manifest
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -14,6 +15,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performGesture
 import androidx.compose.ui.test.performKeyPress
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeRight
@@ -139,25 +141,13 @@ class EventDiscovery {
                 this.swipeRight()
             }
             composeTestRule.onNodeWithText("Enter a tag").assertExists().performTextInput("jedi apprentice")
-            //composeTestRule.onNodeWithText("Enter a tag").performKeyPress()
 
             composeTestRule.onNodeWithTag("button_search").assertExists().performClick()
 
-            composeTestRule.waitUntilAtLeastOneExists(hasTestTag("map_screen"), TIMEOUT_MILLIS)
-            composeTestRule.waitUntilAtLeastOneExists(hasTestTag("cluster"), TIMEOUT_MILLIS)
-            //composeTestRule.onNodeWithTag("cluster-item").assertExists()
-            Thread.sleep(5000)
+            composeTestRule.onNodeWithTag("bottom sheet").assertExists().performClick()
+            composeTestRule.waitUntilAtLeastOneExists(hasTestTag(events[0].id), TIMEOUT_MILLIS)
+            composeTestRule.onNodeWithTag(events[0].id).performScrollTo().performClick()
 
-            /*composeTestRule.waitUntil(timeout) {
-                navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
-            }
-            composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), timeout)
-            composeTestRule.onNodeWithText(eventName, useUnmergedTree = true).assertExists()
-            composeTestRule.onNodeWithTag("a created event").performClick()
-
-            composeTestRule.waitUntil(timeout) {
-                navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
-            }
-            composeTestRule.waitUntilExactlyOneExists(hasText(eventName), timeout)*/
+            composeTestRule.waitUntilAtLeastOneExists(hasTestTag("join_button"), TIMEOUT_MILLIS) /*doesnt work, cannot figure out why*/
         }
 }

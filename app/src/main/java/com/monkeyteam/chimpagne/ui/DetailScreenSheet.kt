@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import com.monkeyteam.chimpagne.model.database.ChimpagneEvent
@@ -19,7 +20,8 @@ import com.monkeyteam.chimpagne.ui.components.EventCard
 @Composable
 fun DetailScreenListSheet(
     events: List<ChimpagneEvent>,
-    onEventClick: (ChimpagneEvent) -> Unit = {}
+    onEventClick: (ChimpagneEvent) -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
   val screenHeight = LocalConfiguration.current.screenHeightDp.dp
   val maxSheetHeight = screenHeight * 0.75f
@@ -52,14 +54,15 @@ fun DetailScreenListSheet(
 
   LazyColumn(
       modifier =
-          Modifier.heightIn(max = maxSheetHeight)
+          modifier.heightIn(max = maxSheetHeight)
               .fillMaxWidth()
-              .nestedScroll(nestedScrollConnection), // Add nested scroll modifier
+              .nestedScroll(nestedScrollConnection).testTag("bottom sheet"), // Add nested scroll modifier
       state = lazyListState // Attach LazyListState to track scroll position
       ) {
         items(events.sortedBy { it.startsAtTimestamp }) { event ->
           EventCard(
               event = event,
+              modifier = Modifier.testTag(event.id),
               onClick = { onEventClick(event) }, // Use the provided onJoinClick callback
           )
         }
