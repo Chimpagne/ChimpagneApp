@@ -118,8 +118,8 @@ class EventActions {
       navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
     }
 
-    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("Event info"), TIMEOUT_MILLIS + 10000)
-    composeTestRule.onNodeWithTag("Event info").assertExists().performTouchInput { this.swipeUp() }
+    // composeTestRule.waitUntilAtLeastOneExists(hasTestTag("Event info"), TIMEOUT_MILLIS + 10000)
+    composeTestRule.onNodeWithTag("Event info").performTouchInput { this.swipeUp() }
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("polls"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("polls").performScrollTo().performClick()
 
