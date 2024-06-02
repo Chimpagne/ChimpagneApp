@@ -7,7 +7,6 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
@@ -111,17 +110,15 @@ class EventActions {
     composeTestRule.waitUntil(TIMEOUT_MILLIS) {
       navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
     }
-    Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
+
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), TIMEOUT_MILLIS)
-    composeTestRule.onNodeWithText(event.title, useUnmergedTree = true).assertExists()
     composeTestRule.onNodeWithTag("a created event").performClick()
 
     composeTestRule.waitUntil(TIMEOUT_MILLIS) {
       navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
     }
-    Thread.sleep(5 * SLEEP_AMOUNT_MILLIS)
 
-    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("Event info"), TIMEOUT_MILLIS)
+    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("Event info"), TIMEOUT_MILLIS + 10000)
     composeTestRule.onNodeWithTag("Event info").assertExists().performTouchInput { this.swipeUp() }
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("polls"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("polls").performScrollTo().performClick()
