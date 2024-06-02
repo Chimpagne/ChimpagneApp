@@ -206,7 +206,8 @@ fun EventScreen(
                   Modifier.fillMaxSize()
                       .padding(innerPadding)
                       .background(MaterialTheme.colorScheme.background)
-                      .verticalScroll(rememberScrollState())) {
+                      .verticalScroll(rememberScrollState())
+                      .testTag("Event info")) {
                 ImageCard(uiState.imageUri)
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
