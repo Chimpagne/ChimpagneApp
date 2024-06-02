@@ -87,6 +87,8 @@
     <string name="event_details_screen_voting_button">Polls &amp; voting</string>
     <string name="event_details_screen_supplies_button">Supplies</string>
     <string name="event_details_screen_leave_failure">Failure to leave the event</string>
+    <string name="event_details_screen_delete">Delete</string>
+    <string name="event_details_screen_delete_failure">Failure to delete event</string>
     <string name="edit_event">Edit event</string>
     <string name="edit_event_toast_finish">The event has been edited !</string>
     <string name="edit_event_save_failure">Could not save the edited event !</string>

@@ -229,6 +229,11 @@ class ViewDetailEventScreenTests {
         .performScrollTo()
         .assertIsDisplayed()
         .assertHasClickAction()
+    composeTestRule
+        .onNodeWithTag("delete")
+        .performScrollTo()
+        .assertIsDisplayed()
+        .assertHasClickAction()
   }
 
   @Test
@@ -319,5 +324,31 @@ class ViewDetailEventScreenTests {
     }
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
+  }
+
+  @OptIn(ExperimentalFoundationApi::class)
+  @Test
+  fun testDeleteEventFunctionality() {
+    val event = TEST_EVENTS[1]
+
+    val eventVM = EventViewModel(event.id, database)
+
+    accountViewModel.loginToChimpagneAccount(TEST_ACCOUNTS[1].firebaseAuthUID, {}, {})
+    accountManager.signInTo(TEST_ACCOUNTS[1])
+
+    while (eventVM.uiState.value.loading) {}
+
+    composeTestRule.setContent {
+      val navController = rememberNavController()
+      val navActions = NavigationActions(navController)
+      EventActions(
+          navObject = navActions,
+          eventViewModel = eventVM,
+          isUserLoggedIn = true,
+          showToast = {},
+          showPromptLogin = {})
+    }
+
+    composeTestRule.onNodeWithTag("delete").performScrollTo().performClick()
   }
 }

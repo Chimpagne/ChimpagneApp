@@ -66,6 +66,22 @@ fun EventActions(
     if (uiState.currentUserRole == ChimpagneRole.OWNER) {
       iconList.add(
           IconInfo(
+              icon = Icons.Rounded.RemoveCircleOutline,
+              description = stringResource(id = R.string.event_details_screen_delete),
+              onClick = {
+                eventViewModel.deleteEvent(
+                    onSuccess = { navObject.goBack() },
+                    onFailure = {
+                      Toast.makeText(
+                              context,
+                              context.getString(R.string.event_details_screen_delete_failure),
+                              Toast.LENGTH_SHORT)
+                          .show()
+                    })
+              },
+              testTag = "delete"))
+      iconList.add(
+          IconInfo(
               icon = Icons.Rounded.Edit,
               description = stringResource(id = R.string.event_details_screen_edit_button),
               onClick = { navObject.navigateTo(Route.EDIT_EVENT_SCREEN + "/${uiState.id}") },
