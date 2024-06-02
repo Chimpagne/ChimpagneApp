@@ -110,10 +110,11 @@ class EventActions {
     composeTestRule.onNodeWithText(event.title, useUnmergedTree = true).assertExists()
     composeTestRule.onNodeWithTag("a created event").performClick()
 
-    /*composeTestRule.waitUntil(TIMEOUT_MILLIS) {
-      navController.currentDestination?.route?.startsWith(Route.EVENT_SCREEN) ?: false
+    composeTestRule.waitUntil(2 * TIMEOUT_MILLIS) {
+      navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
     }
-
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+    /*
     composeTestRule.waitUntilAtLeastOneExists(hasTestTag("polls"), TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("polls").performScrollTo().performClick()
 
