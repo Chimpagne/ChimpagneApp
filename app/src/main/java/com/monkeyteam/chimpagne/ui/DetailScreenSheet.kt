@@ -62,9 +62,11 @@ fun DetailScreenListSheet(
 
   LazyColumn(
       modifier =
-          modifier.heightIn(max = maxSheetHeight)
+          modifier
+              .heightIn(max = maxSheetHeight)
               .fillMaxWidth()
-              .nestedScroll(nestedScrollConnection).testTag("bottom sheet"), // Add nested scroll modifier
+              .nestedScroll(nestedScrollConnection)
+              .testTag("bottom sheet"), // Add nested scroll modifier
       state = lazyListState // Attach LazyListState to track scroll position
       ) {
         items(events.sortedBy { it.startsAtTimestamp }) { event ->

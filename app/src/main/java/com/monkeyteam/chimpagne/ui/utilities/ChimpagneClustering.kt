@@ -39,10 +39,16 @@ fun <T : ClusterItem> ChimpagneClustering(
     onClusterItemInfoWindowLongClick: (T) -> Unit = {},
     clusterContent:
         @[UiComposable Composable]
-        ((Cluster<T>) -> Unit)? = { Box(modifier = Modifier.testTag("cluster")) {}},
+        ((Cluster<T>) -> Unit)? =
+        {
+          Box(modifier = Modifier.testTag("cluster")) {}
+        },
     clusterItemContent:
         @[UiComposable Composable]
-        ((T) -> Unit)? = { Box(modifier = Modifier.testTag("cluster-item")) {}},
+        ((T) -> Unit)? =
+        {
+          Box(modifier = Modifier.testTag("cluster-item")) {}
+        },
 ) {
   val clusterManager = rememberClusterManager<T>()
   val customAlgorithm = remember { CustomAlgorithm<T>() }
