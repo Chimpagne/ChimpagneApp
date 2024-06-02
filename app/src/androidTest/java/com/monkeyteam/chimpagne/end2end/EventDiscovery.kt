@@ -149,9 +149,7 @@ class EventDiscovery {
     }
 
     //            composeTestRule.onNodeWithTag("discover_events_button").assertIsDisplayed()
-    composeTestRule.waitUntil(TIMEOUT_MILLIS) { ok }
-    //            Thread.sleep(TIMEOUT_MILLIS)
-
+    Thread.sleep(TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("ggle_maps").performClick()
     Thread.sleep(TIMEOUT_MILLIS)
     composeTestRule.onNodeWithTag("EVENT_TO_DISCOVER_1").performClick()
