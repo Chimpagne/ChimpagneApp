@@ -91,7 +91,7 @@ class EventActions {
 
   @OptIn(ExperimentalTestApi::class)
   @Test
-  fun eventActionsEndToEndTest() {
+  fun eventPollsEndToEndTest() {
 
     lateinit var navController: NavHostController
     lateinit var accountViewModel: AccountViewModel
@@ -159,5 +159,54 @@ class EventActions {
     composeTestRule.onNodeWithTag("delete poll button").assertIsDisplayed().performClick()
 
     composeTestRule.onNodeWithTag("go_back_button").performClick()
+
+    composeTestRule.waitUntil(TIMEOUT_MILLIS) {
+      navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
+    }
   }
+
+  /*@OptIn(ExperimentalTestApi::class)
+  @Test
+  fun eventSuppliesEndToEndTest() {
+
+    lateinit var navController: NavHostController
+    lateinit var accountViewModel: AccountViewModel
+
+    composeTestRule.setContent {
+      navController = rememberNavController()
+      accountViewModel = viewModel(factory = AccountViewModelFactory(database))
+
+      AppLayout(
+          navController = navController, accountViewModel = accountViewModel, database = database)
+    }
+    composeTestRule.waitUntil(TIMEOUT_MILLIS) {
+      navController.currentDestination?.route == Route.HOME_SCREEN
+    }
+    composeTestRule.onNodeWithTag("open_events_button").assertExists().performClick()
+
+    composeTestRule.waitUntil(TIMEOUT_MILLIS) {
+      navController.currentDestination?.route == Route.MY_EVENTS_SCREEN
+    }
+    Thread.sleep(2 * SLEEP_AMOUNT_MILLIS)
+    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("a created event"), TIMEOUT_MILLIS)
+    composeTestRule.onNodeWithText(event.title, useUnmergedTree = true).assertExists()
+    composeTestRule.onNodeWithTag("a created event").performClick()
+
+    composeTestRule.waitUntil(TIMEOUT_MILLIS) {
+      navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
+    }
+    Thread.sleep(SLEEP_AMOUNT_MILLIS)
+
+    composeTestRule.onNodeWithTag("Event info").assertExists().performTouchInput { this.swipeUp() }
+    composeTestRule.waitUntilAtLeastOneExists(hasTestTag("supplies"), TIMEOUT_MILLIS)
+    composeTestRule.onNodeWithTag("supplies").performScrollTo().performClick()
+
+    composeTestRule.waitUntil(TIMEOUT_MILLIS) {
+      navController.currentDestination?.route == Route.SUPPLIES_SCREEN + "/{EventID}"
+    }
+
+    composeTestRule.waitUntil(TIMEOUT_MILLIS) {
+      navController.currentDestination?.route!! == Route.EVENT_SCREEN + "/{EventID}"
+    }
+  }*/
 }

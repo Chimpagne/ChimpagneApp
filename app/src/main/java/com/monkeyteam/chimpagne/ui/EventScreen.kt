@@ -183,31 +183,31 @@ fun EventScreen(
               }
         }
       }) { innerPadding ->
-        if (showQRDialog) {
-          QRCodeDialog(eventId = uiState.id, onDismiss = { showQRDialog = false })
-        }
-        if (showDialog) {
-          popUpCalendar(
-              onAccept = {
-                createCalendarIntent(eventViewModel.buildChimpagneEvent())?.let {
-                  context.startActivity(it)
-                } ?: showToast(context.getString(R.string.calendar_failed))
-                showDialog = false
-              },
-              onReject = { showDialog = false },
-              event = eventViewModel.buildChimpagneEvent())
-        }
-        if (uiState.id.isEmpty()) {
-          SpinnerView()
-        } else {
+        Column(
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(innerPadding)
+                    .background(MaterialTheme.colorScheme.background)
+                    .verticalScroll(rememberScrollState())
+                    .testTag("Event info")) {
+              if (showQRDialog) {
+                QRCodeDialog(eventId = uiState.id, onDismiss = { showQRDialog = false })
+              }
+              if (showDialog) {
+                popUpCalendar(
+                    onAccept = {
+                      createCalendarIntent(eventViewModel.buildChimpagneEvent())?.let {
+                        context.startActivity(it)
+                      } ?: showToast(context.getString(R.string.calendar_failed))
+                      showDialog = false
+                    },
+                    onReject = { showDialog = false },
+                    event = eventViewModel.buildChimpagneEvent())
+              }
+              if (uiState.id.isEmpty()) {
+                SpinnerView()
+              } else {
 
-          Column(
-              modifier =
-                  Modifier.fillMaxSize()
-                      .padding(innerPadding)
-                      .background(MaterialTheme.colorScheme.background)
-                      .verticalScroll(rememberScrollState())
-                      .testTag("Event info")) {
                 ImageCard(uiState.imageUri)
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
@@ -248,7 +248,7 @@ fun EventScreen(
                       }
                 }
               }
-        }
+            }
       }
 }
 
